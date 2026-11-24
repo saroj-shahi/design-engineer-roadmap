@@ -9,7 +9,7 @@ export const navSections = [
   { id: "readiness", label: "Readiness" },
 ];
 
-export function Nav() {
+export function Nav({ grid, onToggleGrid }: { grid: boolean; onToggleGrid: () => void }) {
   const [active, setActive] = useState("shift");
   const [progress, setProgress] = useState(0);
   const navRef = useRef<HTMLElement>(null);
@@ -51,16 +51,17 @@ export function Nav() {
     };
   }, []);
 
+  const pct = String(Math.round(progress * 100)).padStart(3, "0");
+
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-paper/85 backdrop-blur-md supports-[backdrop-filter]:bg-paper/75">
-      <div className="mx-auto flex h-14 max-w-6xl items-center gap-6 px-4 sm:px-6 lg:px-8">
-        <a href="#top" className="flex shrink-0 items-center gap-2 font-mono text-xs tracking-tight text-ink">
-          <span aria-hidden className="grid size-5 place-items-center rounded-[3px] bg-ink text-[10px] text-paper">
-            DE
-          </span>
-          <span className="hidden sm:inline">field-guide/2026</span>
+    <header className="sticky top-0 z-40 border-b border-line bg-paper">
+      <div className="wrap grid h-12 grid-cols-[auto_1fr] items-center gap-6 lg:grid-cols-12 lg:gap-6">
+        <a href="#top" className="group label flex items-center gap-2.5 text-ink lg:col-span-3">
+          <span aria-hidden className="tick text-accent transition-transform duration-700 ease-silk group-hover:rotate-45" />
+          <span>DE/26</span>
+          <span className="hidden text-ink-3 xl:inline">— Field Guide</span>
         </a>
-        <nav ref={navRef} aria-label="Sections" className="no-scrollbar -mr-4 flex flex-1 justify-start gap-1 overflow-x-auto pr-4 sm:justify-end">
+        <nav ref={navRef} aria-label="Sections" className="no-scrollbar -mr-4 flex gap-5 overflow-x-auto pr-4 lg:col-span-7 lg:mr-0 lg:justify-between lg:pr-0">
           {navSections.map((s, i) => {
             const on = active === s.id;
             return (
@@ -68,18 +69,32 @@ export function Nav() {
                 key={s.id}
                 href={`#${s.id}`}
                 aria-current={on ? "true" : undefined}
-                className={`shrink-0 rounded px-2.5 py-1.5 text-sm transition-colors ${
-                  on ? "bg-surface text-ink shadow-[0_0_0_1px_var(--line)]" : "text-ink-3 hover:text-ink"
-                }`}
+                className={`label flex shrink-0 items-baseline gap-1.5 transition-colors duration-500 ${on ? "text-ink" : "text-ink-3 hover:text-ink"}`}
               >
-                <span className="mr-1 hidden font-mono text-[10px] text-ink-3 md:inline">0{i + 1}</span>
-                {s.label}
+                <span className={`tabular transition-colors duration-500 ${on ? "text-accent-ink" : ""}`}>0{i + 1}</span>
+                <span className="link-ul" data-on={on}>
+                  {s.label}
+                </span>
               </a>
             );
           })}
         </nav>
+        <div className="label hidden items-center justify-end gap-5 text-ink-3 lg:col-span-2 lg:flex">
+          <button
+            type="button"
+            onClick={onToggleGrid}
+            aria-pressed={grid}
+            title="Show the 12-column grid (G)"
+            className={`link-ul transition-colors ${grid ? "text-accent-ink" : "hover:text-ink"}`}
+          >
+            Grid
+          </button>
+          <span className="tabular text-ink" aria-hidden>
+            {pct}%
+          </span>
+        </div>
       </div>
-      <div aria-hidden className="h-px bg-transparent">
+      <div aria-hidden className="absolute inset-x-0 -bottom-px h-px">
         <div className="h-px origin-left bg-accent" style={{ transform: `scaleX(${progress})` }} />
       </div>
     </header>

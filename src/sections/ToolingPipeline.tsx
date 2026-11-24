@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { roleStacks, toolStages } from "../data/research";
 import { Eyebrow, Section, SectionHeader, TabPanel, Tabs } from "../components/ui";
 
@@ -12,88 +12,75 @@ export function ToolingPipeline() {
         id="tooling"
         index="04"
         kicker="2026 tooling pipeline"
-        title={
-          <>
-            Five stages. Every one needs <span className="italic">a human check.</span>
-          </>
-        }
-        lede="Pick your role to light up the stages and tools in your recommended stack. Standardize on one chain to avoid tool fatigue."
+        folio="p. 04 / 06"
+        title={["Five stages.", <>Each needs a <em>human check.</em></>]}
+        lede="Pick your role to light up the stages and tools in your recommended stack. Commit to one chain; tool sprawl costs more than it saves."
       />
 
-      <Tabs
-        idPrefix="role"
-        label="Your role"
-        variant="segmented"
-        value={roleId}
-        onChange={setRoleId}
-        items={roleStacks.map((r) => ({ id: r.id, label: r.label }))}
-      />
+      <div className="grid-12 gap-y-8">
+        <div className="col-span-4 lg:col-span-4">
+          <Eyebrow>Your role</Eyebrow>
+          <Tabs idPrefix="role" label="Your role" variant="segmented" value={roleId} onChange={setRoleId} items={roleStacks.map((r) => ({ id: r.id, label: r.label }))} />
+        </div>
+      </div>
 
-      <TabPanel idPrefix="role" id={roleId} className="mt-6">
-        <div className="rounded-md border border-line bg-surface p-5 sm:p-6">
-          <Eyebrow>Recommended chain · {role.label}</Eyebrow>
-          <ol className="flex flex-wrap items-center gap-x-2 gap-y-2">
+      <TabPanel idPrefix="role" id={roleId} className="mt-12">
+        <div className="grid-12 gap-y-6 border-t border-ink pt-6">
+          <p className="label col-span-4 text-ink-3 lg:col-span-2">Recommended chain</p>
+          <ol className="col-span-4 flex flex-wrap items-baseline gap-x-3 gap-y-2 lg:col-span-10">
             {role.chain.map((c, i) => (
-              <li key={c} className="flex items-center gap-2">
-                <span className="rounded-[3px] border border-ink bg-ink px-2 py-1 font-mono text-xs text-paper">{c}</span>
+              <li key={c} className="flex items-baseline gap-3">
+                <span className="font-serif text-[clamp(1.75rem,3vw,2.75rem)] leading-none tracking-tight text-ink">{c}</span>
                 {i < role.chain.length - 1 && (
-                  <span aria-hidden className="font-mono text-ink-3">
+                  <span aria-hidden className="font-mono text-sm text-accent">
                     →
                   </span>
                 )}
               </li>
             ))}
           </ol>
-          <p className="prose-measure mt-4 text-sm leading-relaxed text-ink-2">{role.summary}</p>
+          <p className="col-span-4 max-w-[60ch] text-sm leading-relaxed text-ink-2 lg:col-span-6 lg:col-start-3">{role.summary}</p>
         </div>
 
-        <ol className="relative mt-8 grid gap-3 lg:grid-cols-5">
-          {/* connector rail */}
-          <span aria-hidden className="absolute left-0 right-0 top-[18px] hidden h-px bg-line lg:block" />
-          {toolStages.map((s) => {
+        <ol className="mt-14 grid border-y border-line lg:grid-cols-5">
+          {toolStages.map((s, i) => {
             const on = role.stages.includes(s.id);
             const highlighted = role.toolsByStage[s.id] ?? [];
             return (
               <li
                 key={s.id}
                 aria-label={`Stage ${s.id}: ${s.name}${on ? ", in your stack" : ""}`}
-                className={`relative flex flex-col transition-opacity duration-300 ${on ? "opacity-100" : "opacity-60 hover:opacity-100"}`}
+                className={`panel-in relative flex flex-col border-line py-8 transition-colors duration-700 lg:px-5 lg:first:pl-0 lg:last:pr-0 ${
+                  i > 0 ? "border-t lg:border-l lg:border-t-0" : ""
+                }`}
+                style={{ animationDelay: `${i * 70}ms` } as CSSProperties}
               >
-                <span
-                  className={`relative z-10 grid size-9 place-items-center rounded-full border font-mono text-xs transition-colors duration-300 ${
-                    on ? "border-accent bg-accent text-white" : "border-line-strong bg-paper text-ink-3"
-                  }`}
-                >
-                  {s.id}
-                </span>
-                <div className={`mt-3 flex flex-1 flex-col rounded-md border p-4 transition-colors duration-300 ${on ? "border-ink bg-surface" : "border-line bg-transparent"}`}>
-                  <div className="flex items-start justify-between gap-2">
-                    <h3 className="font-medium leading-snug text-ink">{s.name}</h3>
-                  </div>
-                  <p className={`mt-1 font-mono text-[10px] uppercase tracking-wider ${on ? "text-accent-ink" : "text-ink-3"}`}>
-                    {on ? "In your stack" : "Outside this stack"}
-                  </p>
-                  <ul className="mt-3 flex flex-wrap gap-1">
-                    {s.tools.map((t) => {
-                      const hit = highlighted.includes(t);
-                      return (
-                        <li
-                          key={t}
-                          className={`rounded-[3px] border px-1.5 py-0.5 font-mono text-[10.5px] leading-4 ${
-                            hit ? "border-accent/50 bg-accent-soft text-accent-ink" : "border-line text-ink-3"
-                          }`}
-                        >
-                          {t}
-                        </li>
-                      );
-                    })}
-                  </ul>
-                  <p className="mt-3 text-xs leading-relaxed text-ink-2">{s.capabilities}</p>
-                  <div className={`mt-auto pt-4`}>
-                    <div className={`rounded border-l-2 py-2 pl-3 pr-2 text-xs leading-relaxed ${on ? "border-accent bg-accent-soft/60 text-ink" : "border-line-strong text-ink-3"}`}>
-                      <span className="mb-0.5 block font-mono text-[10px] uppercase tracking-wider">Human guardrail</span>
-                      {s.guardrail}
-                    </div>
+                <span aria-hidden className={`absolute -top-px left-0 right-0 h-[2px] origin-left bg-accent transition-transform duration-1000 ease-silk ${on ? "scale-x-100" : "scale-x-0"}`} />
+                <div className="flex items-baseline justify-between">
+                  <span className={`numeral text-[4.5rem] transition-colors duration-700 ${on ? "text-ink" : "text-ink-3/50"}`}>0{s.id}</span>
+                  <span className={`label !text-[10px] ${on ? "text-accent-ink" : "text-ink-3"}`}>{on ? "In stack" : "Outside"}</span>
+                </div>
+                <h3 className={`mt-4 text-[1.0625rem] font-medium leading-snug tracking-tight transition-colors duration-700 ${on ? "text-ink" : "text-ink-3"}`}>{s.name}</h3>
+                <ul className="mt-4 flex flex-wrap gap-1">
+                  {s.tools.map((t) => {
+                    const hit = highlighted.includes(t);
+                    return (
+                      <li
+                        key={t}
+                        className={`border px-1.5 py-[3px] font-mono text-[10.5px] leading-4 transition-colors duration-500 ${
+                          hit ? "border-accent text-accent-ink" : "border-line text-ink-3"
+                        }`}
+                      >
+                        {t}
+                      </li>
+                    );
+                  })}
+                </ul>
+                <p className="mt-4 text-xs leading-relaxed text-ink-2">{s.capabilities}</p>
+                <div className="mt-auto pt-6">
+                  <div className={`border-t pt-4 transition-colors duration-700 ${on ? "border-ink" : "border-line"}`}>
+                    <span className={`label mb-1.5 block !text-[10px] ${on ? "text-accent-ink" : "text-ink-3"}`}>Human guardrail</span>
+                    <p className={`text-xs leading-relaxed ${on ? "text-ink" : "text-ink-3"}`}>{s.guardrail}</p>
                   </div>
                 </div>
               </li>

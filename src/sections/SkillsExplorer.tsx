@@ -1,4 +1,4 @@
-import { useId, useMemo, useState } from "react";
+import { useId, useMemo, useState, type CSSProperties } from "react";
 import {
   agentArchitectureTerms,
   agentLayers,
@@ -11,50 +11,47 @@ import {
   protocols,
   type Skill,
 } from "../data/research";
-import { Disclosure, Eyebrow, Section, SectionHeader, TabPanel, Tabs, Tag } from "../components/ui";
+import { Disclosure, Eyebrow, Lines, Section, SectionHeader, TabPanel, Tabs, Tag } from "../components/ui";
 
 const domains = [
-  { id: "core", label: "Core design & judgment", sub: "Layer 1" },
-  { id: "eng", label: "Front-end & repo fluency", sub: "Layer 2" },
-  { id: "ax", label: "Agentic experience & protocols", sub: "Layer 3" },
-  { id: "patterns", label: "Human-AI pattern library", sub: "Reference" },
+  { id: "core", label: "Core design & judgment", sub: "Layer 01" },
+  { id: "eng", label: "Front-end & repo fluency", sub: "Layer 02" },
+  { id: "ax", label: "Agentic experience & protocols", sub: "Layer 03" },
+  { id: "patterns", label: "Human-AI pattern library", sub: "Appendix" },
 ];
 
 export function SkillsExplorer() {
   const [tab, setTab] = useState("core");
   return (
-    <Section id="skills" className="bg-surface/40">
+    <Section id="skills">
       <SectionHeader
         id="skills"
         index="03"
         kicker="Skills architecture"
-        title={
-          <>
-            Human discernment, technical fluency, <span className="italic">system orchestration.</span>
-          </>
-        }
-        lede="Modern product design is a layered stack. Explore each layer, from durable judgment down to the protocols agents speak."
+        folio="p. 03 / 06"
+        title={["Discernment,", "fluency,", <em>orchestration.</em>]}
+        lede="Product design is now a layered stack. Work down it, from durable judgment to the protocols agents use to talk to each other."
       />
 
       <Tabs idPrefix="skills" label="Skill domains" value={tab} onChange={setTab} items={domains} variant="list" />
 
-      <div className="mt-10">
+      <div className="mt-14 sm:mt-20">
         {tab === "core" && (
           <TabPanel idPrefix="skills" id="core">
-            <SkillGrid skills={coreSkills} cols="md:grid-cols-3" large />
-            <p className="prose-measure mt-6 text-sm leading-relaxed text-ink-3">
-              These remain the differentiator when first drafts are automated: 40% of teams report PMs and engineers now generate UI
+            <SkillLedger skills={coreSkills} large />
+            <Footnote>
+              These stay the differentiator once first drafts are automated: 40% of teams report PMs and engineers now generate UI
               directly with AI.
-            </p>
+            </Footnote>
           </TabPanel>
         )}
         {tab === "eng" && (
           <TabPanel idPrefix="skills" id="eng">
-            <SkillGrid skills={engineeringSkills} cols="sm:grid-cols-2 lg:grid-cols-4" />
-            <p className="prose-measure mt-6 text-sm leading-relaxed text-ink-3">
-              Standardize on React + TypeScript + Tailwind CSS. Learn the browser before the AI: the 6-month plan keeps AI code
-              generation off entirely in month one.
-            </p>
+            <SkillLedger skills={engineeringSkills} />
+            <Footnote>
+              Standardise on React, TypeScript and Tailwind CSS. Learn the browser before the AI: the six-month plan keeps AI code
+              generation switched off for all of month one.
+            </Footnote>
           </TabPanel>
         )}
         {tab === "ax" && (
@@ -72,16 +69,34 @@ export function SkillsExplorer() {
   );
 }
 
-function SkillGrid({ skills, cols, large = false }: { skills: Skill[]; cols: string; large?: boolean }) {
+function Footnote({ children }: { children: React.ReactNode }) {
   return (
-    <ul className={`grid gap-px overflow-hidden rounded-md border border-line bg-line ${cols}`}>
+    <div className="grid-12 mt-8">
+      <p className="col-span-4 flex gap-3 text-sm leading-relaxed text-ink-3 lg:col-span-6 lg:col-start-7">
+        <span aria-hidden className="font-mono text-accent-ink">*</span>
+        <span>{children}</span>
+      </p>
+    </div>
+  );
+}
+
+/** Skills as an index ledger: number, name, explanation, tags — one hairline row each. */
+function SkillLedger({ skills, large = false }: { skills: Skill[]; large?: boolean }) {
+  return (
+    <ol className="stagger border-t border-ink">
       {skills.map((s, i) => (
-        <li key={s.name} className="flex flex-col bg-surface p-5 sm:p-6">
-          <span className="font-mono text-[11px] text-ink-3">{String(i + 1).padStart(2, "0")}</span>
-          <h3 className={`mt-3 ${large ? "font-serif text-2xl leading-tight" : "font-medium"} text-ink`}>{s.name}</h3>
-          <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-2">{s.detail}</p>
+        <li key={s.name} className="grid-12 group gap-y-3 border-b border-line py-7 sm:py-9" style={{ "--i": i } as CSSProperties}>
+          <span className="label col-span-1 pt-2 text-ink-3 tabular">{String(i + 1).padStart(2, "0")}</span>
+          <h3
+            className={`col-span-3 tracking-tight text-ink transition-transform duration-700 ease-silk group-hover:translate-x-2 lg:col-span-4 ${
+              large ? "display-m" : "font-serif text-[1.75rem] leading-[1.05]"
+            }`}
+          >
+            {s.name}
+          </h3>
+          <p className="col-span-3 col-start-2 max-w-[56ch] leading-relaxed text-ink-2 lg:col-span-5 lg:col-start-auto">{s.detail}</p>
           {s.tags && (
-            <div className="mt-4 flex flex-wrap gap-1.5">
+            <div className="col-span-3 col-start-2 flex flex-wrap content-start gap-1.5 lg:col-span-2 lg:col-start-auto lg:justify-end">
               {s.tags.map((t) => (
                 <Tag key={t}>{t}</Tag>
               ))}
@@ -89,47 +104,50 @@ function SkillGrid({ skills, cols, large = false }: { skills: Skill[]; cols: str
           )}
         </li>
       ))}
-    </ul>
+    </ol>
   );
 }
 
 function AxPanel() {
   const [layer, setLayer] = useState(agentLayers[0].id);
   const L = agentLayers.find((l) => l.id === layer)!;
+  const layerIndex = agentLayers.findIndex((l) => l.id === layer);
 
   return (
-    <div className="space-y-14">
+    <div className="space-y-28">
       {/* Shift */}
-      <div className="grid gap-8 lg:grid-cols-12">
-        <div className="lg:col-span-7">
+      <div className="grid-12 gap-y-12">
+        <div className="col-span-4 lg:col-span-7">
           <Eyebrow>The discipline shift</Eyebrow>
-          <p className="flex flex-wrap items-baseline gap-x-3 gap-y-1 font-serif text-3xl leading-tight sm:text-4xl">
-            <span className="text-ink-3 line-through decoration-1">{axShift.from}</span>
-            <span aria-hidden className="text-accent">→</span>
+          <p className="display-l">
+            <span className="block text-ink-3 line-through decoration-[0.04em]">{axShift.from}</span>
             <span className="sr-only">shifts to</span>
-            <span className="italic">{axShift.to}</span>
+            <span className="mt-2 flex items-baseline gap-4">
+              <span aria-hidden className="font-mono text-[0.4em] text-accent">↳</span>
+              <em>{axShift.to}</em>
+            </span>
           </p>
-          <p className="prose-measure mt-4 leading-relaxed text-ink-2">{axShift.summary}</p>
+          <p className="mt-8 max-w-[52ch] leading-relaxed text-ink-2">{axShift.summary}</p>
         </div>
-        <figure className="lg:col-span-5">
-          <figcaption className="mb-3 font-mono text-[11px] uppercase tracking-wider text-ink-3">Enterprise agent maturity</figcaption>
-          <div className="flex h-9 overflow-hidden rounded-sm border border-line" role="img" aria-label="21% no adoption, 68% piloting, 11% in production">
+        <figure className="col-span-4 self-end lg:col-span-4 lg:col-start-9">
+          <figcaption className="label mb-4 text-ink-3">Enterprise agent maturity</figcaption>
+          <div className="flex h-24 border border-ink" role="img" aria-label="21% no adoption, 68% piloting, 11% in production">
             {agentMaturity.map((m) => (
               <div
                 key={m.level}
-                className={`flex items-center justify-center font-mono text-xs ${
-                  m.level === 3 ? "bg-accent text-white" : m.level === 2 ? "bg-line-strong text-ink" : "bg-sunken text-ink-2"
+                className={`flex items-end p-2 ${m.level === 3 ? "bg-accent text-[var(--on-accent)]" : m.level === 2 ? "bg-ink text-paper" : "text-ink"} ${
+                  m.level > 1 ? "border-l border-ink" : ""
                 }`}
                 style={{ width: `${m.value}%` }}
               >
-                {m.value}%
+                <span className="numeral text-2xl">{m.value}</span>
               </div>
             ))}
           </div>
-          <dl className="mt-4 space-y-2 text-sm">
+          <dl className="mt-5 text-sm">
             {agentMaturity.map((m) => (
-              <div key={m.level} className="flex gap-3">
-                <dt className="w-32 shrink-0 font-mono text-xs text-ink-3">
+              <div key={m.level} className="flex gap-3 border-b border-line py-2.5">
+                <dt className="label w-28 shrink-0 pt-0.5 text-ink-3">
                   L{m.level} · {m.label}
                 </dt>
                 <dd className="text-ink-2">{m.detail}</dd>
@@ -140,87 +158,97 @@ function AxPanel() {
       </div>
 
       {/* Capability layer explorer */}
-      <div>
-        <Eyebrow>Trust & transparency surfaces · by capability layer</Eyebrow>
-        <div className="grid gap-6 lg:grid-cols-12">
-          <div className="lg:col-span-4">
-            <Tabs
-              idPrefix="layer"
-              label="Agent capability layer"
-              variant="segmented"
-              value={layer}
-              onChange={setLayer}
-              items={agentLayers.map((l) => ({ id: l.id, label: l.name }))}
-            />
-            <p className="mt-4 text-sm leading-relaxed text-ink-2">
-              Each layer of an agent needs a visible surface. Select a layer to see what the interface should expose.
-            </p>
-          </div>
-          <TabPanel idPrefix="layer" id={layer} className="lg:col-span-8">
-            {/* Mock agent panel: illustrates where each surface lives */}
-            <div className="overflow-hidden rounded-md border border-line bg-surface">
-              <div className="flex items-center gap-2 border-b border-line px-4 py-2.5 font-mono text-[11px] text-ink-3">
-                <span className="size-2 rounded-full bg-accent" aria-hidden />
-                agent://{L.id}
-                <span className="ml-auto">layer {agentLayers.findIndex((l) => l.id === layer) + 1}/4</span>
-              </div>
-              <ul className="divide-y divide-line">
-                {L.surfaces.map((s, i) => (
-                  <li key={s} className="flex items-center gap-4 px-4 py-3.5">
-                    <span className="font-mono text-[11px] text-ink-3">{String(i + 1).padStart(2, "0")}</span>
-                    <span className="flex-1 text-ink">{s}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </TabPanel>
+      <div className="grid-12 gap-y-8">
+        <div className="col-span-4 lg:col-span-4">
+          <Eyebrow>Trust & transparency, by capability layer</Eyebrow>
+          <Tabs
+            idPrefix="layer"
+            label="Agent capability layer"
+            variant="list"
+            orientation="vertical"
+            value={layer}
+            onChange={setLayer}
+            items={agentLayers.map((l, i) => ({ id: l.id, label: l.name, sub: `L${i + 1}` }))}
+          />
+          <p className="mt-5 max-w-[36ch] text-sm leading-relaxed text-ink-3">
+            Every layer of an agent needs a surface the user can see. Pick a layer to list what the interface should expose.
+          </p>
         </div>
+        <TabPanel idPrefix="layer" id={layer} className="col-span-4 lg:col-span-7 lg:col-start-6">
+          {/* Specimen of an agent console, showing where each surface lives */}
+          <div className="border border-ink bg-surface">
+            <div className="label flex items-center gap-3 border-b border-ink px-4 py-3 text-ink-3">
+              <span className="tick text-accent" aria-hidden />
+              <span className="text-ink">agent://{L.id}</span>
+              <span className="ml-auto tabular">
+                layer {String(layerIndex + 1).padStart(2, "0")} / {String(agentLayers.length).padStart(2, "0")}
+              </span>
+            </div>
+            <ul className="stagger">
+              {L.surfaces.map((s, i) => (
+                <li key={s} className="flex items-baseline gap-5 border-b border-line px-4 py-5 last:border-b-0" style={{ "--i": i } as CSSProperties}>
+                  <span className="label text-ink-3 tabular">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="font-serif text-[1.625rem] leading-tight tracking-tight text-ink">{s}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </TabPanel>
       </div>
 
       {/* Four competency domains */}
       <div>
-        <Eyebrow>Four AX governance domains</Eyebrow>
-        <SkillGrid skills={axDomains} cols="sm:grid-cols-2" />
+        <SubLabel n="03.c" text="Four AX governance domains" />
+        <SkillLedger skills={axDomains} />
       </div>
 
       {/* Protocols */}
-      <div className="grid gap-8 lg:grid-cols-12">
-        <div className="lg:col-span-4">
+      <div className="grid-12 gap-y-10">
+        <div className="col-span-4 lg:col-span-4">
           <Eyebrow>Protocol literacy</Eyebrow>
-          <h3 className="font-serif text-3xl leading-tight">Ground the interface in how agents actually talk.</h3>
-          <p className="mt-3 text-sm leading-relaxed text-ink-2">Backend concepts worth knowing:</p>
+          <Lines as="h3" className="display-m" lines={["Ground the interface", "in how agents", <em>actually talk.</em>]} />
+          <p className="mt-6 text-sm leading-relaxed text-ink-2">Back-end concepts worth knowing:</p>
           <div className="mt-3 flex flex-wrap gap-1.5">
             {agentArchitectureTerms.map((t) => (
               <Tag key={t}>{t}</Tag>
             ))}
           </div>
         </div>
-        <div className="border-t border-line lg:col-span-8">
+        <div className="col-span-4 border-t border-ink lg:col-span-7 lg:col-start-6">
           {protocols.map((p, i) => (
             <Disclosure
               key={p.id}
               defaultOpen={i === 0}
               summary={
-                <span className="flex items-baseline gap-3">
-                  <code className="font-mono text-base text-accent-ink">{p.name}</code>
-                  <span className="text-sm font-normal text-ink-3">{p.owner}</span>
+                <span className="flex items-baseline gap-4">
+                  <code className="font-mono text-base text-ink">{p.name}</code>
+                  <span className="label text-ink-3">{p.owner}</span>
                 </span>
               }
             >
-              <dl className="grid gap-4 sm:grid-cols-2">
+              <dl className="grid gap-6 sm:grid-cols-2">
                 <div>
-                  <dt className="font-mono text-[11px] uppercase tracking-wider text-ink-3">Architectural role</dt>
-                  <dd className="mt-1 text-sm leading-relaxed text-ink-2">{p.role}</dd>
+                  <dt className="label text-ink-3">Architectural role</dt>
+                  <dd className="mt-2 text-sm leading-relaxed text-ink-2">{p.role}</dd>
                 </div>
-                <div>
-                  <dt className="font-mono text-[11px] uppercase tracking-wider text-accent-ink">What it means for design</dt>
-                  <dd className="mt-1 text-sm leading-relaxed text-ink">{p.ux}</dd>
+                <div className="border-l border-accent pl-4">
+                  <dt className="label text-accent-ink">What it means for design</dt>
+                  <dd className="mt-2 leading-relaxed text-ink">{p.ux}</dd>
                 </div>
               </dl>
             </Disclosure>
           ))}
         </div>
       </div>
+    </div>
+  );
+}
+
+function SubLabel({ n, text }: { n: string; text: string }) {
+  return (
+    <div className="label mb-6 flex gap-6 text-ink-3">
+      <span className="text-accent-ink">[{n}]</span>
+      <span className="text-ink">{text}</span>
     </div>
   );
 }
@@ -247,25 +275,21 @@ function PatternLibrary() {
 
   return (
     <div>
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
-        <div className="relative lg:w-80">
-          <label htmlFor={searchId} className="sr-only">
-            Search patterns
+      <div className="grid-12 gap-y-6">
+        <div className="col-span-4 lg:col-span-5">
+          <label htmlFor={searchId} className="label block text-ink-3">
+            Search the taxonomy
           </label>
-          <svg aria-hidden viewBox="0 0 16 16" className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-ink-3" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <circle cx="7" cy="7" r="4.5" />
-            <path d="M10.5 10.5L14 14" />
-          </svg>
           <input
             id={searchId}
             type="search"
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Search e.g. “consent”, HITL, voice"
-            className="w-full rounded-md border border-line bg-surface py-2 pl-9 pr-3 text-sm text-ink placeholder:text-ink-3 focus:border-ink focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            placeholder="consent, HITL, voice…"
+            className="input-line mt-1"
           />
         </div>
-        <div role="group" aria-label="Filter by category" className="flex flex-wrap gap-1.5">
+        <div role="group" aria-label="Filter by category" className="col-span-4 flex flex-wrap content-end gap-x-5 gap-y-2 lg:col-span-6 lg:col-start-7">
           <FilterChip on={cat === null} onClick={() => setCat(null)}>
             All
           </FilterChip>
@@ -277,35 +301,39 @@ function PatternLibrary() {
         </div>
       </div>
 
-      <p className="mt-4 font-mono text-xs text-ink-3" aria-live="polite">
-        {count} named mechanisms shown · drawn from a 32-pattern taxonomy
+      <p className="label mt-8 text-ink-3" aria-live="polite">
+        <span className="tabular text-ink">{String(count).padStart(2, "0")}</span> named mechanisms shown — from a 32-pattern taxonomy
       </p>
 
       {results.length === 0 ? (
-        <div className="mt-6 rounded-md border border-dashed border-line-strong p-10 text-center">
-          <p className="text-ink">No patterns match “{q}”.</p>
+        <div className="mt-6 border-y border-line py-16">
+          <p className="display-m text-ink">Nothing matches “{q}”.</p>
           <button
             type="button"
             onClick={() => {
               setQ("");
               setCat(null);
             }}
-            className="mt-3 text-sm text-accent-ink underline underline-offset-4"
+            className="link-ul-static label mt-6 text-ink"
           >
             Clear filters
           </button>
         </div>
       ) : (
-        <div className="mt-6 grid gap-4 md:grid-cols-2">
-          {results.map((c) => (
-            <article key={c.id} className="fade-in rounded-md border border-line bg-surface p-5">
-              <h3 className="font-serif text-2xl leading-tight">{c.name}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-ink-2">{c.objective}</p>
-              <ul className="mt-5 divide-y divide-line border-t border-line">
+        <div className="mt-6 grid border-t border-ink md:grid-cols-2">
+          {results.map((c, i) => (
+            <article
+              key={c.id}
+              className={`panel-in border-b border-line py-8 md:py-10 ${i % 2 === 0 ? "md:border-r md:pr-8" : "md:pl-8"}`}
+              style={{ animationDelay: `${i * 60}ms` }}
+            >
+              <h3 className="display-m">{c.name}</h3>
+              <p className="mt-3 max-w-[48ch] text-sm leading-relaxed text-ink-2">{c.objective}</p>
+              <ul className="mt-6 border-t border-line">
                 {c.patterns.map((p) => (
-                  <li key={p.code} className="flex items-center gap-3 py-2">
-                    <code className="w-16 shrink-0 font-mono text-[11px] text-accent-ink">{p.code}</code>
-                    <span className="text-sm text-ink">{p.name}</span>
+                  <li key={p.code} className="group flex items-baseline gap-4 border-b border-line py-2.5 last:border-b-0">
+                    <code className="w-14 shrink-0 font-mono text-[11px] text-accent-ink">{p.code}</code>
+                    <span className="text-[0.9375rem] text-ink transition-transform duration-500 ease-silk group-hover:translate-x-1">{p.name}</span>
                   </li>
                 ))}
               </ul>
@@ -323,11 +351,12 @@ function FilterChip({ on, onClick, children }: { on: boolean; onClick: () => voi
       type="button"
       aria-pressed={on}
       onClick={onClick}
-      className={`rounded-full border px-3 py-1 text-xs transition-colors ${
-        on ? "border-ink bg-ink text-paper" : "border-line bg-surface text-ink-2 hover:border-ink hover:text-ink"
-      }`}
+      className={`label flex items-center gap-2 py-1 transition-colors duration-500 ${on ? "text-ink" : "text-ink-3 hover:text-ink"}`}
     >
-      {children}
+      <span aria-hidden className={`tick transition-transform duration-500 ease-silk ${on ? "scale-100 text-accent" : "scale-0"}`} />
+      <span className="link-ul" data-on={on}>
+        {children}
+      </span>
     </button>
   );
 }
