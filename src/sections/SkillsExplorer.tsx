@@ -12,7 +12,7 @@ import {
   type Skill,
 } from "../data/research";
 import { Glyph, type GlyphName } from "../components/icons";
-import { Disclosure, Eyebrow, Lines, Section, SectionHeader, TabPanel, Tabs, Tag, useTabList } from "../components/ui";
+import { Disclosure, Lines, Section, SectionHeader, TabPanel, Tabs, Tag, useTabList } from "../components/ui";
 
 const patternTotal = patternCategories.reduce((n, c) => n + c.patterns.length, 0);
 
@@ -155,7 +155,7 @@ function AxPanel() {
   const layerIndex = agentLayers.findIndex((l) => l.id === layer);
 
   return (
-    <div className="space-y-28">
+    <div className="space-y-24 sm:space-y-36">
       {/* Shift */}
       <div className="grid-12 gap-y-12">
         <div className="col-span-4 lg:col-span-7">
@@ -200,7 +200,7 @@ function AxPanel() {
       {/* Capability layer explorer */}
       <div className="grid-12 gap-y-8">
         <div className="col-span-4 lg:col-span-4">
-          <Eyebrow>Trust & transparency, by capability layer</Eyebrow>
+          <h3 className="display-m mb-8 text-ink">Trust and transparency, layer by layer</h3>
           <Tabs
             idPrefix="layer"
             label="Agent capability layer"

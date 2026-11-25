@@ -221,13 +221,14 @@ export function Eyebrow({ children, className = "" }: { children: ReactNode; cla
   return <p className={`label mb-4 text-ink-3 ${className}`}>{children}</p>;
 }
 
+/** Subsection heading: sits on a heavy rule, one step below the page title and above card titles. */
 export function SubHead({ n, title, note }: { n: string; title: string; note?: string }) {
   return (
-    <div className="mb-8 grid-12 gap-y-3" data-n={n}>
+    <div className="mb-10 grid-12 gap-y-3 border-t-2 border-edge pt-6 sm:mb-14 sm:pt-8" data-n={n}>
       <div className="col-span-4 lg:col-span-12">
-        <Lines as="h3" lines={[title]} className="display-m text-ink" />
+        <Lines as="h2" lines={[title]} className="display-l text-ink" />
         {note && (
-          <p data-reveal className="prose-measure mt-3 text-sm text-ink-3">
+          <p data-reveal className="prose-measure mt-4 leading-relaxed text-ink-2">
             {note}
           </p>
         )}

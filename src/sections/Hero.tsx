@@ -130,7 +130,7 @@ export function HandoffEconomics() {
           </div>
         </div>
 
-        <div className="col-span-4 space-y-24 lg:col-span-7 lg:col-start-6">
+        <div className="col-span-4 space-y-24 sm:space-y-32 lg:col-span-7 lg:col-start-6">
           <HandoffFlow />
 
           {/* Evidence: opened on request so the page stays short */}

@@ -82,7 +82,7 @@ export function Roadmap() {
         </a>
       </p>
 
-      <div {...panelProps(track)} key={track} className="panel-in mt-24 focus-visible:outline-offset-8">
+      <div {...panelProps(track)} key={track} className="panel-in mt-24 focus-visible:outline-offset-8 sm:mt-32">
         {track === "a" ? <TrackA /> : <TrackB />}
       </div>
     </Section>
@@ -105,7 +105,7 @@ function TrackA() {
   });
 
   return (
-    <div className="space-y-28">
+    <div className="space-y-24 sm:space-y-36">
       {/* Track chooser */}
       <div>
         <SubHead n="A.1" title="Choose your track" />
@@ -285,7 +285,7 @@ function TrackB() {
   });
 
   return (
-    <div className="space-y-28">
+    <div className="space-y-24 sm:space-y-36">
       {/* 4-stage plan */}
       <div>
         <SubHead n="B.1" title="A four-stage launch plan" />
