@@ -252,12 +252,12 @@ export const comparison: CompareRow[] = [
     hybrid: "Live web apps, public GitHub repos, token systems and working production code.",
   },
   {
-    dimension: "Core skill assessment",
+    dimension: "What gets tested",
     traditional: "Visual craft, UX research methods and fluency in design tools like Figma.",
     hybrid: "Code quality (HTML, CSS, JS, React), component structure, accessibility (ARIA), design tokens and AI tools.",
   },
   {
-    dimension: "Iteration velocity",
+    dimension: "How fast work moves",
     traditional: "Engineers build the design in code. Speed depends on how smooth the handoff is.",
     hybrid: "You take an idea from visual design to working code, with engineers reviewing.",
   },
@@ -286,7 +286,7 @@ export const coreSkills: Skill[] = [
   {
     name: "Human craft, visual taste & curation",
     detail:
-      "Visual hierarchy, small interaction details, typography and judgment. These still matter when AI makes the first draft. Over 80% of designers trust their own taste, not tools, for design decisions.",
+      "Visual hierarchy, small interaction details, typography and judgment. These still matter when AI makes the first draft. Over 80% of designers still rely on their own judgment over AI (AI in Design Report 2026).",
     tags: ["Craft"],
   },
   {
@@ -583,7 +583,7 @@ export const roleStacks: RoleStack[] = [
     label: "Creative Production",
     chain: ["Adobe Creative Cloud", "Firefly AI Assistant", "Claude Creative Connectors"],
     summary:
-      "Produce more, faster, with Claude Creative Connectors and Firefly AI Assistant inside your usual design, 3D and media tools.",
+      "Resize assets, grade color and script repeat tasks in bulk with Claude Creative Connectors and Firefly AI Assistant, inside your usual design, 3D and media tools.",
     stages: [5],
     toolsByStage: { 5: ["Claude Creative Connectors", "Adobe Firefly AI Assistant"] },
   },
@@ -596,7 +596,7 @@ export const trackAOptions = [
     id: "pde",
     name: "Product Design Engineer",
     for: "Visual craft, small interaction details, component systems and owning the code.",
-    stack: ["React", "TypeScript", "Tailwind CSS", "Git", "AI-native IDEs"],
+    stack: ["React", "TypeScript", "Tailwind CSS", "Git", "AI code editors (Cursor, Claude Code)"],
   },
   {
     id: "meta",
@@ -701,10 +701,10 @@ export const hybridPortfolio: ChecklistItem[] = [
 /* ───────────── §4 Track B: beginners ───────────── */
 
 export const beginnerContext = [
-  { value: "−65%", label: "Entry-level hiring at big tech" },
-  { value: "−76%", label: "Junior hiring at startups" },
-  { value: "300–800", label: "Applications per job post" },
-  { value: "~90%", label: "Hiring managers who expect a strong junior portfolio" },
+  { value: "−65%", label: "Entry-level hiring at big tech", source: "SignalFire" },
+  { value: "−76%", label: "Junior hiring at startups", source: "SignalFire" },
+  { value: "300–800", label: "Applications per job post", source: "Personal.ink; Bootcamp (Medium)" },
+  { value: "~90%", label: "Hiring managers who expect a strong junior portfolio", source: "UX Pilot, citing State of UX Hiring" },
 ];
 
 export const launchStages = [
@@ -713,13 +713,13 @@ export const launchStages = [
     name: "Learn the lasting basics",
     detail:
       "Before you use AI screen tools, learn usability, accessibility (WCAG), typography, information architecture and interaction patterns. Take real products apart to see where they fail and why.",
-    output: "Basics you can explain, not just use",
+    output: "Basics you can explain",
   },
   {
     n: 2,
     name: "Prototype in code",
     detail:
-      "Learn HTML and CSS alongside AI prototyping tools (Figma Make, v0, Lovable, Bolt, Cursor). Build prototypes that really work in a browser, not drawings on a canvas.",
+      "Learn HTML and CSS alongside AI prototyping tools (Figma Make, v0, Lovable, Bolt, Cursor). Build prototypes that run in a browser.",
     output: "Working prototypes in a browser",
   },
   {
@@ -753,11 +753,11 @@ export const juniorChecklist: ChecklistItem[] = [
   {
     id: "changed",
     title: "Show how your thinking changed",
-    detail: "Share raw findings, ideas you dropped and test results that made you change course. Be honest, not neat and linear.",
+    detail: "Share raw findings, ideas you dropped and test results that made you change course. Show the messy path honestly.",
   },
   {
     id: "functional",
-    title: "Working proof, not just mockups",
+    title: "Working proof",
     detail: "Link to live apps (Vercel, Lovable, React builds) or videos that show real interactions.",
   },
   {
@@ -920,4 +920,9 @@ export const glossary: { term: string; meaning: string }[] = [
   { term: "Super IC", meaning: "A senior hands-on expert who covers work once split across several roles." },
   { term: "Product-led company", meaning: "A company where the product itself drives growth, so design gets more weight." },
   { term: "RAG (retrieval-augmented generation)", meaning: "AI looks up facts in your documents before it answers." },
+  { term: "IC1 / IC2", meaning: "Career levels for individual contributors. IC1 is entry level; IC2 is the next step up." },
+  { term: "Seed-stage startup", meaning: "A young company on its first round of outside funding, usually with a small team." },
+  { term: "WCAG", meaning: "The Web Content Accessibility Guidelines: the standard checklist for making sites usable by everyone." },
+  { term: "SaaS", meaning: "Software as a service: software you use in the browser on a subscription, like Figma or Notion." },
+  { term: "B2B", meaning: "Business to business: products sold to companies rather than to individual people." },
 ];

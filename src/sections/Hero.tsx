@@ -6,31 +6,19 @@ import {
   heroMetrics,
   marketMetrics,
   orgFlattening,
-  patternCategories,
-  sources,
 } from "../data/research";
 import { ArchetypeVenn } from "../components/ArchetypeVenn";
 import { HandoffFlow } from "../components/HandoffFlow";
 import { HandoffPlate } from "../components/HandoffPlate";
 import { HeroStage } from "../components/HeroStage";
 import { ArchetypeGlyph, ArrowGlyph } from "../components/icons";
-import { BasisBadge, CountUp, Disclosure, Eyebrow, FolderTab, Lines, Roll, TRACK_A_OPTION_KEY, Tag, useMediaQuery, useStoredChoice, useTabList, useTrack } from "../components/ui";
-
-const patternCount = patternCategories.reduce((n, c) => n + c.patterns.length, 0);
+import { BasisBadge, CountUp, Disclosure, Eyebrow, Lines, Roll, TRACK_A_OPTION_KEY, Tag, useMediaQuery, useStoredChoice, useTabList, useTrack } from "../components/ui";
 
 export function Hero() {
   return (
     <section id="shift" aria-labelledby="shift-title" className="relative">
       <div id="top" className="wrap pt-5 sm:pt-8">
-        {/* Running head */}
-        <div className="grid-12 label gap-y-2 text-ink-3" data-reveal>
-          <p className="col-span-1 text-accent-ink lg:col-span-2">[00]</p>
-          <p className="col-span-3 text-ink lg:col-span-4">Product Designer → Design Engineer, Meta-Designer, AX</p>
-          <p className="hidden lg:col-span-3 lg:block">Vol. 01 — November 2026</p>
-          <p className="hidden text-right lg:col-span-3 lg:block">Six chapters</p>
-        </div>
-
-        <div className="grid-12 mt-10 gap-y-10 sm:mt-14 lg:items-end">
+        <div className="grid-12 mt-6 gap-y-10 sm:mt-10 lg:items-end">
           <div className="col-span-4 lg:col-span-5 lg:row-start-1">
             <Lines
               as="h1"
@@ -42,10 +30,7 @@ export function Hero() {
           </div>
 
           <div className="col-span-4 lg:col-span-5 lg:row-start-2">
-            <p className="label text-accent-ink" data-reveal style={{ "--d": "450ms" } as CSSProperties}>
-              For working product designers, and people just starting out
-            </p>
-            <p className="lede mt-4 !max-w-[38ch] !text-ink" data-reveal style={{ "--d": "500ms" } as CSSProperties}>
+            <p className="lede !max-w-[38ch] !text-ink" data-reveal style={{ "--d": "500ms" } as CSSProperties}>
               AI tools make it faster to turn a design into working code, so more designers now build alongside developers. This guide
               shows three roles growing out of that shift, and a six-month path into one.
             </p>
@@ -56,15 +41,6 @@ export function Hero() {
             <a href="#/ready" className="hit link-ul-static mt-6 inline-block text-[0.9375rem] font-medium text-ink" data-reveal style={{ "--d": "700ms" } as CSSProperties}>
               Or check if your portfolio is ready
             </a>
-            <p className="label mt-9 flex flex-wrap gap-x-4 gap-y-1 text-ink-3" data-reveal style={{ "--d": "750ms" } as CSSProperties}>
-              <span>06 chapters</span>
-              <span aria-hidden>·</span>
-              <span>{patternCount} named patterns</span>
-              <span aria-hidden>·</span>
-              <span>{sources.length} sources</span>
-              <span aria-hidden>·</span>
-              <span>Rev. 2026.11</span>
-            </p>
           </div>
 
           <div className="col-span-4 lg:col-span-7 lg:col-start-6 lg:row-span-2 lg:row-start-1 lg:self-center" data-reveal style={{ "--d": "350ms" } as CSSProperties}>
@@ -73,34 +49,12 @@ export function Hero() {
         </div>
       </div>
 
-      {/* Figures: one index card per statistic */}
+      {/* The short answer, then one index card per statistic */}
       <div className="wrap mt-24 sm:mt-32">
-        <dl className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
-          {heroMetrics.map((m, i) => (
-            <div
-              key={m.label}
-              data-reveal
-              style={{ "--i": i } as CSSProperties}
-              className="card card-lift flex min-h-[17rem] flex-col sm:min-h-[21rem]"
-            >
-              <dt className="order-3 mt-4 max-w-[26ch] px-4 text-sm leading-snug text-ink-2 sm:px-5">{m.label}</dt>
-              <dd className="card-head label order-1">
-                <span>Fig. 0{i + 1}</span>
-                {i === 0 && <span>Lead</span>}
-              </dd>
-              <dd className={`numeral order-2 mt-auto px-4 pt-8 text-[clamp(3rem,6vw,6.25rem)] sm:px-5 ${i === 0 ? "text-accent" : "text-ink"}`}>
-                <CountUp value={m.value} />
-              </dd>
-              <dd className="card-foot label order-4 mt-5 text-ink-3 sm:px-5">{m.source}</dd>
-            </div>
-          ))}
-        </dl>
-
-        {/* The question an anxious reader brings, answered next to the scariest number */}
-        <div data-reveal className="card card-accent mt-8 grid gap-y-6 sm:mt-10 lg:grid-cols-12">
+        {/* The question an anxious reader brings, answered before the hard numbers */}
+        <div data-reveal className="card card-accent grid gap-y-6 lg:grid-cols-12">
           <p className="card-head label lg:col-span-12">
             <span>Is my job going away?</span>
-            <span className="hidden sm:inline">The short answer</span>
           </p>
           <div className="px-5 sm:px-7 lg:col-span-4 lg:pb-7">
             <p className="numeral text-[clamp(4rem,8vw,7rem)] text-accent">+6%</p>
@@ -108,7 +62,7 @@ export function Hero() {
             <p className="label mt-2 text-ink-3">US BLS projection</p>
           </div>
           <div className="px-5 pb-7 sm:px-7 lg:col-span-8 lg:pl-0 lg:pt-1">
-            <p className="font-display text-[clamp(1.75rem,3vw,2.75rem)] leading-[1.05] tracking-tight text-ink">No. It's moving.</p>
+            <p className="font-display text-[clamp(1.75rem,3vw,2.75rem)] leading-[1.05] tracking-tight text-ink">No, but it's changing.</p>
             <p className="mt-4 max-w-[58ch] leading-relaxed text-ink-2">
               Big-tech hiring for some design roles is down. But design jobs overall are still projected to grow, and half of designers
               already ship some AI-generated code. Your design skills still matter most; what's growing is demand for designers who can
@@ -119,6 +73,26 @@ export function Hero() {
             </a>
           </div>
         </div>
+
+        <dl className="mt-8 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4 sm:mt-10">
+          {heroMetrics.map((m, i) => (
+            <div
+              key={m.label}
+              data-reveal
+              style={{ "--i": i } as CSSProperties}
+              className="card card-lift flex min-h-[17rem] flex-col sm:min-h-[21rem]"
+            >
+              <dt className="order-3 mt-4 max-w-[26ch] px-4 text-sm leading-snug text-ink-2 sm:px-5">{m.label}</dt>
+              <dd className="card-head label order-1">
+                                <BasisBadge basis={m.basis} onBand />
+              </dd>
+              <dd className={`numeral order-2 mt-auto px-4 pt-8 text-[clamp(3rem,6vw,6.25rem)] sm:px-5 ${i === 0 ? "text-accent" : "text-ink"}`}>
+                <CountUp value={m.value} />
+              </dd>
+              <dd className="card-foot label order-4 mt-5 text-ink-3 sm:px-5">{m.source}</dd>
+            </div>
+          ))}
+        </dl>
       </div>
 
     </section>
@@ -144,12 +118,11 @@ export function HandoffEconomics() {
       <div className="grid-12 gap-y-16">
         <div className="col-span-4 lg:col-span-4">
           <div className="lg:sticky lg:top-24">
-            <Eyebrow className="text-accent-ink">Why this is happening</Eyebrow>
             <Lines as="h2" className="display-l text-ink" lines={["Handoffs are", "the bottleneck."]} />
             <p className="mt-8 max-w-[42ch] leading-relaxed text-ink-2" data-reveal>
-              Moving a design from Figma into code takes time, and details can get lost between tools. In Figma's 2025 research,
-              almost every designer and developer named handoff as a main bottleneck. Only 1 designer in 5 sees a first build that
-              matches the design. That is a process problem, not a people problem.
+              Moving a design from Figma into code takes time, and details can get lost between tools. In Figma's 2025
+              research, nearly all designers and developers said the handoff could be improved. Only 1 designer in 5 sees a first build that
+              matches the design. The fix belongs in the process.
             </p>
             <div data-reveal className="mt-10 max-w-[440px]">
               <HandoffPlate />
@@ -162,7 +135,7 @@ export function HandoffEconomics() {
 
           {/* Evidence: opened on request so the page stays short */}
           <div className="border-t-2 border-edge [&>div]:border-b-0">
-          <Disclosure summary="See the evidence: case studies and survey data" meta={<Tag>4 sources</Tag>}>
+          <Disclosure summary="See the evidence: case studies and survey data">
           <div className="space-y-12 pt-2">
           <div className="space-y-8">
             {handoffCases.map((c, i) => (
@@ -255,7 +228,7 @@ export function HandoffEconomics() {
           </div>
 
           <div className="card px-5 sm:px-7 [&>div]:border-b-0">
-            <Disclosure summary="Every market figure, with scope and source" meta={<Tag>{marketMetrics.length} rows</Tag>}>
+            <Disclosure summary="Every market figure, with scope and source">
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[560px] text-left text-sm">
                   <caption className="sr-only">Industry metrics 2025–2026</caption>
@@ -306,10 +279,7 @@ export function Archetypes() {
   return (
     <div id="archetypes" className="wrap pb-24 pt-8 sm:pb-36 sm:pt-12">
       <header className="mb-12 pt-10 sm:mb-16">
-        <FolderTab index="Roles">
-          <p className="label text-ink">Three new roles</p>
-        </FolderTab>
-        <div className="grid-12 mt-10 gap-y-8 sm:mt-14">
+        <div className="grid-12 gap-y-8">
           <Lines as="h1" id="roles-title" className="display-xl col-span-4 lg:col-span-7" lines={["Which role", <>fits <em>you?</em></>]} />
           <p data-reveal className="lede col-span-4 self-end lg:col-span-4 lg:col-start-9">
             Design work is splitting into three new roles. Pick the one that sounds most like you to see what it does, and how to
@@ -319,7 +289,7 @@ export function Archetypes() {
       </header>
 
       {/* Archetype cards: tab sticks out of each; the chosen one is pressed into the desk */}
-      <div {...listProps} aria-label="Role archetypes" className="grid gap-x-6 gap-y-10 pt-7 lg:grid-cols-3">
+      <div {...listProps} aria-label="Role archetypes" className="grid gap-x-6 gap-y-10 lg:grid-cols-3">
         {archetypes.map((x, i) => {
           const on = x.id === sel;
           return (
@@ -328,11 +298,7 @@ export function Archetypes() {
               {...tabProps(x.id, i)}
               className={`card card-lift group flex flex-col p-5 text-left sm:min-h-[17rem] sm:p-6 ${on ? "card-on" : ""}`}
             >
-              <span className="card-tab label tabular">0{i + 1}</span>
-              <span className="flex items-start justify-between gap-4">
-                <ArchetypeGlyph id={x.id} on={on} className={`glyph-xl !size-20 ${on ? "text-ink" : "text-ink-3 group-hover:text-ink"}`} />
-                <span className={`label ${on ? "text-accent-ink" : "text-ink-3"}`}>{on ? "Open ↓" : "Pick"}</span>
-              </span>
+              <ArchetypeGlyph id={x.id} on={on} className={`glyph-xl !size-20 ${on ? "text-ink" : "text-ink-3 group-hover:text-ink"}`} />
               <span className={`display-m mt-auto pt-6 transition-colors sm:pt-10 duration-300 ${on ? "text-ink" : "text-ink-2 group-hover:text-ink"}`}>{x.name}</span>
               <span className="mt-3 text-sm text-ink-2">{x.focus}</span>
               <span className="label mt-5 border-t border-line pt-3 text-ink-3">{x.short}</span>
@@ -405,7 +371,7 @@ export function Archetypes() {
 
       {/* The overlap map, for readers who want it */}
       <div className="mt-12 border-t-2 border-edge [&>div]:border-b-0">
-        <Disclosure summary="How the three roles overlap" meta={<Tag>Skill map</Tag>}>
+        <Disclosure summary="How the three roles overlap">
           <ArchetypeVenn selected={sel} />
         </Disclosure>
       </div>

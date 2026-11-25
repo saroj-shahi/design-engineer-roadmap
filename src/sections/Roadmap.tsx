@@ -11,7 +11,7 @@ import {
   sixMonthPlan,
   trackAOptions,
 } from "../data/research";
-import { CheckRow, Eyebrow, Meter, Section, SectionHeader, SubHead, Tag, TRACK_A_OPTION_KEY, replaceHash, usePersistentSet, useStoredChoice, useTabList, useTrack, type Track } from "../components/ui";
+import { CheckRow, Eyebrow, Meter, pageHref, Section, SectionHeader, SubHead, Tag, TRACK_A_OPTION_KEY, replaceHash, usePersistentSet, useStoredChoice, useTabList, useTrack, type Track } from "../components/ui";
 
 
 /** The six months fall into three two-month phases; notes are the months' own AI policies. */
@@ -29,7 +29,7 @@ export function Roadmap() {
   };
   const tracks = [
     { id: "a" as const, glyph: "stairs" as const, kicker: "Track A", title: "I'm a practising product designer", sub: "Evolve into a hybrid role" },
-    { id: "b" as const, glyph: "launch" as const, kicker: "Track B", title: "I'm starting out", sub: "Launch as a code-literate builder" },
+    { id: "b" as const, glyph: "launch" as const, kicker: "Track B", title: "I'm starting out", sub: "Get your first role, with code in your portfolio" },
   ];
   const { listProps, tabProps, panelProps } = useTabList({
     ids: tracks.map((t) => t.id),
@@ -42,13 +42,9 @@ export function Roadmap() {
     <Section id="roadmap">
       <SectionHeader
         id="roadmap"
-        index="Plan"
         level="h1"
-        kicker="Dual career roadmap"
-        folio="p. 05 / 06"
         glyph="route"
-        plate="The route"
-        title={["Your plan,", <em>month by month.</em>]}
+        title={["Your plan,", <em>step by step.</em>]}
         lede="Pick where you are today. The plan changes to match. Your ticks are saved in this browser only."
       />
 
@@ -67,10 +63,7 @@ export function Roadmap() {
                 aria-hidden
                 className={`absolute inset-0 -z-10 origin-bottom bg-inverse transition-transform duration-[900ms] ease-silk ${on ? "scale-y-100" : "scale-y-0"}`}
               />
-              <span className="flex items-baseline justify-between">
-                <span className={`label ${on ? "text-inverse-muted" : "text-ink-3"}`}>{t.kicker}</span>
-                <span className={`label ${on ? "text-inverse-accent" : "text-ink-3"}`}>{on ? "Reading" : "Select"}</span>
-              </span>
+              <span className={`label ${on ? "text-inverse-muted" : "text-ink-3"}`}>{t.kicker}</span>
               <span className="mt-auto flex items-end justify-between gap-4">
                 <span className="numeral text-[clamp(4rem,8vw,7rem)]">{t.id.toUpperCase()}</span>
                 <Glyph name={t.glyph} on={on} className="glyph-xl !size-20 sm:!size-28" />
@@ -81,6 +74,13 @@ export function Roadmap() {
           );
         })}
       </div>
+
+      <p className="mt-6 text-sm text-ink-3">
+        New to a term like PR, tokens or MCP?{" "}
+        <a href={pageHref("library", "glossary")} className="hit link-ul-static font-medium text-ink">
+          See the glossary
+        </a>
+      </p>
 
       <div {...panelProps(track)} key={track} className="panel-in mt-24 focus-visible:outline-offset-8">
         {track === "a" ? <TrackA /> : <TrackB />}
@@ -108,7 +108,7 @@ function TrackA() {
     <div className="space-y-28">
       {/* Track chooser */}
       <div>
-        <SubHead n="A.1" title="Choose your evolution track" />
+        <SubHead n="A.1" title="Choose your track" />
         <fieldset className="min-w-0">
           <legend className="sr-only">Evolution track</legend>
           <div className="grid gap-6 md:grid-cols-2">
@@ -142,13 +142,13 @@ function TrackA() {
         <p className="mt-6 max-w-[62ch] text-sm leading-relaxed text-ink-3" aria-live="polite">
           {choice === "pde"
             ? "Follow the full six-month plan below to reach production pull requests."
-            : "Use the six-month plan below for the front-end literacy you need to audit AI-generated code, then apply it to tokens, Figma MCP context and agent trust protocols."}
+            : "Use the six-month plan below to learn enough front-end to review AI code. Then use it on design tokens, Figma MCP and rules for when agents need a person."}
         </p>
       </div>
 
       {/* 6-month timeline */}
       <div>
-        <SubHead n="A.2" title="A six-month technical transition" note="Browser standards first, AI acceleration second. Standardised on React, TypeScript and Tailwind." />
+        <SubHead n="A.2" title="A six-month technical transition" note="Learn the browser before AI tools. The plan uses React, TypeScript and Tailwind." />
 
         <ol aria-label="Phases" className="mb-3 grid grid-cols-6 gap-x-2">
           {phases.map((p) => {
@@ -225,7 +225,7 @@ function TrackA() {
       {/* Leverage + portfolio */}
       <div className="grid gap-y-24 lg:grid-cols-12 lg:gap-x-6">
         <div className="lg:col-span-5">
-          <SubHead n="A.3" title="In-role leverage" />
+          <SubHead n="A.3" title="Using it in your current job" />
           <Meter value={habits.set.size} max={leverageHabits.length} label="Habits in place" />
           <ul className="card mt-6 px-5 sm:px-6 [&>li:last-child]:border-b-0">
             {leverageHabits.map((h, i) => (
@@ -315,7 +315,7 @@ function TrackB() {
       </div>
 
       <div>
-        <SubHead n="B.2" title="The market you're entering" note="Crowded, not closed. Seed-stage startups have the highest design hiring rate (25%), and a portfolio with something that runs puts you ahead of most of the 300–800 applicants per role." />
+        <SubHead n="B.2" title="The market you're entering" note="Seed-stage startups have the highest design hiring rate (25%), and a portfolio with something that runs puts you ahead of most of the 300–800 applicants per role." />
         <dl className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-4">
           {beginnerContext.map((c, i) => (
             <div
@@ -326,6 +326,7 @@ function TrackB() {
             >
               <dt className="order-2 mt-3 text-sm text-ink-2">{c.label}</dt>
               <dd className="numeral order-1 text-[clamp(3rem,6vw,5.5rem)]">{c.value}</dd>
+              <dd className="label order-3 mt-auto pt-4 text-ink-3">{c.source}</dd>
             </div>
           ))}
         </dl>

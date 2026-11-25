@@ -2,7 +2,7 @@ import { Comparison } from "../sections/Comparison";
 import { SkillsExplorer } from "../sections/SkillsExplorer";
 import { ToolingPipeline } from "../sections/ToolingPipeline";
 import { glossary } from "../data/research";
-import { FolderTab, Lines, Tabs, pageHref } from "../components/ui";
+import { Lines, NextPage, Tabs, pageHref } from "../components/ui";
 
 const shelves = [
   { id: "compare", label: "Compare roles" },
@@ -18,10 +18,7 @@ export function Library({ shelf: raw }: { shelf?: string }) {
   return (
     <div className="pt-8 sm:pt-12">
       <header className="wrap pb-12 pt-10 sm:pb-16">
-        <FolderTab index="Library">
-          <p className="label text-ink">Reference</p>
-        </FolderTab>
-        <Lines as="h1" id="library-title" className="display-xl mt-10 text-ink sm:mt-14" lines={["Go deeper,", <em>when you want to.</em>]} />
+        <Lines as="h1" id="library-title" className="display-xl text-ink" lines={["Go deeper,", <em>when you want to.</em>]} />
         <p className="lede mt-8" data-reveal>
           You don't need any of this to start. Open a shelf when a question comes up.
         </p>
@@ -45,6 +42,7 @@ export function Library({ shelf: raw }: { shelf?: string }) {
         {shelf === "tools" && <ToolingPipeline />}
         {shelf === "glossary" && <Glossary />}
       </div>
+      <NextPage to="plan" title="Back to your plan" note="Pick up where you left off, one month or stage at a time." />
     </div>
   );
 }

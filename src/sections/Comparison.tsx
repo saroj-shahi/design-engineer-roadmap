@@ -14,11 +14,7 @@ export function Comparison() {
     <Section id="compare">
       <SectionHeader
         id="compare"
-        index="Compare"
-        kicker="Role comparison"
-        folio="p. 02 / 06"
         glyph="compare"
-        plate="Two roles"
         title={["What changes", <>when you <em>build it too.</em></>]}
         lede="Two valid ways to do design work, side by side, and how hiring teams judge each one."
       />
@@ -92,10 +88,9 @@ export function Comparison() {
                 </tr>
               </thead>
               <tbody>
-                {comparison.map((r, i) => (
+                {comparison.map((r) => (
                   <tr key={r.dimension} className="border-b border-line align-top">
                     <th scope="row" className="py-6 pr-6 font-normal">
-                      <span className="label mr-3 text-ink-3">{String(i + 1).padStart(2, "0")}</span>
                       <span className="font-display text-2xl leading-tight tracking-tight text-ink">{r.dimension}</span>
                     </th>
                     <td className="py-6 pr-6 leading-relaxed text-ink-2">{r.traditional}</td>

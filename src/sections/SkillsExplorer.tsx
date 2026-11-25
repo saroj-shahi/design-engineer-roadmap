@@ -29,13 +29,9 @@ export function SkillsExplorer() {
     <Section id="skills">
       <SectionHeader
         id="skills"
-        index="Skills"
-        kicker="Skills architecture"
-        folio="p. 03 / 06"
         glyph="layers"
-        plate="The stack"
         title={["What to learn,", <em>layer by layer.</em>]}
-        lede="Start with the judgment AI can't replace. Then front-end skills. Then how to design products that use AI agents."
+        lede="Start with the judgment AI can't replace, add front-end skills, then learn to design products that use AI agents."
       />
 
       <LayerStack value={tab} onChange={setTab} />
@@ -45,8 +41,8 @@ export function SkillsExplorer() {
           <TabPanel idPrefix="skills" id="core">
             <SkillLedger skills={coreSkills} large />
             <Footnote>
-              These stay the differentiator once first drafts are automated: 40% of teams report PMs and engineers now generate UI
-              directly with AI.
+              These still set you apart when AI makes the first draft. In a Q1 2026 Designer Fund / Foundation Capital survey, 40% of
+              teams said PMs or engineers now create UI with AI.
             </Footnote>
           </TabPanel>
         )}
@@ -54,7 +50,7 @@ export function SkillsExplorer() {
           <TabPanel idPrefix="skills" id="eng">
             <SkillLedger skills={engineeringSkills} />
             <Footnote>
-              Standardise on React, TypeScript and Tailwind CSS. Learn the browser before the AI: the six-month plan keeps AI code
+              Standardize on React, TypeScript and Tailwind CSS. Learn the browser before the AI: the six-month plan keeps AI code
               generation switched off for all of month one.
             </Footnote>
           </TabPanel>
@@ -132,17 +128,16 @@ function SkillLedger({ skills, large = false }: { skills: Skill[]; large?: boole
           className="card card-lift grid-12 group gap-y-3 px-5 py-7 sm:px-7 sm:py-9 lg:sticky lg:top-[calc(5.5rem+var(--i)*14px)]"
           style={{ "--i": i } as CSSProperties}
         >
-          <span className="label col-span-1 pt-2 text-ink-3 tabular">{String(i + 1).padStart(2, "0")}</span>
           <h3
-            className={`col-span-3 tracking-tight text-ink transition-transform duration-700 ease-silk group-hover:translate-x-2 lg:col-span-4 ${
+            className={`col-span-4 tracking-tight text-ink transition-transform duration-700 ease-silk group-hover:translate-x-2 lg:col-span-5 ${
               large ? "display-m" : "font-display text-[1.75rem] leading-[1.05]"
             }`}
           >
             {s.name}
           </h3>
-          <p className="col-span-3 col-start-2 max-w-[56ch] leading-relaxed text-ink-2 lg:col-span-5 lg:col-start-auto">{s.detail}</p>
+          <p className="col-span-4 max-w-[56ch] leading-relaxed text-ink-2 lg:col-span-5">{s.detail}</p>
           {s.tags && (
-            <div className="col-span-3 col-start-2 flex flex-wrap content-start gap-1.5 lg:col-span-2 lg:col-start-auto lg:justify-end">
+            <div className="col-span-4 flex flex-wrap content-start gap-1.5 lg:col-span-2 lg:justify-end">
               {s.tags.map((t) => (
                 <Tag key={t}>{t}</Tag>
               ))}
@@ -164,7 +159,6 @@ function AxPanel() {
       {/* Shift */}
       <div className="grid-12 gap-y-12">
         <div className="col-span-4 lg:col-span-7">
-          <Eyebrow>The discipline shift</Eyebrow>
           <p className="display-l">
             <span className="block text-ink-3">{axShift.from}</span>
             <span className="sr-only">grows to include</span>
@@ -251,7 +245,6 @@ function AxPanel() {
       {/* Protocols */}
       <div className="grid-12 gap-y-10">
         <div className="col-span-4 lg:col-span-4">
-          <Eyebrow>Protocol literacy</Eyebrow>
           <Lines as="h3" className="display-m" lines={["Ground the interface", "in how agents", <em>actually talk.</em>]} />
           <p className="mt-6 text-sm leading-relaxed text-ink-2">Back-end concepts worth knowing:</p>
           <div className="mt-3 flex flex-wrap gap-1.5">
@@ -353,11 +346,9 @@ function PatternLibrary() {
       </p>
 
       {results.length === 0 ? (
-        <div className="card-empty mt-6 grid grid-cols-[auto_1fr] items-center gap-6 py-14 pl-4 pr-6 sm:gap-10">
-          <p aria-hidden className="label sideways text-ink-3">Slot empty</p>
+        <div className="card-empty mt-6 px-6 py-14">
           <div>
-          <p className="label text-ink-3">No matches · 00 / {total} patterns</p>
-          <p className="display-m mt-3 text-ink">Nothing matches “{q}”.</p>
+          <p className="display-m text-ink">Nothing matches “{q}”.</p>
           <button
             type="button"
             onClick={() => {

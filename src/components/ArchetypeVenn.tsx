@@ -39,7 +39,6 @@ export function ArchetypeVenn({ selected }: { selected: string }) {
     <div className="grid-12 gap-y-10">
       <figure className="card col-span-4 lg:col-span-7">
         <figcaption className="card-head label">
-          <span>Plate II</span>
           <span>Skill map</span>
         </figcaption>
         <div className="plate-field p-3 sm:p-6">

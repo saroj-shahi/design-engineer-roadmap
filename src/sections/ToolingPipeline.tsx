@@ -13,12 +13,8 @@ export function ToolingPipeline() {
     <Section id="tooling">
       <SectionHeader
         id="tooling"
-        index="Tools"
-        kicker="2026 tooling pipeline"
-        folio="p. 04 / 06"
         glyph="pipeline"
-        plate="The pipe"
-        title={["Which tools,", <em>at which step.</em>]}
+        title={["The right tool", <em>for each step.</em>]}
         lede="Pick your role to see the tools for each step of the work. Choose one set and stick with it. Too many tools slow you down."
       />
 

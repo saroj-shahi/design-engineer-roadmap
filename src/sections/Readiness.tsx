@@ -3,27 +3,29 @@ import { CheckRow, Section, SectionHeader, Tabs, usePersistentSet, useTrack, typ
 import { Glyph } from "../components/icons";
 
 /** One checklist per track, each with its own saved ticks. Chapter 05 links here instead of repeating them. */
-const lists: Record<Track, { key: string; items: ChecklistItem[]; who: string; lede: string }> = {
+const lists: Record<Track, { key: string; items: ChecklistItem[]; who: string; lede: string; start: string }> = {
   a: {
     key: "de-guide:readiness",
     items: readinessItems,
     who: "Working designer",
     lede: "Proof a hiring team can open: something that runs, the code behind it, and evidence you can build with AI.",
+    start: "Start with one live demo. It's the quickest signal a reviewer can check.",
   },
   b: {
     key: "de-guide:junior-checklist",
     items: juniorChecklist,
     who: "Starting out",
-    lede: "What screeners look for in a junior portfolio before they read a single case study.",
+    lede: "What screeners look for in a junior portfolio alongside your case studies.",
+    start: "Start with the first item. It needs no code: open each case study with who you are and the problem you solved.",
   },
 };
 
 /** Status line by share of items done, so the copy fits lists of any length. */
-function levelFor(done: number, total: number) {
-  if (done === 0) return { label: "Not started", note: "Start with one live demo. It's the quickest signal a reviewer can check." };
+function levelFor(done: number, total: number, start: string) {
+  if (done === 0) return { label: "Not started", note: start };
   if (done === total) return { label: "Ready to apply", note: "Every item checked. Aim at hybrid-friendly teams with ~20 targeted applications." };
   if (done === total - 1) return { label: "Almost ready", note: "One item left. Finish it before you send applications." };
-  if (done >= total / 2) return { label: "Getting close", note: "The evidence is forming. Close the remaining gaps before you apply." };
+  if (done >= total / 2) return { label: "Getting close", note: "Over halfway. Close the remaining gaps before you apply." };
   return { label: "Foundations", note: "Keep going. Reviewers will ask for the live build and the repo next." };
 }
 
@@ -48,12 +50,8 @@ export function Readiness() {
     <Section id="readiness">
       <SectionHeader
         id="readiness"
-        index="Ready?"
         level="h1"
-        kicker="Self-assessment"
-        folio="p. 06 / 06"
         glyph="check"
-        plate="The check"
         title={["Is your portfolio", <em>ready to ship?</em>]}
         lede="Tick what's true today. Progress is saved in this browser only; nothing is sent anywhere."
       />
@@ -85,19 +83,15 @@ function Checklist({ track }: { track: Track }) {
   const total = list.items.length;
   const done = list.items.filter((it) => set.has(it.id)).length;
   const pct = Math.round((done / total) * 100);
-  const level = levelFor(done, total);
+  const level = levelFor(done, total, list.start);
 
   return (
     <div role="tabpanel" id={`ready-panel-${track}`} aria-labelledby={`ready-tab-${track}`} tabIndex={0} className="panel-in grid-12 gap-y-12">
       <div className="col-span-4 lg:col-span-4">
         <div className="card group p-6 sm:p-8 lg:sticky lg:top-24">
-          <p className="label flex items-start justify-between gap-4 text-ink-3">
-            <span>
-              Portfolio readiness
-              <span className="mt-1 block text-ink">{list.who}</span>
-            </span>
+          <div className="flex justify-end">
             <Glyph name="check" on={done === total} className="glyph-xl !size-16 text-ink" />
-          </p>
+          </div>
           <p className="numeral mt-4 flex items-start text-[clamp(7rem,15vw,13rem)] text-ink">
             <span className="tabular">{pct}</span>
             <span aria-hidden className="mt-[0.12em] text-[0.35em] text-accent">%</span>

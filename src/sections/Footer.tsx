@@ -64,14 +64,12 @@ export function Footer() {
           <p className="label col-span-4 text-inverse-muted lg:col-span-3">Method</p>
           <p className="col-span-4 max-w-[62ch] text-xs leading-relaxed text-inverse-muted lg:col-span-6">
             Figures are reproduced from “The 2026 Product Design Evolution” research brief with their original scope and vintage. Case
-            studies describe single organisations and are not market benchmarks.
+            studies describe single organizations and are not market benchmarks.
           </p>
         </div>
         </details>
 
         <div className="label mt-20 flex flex-wrap items-baseline justify-between gap-4 border-t border-inverse-line pt-5 text-inverse-muted">
-          <span>Field Guide — Ed. 2026 · Rev. 11</span>
-          <span>Set in Archivo &amp; Martian Mono</span>
           <span className="hidden lg:inline">
             Press <kbd className="border border-inverse-line px-1.5 py-0.5 text-on-inverse">Alt</kbd> <kbd className="border border-inverse-line px-1.5 py-0.5 text-on-inverse">G</kbd> to show the grid
           </span>

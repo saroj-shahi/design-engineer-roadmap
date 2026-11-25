@@ -27,7 +27,6 @@ export function HandoffFlow() {
     <figure aria-labelledby="handoff-flow-cap">
       <div className="flex items-baseline justify-between border-t-2 border-edge pt-4">
         <h3 className="label text-ink">How work moves</h3>
-        <span className="label hidden text-ink-3 sm:block">Before → after</span>
       </div>
 
       <Row

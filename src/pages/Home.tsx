@@ -17,7 +17,7 @@ export function Home() {
       <Hero />
       <section aria-labelledby="inside-title" className="wrap pb-24 pt-20 sm:pb-32 sm:pt-28">
         <h2 id="inside-title" className="display-l text-ink" data-reveal>
-          Four questions, <em>four pages.</em>
+          Four questions, one page <em>for each.</em>
         </h2>
         <p className="mt-5 max-w-[52ch] leading-relaxed text-ink-2" data-reveal>
           Read in any order. Each page answers one question, and the detail stays tucked away until you ask for it.

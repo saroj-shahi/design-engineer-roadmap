@@ -175,38 +175,25 @@ export function Section({ id, children, className = "" }: { id: string; children
   );
 }
 
-/** Chapter opener: running head on a hairline, monumental title, lede offset to the right. */
+/** Page opener: monumental title, optional glyph plate, lede offset to the right. */
 export function SectionHeader({
   id,
-  index,
-  kicker,
   title,
   lede,
   glyph,
-  plate,
   level = "h2",
 }: {
   id: string;
-  index: string;
-  kicker: string;
   title: ReactNode[];
   lede?: ReactNode;
-  folio?: string;
   glyph?: GlyphName;
-  plate?: string;
   level?: "h1" | "h2";
 }) {
   return (
     <header className="mb-16 pt-10 sm:mb-24">
-      <FolderTab index={index}>
-        <div className="grid-12 label text-ink-3">
-          <p className="col-span-4 text-ink lg:col-span-6">{kicker}</p>
-
-        </div>
-      </FolderTab>
-      <div className="grid-12 mt-10 gap-y-10 sm:mt-16">
+      <div className="grid-12 gap-y-10">
         <Lines as={level} id={`${id}-title`} lines={title} className={`display-xl col-span-4 text-ink ${glyph ? "lg:col-span-8" : "lg:col-span-11"}`} />
-        {glyph && <Plate index={index} glyph={glyph} label={plate} className="self-end max-lg:hidden lg:col-span-3 lg:col-start-10" />}
+        {glyph && <Plate glyph={glyph} className="self-end max-lg:hidden lg:col-span-3 lg:col-start-10" />}
       </div>
       {lede && (
         <div className="grid-12 mt-8 sm:mt-12">
@@ -220,30 +207,13 @@ export function SectionHeader({
 }
 
 /** Specimen plate: one chapter glyph drawn large on a blueprint field. Hover plays its gesture. */
-export function Plate({ index, glyph, label, className = "" }: { index: string; glyph: GlyphName; label?: string; className?: string }) {
+export function Plate({ glyph, className = "" }: { glyph: GlyphName; className?: string }) {
   return (
-    <figure data-reveal className={`card card-lift group ${className}`} style={{ "--d": "200ms" } as CSSProperties}>
-      <figcaption className="card-head label">
-        <span className="truncate">{label ?? index}</span>
-      </figcaption>
+    <figure aria-hidden data-reveal className={`card card-lift group ${className}`} style={{ "--d": "200ms" } as CSSProperties}>
       <div className="plate-field grid aspect-square place-items-center">
         <Glyph name={glyph} className="glyph-xl !size-[62%] text-ink" />
       </div>
     </figure>
-  );
-}
-
-/** A folder's label tab riding on a 2px rule: the chapter divider of the workbench. */
-export function FolderTab({ index, children }: { index: string; children: ReactNode }) {
-  return (
-    <div className="relative pt-4">
-      <span aria-hidden data-reveal="rule" className="absolute inset-x-0 top-0 h-0.5 bg-edge" />
-      <span className="label absolute left-0 top-0 -translate-y-full bg-edge px-3 pb-1 pt-1.5 text-card">
-        <span className="sr-only">Chapter </span>
-        {index}
-      </span>
-      {children}
-    </div>
   );
 }
 
@@ -288,9 +258,10 @@ const basisStyle: Record<BasisKind, string> = {
   case: "text-ink-3",
 };
 
-export function BasisBadge({ basis }: { basis: BasisKind }) {
+/** `onBand` takes the text colour of a filled band (e.g. a card head) instead of the muted ink. */
+export function BasisBadge({ basis, onBand = false }: { basis: BasisKind; onBand?: boolean }) {
   return (
-    <span className={`label inline-flex items-center gap-1.5 whitespace-nowrap ${basisStyle[basis]}`}>
+    <span className={`label inline-flex items-center gap-1.5 whitespace-nowrap ${onBand ? "text-current" : basisStyle[basis]}`}>
       <span aria-hidden className={`size-[5px] bg-current`} />
       {basisLabel[basis]}
     </span>

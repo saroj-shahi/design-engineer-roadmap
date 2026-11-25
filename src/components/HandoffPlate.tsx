@@ -28,7 +28,6 @@ export function HandoffPlate({ className = "" }: { className?: string }) {
   return (
     <figure className={`card handoff-plate ${className}`}>
       <figcaption className="card-head label">
-        <span>Plate I</span>
         <span>Handoff, collapsed</span>
       </figcaption>
       <svg

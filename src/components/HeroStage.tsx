@@ -80,10 +80,7 @@ export function HeroStage() {
 
   return (
     <figure className="hs-wrap" aria-labelledby="hero-stage-caption">
-      <div className="mb-4 flex items-center justify-between gap-4">
-        <p className="label text-ink-3">
-          <span className="text-accent-ink">Fig. 00</span> · The shift in one picture
-        </p>
+      <div className="mb-4 flex items-center justify-end gap-4">
         <div role="group" aria-label="Show the way work moved" className="inline-flex border-2 border-edge bg-card shadow-[var(--sh-1)]">
           {(["before", "after"] as const).map((p) => (
             <button
