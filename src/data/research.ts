@@ -26,6 +26,8 @@ export interface Archetype {
   signals: string;
   skills: string[];
   skillStats?: { label: string; value: number }[];
+  /** Titles job posts use for this kind of work. The role names above are this guide's own. */
+  aka: string[];
   /** Plain "this fits you if…" line, and which Track A option its plan uses. */
   fitsIf: string;
   plan: "pde" | "meta";
@@ -51,16 +53,11 @@ export interface Protocol {
   ux: string;
 }
 
-export interface Pattern {
-  code: string;
-  name: string;
-}
-
 export interface PatternCategory {
   id: string;
   name: string;
   objective: string;
-  patterns: Pattern[];
+  patterns: string[];
 }
 
 export interface ToolStage {
@@ -81,6 +78,13 @@ export interface RoleStack {
   toolsByStage: Record<number, string[]>;
 }
 
+/** A free or paid place to learn a step's skills. Links are checked by hand; recheck before release. */
+export interface Resource {
+  label: string;
+  url: string;
+  cost: "free" | "paid";
+}
+
 export interface Month {
   month: number;
   /** Short name for the roadmap map. */
@@ -93,6 +97,11 @@ export interface Month {
   deliverable: string;
   guardrail: string;
   aiPolicy: "none" | "read" | "assist" | "oversee" | "production" | "position";
+  /** A concrete first task for the month. */
+  start: string;
+  /** How to tell you're ready to move on. */
+  doneWhen: string;
+  resources: Resource[];
 }
 
 export interface ChecklistItem {
@@ -103,14 +112,24 @@ export interface ChecklistItem {
 
 /* ───────────── §1 Macro market ───────────── */
 
+const designHiringBigTech: Metric = {
+  value: "−48%",
+  label: "Design hiring at 12 big tech companies, compared with 2019",
+  scope: "12 big tech companies, June 2026",
+  source: "SignalFire, State of Talent 2026",
+  basis: "analytics",
+};
+
+const designerJobsOutlook: Metric = {
+  value: "+6%",
+  label: "US web and interface designers, 132,700 → 140,800",
+  scope: "2025 → 2035, SOC 15-1255",
+  source: "US BLS projection",
+  basis: "projection",
+};
+
 export const heroMetrics: Metric[] = [
-  {
-    value: "−48%",
-    label: "Design hiring at 12 big tech companies, compared with 2019",
-    scope: "12 big tech companies, June 2026",
-    source: "SignalFire, State of Talent 2026",
-    basis: "analytics",
-  },
+  designHiringBigTech,
   {
     value: "55%",
     label: "Share of big tech hires who are software engineers (46% in 2019)",
@@ -125,17 +144,11 @@ export const heroMetrics: Metric[] = [
     source: "Designer Fund / Foundation Capital",
     basis: "survey",
   },
-  {
-    value: "20%",
-    label: "Designers who say the first build matches their design",
-    scope: "Product designer survey",
-    source: "CollabSoft",
-    basis: "survey",
-  },
+  designerJobsOutlook,
 ];
 
 export const marketMetrics: Metric[] = [
-  { value: "−48%", label: "Design hiring at big tech, compared with 2019", scope: "12 big tech companies, June 2026", source: "SignalFire", basis: "analytics" },
+  designHiringBigTech,
   { value: "−22%", label: "Design hiring at early-stage startups, compared with 2019", scope: "Startup group, June 2026", source: "SignalFire", basis: "analytics" },
   { value: "−39%", label: "Product manager hiring at big tech", scope: "Big tech, compared with 2019", source: "SignalFire", basis: "analytics" },
   { value: "−36%", label: "Marketing hiring at big tech", scope: "Big tech, compared with 2019", source: "SignalFire", basis: "analytics" },
@@ -145,8 +158,14 @@ export const marketMetrics: Metric[] = [
   { value: "12.6–13%", label: "Designers who leave their job each year (about 9% for engineers)", scope: "2026", source: "SignalFire", basis: "analytics" },
   { value: "3,423 vs. 20,726", label: "US job posts: Design Engineer vs. Product Designer", scope: "US job posts, Oct 2026 (+15% month on month, with AI product design roles)", source: "Academy UX (aggregator)", basis: "analytics" },
   { value: "97%", label: "Design Engineer roles that ask for senior level (open 57 days on average)", scope: "European job posts, July 2026", source: "Hymera", basis: "analytics" },
-  { value: "+6%", label: "US web and interface designers, 132,700 → 140,800", scope: "2025 → 2035, SOC 15-1255", source: "US BLS projection", basis: "projection" },
+  designerJobsOutlook,
 ];
+
+/** What the job-post numbers mean for a working designer. Figures from `marketMetrics`. */
+const metricValue = (label: string) => marketMetrics.find((m) => m.label.startsWith(label))!.value;
+const [dePosts, pdPosts] = metricValue("US job posts").split(" vs. ");
+
+export const titleReality = `Design Engineer is still a small, senior title: about ${dePosts} US job posts against ${pdPosts} for Product Designer, and ${metricValue("Design Engineer roles that ask for senior level")} of European listings ask for senior level. For most designers, the first step is hybrid work in the job they already have, not a new title.`;
 
 export const orgFlattening = [
   { value: "12", label: "Engineers per engineering manager at big tech", delta: "+14% vs. 2019" },
@@ -198,6 +217,7 @@ export const archetypes: Archetype[] = [
     name: "Design Engineer",
     short: "Ships the code",
     focus: "Product or brand and web work",
+    aka: ["Design Engineer", "UX Engineer", "Design Technologist", "Front-end Designer"],
     fitsIf: "you care about the last 10% of polish, already play with code, and want to own what ships.",
     plan: "pde",
     deliverable:
@@ -216,6 +236,7 @@ export const archetypes: Archetype[] = [
     name: "Meta-Designer / Systems Architect",
     short: "Sets the rules",
     focus: "Design systems and rules",
+    aka: ["Design Systems Designer", "Design Systems Engineer", "Design Ops"],
     fitsIf: "you think in systems, enjoy tokens and rules, and want to shape what other people (and AI) build with.",
     plan: "meta",
     deliverable:
@@ -234,6 +255,7 @@ export const archetypes: Archetype[] = [
     name: "Agentic Experience (AX) Designer",
     short: "Designs the agent",
     focus: "AI product design",
+    aka: ["AI Product Designer", "Conversational / AI UX Designer"],
     fitsIf: "you like AI products and research, and want to design for trust, uncertainty and handover between people and AI.",
     plan: "meta",
     deliverable:
@@ -252,6 +274,11 @@ export const archetypes: Archetype[] = [
 /* ───────────── §3.4 Comparison ───────────── */
 
 export const comparison: CompareRow[] = [
+  {
+    dimension: "What carries over",
+    traditional: "Research, problem framing, visual craft, typography and judgment about what to build.",
+    hybrid: "The same foundation. Code is added on top of it, not instead of it.",
+  },
   {
     dimension: "Primary artifacts",
     traditional: "Research findings, personas, journey maps, wireframes and interactive Figma prototypes.",
@@ -426,69 +453,34 @@ export const protocols: Protocol[] = [
   },
 ];
 
-export const agentArchitectureTerms = ["Prompt chaining", "Routing", "RAG", "Memory orchestration", "Fault tolerance"];
-
 export const patternCategories: PatternCategory[] = [
   {
     id: "supervision",
     name: "Supervision & Control",
     objective:
       "Decide how closely people watch the agent, and hand over control cleanly. Low-risk actions that can be undone run on their own. High-risk actions wait for a person to approve.",
-    patterns: [
-      { code: "HITL", name: "Human-in-the-Loop" },
-      { code: "HOTL", name: "Human-on-the-Loop" },
-      { code: "MIP", name: "Mixed-Initiative Interfaces" },
-      { code: "MON", name: "Monitoring & Control" },
-      { code: "AQE", name: "Approval Queues & Escalation Chains" },
-    ],
+    patterns: ["Human-in-the-loop", "Human-on-the-loop", "Approval queues & escalation"],
   },
   {
     id: "transparency",
     name: "Transparency & Reasoning",
     objective:
       "Show the agent's steps, sources, doubts and limits. Keep it simple enough that people aren't overwhelmed.",
-    patterns: [
-      { code: "PDP", name: "Progressive Disclosure" },
-      { code: "CVP", name: "Confidence Visualization" },
-      { code: "ASP", name: "Agent Status & Activity" },
-      { code: "TTP", name: "Trust & Transparency" },
-      { code: "VRP", name: "Visual Reasoning Panels" },
-      { code: "CWM", name: "Context Window Management" },
-    ],
+    patterns: ["Agent status & activity", "Confidence visualization"],
   },
   {
     id: "interaction",
     name: "Interaction & Modality",
     objective:
       "Go beyond text chat: UI the agent builds on the fly, fast voice, spaces where several agents work together, and smooth switches between modes.",
-    patterns: [
-      { code: "GenUI", name: "Generative UI" },
-      { code: "RVA", name: "Realtime Voice Agents" },
-      { code: "CIP/CHI", name: "Conversational & Chat Patterns" },
-      { code: "ACX", name: "Agent Collaboration UX" },
-      { code: "AIP", name: "Adaptive Patterns" },
-      { code: "AAP", name: "Ambient Patterns" },
-      { code: "MMIP", name: "Multimodal Patterns" },
-      { code: "CPX", name: "Cross-Platform Patterns" },
-    ],
+    patterns: ["Generative UI"],
   },
   {
     id: "trust",
     name: "Trust, Privacy & Compliance",
     objective:
       "Fail gently, follow privacy laws (GDPR, CCPA, AI Acts), give users fine control over their data, and keep every AI state accessible.",
-    patterns: [
-      { code: "ERP", name: "Error Handling & Recovery" },
-      { code: "OEP", name: "Onboarding & Education" },
-      { code: "PbD", name: "Privacy-by-Design" },
-      { code: "GPC", name: "Granular Privacy Controls" },
-      { code: "PCC", name: "Progressive Consent" },
-      { code: "TDH", name: "Transparent Data Handling" },
-      { code: "UPD", name: "User Empowerment Dashboards" },
-      { code: "RCX", name: "Regulatory Compliance" },
-      { code: "APT", name: "Advanced Privacy UX" },
-      { code: "AAD", name: "Accessibility in Agent Design" },
-    ],
+    patterns: ["Error handling & recovery", "Progressive consent"],
   },
 ];
 
@@ -527,15 +519,6 @@ export const toolStages: ToolStage[] = [
     capabilities: "Quick full apps with databases, admin dashboards and proof-of-concept software.",
     guardrail:
       "Check for plain default components, missing empty and error states, weak visual hierarchy and security holes.",
-  },
-  {
-    id: 5,
-    name: "Creative Production",
-    tools: ["Claude Creative Connectors", "Adobe Firefly AI Assistant"],
-    capabilities:
-      "Edit media in bulk: resize assets, grade color and script tasks in Photoshop, Illustrator, Premiere and Blender.",
-    guardrail:
-      "Made for assets, not app UI. Check for visual glitches, lost work and copyright problems.",
   },
 ];
 
@@ -584,15 +567,6 @@ export const roleStacks: RoleStack[] = [
       3: ["v0 (Vercel)", "Codex", "Claude Code", "Cursor"],
     },
   },
-  {
-    id: "creative",
-    label: "Creative Production",
-    chain: ["Adobe Creative Cloud", "Firefly AI Assistant", "Claude Creative Connectors"],
-    summary:
-      "Resize assets, grade color and script repeat tasks in bulk with Claude Creative Connectors and Firefly AI Assistant, inside your usual design, 3D and media tools.",
-    stages: [5],
-    toolsByStage: { 5: ["Claude Creative Connectors", "Adobe Firefly AI Assistant"] },
-  },
 ];
 
 /* ───────────── §3 Track A: practicing designers ───────────── */
@@ -626,6 +600,14 @@ export const sixMonthPlan: Month[] = [
     deliverable: "3 responsive landing pages, built from scratch with no frameworks.",
     guardrail: "No AI code and no CSS frameworks. Learn to fix layouts by hand.",
     aiPolicy: "none",
+    start: "Pick a landing page you like and rebuild its layout from a blank HTML file.",
+    doneWhen: "You can rebuild a layout from a screenshot and fix it at phone width without help.",
+    resources: [
+      { label: "MDN: Learn web development", url: "https://developer.mozilla.org/en-US/docs/Learn_web_development", cost: "free" },
+      { label: "Josh W. Comeau: Interactive guide to Flexbox", url: "https://www.joshwcomeau.com/css/interactive-guide-to-flexbox/", cost: "free" },
+      { label: "Josh W. Comeau: Interactive guide to CSS Grid", url: "https://www.joshwcomeau.com/css/interactive-guide-to-grid/", cost: "free" },
+      { label: "Chrome DevTools docs", url: "https://developer.chrome.com/docs/devtools", cost: "free" },
+    ],
   },
   {
     month: 2,
@@ -636,6 +618,12 @@ export const sixMonthPlan: Month[] = [
     deliverable: "Read, find your way around and change an existing React app.",
     guardrail: "Focus on reading and changing real code, not memorizing syntax.",
     aiPolicy: "read",
+    start: "Run a small open-source React app on your computer, then change one piece of text and one style.",
+    doneWhen: "You can find where a piece of UI lives in the code and change how it behaves.",
+    resources: [
+      { label: "The Modern JavaScript Tutorial", url: "https://javascript.info/", cost: "free" },
+      { label: "React docs: Learn React", url: "https://react.dev/learn", cost: "free" },
+    ],
   },
   {
     month: 3,
@@ -644,18 +632,34 @@ export const sixMonthPlan: Month[] = [
     build: "Launch 1 small tool or web app",
     focus: "Tailwind CSS, design tokens and TypeScript basics.",
     deliverable: "Build and launch 1 small tool or live web app.",
-    guardrail: "Use AI coding tools (Cursor, Claude Code) freely to write code faster.",
+    guardrail: "You can now spot when AI output is wrong, so use AI coding tools (Cursor, Claude Code) freely to write code faster.",
     aiPolicy: "assist",
+    start: "Turn the colors, spacing and type of one month-1 page into design tokens.",
+    doneWhen: "Your tool is live at a public link, and you can explain every file in it.",
+    resources: [
+      { label: "Tailwind CSS docs", url: "https://tailwindcss.com/docs", cost: "free" },
+      { label: "TypeScript Handbook", url: "https://www.typescriptlang.org/docs/handbook/intro.html", cost: "free" },
+      { label: "React TypeScript Cheatsheet", url: "https://react-typescript-cheatsheet.netlify.app/", cost: "free" },
+      { label: "Design Tokens Community Group (W3C)", url: "https://www.designtokens.org/", cost: "free" },
+    ],
   },
   {
     month: 4,
     title: "Building with AI",
-    learn: ["Managing a codebase with AI", "App state", "UI patterns for AI agents"],
-    build: "Multi-page app with login",
-    focus: "Managing a codebase with AI, app state and UI patterns for AI agents.",
-    deliverable: "Launch a multi-page app with login, like an AI dashboard or a SaaS tool.",
-    guardrail: "Set up Cursor (Design Mode) or Claude Code. You still decide the structure and check the AI's edge cases.",
+    learn: ["Components & variants", "Tokens in code", "Empty, loading & error states", "Deploying"],
+    build: "Live component library",
+    focus: "Building components with AI help: variants, every state, tokens in code, and deploying.",
+    deliverable: "A small component library (button, input, card, dialog) built on your tokens, with every state, live at a public link.",
+    guardrail: "Set up Cursor or Claude Code. You still decide the structure and check every state the AI skips.",
     aiPolicy: "oversee",
+    start: "List the components you use most in your Figma work, and build the first one with all its states.",
+    doneWhen: "Each component has hover, focus, disabled, empty and error states, and works with a keyboard.",
+    resources: [
+      { label: "WAI-ARIA patterns for components", url: "https://www.w3.org/WAI/ARIA/apg/patterns/", cost: "free" },
+      { label: "Radix Primitives docs", url: "https://www.radix-ui.com/primitives/docs/overview/introduction", cost: "free" },
+      { label: "Figma: How designers can use Claude Code", url: "https://www.figma.com/resource-library/claude-code-for-designers/", cost: "free" },
+      { label: "Getting started with Vercel", url: "https://vercel.com/docs/getting-started-with-vercel", cost: "free" },
+    ],
   },
   {
     month: 5,
@@ -666,6 +670,14 @@ export const sixMonthPlan: Month[] = [
     deliverable: "Get 1–3 PRs into a real product: CSS bugs, accessibility fixes or component variants.",
     guardrail: "Pick up real front-end fixes at work, or help with open-source UI libraries.",
     aiPolicy: "production",
+    start: "Ask a front-end lead which small UI bugs they'd review from you. No access at work? Filter an open-source UI library's issues by “good first issue”.",
+    doneWhen: "At least one pull request is merged after a real review.",
+    resources: [
+      { label: "Pro Git book", url: "https://git-scm.com/book/en/v2", cost: "free" },
+      { label: "GitHub Skills", url: "https://learn.github.com/skills", cost: "free" },
+      { label: "Good First Issue", url: "https://goodfirstissue.dev/", cost: "free" },
+      { label: "First Contributions", url: "https://github.com/firstcontributions/first-contributions", cost: "free" },
+    ],
   },
   {
     month: 6,
@@ -676,8 +688,71 @@ export const sixMonthPlan: Month[] = [
     deliverable: "Rebuild your portfolio around live apps, public GitHub repos and merged PRs.",
     guardrail: "Send about 20 careful applications to teams that hire hybrids. Skip mass applying.",
     aiPolicy: "position",
+    start: "Pick your two strongest projects and write a 2–3 paragraph write-up for each.",
+    doneWhen: "Every item on the Ready? checklist is ticked.",
+    resources: [
+      { label: "Design engineering resources", url: "https://designengineering.arun.is/", cost: "free" },
+    ],
   },
 ];
+
+/** The Meta-Designer / AX option shares months 1–3, then turns to systems AI can read and agent trust flows. */
+const metaMonths: Month[] = [
+  {
+    month: 4,
+    title: "Systems AI can read",
+    learn: ["Token naming & structure", "Figma variables", "Code Connect", "Figma MCP"],
+    build: "Tokens wired from Figma to code",
+    focus: "Name and structure design tokens, set up Figma variables and Code Connect, and connect them to an AI coding tool through Figma MCP.",
+    deliverable: "A small design system whose tokens and components an AI coding tool can read and use correctly.",
+    guardrail: "Test it: ask an AI tool to build a screen from your system, then fix the names or docs wherever it went wrong.",
+    aiPolicy: "oversee",
+    start: "Audit one Figma file: list every color and spacing value that isn't a variable yet.",
+    doneWhen: "An AI tool builds a screen using only your tokens and components.",
+    resources: [
+      { label: "Figma: Guide to variables", url: "https://help.figma.com/hc/en-us/articles/15339657135383-Guide-to-variables-in-Figma", cost: "free" },
+      { label: "Figma: Code Connect docs", url: "https://developers.figma.com/docs/code-connect/", cost: "free" },
+      { label: "Figma: Guide to the Figma MCP server", url: "https://help.figma.com/hc/en-us/articles/32132100833559-Guide-to-the-Figma-MCP-server", cost: "free" },
+      { label: "Design Tokens Community Group (W3C)", url: "https://www.designtokens.org/", cost: "free" },
+    ],
+  },
+  {
+    month: 5,
+    title: "Agent trust flows",
+    learn: ["Approval & escalation", "Showing confidence", "Undo & recovery", "Reviewing AI code"],
+    build: "Trust flows + 1 merged PR",
+    focus: "Design how an AI feature asks for approval, shows how sure it is, and recovers from mistakes. Keep reviewing AI-written UI code.",
+    deliverable: "Approval, status, error and undo states for one agent feature, prototyped in code, plus one merged PR that fixes tokens or accessibility.",
+    guardrail: "Start from the Human-AI pattern library in Library → Skills, and test the flows with real users.",
+    aiPolicy: "production",
+    start: "Pick one AI feature you use daily and map every point where it acts without asking you.",
+    doneWhen: "Every risky action in your flow has an approval step, a visible status and a way to undo it.",
+    resources: [
+      { label: "Google PAIR: People + AI Guidebook", url: "https://pair.withgoogle.com/guidebook", cost: "free" },
+      { label: "Microsoft: Guidelines for Human-AI Interaction", url: "https://www.microsoft.com/en-us/haxtoolkit/ai-guidelines/", cost: "free" },
+      { label: "WAI-ARIA patterns for components", url: "https://www.w3.org/WAI/ARIA/apg/patterns/", cost: "free" },
+    ],
+  },
+  {
+    month: 6,
+    title: "Portfolio & applications",
+    learn: ["Systems case study", "Live prototypes", "~20 focused applications"],
+    build: "Portfolio of systems & trust work",
+    focus: "Show yourself as a systems and AI-product hybrid, with live links behind every claim.",
+    deliverable: "Rebuild your portfolio around your design system, your trust flows and any merged PRs.",
+    guardrail: "Send about 20 careful applications to teams that hire hybrids. Skip mass applying.",
+    aiPolicy: "position",
+    start: "Write a short case study showing an AI tool using your system: what broke, what you fixed.",
+    doneWhen: "Every item on the Ready? checklist is ticked.",
+    resources: [
+      { label: "Design engineering resources", url: "https://designengineering.arun.is/", cost: "free" },
+    ],
+  },
+];
+
+/** The six months for a Track A option. */
+export const planFor = (option: "pde" | "meta"): Month[] =>
+  option === "meta" ? [...sixMonthPlan.slice(0, 3), ...metaMonths] : sixMonthPlan;
 
 export const aiPolicyLabel: Record<Month["aiPolicy"], string> = {
   none: "AI off",
@@ -715,13 +790,6 @@ export const leverageHabits: ChecklistItem[] = [
   },
 ];
 
-export const hybridPortfolio: ChecklistItem[] = [
-  { id: "demo", title: "Live demos that work in 10 seconds", detail: "Share deploy links (Vercel, GitHub Pages) so hiring managers can try your work in a browser right away." },
-  { id: "repo", title: "Public GitHub repositories", detail: "Let engineers look at your components, state, CSS structure and ARIA labels." },
-  { id: "writeup", title: "Short design and code write-ups", detail: "2–3 paragraphs: what you wanted, key decisions, trade-offs and what you'd do next." },
-  { id: "aiproof", title: "Clear proof of your AI workflow", detail: "Show how you guided Cursor or Claude Code to build real, high-quality features." },
-];
-
 /* ───────────── §4 Track B: beginners ───────────── */
 
 export const beginnerContext = [
@@ -731,7 +799,18 @@ export const beginnerContext = [
   { value: "~90%", label: "Hiring managers who expect a strong junior portfolio", source: "UX Pilot, citing State of UX Hiring" },
 ];
 
-export const launchStages = [
+export interface LaunchStage {
+  n: number;
+  learn: string[];
+  name: string;
+  detail: string;
+  output: string;
+  start: string;
+  doneWhen: string;
+  resources: Resource[];
+}
+
+export const launchStages: LaunchStage[] = [
   {
     n: 1,
     learn: ["Usability", "Accessibility (WCAG)", "Typography", "Information architecture", "Interaction patterns"],
@@ -739,22 +818,43 @@ export const launchStages = [
     detail:
       "Before you use AI screen tools, learn usability, accessibility (WCAG), typography, information architecture and interaction patterns. Take real products apart to see where they fail and why.",
     output: "Basics you can explain",
+    start: "Pick an app you use daily and write down three places it fails a new user, and why.",
+    doneWhen: "You can explain a usability or accessibility problem, and its fix, in plain words. Covered this in school or a bootcamp? Check yourself against this and move on.",
+    resources: [
+      { label: "NN/g: 10 usability heuristics", url: "https://www.nngroup.com/articles/ten-usability-heuristics/", cost: "free" },
+      { label: "WebAIM: WCAG 2 checklist", url: "https://webaim.org/standards/wcag/checklist", cost: "free" },
+      { label: "Butterick's Practical Typography", url: "https://practicaltypography.com/", cost: "free" },
+      { label: "Laws of UX", url: "https://lawsofux.com/", cost: "free" },
+    ],
   },
   {
     n: 2,
     learn: ["HTML & CSS", "AI prototyping tools", "Prototypes that run in a browser"],
     name: "Prototype in code",
     detail:
-      "Learn HTML and CSS alongside AI prototyping tools (Figma Make, v0, Lovable, Bolt, Cursor). Build prototypes that run in a browser.",
+      "Learn HTML and CSS first, then add one AI prototyping tool (Figma Make or v0, for example). Knowing the basics is what lets you judge what the AI makes. Build prototypes that run in a browser.",
     output: "Working prototypes in a browser",
+    start: "Rebuild one screen from a past case study in plain HTML and CSS, then use one AI tool to extend it.",
+    doneWhen: "A prototype runs in the browser at a link you can share.",
+    resources: [
+      { label: "MDN: Learn web development", url: "https://developer.mozilla.org/en-US/docs/Learn_web_development", cost: "free" },
+      { label: "web.dev: Learn CSS", url: "https://web.dev/learn/css", cost: "free" },
+      { label: "GitHub Pages quickstart", url: "https://docs.github.com/en/pages/quickstart", cost: "free" },
+    ],
   },
   {
     n: 3,
     learn: ["Local businesses", "Community groups", "Open-source projects", "Small SaaS"],
     name: "Ship real work for real users",
     detail:
-      "Skip made-up Spotify or Uber redesigns. Solve real problems for local businesses, community groups, open-source projects or small SaaS. Test it live and write down how feedback changed your mind.",
+      "Skip made-up Spotify or Uber redesigns. Solve real problems for local businesses, community groups, open-source projects or small SaaS. Start small: one group, one problem, a handful of real users. Test it live and write down how feedback changed your mind.",
     output: "Live work with proof from real users",
+    start: "Ask one local business, club or open-source project what slows them down each week.",
+    doneWhen: "Real people used what you built, and you can show what changed because of their feedback.",
+    resources: [
+      { label: "Good First Issue", url: "https://goodfirstissue.dev/", cost: "free" },
+      { label: "First Contributions", url: "https://github.com/firstcontributions/first-contributions", cost: "free" },
+    ],
   },
   {
     n: 4,
@@ -763,6 +863,11 @@ export const launchStages = [
     detail:
       "Write 3–4 short, easy-to-scan case studies. Aim them at early (seed-stage) startups, which hire the most designers relative to size (25%). Also try small agencies and industry-focused B2B companies, not only big tech junior programs.",
     output: "A portfolio aimed at where hiring happens",
+    start: "Rewrite the opening of your best case study: who you are, the problem, and what you did.",
+    doneWhen: "Every item on the Ready? checklist is ticked.",
+    resources: [
+      { label: "Design engineering resources", url: "https://designengineering.arun.is/", cost: "free" },
+    ],
   },
 ];
 
@@ -776,7 +881,7 @@ export const juniorChecklist: ChecklistItem[] = [
   {
     id: "context",
     title: "Clear context and scope up front",
-    detail: "Say who you are, the exact problem and what you did, before any visuals. Label personal and school work as speculative.",
+    detail: "Say who you are, the exact problem and what you did, before any visuals. Mark personal and school work as practice projects.",
   },
   {
     id: "changed",
@@ -819,7 +924,7 @@ export const readinessItems: ChecklistItem[] = [
   { id: "ai", title: "Proof of an AI-assisted workflow", detail: "Show you guided Cursor or Claude Code to ship real features." },
   { id: "access", title: "Easy to open", detail: "No password walls, no broken links, no clutter." },
   { id: "scope", title: "Honest about your role", detail: "Say exactly what you did. Label made-up projects clearly." },
-  { id: "deployed", title: "A multi-page app you built and launched", detail: "Pages, state and layouts that fit any screen, live on Vercel or similar. Month 4 of the plan." },
+  { id: "deployed", title: "A live project you built and launched", detail: "Components with every state and layouts that fit any screen, live on Vercel or similar. Month 4 of the plan." },
   { id: "merged", title: "A merged pull request in a real codebase", detail: "Even a small UI fix in your team's code or an open-source project counts. Month 5 of the plan." },
 ];
 
@@ -841,11 +946,6 @@ export const sources: Source[] = [
 export const worksCited: { title: string; url: string }[] = [
   { title: "Is design engineer a real job? Why the role exists now - Modeinspect", url: "https://modeinspect.com/design-engineer/why-design-engineers-now" },
   { title: "SignalFire State of Talent Report 2026", url: "https://www.signalfire.com/blog/signalfire-state-of-talent-report-2026" },
-  { title: "GenFaceUI: Meta-Design of Generative Personalized Facial ... - arXiv", url: "https://arxiv.org/html/2602.11055v1" },
-  { title: "GenFaceUI: Meta-Design of Generative Personalized Facial", url: "https://yate.fun/assets/pdf/ge2026genfaceui.pdf" },
-  { title: "Best remote Design Process employees for hire in Oct 2026", url: "https://himalayas.app/talent/design-process" },
-  { title: "Best remote Dashboard Design employees for hire in Oct 2026", url: "https://himalayas.app/talent/dashboard-design" },
-  { title: "Product Designer – Canva — Relocate.me - IT Jobs Abroad", url: "https://relocate.me/australia/sydney/canva/product-designer-4247" },
   { title: "The Next Curve: Why the Design Engineer is the Future of Product", url: "https://medium.com/@moeinsaboohi96/the-next-curve-why-the-design-engineer-is-the-future-of-product-creation-87dc0199ff03" },
   { title: "From UX Designer to UX Engineer: The Hybrid Role AI Just Made", url: "https://www.designsystemscollective.com/from-ux-designer-to-ux-engineer-the-hybrid-role-ai-just-made-inevitable-e75090f37e02" },
   { title: "Designer hiring at big tech is down 48% since 2019 — Design Bootcamp", url: "https://medium.com/design-bootcamp/designer-hiring-at-big-tech-is-down-48-since-2019-new-job-titles-keep-appearing-d02260aa305f" },
@@ -855,9 +955,7 @@ export const worksCited: { title: string; url: string }[] = [
   { title: "Entry Level UI UX Jobs in 2026 Are Disappearing | by Ahnaf Tahmid", url: "https://medium.com/design-bootcamp/entry-level-ui-ux-jobs-in-2026-are-disappearing-364d3b5e04ee" },
   { title: "Being a Product Designer in 2026 Without Losing Your Mind - Medium", url: "https://medium.com/design-bootcamp/being-a-product-designer-in-2026-without-losing-your-mind-5ca7f4e683b6" },
   { title: "What a Junior Product Designer Portfolio Needs in 2026 (Hiring", url: "https://fueler.io/blog/what-a-junior-product-designer-portfolio-needs" },
-  { title: "Software Engineer Jobs at Startups | RFS", url: "https://www.recruitingfromscratch.com/roles/software-engineer" },
   { title: "SignalFire data shows engineering hiring is more resilient than", url: "https://startupfortune.com/signalfire-data-shows-engineering-hiring-is-more-resilient-than-almost-anyone-expected/" },
-  { title: "Why storytelling is now the most valuable skill in tech : r/UXDesign", url: "https://www.reddit.com/r/UXDesign/comments/1x63dvr/why_storytelling_is_now_the_most_valuable_skill/" },
   { title: "UX Designer Demand and Hiring Market Outlook for Employers 2026", url: "https://designcareers.aiga.org/career-resources/hire-designers-11/ux-designer-hiring-market-demand-and-supply-2026-158" },
   { title: "How Figma, Midjourney, Databricks, and Modyfi Harness AI with", url: "https://designerfund.com/blog/how-figma-midjourney-and-databricks-harness-ai-in-design" },
   { title: "Careers at Profound", url: "https://www.tryprofound.com/careers" },
@@ -865,7 +963,6 @@ export const worksCited: { title: string; url: string }[] = [
   { title: "Best AI Tools for Designers in 2026: Choose by Workflow - The Crit", url: "https://thecrit.co/resources/best-ai-coding-tools-designers-2026" },
   { title: "On the hunt for the elusive product-led employer | Melio's R&D blog", url: "https://medium.com/meliopayments/on-the-hunt-for-the-elusive-product-led-employer-106da39537e1" },
   { title: "Interleavings: Notes & Thoughts on Recent Reads, 9 November 2026", url: "https://sajithpai.com/interleavings-notes-thoughts-on-recent-reads-9-november-2026/" },
-  { title: "One system, one conversation. Designing LowerOS for borrowers", url: "https://laurabsteele.com/portfolio/lower-end-to-end" },
   { title: "AX Design Explained: The 2026 Guide to Agentic Experience", url: "https://www.pixelmojo.io/blogs/what-is-ax-design-complete-guide-agentic-experience-2026" },
   { title: "Agentic UI/UX Design Patterns", url: "https://agentic-design.ai/patterns/ui-ux-patterns" },
   { title: "Design Team Promotion Framework: Timelines, KPIs, and What It", url: "https://medium.muz.li/design-team-promotion-framework-timelines-kpis-and-what-it-really-takes-to-grow-028ac1f98ebf" },
@@ -947,8 +1044,6 @@ export const glossary: { term: string; meaning: string }[] = [
   { term: "IC (individual contributor)", meaning: "Someone who does the hands-on work rather than managing people." },
   { term: "Super IC", meaning: "A senior hands-on expert who covers work once split across several roles." },
   { term: "Product-led company", meaning: "A company where the product itself drives growth, so design gets more weight." },
-  { term: "RAG (retrieval-augmented generation)", meaning: "AI looks up facts in your documents before it answers." },
-  { term: "IC1 / IC2", meaning: "Career levels for individual contributors. IC1 is entry level; IC2 is the next step up." },
   { term: "Seed-stage startup", meaning: "A young company on its first round of outside funding, usually with a small team." },
   { term: "WCAG", meaning: "The Web Content Accessibility Guidelines: the standard checklist for making sites usable by everyone." },
   { term: "SaaS", meaning: "Software as a service: software you use in the browser on a subscription, like Figma or Notion." },

@@ -3,7 +3,7 @@ import { roleStacks, toolStages } from "../data/research";
 import { Section, SectionHeader, TabPanel, useTabList } from "../components/ui";
 import { Glyph, type GlyphName } from "../components/icons";
 
-const stageGlyph: Record<number, GlyphName> = { 1: "frame", 2: "roundtrip", 3: "branch", 4: "blocks", 5: "spark" };
+const stageGlyph: Record<number, GlyphName> = { 1: "frame", 2: "roundtrip", 3: "branch", 4: "blocks" };
 
 export function ToolingPipeline() {
   const [roleId, setRoleId] = useState("de");
@@ -47,7 +47,7 @@ export function ToolingPipeline() {
           <p className="col-span-4 max-w-[60ch] text-sm leading-relaxed text-ink-2 lg:col-span-6 lg:col-start-3">{role.summary}</p>
         </div>
 
-        <ol className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <ol className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {toolStages.map((s, i) => {
             const on = role.stages.includes(s.id);
             const highlighted = role.toolsByStage[s.id] ?? [];
@@ -98,7 +98,7 @@ export function ToolingPipeline() {
 /** Role × stage matrix. Every row is a tab; the selected row drives the chain and the stage cards below. */
 function RoleMatrix({ value, onChange }: { value: string; onChange: (id: string) => void }) {
   const { listProps, tabProps } = useTabList({ ids: roleStacks.map((r) => r.id), value, onChange, idPrefix: "role", orientation: "vertical" });
-  const cols = "grid grid-cols-[minmax(6.5rem,1.4fr)_repeat(5,minmax(0,1fr))] gap-x-1 sm:gap-x-1.5";
+  const cols = "grid grid-cols-[minmax(6.5rem,1.4fr)_repeat(4,minmax(0,1fr))] gap-x-1 sm:gap-x-1.5";
 
   return (
     <div>

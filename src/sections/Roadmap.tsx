@@ -1,5 +1,5 @@
 import { useState, type CSSProperties } from "react";
-import { ArrowBackGlyph, ArrowGlyph, Glyph } from "../components/icons";
+import { ArrowBackGlyph, ArrowGlyph, ExternalGlyph, Glyph } from "../components/icons";
 import { RoadmapMap } from "../components/RoadmapMap";
 import {
   aiPolicyLabel,
@@ -9,8 +9,10 @@ import {
   icGrowth,
   launchStages,
   leverageHabits,
+  planFor,
   sixMonthPlan,
   trackAOptions,
+  type Resource,
 } from "../data/research";
 import { CheckRow, Eyebrow, Meter, pageHref, Section, SectionHeader, SubHead, Tag, TRACK_A_OPTION_KEY, replaceHash, usePersistentSet, useStoredChoice, useTabList, useTrack, type Track } from "../components/ui";
 
@@ -102,10 +104,11 @@ function TrackA() {
   const [choice, setChoice] = useStoredChoice(TRACK_A_OPTION_KEY, "pde", ["pde", "meta"]);
   const [month, setMonth] = useState(1);
   const habits = usePersistentSet("de-guide:habits");
-  const m = sixMonthPlan[month - 1];
+  const plan = planFor(choice);
+  const m = plan[month - 1];
   const interview = comparison.find((r) => r.dimension === "Interview focus")!;
   const months = useTabList({
-    ids: sixMonthPlan.map((x) => String(x.month)),
+    ids: plan.map((x) => String(x.month)),
     value: String(month),
     onChange: (id) => setMonth(Number(id)),
     idPrefix: "month",
@@ -148,8 +151,8 @@ function TrackA() {
         </fieldset>
         <p className="mt-6 max-w-[62ch] text-sm leading-relaxed text-ink-3" aria-live="polite">
           {choice === "pde"
-            ? "Follow the full six-month plan below to reach production pull requests."
-            : "Use the six-month plan below to learn enough front-end to review AI code. Then use it on design tokens, Figma MCP and rules for when agents need a person."}
+            ? "Six months, from browser basics to merged pull requests in a real product."
+            : "Months 1–3 are the same for both options: enough front-end to review AI code. Months 4–6 switch to design systems AI tools can read, and to trust flows for AI agents."}
         </p>
       </div>
 
@@ -165,7 +168,7 @@ function TrackA() {
             setMonth(Number(id));
             showDetail("month-detail");
           }}
-          steps={sixMonthPlan.map((x) => ({
+          steps={plan.map((x) => ({
             id: String(x.month),
             kicker: `Month ${x.month}`,
             title: x.title,
@@ -195,7 +198,7 @@ function TrackA() {
           })}
         </ol>
         <div {...months.listProps} aria-label="Month" className="mt-4 grid grid-cols-6 gap-1.5 sm:gap-3">
-          {sixMonthPlan.map((x, i) => {
+          {plan.map((x, i) => {
             const on = month === x.month;
             const done = x.month < month;
             return (
@@ -237,6 +240,7 @@ function TrackA() {
             <Eyebrow className="!text-accent-ink">Guardrail · {aiPolicyLabel[m.aiPolicy]}</Eyebrow>
             <p className="leading-relaxed text-ink">{m.guardrail}</p>
           </div>
+          <StartAndDone start={m.start} doneWhen={m.doneWhen} resources={m.resources} />
           </div>
         </div>
         <div className="mt-5 flex items-center justify-between">
@@ -289,6 +293,39 @@ function ChecklistLink({ href, title, detail }: { href: string; title: string; d
         <span className="mt-1.5 block text-sm leading-relaxed text-ink-2">{detail}</span>
       </span>
     </a>
+  );
+}
+
+/** The first task for a step, the sign you can move on, and where to learn it. Spans a 12-column row. */
+function StartAndDone({ start, doneWhen, resources }: { start: string; doneWhen: string; resources: Resource[] }) {
+  return (
+    <>
+      <div className="border-t border-line pt-5 md:col-span-6">
+        <Eyebrow>Start with</Eyebrow>
+        <p className="leading-relaxed text-ink">{start}</p>
+      </div>
+      <div className="border-t border-line pt-5 md:col-span-6">
+        <Eyebrow>Move on when</Eyebrow>
+        <p className="leading-relaxed text-ink-2">{doneWhen}</p>
+      </div>
+      {resources.length > 0 && (
+        <div className="border-t border-line pt-5 md:col-span-12">
+          <Eyebrow>Learn from</Eyebrow>
+          <ul className="grid gap-x-6 gap-y-3 sm:grid-cols-2">
+            {resources.map((r) => (
+              <li key={r.url} className="flex items-baseline justify-between gap-3 border-b border-line pb-3">
+                <a href={r.url} target="_blank" rel="noopener noreferrer" className="group min-w-0 text-ink">
+                  <span className="link-ul">{r.label}</span>
+                  <ExternalGlyph className="ml-1 text-ink-3 transition-colors duration-300 group-hover:text-accent-ink" />
+                  <span className="sr-only"> (opens in new tab)</span>
+                </a>
+                <span className={`label shrink-0 ${r.cost === "free" ? "text-ink-3" : "text-accent-ink"}`}>{r.cost === "free" ? "Free" : "Paid"}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </>
   );
 }
 
@@ -363,11 +400,14 @@ function TrackB() {
             Stage 0{s.n} — {s.name}
           </p>
           <p className="col-span-4 mt-3 max-w-[60ch] text-lg leading-relaxed text-ink lg:col-span-8 lg:col-start-5 lg:mt-0">{s.detail}</p>
+          <div className="col-span-4 mt-10 grid gap-y-8 lg:col-span-8 lg:col-start-5 md:grid-cols-12 md:gap-x-6">
+            <StartAndDone start={s.start} doneWhen={s.doneWhen} resources={s.resources} />
+          </div>
         </div>
       </div>
 
       <div>
-        <SubHead n="B.2" title="The market you're entering" note="Seed-stage startups have the highest design hiring rate (25%), and a portfolio with something that runs puts you ahead of most of the 300–800 applicants per role." />
+        <SubHead n="B.2" title="The market you're entering" note="Seed-stage startups (young companies on their first funding round) have the highest design hiring rate (25%). With 300–800 applicants per role, a portfolio with something that runs is one way to stand out." />
         <dl className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-4">
           {beginnerContext.map((c, i) => (
             <div
@@ -382,15 +422,11 @@ function TrackB() {
             </div>
           ))}
         </dl>
-        <p className="mt-6 max-w-[62ch] text-sm leading-relaxed text-ink-3">
-          AI tools now help with basic layout work, so portfolios that show something running stand out in screening. Strong design
-          thinking still comes first; a little code makes it visible.
-        </p>
       </div>
 
       {/* Stack */}
       <div>
-        <SubHead n="B.3" title="One focused stack, in order" note="Resist tool sprawl. Learn the fundamentals before AI screen generation." />
+        <SubHead n="B.3" title="One focused stack, in order" />
         <ol className="grid gap-4 md:grid-cols-3">
           {beginnerStack.map((p, i) => (
             <li key={p.phase} className="card card-lift p-5 sm:p-6">
@@ -413,7 +449,7 @@ function TrackB() {
           <ChecklistLink href="#/ready/b" title="Your screening checklist" detail="Clear scope, how your thinking changed, a live build, easy access. Tick it off on the Ready? page." />
         </div>
         <div className="lg:col-span-5 lg:col-start-8">
-          <SubHead n="B.5" title="Year one: IC1 → IC2" />
+          <SubHead n="B.5" title="Your first year on the job" />
           <ol className="space-y-4">
             {icGrowth.map((g, i) => (
               <li key={g.name} className="card card-lift grid grid-cols-[3rem_1fr] gap-x-3 p-5" data-reveal style={{ "--i": i } as CSSProperties}>

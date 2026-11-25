@@ -1,6 +1,5 @@
-import { useId, useMemo, useState, type CSSProperties } from "react";
+import { useState, type CSSProperties } from "react";
 import {
-  agentArchitectureTerms,
   agentLayers,
   agentMaturity,
   axDomains,
@@ -246,12 +245,6 @@ function AxPanel() {
       <div className="grid-12 gap-y-10">
         <div className="col-span-4 lg:col-span-4">
           <Lines as="h3" className="display-m" lines={["Ground the interface", "in how agents", <em>actually talk.</em>]} />
-          <p className="mt-6 text-sm leading-relaxed text-ink-2">Back-end concepts worth knowing:</p>
-          <div className="mt-3 flex flex-wrap gap-1.5">
-            {agentArchitectureTerms.map((t) => (
-              <Tag key={t}>{t}</Tag>
-            ))}
-          </div>
         </div>
         <div className="card col-span-4 px-5 sm:px-6 lg:col-span-7 lg:col-start-6 [&>div:last-child]:border-b-0">
           {protocols.map((p, i) => (
@@ -293,112 +286,21 @@ function SubLabel({ n, text }: { n: string; text: string }) {
 }
 
 function PatternLibrary() {
-  const [q, setQ] = useState("");
-  const [cat, setCat] = useState<string | null>(null);
-  const searchId = useId();
-
-  const results = useMemo(() => {
-    const needle = q.trim().toLowerCase();
-    return patternCategories
-      .filter((c) => !cat || c.id === cat)
-      .map((c) => ({
-        ...c,
-        patterns: c.patterns.filter(
-          (p) => !needle || p.name.toLowerCase().includes(needle) || p.code.toLowerCase().includes(needle) || c.name.toLowerCase().includes(needle),
-        ),
-      }))
-      .filter((c) => c.patterns.length > 0);
-  }, [q, cat]);
-
-  const count = results.reduce((n, c) => n + c.patterns.length, 0);
-  const total = patternCategories.reduce((n, c) => n + c.patterns.length, 0);
-
   return (
-    <div>
-      <div className="grid-12 gap-y-6">
-        <div className="col-span-4 lg:col-span-5">
-          <label htmlFor={searchId} className="label block text-ink-3">
-            Search the taxonomy
-          </label>
-          <input
-            id={searchId}
-            type="search"
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            placeholder="consent, HITL, voice…"
-            className="input-line mt-1"
-          />
-        </div>
-        <div role="group" aria-label="Filter by category" className="col-span-4 flex flex-wrap content-end gap-x-5 lg:col-span-6 lg:col-start-7">
-          <FilterChip on={cat === null} onClick={() => setCat(null)}>
-            All
-          </FilterChip>
-          {patternCategories.map((c) => (
-            <FilterChip key={c.id} on={cat === c.id} onClick={() => setCat(cat === c.id ? null : c.id)}>
-              {c.name}
-            </FilterChip>
-          ))}
-        </div>
-      </div>
-
-      <p className="label mt-8 text-ink-3" aria-live="polite">
-        <span className="tabular text-ink">{String(count).padStart(2, "0")}</span> of {total} named mechanisms shown
-      </p>
-
-      {results.length === 0 ? (
-        <div className="card-empty mt-6 px-6 py-14">
-          <div>
-          <p className="display-m text-ink">Nothing matches “{q}”.</p>
-          <button
-            type="button"
-            onClick={() => {
-              setQ("");
-              setCat(null);
-            }}
-            className="link-ul-static label mt-6 text-ink"
-          >
-            Clear filters
-          </button>
-          </div>
-        </div>
-      ) : (
-        <div className="mt-6 grid gap-6 md:grid-cols-2">
-          {results.map((c, i) => (
-            <article
-              key={c.id}
-              className="card card-lift panel-in p-6 sm:p-8"
-              style={{ animationDelay: `${i * 60}ms` }}
-            >
-              <h3 className="display-m">{c.name}</h3>
-              <p className="mt-3 max-w-[48ch] text-sm leading-relaxed text-ink-2">{c.objective}</p>
-              <ul className="mt-6 border-t border-line">
-                {c.patterns.map((p) => (
-                  <li key={p.code} className="group flex items-baseline gap-4 border-b border-line py-2.5 last:border-b-0">
-                    <code className="w-14 shrink-0 font-mono text-[11px] text-accent-ink">{p.code}</code>
-                    <span className="text-[0.9375rem] text-ink transition-transform duration-500 ease-silk group-hover:translate-x-1">{p.name}</span>
-                  </li>
-                ))}
-              </ul>
-            </article>
-          ))}
-        </div>
-      )}
+    <div className="grid gap-6 md:grid-cols-2">
+      {patternCategories.map((c) => (
+        <article key={c.id} className="card card-lift p-6 sm:p-8">
+          <h3 className="display-m">{c.name}</h3>
+          <p className="mt-3 max-w-[48ch] text-sm leading-relaxed text-ink-2">{c.objective}</p>
+          <ul className="mt-6 border-t border-line">
+            {c.patterns.map((p) => (
+              <li key={p} className="border-b border-line py-2.5 text-[0.9375rem] text-ink last:border-b-0">
+                {p}
+              </li>
+            ))}
+          </ul>
+        </article>
+      ))}
     </div>
-  );
-}
-
-function FilterChip({ on, onClick, children }: { on: boolean; onClick: () => void; children: React.ReactNode }) {
-  return (
-    <button
-      type="button"
-      aria-pressed={on}
-      onClick={onClick}
-      className={`label flex min-h-11 items-center gap-2 transition-colors duration-500 ${on ? "text-ink" : "text-ink-3 hover:text-ink"}`}
-    >
-      <span aria-hidden className={`tick transition-transform duration-500 ease-silk ${on ? "scale-100 text-accent" : "scale-0"}`} />
-      <span className="link-ul" data-on={on}>
-        {children}
-      </span>
-    </button>
   );
 }

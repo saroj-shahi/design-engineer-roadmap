@@ -6,6 +6,7 @@ import {
   heroMetrics,
   marketMetrics,
   orgFlattening,
+  titleReality,
 } from "../data/research";
 import { ArchetypeVenn } from "../components/ArchetypeVenn";
 import { HandoffFlow } from "../components/HandoffFlow";
@@ -68,6 +69,7 @@ export function Hero() {
               already ship some AI-generated code. Your design skills still matter most; what's growing is demand for designers who can
               also work in code with developers. The rest of this guide shows how.
             </p>
+            <p className="mt-4 max-w-[58ch] text-sm leading-relaxed text-ink-3">{titleReality}</p>
             <a href="#/roles" className="hit link-ul-static mt-5 inline-flex items-center gap-2 text-[0.9375rem] font-medium text-ink group">
               See the three roles <ArrowGlyph />
             </a>
@@ -282,8 +284,8 @@ export function Archetypes() {
         <div className="grid-12 gap-y-8">
           <Lines as="h1" id="roles-title" className="display-xl col-span-4 lg:col-span-7" lines={["Which role", <>fits <em>you?</em></>]} />
           <p data-reveal className="lede col-span-4 self-end lg:col-span-4 lg:col-start-9">
-            Design work is splitting into three new roles. Pick the one that sounds most like you to see what it does, and how to
-            get there.
+            Three roles are growing where design and code meet. Pick the one that sounds most like you to see what it does, and how
+            to get there.
           </p>
         </div>
       </header>
@@ -334,6 +336,14 @@ export function Archetypes() {
           <p className="font-display text-[1.75rem] leading-[1.15] tracking-tight text-ink">{a.deliverable}</p>
         </div>
         <div className="col-span-4 lg:col-span-3 lg:col-start-7" style={{ "--i": 1 } as CSSProperties}>
+          <Eyebrow>Search job boards for</Eyebrow>
+          <ul className="mb-8 flex flex-wrap gap-1.5">
+            {a.aka.map((t) => (
+              <li key={t}>
+                <Tag>{t}</Tag>
+              </li>
+            ))}
+          </ul>
           <Eyebrow>Market signal</Eyebrow>
           <p className="leading-relaxed text-ink-2">{a.signals}</p>
         </div>
