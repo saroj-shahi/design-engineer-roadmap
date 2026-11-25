@@ -887,3 +887,48 @@ export const worksCited: { title: string; url: string }[] = [
   { title: "Product Designer Portfolio: What Hiring Managers Actually Look For", url: "https://www.ayoubka.com/post/product-designer-portfolio-guide" },
   { title: "Best Product Designer Portfolios 2026 — Examples & Inspiration", url: "https://jobroadmaps.com/portfolios/product-designer" },
 ];
+
+/* ───────── Skill map: where the three archetypes overlap ───────── */
+
+export type ArchetypeId = "de" | "meta" | "ax";
+
+export interface SkillRegion {
+  id: string;
+  sets: ArchetypeId[];
+  name: string;
+  detail: string;
+  skills?: string[];
+}
+
+export const skillMap: SkillRegion[] = [
+  {
+    id: "de",
+    sets: ["de"],
+    name: "Design Engineer",
+    detail: "Code track",
+    skills: ["Production React & TypeScript", "Git & pull requests", "Modern CSS & Tailwind", "AI IDE fluency: Cursor, v0, Codex"],
+  },
+  {
+    id: "meta",
+    sets: ["meta"],
+    name: "Meta-Designer",
+    detail: "Systems track",
+    skills: ["Design token architecture", "System-level governance & accessibility guardrails", "Figma MCP integration", "Business logic encoding"],
+  },
+  {
+    id: "ax",
+    sets: ["ax"],
+    name: "AX Designer",
+    detail: "Agentic track",
+    skills: ["Trust & transparency architecture", "Human-in-the-loop autonomy controls", "Failure recovery choreography", "Agent protocol literacy: MCP, AG-UI, A2A, A2UI"],
+  },
+  { id: "de-meta", sets: ["de", "meta"], name: "Code–system bridge", detail: "Wiring design tokens into production components." },
+  { id: "de-ax", sets: ["de", "ax"], name: "Dynamic runtime execution", detail: "Generative UI that is composed and rendered at runtime." },
+  { id: "meta-ax", sets: ["meta", "ax"], name: "Context & guardrail protocol", detail: "Prompt rules and constraints that keep agents on-system." },
+  {
+    id: "core",
+    sets: ["de", "meta", "ax"],
+    name: "Shared core",
+    detail: "Visual taste and quality discernment, plus framing problems against measurable business outcomes.",
+  },
+];

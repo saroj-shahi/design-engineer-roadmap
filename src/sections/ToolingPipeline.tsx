@@ -1,6 +1,6 @@
 import { useState, type CSSProperties } from "react";
 import { roleStacks, toolStages } from "../data/research";
-import { Eyebrow, Section, SectionHeader, TabPanel, Tabs } from "../components/ui";
+import { Section, SectionHeader, TabPanel, useTabList } from "../components/ui";
 
 export function ToolingPipeline() {
   const [roleId, setRoleId] = useState("de");
@@ -17,11 +17,15 @@ export function ToolingPipeline() {
         lede="Pick your role to light up the stages and tools in your recommended stack. Commit to one chain; tool sprawl costs more than it saves."
       />
 
-      <div className="grid-12 gap-y-8">
-        <div className="col-span-4 lg:col-span-4">
-          <Eyebrow>Your role</Eyebrow>
-          <Tabs idPrefix="role" label="Your role" variant="segmented" value={roleId} onChange={setRoleId} items={roleStacks.map((r) => ({ id: r.id, label: r.label }))} />
+      <div className="grid-12 gap-y-6">
+        <div className="col-span-4 lg:col-span-8">
+          <RoleMatrix value={roleId} onChange={setRoleId} />
         </div>
+        <p className="col-span-4 self-end text-sm leading-relaxed text-ink-3 lg:col-span-3 lg:col-start-10">
+          Each row is a role; each column a pipeline stage. A filled cell means the role's recommended stack works in that stage,
+          and the figure is how many of that stage's tools it uses. Stage 04, app builders, sits outside every recommended stack.
+          Pick a row to see its chain.
+        </p>
       </div>
 
       <TabPanel idPrefix="role" id={roleId} className="mt-12">
@@ -89,5 +93,60 @@ export function ToolingPipeline() {
         </ol>
       </TabPanel>
     </Section>
+  );
+}
+
+/** Role × stage matrix. Every row is a tab; the selected row drives the chain and the stage cards below. */
+function RoleMatrix({ value, onChange }: { value: string; onChange: (id: string) => void }) {
+  const { listProps, tabProps } = useTabList({ ids: roleStacks.map((r) => r.id), value, onChange, idPrefix: "role", orientation: "vertical" });
+  const cols = "grid grid-cols-[minmax(6.5rem,1.4fr)_repeat(5,minmax(0,1fr))] gap-x-1 sm:gap-x-1.5";
+
+  return (
+    <div>
+      <div aria-hidden className={`${cols} border-b border-ink pb-3`}>
+        <span className="label self-end text-ink-3">Role</span>
+        {toolStages.map((s) => (
+          <span key={s.id} className="flex min-w-0 flex-col">
+            <span className="label text-ink">0{s.id}</span>
+            <span className="mt-1 hidden text-xs leading-tight text-ink-3 sm:line-clamp-2">{s.name}</span>
+          </span>
+        ))}
+      </div>
+      <div {...listProps} aria-label="Your role" className="flex flex-col">
+        {roleStacks.map((r, i) => {
+          const on = r.id === value;
+          return (
+            <button
+              key={r.id}
+              {...tabProps(r.id, i)}
+              className={`group ${cols} items-center border-b border-line py-1.5 text-left transition-colors duration-500 ${on ? "bg-surface" : "hover:bg-sunken"}`}
+            >
+              <span className={`flex items-center gap-2 pr-2 text-sm leading-tight sm:text-[0.9375rem] ${on ? "font-medium text-ink" : "text-ink-2"}`}>
+                <span aria-hidden className={`tick shrink-0 text-accent transition-transform duration-500 ease-silk ${on ? "scale-100" : "scale-0"}`} />
+                {r.label}
+              </span>
+              {toolStages.map((s) => {
+                const n = r.toolsByStage[s.id]?.length ?? 0;
+                const has = r.stages.includes(s.id);
+                return (
+                  <span
+                    key={s.id}
+                    aria-hidden
+                    className={`grid h-10 place-items-center font-mono text-sm tabular transition-colors duration-500 ${
+                      has ? (on ? "bg-accent text-[var(--on-accent)]" : "bg-ink text-paper") : "border border-dashed border-line-strong"
+                    }`}
+                  >
+                    {has ? n : ""}
+                  </span>
+                );
+              })}
+              <span className="sr-only">
+                , works in stages {r.stages.join(", ")}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
   );
 }

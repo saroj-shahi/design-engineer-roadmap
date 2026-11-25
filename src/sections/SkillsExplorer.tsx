@@ -11,13 +11,15 @@ import {
   protocols,
   type Skill,
 } from "../data/research";
-import { Disclosure, Eyebrow, Lines, Section, SectionHeader, TabPanel, Tabs, Tag } from "../components/ui";
+import { Disclosure, Eyebrow, Lines, Section, SectionHeader, TabPanel, Tabs, Tag, useTabList } from "../components/ui";
+
+const patternTotal = patternCategories.reduce((n, c) => n + c.patterns.length, 0);
 
 const domains = [
-  { id: "core", label: "Core design & judgment", sub: "Layer 01" },
-  { id: "eng", label: "Front-end & repo fluency", sub: "Layer 02" },
-  { id: "ax", label: "Agentic experience & protocols", sub: "Layer 03" },
-  { id: "patterns", label: "Human-AI pattern library", sub: "Appendix" },
+  { id: "core", label: "Core design & judgment", sub: "Layer 01", items: coreSkills.map((s) => s.name) },
+  { id: "eng", label: "Front-end & repo fluency", sub: "Layer 02", items: engineeringSkills.map((s) => s.name) },
+  { id: "ax", label: "Agentic experience & protocols", sub: "Layer 03", items: [...axDomains.map((s) => s.name), "Protocols: " + protocols.map((p) => p.name).join(", ")] },
+  { id: "patterns", label: "Human-AI pattern library", sub: "Appendix", items: [`${patternTotal} named patterns in ${patternCategories.length} families`] },
 ];
 
 export function SkillsExplorer() {
@@ -33,7 +35,7 @@ export function SkillsExplorer() {
         lede="Product design is now a layered stack. Work down it, from durable judgment to the protocols agents use to talk to each other."
       />
 
-      <Tabs idPrefix="skills" label="Skill domains" value={tab} onChange={setTab} items={domains} variant="list" />
+      <LayerStack value={tab} onChange={setTab} />
 
       <div className="mt-14 sm:mt-20">
         {tab === "core" && (
@@ -66,6 +68,40 @@ export function SkillsExplorer() {
         )}
       </div>
     </Section>
+  );
+}
+
+/** The skills stack drawn as offset plates: each layer sits one grid column further in, so the page
+ *  reads top-down from durable judgment to protocols. Each plate is a tab for the panel below. */
+function LayerStack({ value, onChange }: { value: string; onChange: (id: string) => void }) {
+  const { listProps, tabProps } = useTabList({ ids: domains.map((d) => d.id), value, onChange, idPrefix: "skills", orientation: "vertical" });
+  return (
+    <div {...listProps} aria-label="Skill layers" className="flex flex-col">
+      {domains.map((d, i) => {
+        const on = d.id === value;
+        const appendix = d.id === "patterns";
+        return (
+          <button
+            key={d.id}
+            {...tabProps(d.id, i)}
+            style={{ "--step": i } as CSSProperties}
+            className={`group relative -mt-px grid grid-cols-[4.5rem_1fr] items-baseline gap-x-4 border px-4 py-5 text-left transition-colors duration-500 sm:grid-cols-[6rem_1fr_auto] sm:px-6 lg:ml-[calc(var(--step)*(100%_+_24px)/12)] ${
+              appendix ? "mt-4 border-dashed" : ""
+            } ${on ? "z-[1] border-ink bg-surface text-ink" : "border-line-strong text-ink-3 hover:text-ink"}`}
+          >
+            <span aria-hidden className={`absolute inset-y-0 left-0 w-[3px] origin-top bg-accent transition-transform duration-700 ease-silk ${on ? "scale-y-100" : "scale-y-0"}`} />
+            <span className={`label ${on ? "text-accent-ink" : "text-ink-3"}`}>{d.sub}</span>
+            <span className="min-w-0">
+              <span className="display-m block">{d.label}</span>
+              <span className={`mt-2 block text-sm leading-relaxed ${on ? "text-ink-2" : "text-ink-3"}`}>{d.items.join(" / ")}</span>
+            </span>
+            <span aria-hidden className={`label hidden self-center sm:block ${on ? "text-ink" : "text-ink-3"}`}>
+              {on ? "Reading ↓" : "Open"}
+            </span>
+          </button>
+        );
+      })}
+    </div>
   );
 }
 

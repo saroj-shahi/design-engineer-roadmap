@@ -16,6 +16,13 @@ import { CheckRow, Eyebrow, Meter, Section, SectionHeader, SubHead, Tag, usePers
 
 type Track = "a" | "b";
 
+/** The six months fall into three two-month phases; notes are the months' own AI policies. */
+const phases = [
+  { name: "Foundations", months: [1, 2] },
+  { name: "Acceleration", months: [3, 4] },
+  { name: "Production", months: [5, 6] },
+].map((p) => ({ ...p, note: p.months.map((m) => aiPolicyLabel[sixMonthPlan[m - 1].aiPolicy]).join(" → ") }));
+
 export function Roadmap() {
   const [track, setTrack] = useState<Track>("a");
   const tracks = [
@@ -138,6 +145,20 @@ function TrackA() {
       <div>
         <SubHead n="A.2" title="A six-month technical transition" note="Browser standards first, AI acceleration second. Standardised on React, TypeScript and Tailwind." />
 
+        <ol aria-label="Phases" className="mb-3 grid grid-cols-6 gap-x-2">
+          {phases.map((p) => {
+            const on = p.months.includes(month);
+            return (
+              <li key={p.name} className="col-span-2">
+                <span aria-hidden className={`block h-2 border-x border-t transition-colors duration-500 ${on ? "border-accent" : "border-line-strong"}`} />
+                <p className={`label mt-2 transition-colors duration-500 ${on ? "text-accent-ink" : "text-ink-3"}`}>
+                  {p.name} <span className="sr-only">: months {p.months.join(" and ")}</span>
+                </p>
+                <p className={`mt-1 text-xs leading-snug transition-colors duration-500 ${on ? "text-ink" : "text-ink-3"}`}>{p.note}</p>
+              </li>
+            );
+          })}
+        </ol>
         <div {...months.listProps} aria-label="Month" className="grid grid-cols-6 border-t border-ink">
           {sixMonthPlan.map((x, i) => {
             const on = month === x.month;

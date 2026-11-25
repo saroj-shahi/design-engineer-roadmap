@@ -9,6 +9,8 @@ import {
   patternCategories,
   sources,
 } from "../data/research";
+import { ArchetypeVenn } from "../components/ArchetypeVenn";
+import { HandoffFlow } from "../components/HandoffFlow";
 import { BasisBadge, CountUp, Disclosure, Eyebrow, Lines, Magnetic, Roll, Tag, useTabList } from "../components/ui";
 
 const patternCount = patternCategories.reduce((n, c) => n + c.patterns.length, 0);
@@ -120,6 +122,8 @@ function HandoffEconomics() {
         </div>
 
         <div className="col-span-4 space-y-24 lg:col-span-7 lg:col-start-6">
+          <HandoffFlow />
+
           {/* Case studies */}
           <div className="space-y-14">
             {handoffCases.map((c) => (
@@ -261,6 +265,10 @@ function Archetypes() {
           </p>
         </div>
       </header>
+
+      <div className="mb-20 sm:mb-28">
+        <ArchetypeVenn selected={sel} />
+      </div>
 
       <div {...listProps} aria-label="Role archetypes" className="border-t border-ink">
         {archetypes.map((x, i) => {

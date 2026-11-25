@@ -289,7 +289,9 @@ export function useTabList({
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const onKeyDown = (e: KeyboardEvent<HTMLElement>) => {
-    const i = ids.indexOf(value);
+    // Step from the focused tab (it can differ from the selected one), falling back to the selection.
+    const focused = refs.current.findIndex((el) => el === document.activeElement);
+    const i = focused >= 0 ? focused : ids.indexOf(value);
     const fwd = orientation === "vertical" ? ["ArrowDown", "ArrowRight"] : ["ArrowRight"];
     const back = orientation === "vertical" ? ["ArrowUp", "ArrowLeft"] : ["ArrowLeft"];
     let n = -1;
