@@ -5,7 +5,7 @@
    Motion lives in index.css under .glyph and only moves sub-paths.
    ───────────────────────────────────────────────────────────── */
 
-import type { ArchetypeId } from "../data/research";
+import type { ArchetypeId, BasisKind } from "../data/research";
 
 type GlyphProps = { className?: string };
 
@@ -293,9 +293,98 @@ const library = {
       <path d="M6 17.5h7" />
     </>
   ),
+  /** Hiring contraction / downward trend bar chart. */
+  trendDown: () => (
+    <>
+      <path d="M2.75 20.25h18.5" />
+      <rect x="4" y="6" width="4" height="14.25" />
+      <rect x="10" y="10.5" width="4" height="9.75" />
+      <rect x="16" y="14.5" width="4" height="5.75" {...tint} />
+      <path d="M12.5 4.25l6.5 6.5M19 6.25v4.5h-4.5" stroke={A} />
+    </>
+  ),
+  /** Hiring share / proportion bar (majority engineering share). */
+  shareBar: () => (
+    <>
+      <rect x="2.75" y="5.5" width="18.5" height="6.5" />
+      <rect x="2.75" y="5.5" width="10.5" height="6.5" {...tint} />
+      <path d="M13.25 3.25v11" stroke={A} />
+      <rect x="2.75" y="15.25" width="18.5" height="4.5" />
+      <rect x="2.75" y="15.25" width="8.5" height="4.5" fill="currentColor" fillOpacity="0.18" />
+    </>
+  ),
+  /** Survey / poll findings: clipboard & horizontal tally bars. */
+  survey: () => (
+    <>
+      <rect x="4.25" y="3.5" width="15.5" height="17.5" />
+      <path d="M8.5 2v3M15.5 2v3" />
+      <path d="M8 9.25h8" stroke={A} />
+      <path d="M8 13.25h6" />
+      <path d="M8 17.25h4" />
+      <rect x="15.25" y="12.25" width="2" height="2" fill={A} stroke="none" />
+    </>
+  ),
+  /** Government / long-range forecast: rising trajectory with dashed projection. */
+  forecast: () => (
+    <>
+      <path d="M3.25 19.75h17.5M3.25 4.25v15.5" />
+      <path d="M6 16.5l4.5-3.25 3.25 1.75" />
+      <path d="M13.75 15l5.5-7.25" stroke={A} strokeDasharray="2 2" />
+      <path d="M15.75 7.5h3.75v3.75" stroke={A} />
+    </>
+  ),
+  /** Case study / single-organization before → after plate. */
+  caseStudy: () => (
+    <>
+      <rect x="3" y="5" width="7.5" height="14" />
+      <rect x="13.5" y="5" width="7.5" height="14" {...tint} />
+      <path d="M9.5 12h5m-2-2l2 2-2 2" stroke={A} />
+    </>
+  ),
+  /** High-volume applications / stacked inbox cards. */
+  stack: () => (
+    <>
+      <path d="M5.5 5h13" />
+      <path d="M4 8.75h16" />
+      <rect x="2.75" y="12.25" width="18.5" height="8" {...tint} />
+      <path d="M7 16.25h10" stroke={A} />
+    </>
+  ),
+  /** Single person / role mark: geometric head and mitered shoulders. */
+  user: () => (
+    <>
+      <circle cx="12" cy="7.5" r="3.75" {...tint} />
+      <path d="M4.5 20.25v-3l2.25-2.5h10.5l2.25 2.5v3" />
+    </>
+  ),
+  /** Multiple people / team collaboration mark. */
+  users: () => (
+    <>
+      <circle cx="9.25" cy="8" r="3.25" {...tint} />
+      <path d="M2.75 20.25v-2.75l2-2.25h9l2 2.25v2.75" />
+      <circle cx="16.75" cy="8.75" r="2.5" />
+      <path d="M16.5 14.75h2.75l2 2.25v3.25" />
+    </>
+  ),
 } as const;
 
 export type GlyphName = keyof typeof library;
+
+const basisGlyph: Record<BasisKind, GlyphName> = {
+  analytics: "trendDown",
+  survey: "survey",
+  projection: "forecast",
+  case: "caseStudy",
+};
+
+export function BasisGlyph({ basis, className = "size-3.5" }: { basis: BasisKind; className?: string }) {
+  const Draw = library[basisGlyph[basis]];
+  return (
+    <svg {...base} className={`inline-block shrink-0 ${className}`}>
+      <Draw />
+    </svg>
+  );
+}
 
 export function Glyph({ name, on = false, className = "", title }: { name: GlyphName; on?: boolean; className?: string; title?: string }) {
   const Draw = library[name];

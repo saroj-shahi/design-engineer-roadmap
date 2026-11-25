@@ -1,6 +1,7 @@
 import { useState, type CSSProperties } from "react";
 import { roleStacks, toolStages } from "../data/research";
-import { Section, SectionHeader, TabPanel, useTabList } from "../components/ui";
+import { BrandLogosFor } from "../components/BrandLogo";
+import { Section, SectionHeader, TabPanel, Tag, useTabList } from "../components/ui";
 import { Glyph, type GlyphName } from "../components/icons";
 
 const stageGlyph: Record<number, GlyphName> = { 1: "frame", 2: "roundtrip", 3: "branch", 4: "blocks" };
@@ -32,7 +33,10 @@ export function ToolingPipeline() {
       <TabPanel idPrefix="role" id={roleId} className="mt-12">
         <div className="card">
           <div className="card-head label">
-            <span>Recommended pipeline · {role.label}</span>
+            <span className="inline-flex items-center gap-1.5">
+              <Glyph name="user" className="!size-3.5 [--accent:currentColor]" />
+              <span>Recommended pipeline · {role.label}</span>
+            </span>
             <span>{role.stages.length} of {toolStages.length} stages active</span>
           </div>
           <div className="plate-field px-5 py-6 sm:px-7">
@@ -42,13 +46,14 @@ export function ToolingPipeline() {
                 return (
                   <li key={c} className="flex items-center gap-3">
                     <span
-                      className={`inline-flex items-baseline gap-2.5 border-2 px-3.5 py-2 shadow-[var(--sh-1)] ${
+                      className={`inline-flex items-center gap-2.5 border-2 px-3.5 py-2 shadow-[var(--sh-1)] ${
                         isLast ? "border-edge bg-accent text-[var(--on-accent)]" : "border-edge bg-card text-ink"
                       }`}
                     >
                       <span className={`label tabular ${isLast ? "text-[var(--on-accent)]" : "text-ink-3"}`}>
                         {String(i + 1).padStart(2, "0")}
                       </span>
+                      <BrandLogosFor text={c} max={3} className="size-4 sm:size-[1.125rem]" />
                       <span className="font-display text-[clamp(1.375rem,2.2vw,2rem)] leading-none tracking-tight">{c}</span>
                     </span>
                     {!isLast && (
@@ -85,17 +90,12 @@ export function ToolingPipeline() {
                 </div>
                 <span className={`numeral mt-5 text-[3.5rem] transition-colors duration-700 ${on ? "text-ink" : "text-ink-3"}`}>0{s.id}</span>
                 <h3 className={`mt-4 text-[1.0625rem] font-medium leading-snug tracking-tight transition-colors duration-700 ${on ? "text-ink" : "text-ink-3"}`}>{s.name}</h3>
-                <ul className="mt-4 flex flex-wrap gap-1">
+                <ul className="mt-4 flex flex-wrap gap-1.5">
                   {s.tools.map((t) => {
                     const hit = highlighted.includes(t);
                     return (
-                      <li
-                        key={t}
-                        className={`border px-1.5 py-[3px] font-mono text-[11px] leading-4 transition-colors duration-500 ${
-                          hit ? "border-accent text-accent-ink" : "border-line text-ink-3"
-                        }`}
-                      >
-                        {t}
+                      <li key={t}>
+                        <Tag tone={hit ? "accent" : "neutral"}>{t}</Tag>
                       </li>
                     );
                   })}
@@ -143,7 +143,8 @@ function RoleMatrix({ value, onChange }: { value: string; onChange: (id: string)
             >
               <span className={`flex items-center gap-2 pr-2 text-sm leading-tight sm:text-[0.9375rem] ${on ? "font-medium text-ink" : "text-ink-2"}`}>
                 <span aria-hidden className={`tick shrink-0 text-accent transition-transform duration-500 ease-silk ${on ? "scale-100" : "scale-0"}`} />
-                {r.label}
+                <Glyph name="user" className={`!size-3.5 shrink-0 ${on ? "text-ink" : "text-ink-3"}`} />
+                <span>{r.label}</span>
               </span>
               {toolStages.map((s) => {
                 const n = r.toolsByStage[s.id]?.length ?? 0;

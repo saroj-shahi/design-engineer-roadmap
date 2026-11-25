@@ -10,9 +10,10 @@ import {
   protocols,
   type Skill,
 } from "../data/research";
+import { BrandLogosFor } from "../components/BrandLogo";
 import { Glyph, type GlyphName } from "../components/icons";
 import { ProtocolArchitecture } from "../components/ProtocolArchitecture";
-import { Disclosure, Lines, Section, SectionHeader, TabPanel, Tabs, Tag, useTabList } from "../components/ui";
+import { Disclosure, Lines, Section, SectionHeader, TabPanel, Tabs, Tag, pageHref, useTabList } from "../components/ui";
 
 const patternTotal = patternCategories.reduce((n, c) => n + c.patterns.length, 0);
 
@@ -42,7 +43,15 @@ export function SkillsExplorer() {
             <SkillLedger skills={coreSkills} large />
             <Footnote>
               These still set you apart when AI makes the first draft. In a Q1 2026 Designer Fund / Foundation Capital survey, 40% of
-              teams said PMs or engineers now create UI with AI.
+              teams said PMs or engineers now create UI with AI. Browse full topic syllabi in{" "}
+              <a href={pageHref("library", "roadmaps", "ux-design")} className="hit link-ul-static font-medium text-ink">
+                UX Design
+              </a>{" "}
+              and{" "}
+              <a href={pageHref("library", "roadmaps", "product-design")} className="hit link-ul-static font-medium text-ink">
+                Product Design
+              </a>
+              .
             </Footnote>
           </TabPanel>
         )}
@@ -51,7 +60,15 @@ export function SkillsExplorer() {
             <SkillLedger skills={engineeringSkills} />
             <Footnote>
               Standardize on React, TypeScript and Tailwind CSS. Learn the browser before the AI: the six-month plan keeps AI code
-              generation switched off for all of month one.
+              generation switched off for all of month one. See full topic checklists in{" "}
+              <a href={pageHref("library", "roadmaps", "frontend")} className="hit link-ul-static font-medium text-ink">
+                Frontend
+              </a>{" "}
+              and{" "}
+              <a href={pageHref("library", "roadmaps", "design-system")} className="hit link-ul-static font-medium text-ink">
+                Design System
+              </a>
+              .
             </Footnote>
           </TabPanel>
         )}
@@ -264,9 +281,12 @@ function AxPanel() {
               headingLevel="h4"
               defaultOpen={i === 0}
               summary={
-                <span className="flex items-baseline gap-4">
+                <span className="flex items-center gap-4">
                   <code className={`font-mono text-base ${protoId === p.id ? "text-accent-ink" : "text-ink"}`}>{p.name}</code>
-                  <span className="label text-ink-3">{p.owner}</span>
+                  <span className="label inline-flex items-center gap-1.5 text-ink-3">
+                    <BrandLogosFor text={p.owner} max={1} className="size-3.5" />
+                    <span>{p.owner}</span>
+                  </span>
                 </span>
               }
             >

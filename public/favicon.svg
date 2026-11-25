@@ -1,6 +1,28 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <rect width="32" height="32" fill="#f7f6f2"/>
-  <rect x="2" y="2" width="28" height="28" stroke="#111111" stroke-width="2"/>
-  <rect x="6.5" y="6.5" width="12.5" height="12.5" stroke="#111111" stroke-width="2"/>
-  <rect x="13" y="13" width="12.5" height="12.5" fill="#ff3b00" fill-opacity="0.22" stroke="#ff3b00" stroke-width="2"/>
+  <style>
+    .bg { fill: #f7f6f2; }
+    .ink { stroke: #111111; }
+    .node { fill: #f7f6f2; stroke: #111111; }
+    .accent-stroke { stroke: #ff3b00; }
+    .accent-fill { fill: #ff3b00; fill-opacity: 0.2; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #131312; }
+      .ink { stroke: #edebe5; }
+      .node { fill: #131312; stroke: #edebe5; }
+      .accent-stroke { stroke: #ff4a12; }
+      .accent-fill { fill: #ff4a12; fill-opacity: 0.26; }
+    }
+  </style>
+  <rect class="bg" width="32" height="32" />
+  <rect class="ink" x="1.5" y="1.5" width="29" height="29" stroke-width="1.5" stroke-opacity="0.22" />
+  <!-- Design frame + vector corner handles -->
+  <rect class="ink" x="6" y="7" width="13" height="18" stroke-width="2" />
+  <rect class="node" x="4.25" y="5.25" width="3.5" height="3.5" stroke-width="1.5" />
+  <rect class="node" x="17.25" y="5.25" width="3.5" height="3.5" stroke-width="1.5" />
+  <rect class="node" x="4.25" y="23.25" width="3.5" height="3.5" stroke-width="1.5" />
+  <rect class="node" x="17.25" y="23.25" width="3.5" height="3.5" stroke-width="1.5" />
+  <!-- Code merge zone + slash + angle bracket -->
+  <polygon class="accent-fill" points="14,10.5 19,10.5 25,16 19,21.5 14,21.5" />
+  <path class="accent-stroke" d="M12 20.5L15.5 11.5" stroke-width="2" stroke-linecap="square" />
+  <path class="accent-stroke" d="M21 10L27 16L21 22" stroke-width="2.25" stroke-linecap="square" stroke-linejoin="miter" />
 </svg>

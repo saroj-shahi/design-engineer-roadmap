@@ -7,7 +7,7 @@ import { protocols } from "../data/research";
    Clicking a protocol chip selects it and explains its role and UX impact in the plate footer. */
 
 const bridges: { id: string; label: string; sub: string }[] = [
-  { id: "ag-ui", label: "AG-UI", sub: "Live state stream" },
+  { id: "agui", label: "AG-UI", sub: "Live state stream" },
   { id: "a2ui", label: "A2UI", sub: "Approved UI components" },
   { id: "mcp", label: "MCP", sub: "Tools, Figma & data" },
   { id: "a2a", label: "A2A", sub: "Peer agent handoff" },
@@ -45,8 +45,8 @@ export function ProtocolArchitecture({
 
           {/* Left node: User & UI */}
           <rect x="20" y="68" width="156" height="148" fill="var(--card)" stroke="var(--edge)" strokeWidth="2" />
-          <rect x="20" y="68" width="156" height="26" fill="var(--edge)" />
-          <text x="32" y="85" fill="var(--card)" style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.08em" }}>
+          <rect x="20" y="68" width="156" height="26" fill="var(--inverse-bg)" />
+          <text x="32" y="85" fill="var(--inverse-fg)" style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.08em" }}>
             SURFACE
           </text>
           <text x="32" y="132" fill="var(--ink)" style={{ fontFamily: "var(--font-display)", fontStretch: "72%", fontWeight: 600, fontSize: 22 }}>
@@ -106,9 +106,9 @@ export function ProtocolArchitecture({
           {/* 4 interactive protocol bridges */}
           {bridges.map((b) => {
             const on = active.id === b.id;
-            const lineY = b.id === "ag-ui" || b.id === "mcp" ? 96 : 192;
-            const x1 = b.id === "ag-ui" || b.id === "a2ui" ? 176 : 524;
-            const x2 = b.id === "ag-ui" || b.id === "a2ui" ? 356 : 704;
+            const lineY = b.id === "agui" || b.id === "mcp" ? 96 : 192;
+            const x1 = b.id === "agui" || b.id === "a2ui" ? 176 : 524;
+            const x2 = b.id === "agui" || b.id === "a2ui" ? 356 : 704;
             const midX = (x1 + x2) / 2;
             return (
               <g

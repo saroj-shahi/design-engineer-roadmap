@@ -1,0 +1,23 @@
+{
+  "name": "Design Engineer Field Guide",
+  "short_name": "DE Field Guide",
+  "description": "Practical 2026 guide for designers upskilling into code or Design Engineer, Meta-Designer, and AX roles: market data, skills, tooling, and a 6-month plan.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f7f6f2",
+  "theme_color": "#ff3b00",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

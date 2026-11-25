@@ -109,8 +109,14 @@ function Row({
                 solid ? "!bg-inverse text-on-inverse" : "text-ink"
               }`}
             >
-              <span className={`label ${solid ? "text-inverse-muted" : "text-ink-3"}`}>
-                {String(i + 1).padStart(2, "0")} · {s.who}
+              <span className={`label inline-flex items-center gap-1.5 ${solid ? "text-inverse-muted" : "text-ink-3"}`}>
+                <Glyph
+                  name={s.who === "Both" || s.who === "Shared" || s.who === "Team" ? "users" : "user"}
+                  className={`!size-3.5 ${solid ? "[--accent:currentColor]" : ""}`}
+                />
+                <span>
+                  {String(i + 1).padStart(2, "0")} · {s.who}
+                </span>
               </span>
               <Glyph name={s.glyph} className="mt-3.5 !size-9 sm:!size-11" />
               <span className="mt-auto pt-3 font-display text-[1.25rem] leading-[1.06]">{s.name}</span>

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { BrandLogo } from "./BrandLogo";
 import { Glyph, ArchetypeGlyph, type GlyphName } from "./icons";
 import { prefersReducedMotion, usePointerParallax } from "./ui";
 import { archetypes } from "../data/research";
@@ -84,7 +85,7 @@ export function HeroStage() {
               aria-pressed={phase === p}
               onClick={() => pick(p)}
               className={`label h-11 border-edge px-3.5 transition-colors duration-300 first:border-r-2 sm:h-9 sm:px-4 ${
-                phase === p ? (p === "after" ? "bg-accent text-[var(--on-accent)]" : "bg-edge text-card") : "text-ink-3 hover:bg-sunken hover:text-ink"
+                phase === p ? (p === "after" ? "bg-accent text-[var(--on-accent)]" : "bg-inverse text-on-inverse") : "text-ink-3 hover:bg-sunken hover:text-ink"
               }`}
             >
               {p === "before" ? "Before" : "Now"}
@@ -129,7 +130,20 @@ export function HeroStage() {
           <span className="hs-tag-sub label">spec · redlines · back-and-forth</span>
         </div>
 
-        <StageCard className="hs-designer" depth={3} head="Step 1 · Designer" glyph="frame" title="Designs it" sub="Screens in Figma" />
+        <StageCard
+          className="hs-designer"
+          depth={3}
+          head="Step 1 · Designer"
+          glyph="frame"
+          title="Designs it"
+          sub={
+            <span className="inline-flex items-center gap-1">
+              <span>Screens in</span>
+              <BrandLogo brand="figma" className="size-[1.05em]" />
+              <span>Figma</span>
+            </span>
+          }
+        />
         <StageCard
           className="hs-engineer"
           depth={5}
@@ -184,7 +198,7 @@ function StageCard({
 }) {
   return (
     <div className={`hs-card card ${className}`} style={{ "--depth": depth } as CSSProperties}>
-      <p className={`card-head label ${accent ? "!bg-accent !text-[var(--on-accent)]" : ""}`}>{head}</p>
+      <p className={`card-head label ${accent ? "bg-accent text-[var(--on-accent)]" : ""}`}>{head}</p>
       <div className="hs-body hs-body-row">
         <Glyph name={glyph} on={on} className="hs-glyph text-ink" />
         <div className="min-w-0">

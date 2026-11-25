@@ -1,5 +1,4 @@
 import { sources, worksCited } from "../data/research";
-import { Lines } from "../components/ui";
 import { ExternalGlyph } from "../components/icons";
 
 function hostnameOf(url: string) {
@@ -23,15 +22,9 @@ function ExtLink({ href, children }: { href: string; children: React.ReactNode }
 export function Footer() {
   return (
     <footer className="relative z-[1] bg-inverse text-on-inverse">
-      <div className="wrap pb-10 pt-16 sm:pt-24">
-        <Lines
-          as="p"
-          className="display-xl"
-          lines={["Learn the browser.", <em className="text-inverse-accent">Then direct the AI.</em>]}
-        />
-
+      <div className="wrap pb-10 pt-10 sm:pt-14">
         {/* Sources stay one click away instead of filling every page */}
-        <details className="group/src mt-16 border-t border-inverse-line sm:mt-24">
+        <details className="group/src border-t border-inverse-line">
           <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-6 [&::-webkit-details-marker]:hidden">
             <span className="text-base font-medium">Sources and method</span>
             <span className="label text-inverse-muted">

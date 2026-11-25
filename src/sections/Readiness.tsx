@@ -4,14 +4,28 @@ import { CheckRow, Section, SectionHeader, Tabs, navigate, pageHref, parseString
 import { Glyph } from "../components/icons";
 
 /** One checklist per track, each with its own saved ticks. Chapter 05 links here instead of repeating them. */
-const lists: Record<Track, { key: string; items: ChecklistItem[]; who: string; lede: string; start: string; ready: string }> = {
+const lists: Record<
+  Track,
+  {
+    key: string;
+    items: ChecklistItem[];
+    who: string;
+    lede: string;
+    start: string;
+    readyLabel: string;
+    ready: string;
+    almostNote: (title: string) => string;
+  }
+> = {
   a: {
     key: "de-guide:readiness",
     items: readinessItems,
     who: "Working designer",
-    lede: "Proof a hiring team can open: something that runs, the code behind it, and evidence you can build with AI.",
-    start: "Start with one live demo. It's the quickest signal a reviewer can check.",
-    ready: "Every item checked. Send about 20 careful applications to teams that hire hybrids.",
+    lede: "Concrete proof you can work across design and code — to demo to your team, support a promotion case, or share when you're ready for a new\u00A0role.",
+    start: "Start with one live demo. It's the quickest proof to share with teammates or reviewers.",
+    readyLabel: "Ready to ship",
+    ready: "Every item checked. Bring this workflow into your team's next project — or, if you're looking to move, send about 20 focused applications to teams that hire hybrids.",
+    almostNote: (title) => `One item left: “${title}”. Close that gap next.`,
   },
   b: {
     key: "de-guide:junior-checklist",
@@ -19,15 +33,17 @@ const lists: Record<Track, { key: string; items: ChecklistItem[]; who: string; l
     who: "Starting out",
     lede: "What screeners look for in a junior portfolio alongside your case studies.",
     start: "Start with the first item. It needs no code: open each case study with who you are and the problem you solved.",
+    readyLabel: "Ready to apply",
     ready: "Every item checked. Aim at seed-stage startups, small agencies and industry B2B companies, not only big tech.",
+    almostNote: (title) => `One item left: “${title}”. Finish it before you apply.`,
   },
 };
 
 /** Status line by share of items done. Mid-way notes name the first unticked item, so they fit either track's list. */
 function levelFor(done: number, total: number, list: (typeof lists)[Track], next?: ChecklistItem) {
   if (done === 0) return { label: "Not started", note: list.start };
-  if (done === total || !next) return { label: "Ready to apply", note: list.ready };
-  if (done === total - 1) return { label: "Almost ready", note: `One item left: “${next.title}”. Finish it before you apply.` };
+  if (done === total || !next) return { label: list.readyLabel, note: list.ready };
+  if (done === total - 1) return { label: "Almost ready", note: list.almostNote(next.title) };
   if (done >= total / 2) return { label: "Getting close", note: `${done * 2 === total ? "Halfway there" : "Over halfway"}. Next up: “${next.title}”.` };
   return { label: "Foundations", note: `Keep going. Next up: “${next.title}”.` };
 }
@@ -56,7 +72,7 @@ export function Readiness({ track }: { track: Track | null }) {
         id="readiness"
         level="h1"
         glyph="check"
-        title={["Is your portfolio", <em>ready to ship?</em>]}
+        title={["Are you ready", <em>to ship in code?</em>]}
         lede={`Tick what's true today. ${saveNote}`}
       />
 
@@ -83,11 +99,13 @@ export function Readiness({ track }: { track: Track | null }) {
         <div className="mb-10">
           <p className="mb-4 text-ink-2">Pick your track to see your checklist.</p>
           <div className="flex flex-wrap gap-3">
-            <button type="button" onClick={() => pick("a")} className="hit label h-11 border-2 border-edge bg-card px-4 text-ink shadow-[var(--sh-1)] hover:bg-sunken">
-              I'm a working designer
+            <button type="button" onClick={() => pick("a")} className="hit label inline-flex h-11 items-center gap-2 border-2 border-edge bg-card px-4 text-ink shadow-[var(--sh-1)] hover:bg-sunken">
+              <Glyph name="user" className="!size-4" />
+              <span>I'm a working designer</span>
             </button>
-            <button type="button" onClick={() => pick("b")} className="hit label h-11 border-2 border-edge bg-card px-4 text-ink shadow-[var(--sh-1)] hover:bg-sunken">
-              I'm starting out
+            <button type="button" onClick={() => pick("b")} className="hit label inline-flex h-11 items-center gap-2 border-2 border-edge bg-card px-4 text-ink shadow-[var(--sh-1)] hover:bg-sunken">
+              <Glyph name="user" className="!size-4" />
+              <span>I'm starting out</span>
             </button>
           </div>
         </div>
@@ -173,7 +191,7 @@ function Checklist({ track }: { track: Track }) {
       </div>
 
       <div className="col-span-4 self-start lg:col-span-7 lg:col-start-6">
-        <p className="mb-5 max-w-[56ch] leading-relaxed text-ink-2">{list.lede}</p>
+        <p className="mb-5 max-w-[52ch] leading-relaxed text-pretty text-ink-2">{list.lede}</p>
         <ul className="card px-5 sm:px-6 [&>li:last-child]:border-b-0">
           {list.items.map((it, i) => (
             <CheckRow key={it.id} index={i + 1} checked={set.has(it.id)} onToggle={() => toggle(it.id)} title={it.title} detail={it.detail} />

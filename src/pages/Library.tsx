@@ -1,7 +1,9 @@
 import { Comparison } from "../sections/Comparison";
+import { RoadmapTopics } from "../sections/RoadmapTopics";
 import { SkillsExplorer } from "../sections/SkillsExplorer";
 import { ToolingPipeline } from "../sections/ToolingPipeline";
 import { glossary } from "../data/research";
+import { externalRoadmaps } from "../data/roadmaps";
 import { useEffect, useState } from "react";
 import { ContextBar, Lines, NextPage, jumpTo, lastPlanHref, navigate, pageHref } from "../components/ui";
 
@@ -9,6 +11,7 @@ const shelves = [
   { id: "compare", label: "Compare roles" },
   { id: "skills", label: "Skills" },
   { id: "tools", label: "Tools" },
+  { id: "roadmaps", label: "Roadmaps" },
   { id: "glossary", label: "Glossary" },
 ] as const;
 type Shelf = (typeof shelves)[number]["id"];
@@ -20,11 +23,13 @@ const sortedGlossary = [...glossary].sort((a, b) => a.term.localeCompare(b.term)
 export function Library({ shelf: raw, term }: { shelf?: string; term?: string }) {
   const shelf: Shelf = shelves.some((s) => s.id === raw) ? (raw as Shelf) : "compare";
   const shelfLabel = shelves.find((s) => s.id === shelf)!.label;
-  const open = shelf === "glossary" && term ? glossary.find((g) => slugify(g.term) === term) : undefined;
+  const openTerm = shelf === "glossary" && term ? glossary.find((g) => slugify(g.term) === term) : undefined;
+  const openRoadmap = shelf === "roadmaps" ? externalRoadmaps.find((r) => r.slug === term) : undefined;
+  const subLabel = openTerm?.term ?? openRoadmap?.title;
   const trail = [
     { label: "Library", href: pageHref("library") },
-    { label: shelfLabel, href: open ? pageHref("library", shelf) : undefined },
-    ...(open ? [{ label: open.term }] : []),
+    { label: shelfLabel, href: subLabel ? pageHref("library", shelf) : undefined },
+    ...(subLabel ? [{ label: subLabel }] : []),
   ];
   return (
     <div className="pt-8 sm:pt-12">
@@ -41,8 +46,8 @@ export function Library({ shelf: raw, term }: { shelf?: string; term?: string })
                 key={s.id}
                 href={pageHref("library", s.id)}
                 aria-current={selected ? "page" : undefined}
-                className={`label flex min-h-11 shrink-0 items-center justify-center border-edge px-4 text-center transition-colors duration-300 ease-silk max-sm:odd:border-r-2 max-sm:[&:nth-child(-n+2)]:border-b-2 sm:border-r-2 sm:last:border-r-0 ${
-                  selected ? "bg-edge text-card" : "text-ink-3 hover:bg-sunken hover:text-ink"
+                className={`label flex min-h-11 shrink-0 items-center justify-center border-edge px-4 text-center transition-colors duration-300 ease-silk max-sm:border-b-2 max-sm:odd:border-r-2 max-sm:last:col-span-2 max-sm:last:border-b-0 max-sm:last:border-r-0 sm:border-r-2 sm:last:border-r-0 ${
+                  selected ? "bg-inverse text-on-inverse" : "text-ink-3 hover:bg-sunken hover:text-ink"
                 }`}
               >
                 {s.label}
@@ -59,6 +64,7 @@ export function Library({ shelf: raw, term }: { shelf?: string; term?: string })
           {shelf === "compare" && <Comparison />}
           {shelf === "skills" && <SkillsExplorer />}
           {shelf === "tools" && <ToolingPipeline />}
+          {shelf === "roadmaps" && <RoadmapTopics slug={term} />}
           {shelf === "glossary" && <Glossary term={term} />}
         </div>
       </div>

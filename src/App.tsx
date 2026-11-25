@@ -71,11 +71,14 @@ export default function App() {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  // Each page gets its own document title, naming the sub-state where there is one.
+  // Each page gets its own document title & meta description, naming the sub-state where there is one.
   const title = titleFor(route);
+  const description = descriptionFor(route);
   useEffect(() => {
     document.title = title;
-  }, [title]);
+    const meta = document.head.querySelector<HTMLMetaElement>('meta[name="description"]');
+    if (meta) meta.content = description;
+  }, [title, description]);
 
   // Keep client-side NotFound routes out of search indexes.
   useEffect(() => {
@@ -148,21 +151,68 @@ export default function App() {
 
 const SITE = "Design Engineer Field Guide";
 
+const roleTitles: Record<string, string> = {
+  de: "Design Engineer",
+  meta: "Meta-Designer & Systems Architect",
+  ax: "Agentic Experience (AX) Designer",
+};
+
+const shelfTitles: Record<string, string> = {
+  compare: "Compare Roles",
+  skills: "Skills Architecture",
+  tools: "Tooling Pipeline",
+  roadmaps: "Topic Roadmaps",
+  glossary: "Glossary",
+};
+
 function titleFor(route: Route) {
-  if (route.notFound) return `Page not found · ${SITE}`;
-  if (route.page === "home") return "Designer → Design Engineer · 2026 Field Guide";
+  if (route.notFound) return `Page Not Found | ${SITE}`;
+  if (route.page === "home") return `${SITE} | 2026 Roles, Skills & Roadmap`;
   const p = pages.find((x) => x.id === route.page)!;
+  if (route.page === "roles") {
+    const roleName = route.parts[0] ? roleTitles[route.parts[0]] : null;
+    return roleName ? `${roleName} | ${SITE}` : `Design Engineer, Meta-Designer & AX Roles | ${SITE}`;
+  }
   if (route.page === "plan") {
     const plan = planFromParts(route.parts);
     if (plan) {
       const step = plan.track === "a" ? `Month ${plan.month} · Track A` : `Stage ${plan.stage} · Track B`;
-      return `${step} · ${p.title} · ${SITE}`;
+      return `${step} — ${p.title} | ${SITE}`;
     }
   }
   if (route.page === "ready" && (route.parts[0] === "a" || route.parts[0] === "b")) {
-    return `Track ${route.parts[0].toUpperCase()} · ${p.title} · ${SITE}`;
+    return `Track ${route.parts[0].toUpperCase()} — ${p.title} | ${SITE}`;
   }
-  return `${p.title} · ${SITE}`;
+  if (route.page === "library") {
+    const shelf = route.parts[0] ?? "compare";
+    if (shelf === "roadmaps") {
+      const label = route.parts[1]
+        ? route.parts[1]
+            .split("-")
+            .map((w) => (w === "ux" || w === "ai" ? w.toUpperCase() : w.charAt(0).toUpperCase() + w.slice(1)))
+            .join(" ")
+        : null;
+      return label ? `${label} Roadmap | ${SITE}` : `Topic Roadmaps | ${SITE}`;
+    }
+    return `${shelfTitles[shelf] ?? p.title} | ${SITE}`;
+  }
+  return `${p.title} | ${SITE}`;
+}
+
+function descriptionFor(route: Route) {
+  if (route.notFound) return "That page does not exist in the Design Engineer Field Guide.";
+  switch (route.page) {
+    case "roles":
+      return "Compare Design Engineer, Meta-Designer, and Agentic Experience (AX) Designer roles, deliverables, skill signals, and handoff economics.";
+    case "plan":
+      return "Follow a 6-month upskilling roadmap for working designers (Track A) or a 4-stage beginner roadmap (Track B) with paired roadmap.sh topics.";
+    case "ready":
+      return "Interactive proof-of-work readiness checklist for designers shipping code in their current role or preparing for hybrid roles.";
+    case "library":
+      return "Reference library comparing traditional and hybrid design work, layered skills, AI tooling pipelines, 8 roadmap.sh tracks, and a plain-English glossary.";
+    default:
+      return "Practical 2026 guide for designers upskilling into code or Design Engineer, Meta-Designer, and AX roles: market data, skills, tooling, and a 6-month plan.";
+  }
 }
 
 /** Shown for any hash that names no page. Keeps the bad URL so the reader can see what went wrong. */

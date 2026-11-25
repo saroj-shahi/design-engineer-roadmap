@@ -1,0 +1,63 @@
+# AGENTS.md
+
+Instructions for AI coding agents working in the **Design Engineer Field Guide** repository.
+
+## Project overview
+
+A static, five-page interactive field guide (**Design Engineer Field Guide · 2026**) built with **React 18 + TypeScript + Vite 5 + Tailwind CSS v4**. No backend, no external router library, no test runner.
+
+- **Audience:** Serves **both** working product designers upskilling inside their current role and designers aiming for a new hybrid role (`Track A`), plus beginners/career-switchers breaking into their first role (`Track B`). Never drift back to job-search-only framing on Home, Roles, Track A, or Checklist.
+- **Design system:** Read [DESIGN.md](DESIGN.md) before changing layout, colors, typography, cards, icons, or CSS.
+- **Claude-specific setup:** See [CLAUDE.md](CLAUDE.md) and `.claude/agents/` for persona review agents and dev launch config.
+
+## Commands
+
+```bash
+npm run dev        # Vite dev server (http://localhost:5173/)
+npm run typecheck  # tsc -b (strict; noUnusedLocals & noUnusedParameters are on)
+npm run build      # tsc -b && vite build -> dist/
+npm run preview    # Preview production build locally
+```
+
+Always run `npm run typecheck` (or `npm run build`) after edits.
+
+## Architecture & file map
+
+- `index.html`, `public/site.webmanifest`, `public/favicon.svg`, `public/404.html`: SEO metadata, Open Graph, Twitter/X Card, JSON-LD `@graph` (`WebSite` + `LearningResource`), theme-aware SVG favicon, and pre-paint theme init (`public/theme-init.js`).
+- `src/App.tsx`: App shell, hash route dispatch, dynamic `document.title` and `<meta name="description">`, skip link, error boundary, `Alt+G` 12-column grid overlay.
+- `src/pages/*`: Thin page composers — `Home`, `Roles`, `Plan`, `Ready`, `Library`.
+- `src/sections/*`: Content blocks — `Hero` (includes `Archetypes` and `HandoffEconomics`), `Roadmap` (Track A & Track B), `Readiness`, `Comparison`, `SkillsExplorer`, `ToolingPipeline`, `RoadmapTopics`, `Footer`.
+- `src/components/ui.tsx`: Shared primitives (`Section`, `SectionHeader`, `SubHead`, `Tabs`, `TabPanel`, `useTabList`, `Disclosure`, `CheckRow`, `TopicCheckbox`, `Tag`, `BasisBadge`, `ContextBar`, `Meter`, `NextPage`), hash router (`useRoute`, `pageHref`, `navigate`, `planFromParts`), theme hook, and safe `localStorage` helpers (`usePersistentSet`). **Check here before writing a new primitive.**
+- `src/components/icons.tsx`: 24×24 Swiss geometric glyphs (`Glyph`, `ArchetypeGlyph`, `BasisGlyph`, `ArrowGlyph`, `ArrowBackGlyph`, `ExternalGlyph`), including metric icons (`trendDown`, `shareBar`, `survey`, `forecast`, `caseStudy`, `stack`) and persona/role icons (`user`, `users`).
+- `src/components/BrandLogo.tsx`: 25 monochrome `currentColor` app/brand marks (`BrandLogo`, `BrandLogosFor`, `detectBrands`) automatically wired into `Tag`, `ToolingPipeline`, resource links, protocol owners, and `roadmap.sh` links.
+- `src/components/Nav.tsx`: Sticky header, `BrandMark` (Design × Code emblem + wordmark lockup), responsive 5-page nav, scroll progress bar, light/dark toggle.
+- `src/components/*`: Data visualizations and interactive modules (`HeroStage`, `MarketShiftChart`, `ArchetypeVenn`, `HandoffFlow`, `HandoffPlate`, `AdoptionDumbbell`, `AiAutonomyRamp`, `ProtocolArchitecture`, `PlanRoadmapBase`, `RoadmapMap`).
+- `src/data/research.ts`: Single source of truth for all statistics, roles, plans, checklists, skills, tooling, protocols, sources, and glossary.
+- `src/data/roadmaps.ts`: Structured `roadmap.sh` curricula (8 core syllabi + companion skill tracks) shared between `PlanRoadmapBase` and `Library → Roadmaps`.
+- `src/index.css`: Design tokens (light + both dark-mode blocks), `@theme` mapping, `@layer components` primitives, typography wrapping rules, and reduced-motion-safe animations.
+
+## Non-negotiable content rules
+
+1. **Zero invented data:** Every figure, stat, percentage, company example, and citation must trace to `src/data/research.ts` ("The 2026 Product Design Evolution" brief). Edit data in `research.ts`, never hard-code numbers in JSX.
+2. **Honest metric basis:** Every `Metric` carries `basis: "survey" | "analytics" | "projection" | "case"` and renders through `BasisBadge`.
+3. **Respectful bridge tone:** Plain, direct prose. Never frame designers as "catching up" or engineers as gatekeepers; frame hybrid work as shrinking the handoff.
+4. **Dual Track A framing:** Track A copy (`Home`, `Roles`, `Plan`, `Ready`, `Comparison`) must serve working designers upskilling in their current job **and** those preparing for a new role.
+
+## Routing, storage & SEO rules
+
+- **Hash routing:** All in-app routes use `#/...` (`#/roles/de`, `#/plan/a/pde/m1`, `#/plan/b/s1`, `#/ready/a`, `#/library/roadmaps/frontend`). Keep the `legacy` anchor map in `ui.tsx` working.
+- **History discipline:** Navigating to a new page or library shelf pushes history (plain `<a href>`). Switching tabs/months/stages/roles within a page calls `navigate(hash, { replace: true })`.
+- **Resilient storage:** Prefix all `localStorage` keys with `de-guide:` and wrap every read/write in `try/catch` so the site works cleanly with storage blocked.
+- **Titles & meta:** Keep route titles on the `Page | Design Engineer Field Guide` pattern in `App.tsx`, and keep `index.html`, `site.webmanifest`, and `404.html` synchronized.
+
+## Verification checklist
+
+Before finishing any UI or content change:
+1. Run `npm run typecheck` and `npm run build` with zero errors.
+2. Check rendered views at desktop (`~1280px`) and mobile (`~375px`) in **both light and dark themes**.
+3. Confirm zero horizontal overflow, zero console/network errors, high-contrast headers/tabs in dark mode, clean keyboard focus order, and no orphan-word regressions.
+
+## Git rules
+
+- Commit messages: imperative, sentence case, no prefix (e.g., `Align home stat card footers across breakpoints`).
+- Never include AI agent attribution lines or `Co-Authored-By:` trailers for AI tools/models.

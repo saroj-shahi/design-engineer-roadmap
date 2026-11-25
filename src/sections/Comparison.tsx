@@ -1,5 +1,6 @@
 import { useState, type CSSProperties } from "react";
 import { comparison } from "../data/research";
+import { Glyph } from "../components/icons";
 import { Section, SectionHeader, TabPanel, Tabs, useMediaQuery } from "../components/ui";
 
 type View = "focus" | "table";
@@ -16,7 +17,7 @@ export function Comparison() {
         id="compare"
         glyph="compare"
         title={["What changes", <>when you <em>build it too.</em></>]}
-        lede="Two valid ways to do design work, side by side, and how hiring teams judge each one."
+        lede="Two valid ways to do design work, side by side — how they differ day to day and when teams evaluate them."
       />
 
       <div className="mb-10 flex flex-wrap items-center justify-between gap-4">
@@ -63,7 +64,10 @@ export function Comparison() {
                 ].map((c, i) => (
                   <div key={c.who} className="card flex flex-col" style={{ "--i": i } as CSSProperties}>
                     <p className="card-head label">
-                      <span>{c.who}</span>
+                      <span className="inline-flex items-center gap-1.5">
+                        <Glyph name="user" className="!size-3.5 [--accent:currentColor]" />
+                        <span>{c.who}</span>
+                      </span>
                     </p>
                     <p className="px-5 py-6 font-display text-[clamp(1.375rem,2vw,1.75rem)] leading-[1.15] tracking-tight text-ink sm:px-6">{c.text}</p>
                   </div>

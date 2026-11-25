@@ -7,6 +7,10 @@ export interface MapStep {
   title: string;
   /** Extra line under the title, e.g. the month's AI policy. */
   note?: string;
+  /** Paired roadmap.sh base label shown on the node, e.g. "UX Design · Product Design". */
+  base?: string;
+  /** Renders the step as the shared foundation/base anchor at the top of the spine. */
+  foundation?: boolean;
   left: string[];
   right: string;
 }
@@ -38,6 +42,9 @@ export function RoadmapMap({
     <div>
       <div className="mb-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-ink-2" aria-hidden>
         <span className="flex items-center gap-2">
+          <span className="rm-key rm-key-base" /> Base
+        </span>
+        <span className="flex items-center gap-2">
           <span className="rm-key rm-key-node" /> Step
         </span>
         <span className="flex items-center gap-2">
@@ -51,6 +58,7 @@ export function RoadmapMap({
       <ol className="rm" aria-label={label}>
         {steps.map((s, i) => {
           const on = s.id === active;
+          const isBase = Boolean(s.foundation);
           return (
             <li key={s.id} className="rm-row" data-reveal style={{ "--i": i } as CSSProperties}>
               <a
@@ -61,11 +69,34 @@ export function RoadmapMap({
                   e.preventDefault();
                   onPick(s.id);
                 }}
-                className={`rm-node card card-lift block ${on ? "card-on rm-node-on" : ""}`}
+                className={`rm-node card card-lift block ${
+                  isBase ? "rm-node-base" : on ? "card-on rm-node-on" : ""
+                }`}
               >
-                <span className="label block text-ink-3">{s.kicker}</span>
-                <span className="mt-1.5 block font-display text-[1.375rem] font-medium leading-[1.1] tracking-tight text-ink">{s.title}</span>
-                {s.note && <span className="mt-2 block text-xs text-ink-3">{s.note}</span>}
+                <span className={`label block ${isBase ? "text-inverse-accent" : "text-ink-3"}`}>{s.kicker}</span>
+                <span
+                  className={`mt-1.5 block font-display text-[1.375rem] font-medium leading-[1.1] tracking-tight ${
+                    isBase ? "text-on-inverse" : "text-ink"
+                  }`}
+                >
+                  {s.title}
+                </span>
+                {s.note && (
+                  <span className={`mt-2 block text-xs ${isBase ? "text-inverse-muted" : "text-ink-3"}`}>
+                    {s.note}
+                  </span>
+                )}
+                {s.base && (
+                  <span
+                    className={`label mt-2.5 block border-t pt-2 text-[10px] ${
+                      isBase
+                        ? "border-inverse-line text-inverse-muted"
+                        : "border-line text-ink-3"
+                    }`}
+                  >
+                    {s.base}
+                  </span>
+                )}
               </a>
 
               <ul className="rm-branch rm-left" aria-label={`${s.title}: ${leftLabel.toLowerCase()}`}>

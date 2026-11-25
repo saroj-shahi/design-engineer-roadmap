@@ -10,7 +10,8 @@ import {
   type ReactNode,
 } from "react";
 import { basisLabel, type BasisKind } from "../data/research";
-import { ArrowGlyph, Glyph, type GlyphName } from "./icons";
+import { BrandLogosFor } from "./BrandLogo";
+import { ArrowGlyph, BasisGlyph, Glyph, type GlyphName } from "./icons";
 
 /* ───────── Motion plumbing ───────── */
 
@@ -276,8 +277,9 @@ export function Tag({ children, tone = "neutral" }: { children: ReactNode; tone?
     solid: "border-ink bg-ink text-paper",
   };
   return (
-    <span className={`inline-flex max-w-full items-center border px-1.5 py-[3px] font-mono text-[11px] leading-4 tracking-tight ${tones[tone]}`}>
-      {children}
+    <span className={`inline-flex max-w-full items-center gap-1.5 border px-1.5 py-[3px] font-mono text-[11px] leading-4 tracking-tight ${tones[tone]}`}>
+      {typeof children === "string" && <BrandLogosFor text={children} max={2} className="size-3.5" />}
+      <span>{children}</span>
     </span>
   );
 }
@@ -285,9 +287,9 @@ export function Tag({ children, tone = "neutral" }: { children: ReactNode; tone?
 /** `onBand` takes the text colour of a filled band (e.g. a card head) instead of the muted ink. */
 export function BasisBadge({ basis, onBand = false }: { basis: BasisKind; onBand?: boolean }) {
   return (
-    <span className={`label inline-flex items-center gap-1.5 whitespace-nowrap ${onBand ? "text-current" : "text-ink-3"}`}>
-      <span aria-hidden className="size-[5px] bg-current" />
-      {basisLabel[basis]}
+    <span className={`label inline-flex items-center gap-1.5 whitespace-nowrap ${onBand ? "text-current [&_.glyph-accent]:stroke-current" : "text-ink-3"}`}>
+      <BasisGlyph basis={basis} className={`size-3.5 ${onBand ? "[--accent:currentColor]" : ""}`} />
+      <span>{basisLabel[basis]}</span>
     </span>
   );
 }
@@ -390,7 +392,7 @@ export function Tabs({
             selected ? "text-ink" : "text-ink-3 hover:text-ink"
           }`,
           segmented: `shrink-0 h-11 px-4 label transition-colors duration-300 ease-silk border-r-2 border-edge last:border-r-0 ${
-            selected ? "bg-edge text-card" : "text-ink-3 hover:text-ink hover:bg-sunken"
+            selected ? "bg-inverse text-on-inverse" : "text-ink-3 hover:text-ink hover:bg-sunken"
           }`,
           list:
             orientation === "vertical"
@@ -525,12 +527,53 @@ export function CheckRow({
             checked ? "border-accent bg-accent" : "border-line-strong group-hover:border-ink"
           }`}
         >
-          <svg viewBox="0 0 12 12" className="size-3 text-[var(--on-accent)]" fill="none" stroke="currentColor" strokeWidth="1.6">
+          <svg viewBox="0 0 12 12" className="size-3 text-[var(--on-accent)]" fill="none" stroke="currentColor" strokeWidth="1.75">
             <path d="M2.5 6.5l2.2 2.2L9.5 3.5" pathLength={1} strokeDasharray={1} strokeDashoffset={checked ? 0 : 1} className="transition-[stroke-dashoffset] duration-500 ease-silk" />
           </svg>
         </span>
       </label>
     </li>
+  );
+}
+
+/** Compact topic checkbox shared by Plan, PlanRoadmapBase, and Library → Roadmaps. */
+export function TopicCheckbox({
+  checked,
+  onToggle,
+  label,
+  meta,
+}: {
+  checked: boolean;
+  onToggle: () => void;
+  label: string;
+  meta?: string;
+}) {
+  return (
+    <label className="group flex min-h-8 cursor-pointer items-start gap-2.5 py-0.5">
+      <input type="checkbox" checked={checked} onChange={onToggle} className="peer sr-only" />
+      <span
+        aria-hidden
+        className={`mt-0.5 grid size-4 shrink-0 place-items-center border transition-colors duration-300 ease-silk peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent ${
+          checked ? "border-accent bg-accent" : "border-line-strong group-hover:border-ink"
+        }`}
+      >
+        <svg viewBox="0 0 12 12" className="size-2.5 text-[var(--on-accent)]" fill="none" stroke="currentColor" strokeWidth="1.75">
+          <path
+            d="M2.5 6.5l2.2 2.2L9.5 3.5"
+            pathLength={1}
+            strokeDasharray={1}
+            strokeDashoffset={checked ? 0 : 1}
+            className="transition-[stroke-dashoffset] duration-300 ease-silk"
+          />
+        </svg>
+      </span>
+      <span className="min-w-0 flex-1 text-sm leading-snug">
+        <span className={`transition-colors duration-300 ${checked ? "text-ink-3 line-through" : "text-ink-2 group-hover:text-ink"}`}>
+          {label}
+        </span>
+        {meta && <span className="label ml-2 text-ink-3">· {meta}</span>}
+      </span>
+    </label>
   );
 }
 
@@ -638,7 +681,7 @@ export const pages: { id: Page; label: string; title: string }[] = [
   { id: "home", label: "Start", title: "Start here" },
   { id: "roles", label: "Roles", title: "Which role fits you" },
   { id: "plan", label: "Plan", title: "Your six-month plan" },
-  { id: "ready", label: "Checklist", title: "Portfolio checklist" },
+  { id: "ready", label: "Checklist", title: "Readiness checklist" },
   { id: "library", label: "Library", title: "Reference library" },
 ];
 export const pageHref = (id: Page, ...parts: string[]) => (id === "home" ? "#/" : `#/${[id, ...parts].join("/")}`);

@@ -5,10 +5,10 @@ import { pageHref, type Page } from "../components/ui";
 
 /** What's on each page, in the reader's words: one question per page. */
 const inside: { to: Page; glyph: GlyphName; question: string; answer: string }[] = [
-  { to: "roles", glyph: "eye", question: "Which role fits me?", answer: "Three new roles, what each one does, and who it suits." },
-  { to: "plan", glyph: "route", question: "What do I do next?", answer: "A month-by-month plan, for working designers and for beginners." },
-  { to: "ready", glyph: "check", question: "Am I ready to apply?", answer: "A short portfolio checklist you can tick off." },
-  { to: "library", glyph: "library", question: "I want the detail", answer: "Role comparison, skills, tools, AI patterns and a glossary." },
+  { to: "roles", glyph: "eye", question: "Which direction fits me?", answer: "Three ways design and code meet, what each covers, and who it suits." },
+  { to: "plan", glyph: "route", question: "What do I do next?", answer: "A step-by-step plan — whether you're upskilling at work or starting\u00A0out." },
+  { to: "ready", glyph: "check", question: "How do I know I'm ready?", answer: "A short proof-of-work checklist for your current team or a job\u00A0search." },
+  { to: "library", glyph: "library", question: "I want the detail", answer: "Role comparison, skills, tools, roadmap.sh topics and a glossary." },
 ];
 
 export function Home() {
@@ -26,9 +26,9 @@ export function Home() {
           {inside.map((x, i) => (
             <li key={x.to} data-reveal style={{ "--i": i } as CSSProperties}>
               <a href={pageHref(x.to)} className="card card-lift group flex h-full flex-col p-5 sm:p-6">
-                <Glyph name={x.glyph} className="!size-14 text-ink" />
+                <Glyph name={x.glyph} className="size-14 text-ink" />
                 <span className="display-m mt-8 block text-ink">{x.question}</span>
-                <span className="mt-3 block flex-1 text-sm leading-relaxed text-ink-2">{x.answer}</span>
+                <span className="mt-3 block flex-1 text-sm leading-relaxed text-pretty text-ink-2">{x.answer}</span>
                 <span className="label mt-6 text-accent-ink">Open →</span>
               </a>
             </li>

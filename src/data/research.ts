@@ -85,6 +85,15 @@ export interface Resource {
   cost: "free" | "paid";
 }
 
+/** Relevant syllabus slice from an official roadmap.sh track, paired with a month or stage. */
+export interface PlanTopicGroup {
+  /** Matches a roadmap slug in `#/library/roadmaps/<slug>`. */
+  slug: string;
+  source: string;
+  area: string;
+  topics: string[];
+}
+
 export interface Month {
   month: number;
   /** Short name for the roadmap map. */
@@ -101,6 +110,7 @@ export interface Month {
   start: string;
   /** How to tell you're ready to move on. */
   doneWhen: string;
+  roadmapTopics: PlanTopicGroup[];
   resources: Resource[];
 }
 
@@ -114,15 +124,15 @@ export interface ChecklistItem {
 
 const designHiringBigTech: Metric = {
   value: "−48%",
-  label: "Design hiring at 12 big tech companies, compared with 2019",
+  label: "Design hiring at 12 big tech companies, compared with\u00A02019",
   scope: "12 big tech companies, June 2026",
-  source: "SignalFire, State of Talent 2026",
+  source: "SignalFire, State of Talent\u00A02026",
   basis: "analytics",
 };
 
 const designerJobsOutlook: Metric = {
   value: "+6%",
-  label: "US web and interface designers, 132,700 → 140,800",
+  label: "US web and interface designers, 132,700 →\u00A0140,800",
   scope: "2025 → 2035, SOC 15-1255",
   source: "US BLS projection",
   basis: "projection",
@@ -132,16 +142,16 @@ export const heroMetrics: Metric[] = [
   designHiringBigTech,
   {
     value: "55%",
-    label: "Share of big tech hires who are software engineers (46% in 2019)",
+    label: "Share of big tech hires who are software engineers (46% in\u00A02019)",
     scope: "Big tech companies, 2026",
-    source: "SignalFire, State of Talent 2026",
+    source: "SignalFire, State of Talent\u00A02026",
     basis: "analytics",
   },
   {
     value: "50%",
-    label: "Designers who ship AI-written code to real products",
+    label: "Designers who ship AI-written code to real\u00A0products",
     scope: "Q1 2026 survey",
-    source: "Designer Fund / Foundation Capital",
+    source: "Designer Fund / Foundation\u00A0Capital",
     basis: "survey",
   },
   designerJobsOutlook,
@@ -256,9 +266,9 @@ export const archetypes: Archetype[] = [
     fitsIf: "you care about the last 10% of polish, already play with code, and want to own what ships.",
     plan: "pde",
     deliverable:
-      "Code changes merged into the real product. You own the UI components, design tokens, screen sizes and visual quality in the code itself.",
+      "Code changes merged into the real product. You own the UI components, design tokens, screen sizes and visual quality in the code\u00A0itself.",
     signals: "In high demand at Vercel, Cursor, Replit, Linear, Lovable, Raycast and Profound.",
-    skills: ["Visual craft & taste", "React", "TypeScript", "Git workflows", "Live code portfolio"],
+    skills: ["Visual craft & taste", "React", "TypeScript", "Git workflows", "Live code demos & PRs"],
     skillStats: [
       { label: "Visual craft / taste", value: 79 },
       { label: "React", value: 46 },
@@ -326,7 +336,7 @@ export const comparison: CompareRow[] = [
     hybrid: "Live web apps, public GitHub repos, token systems and working production code.",
   },
   {
-    dimension: "What gets tested",
+    dimension: "What gets evaluated",
     traditional: "Visual craft, UX research methods and fluency in design tools like Figma.",
     hybrid: "Code quality (HTML, CSS, JS, React), component structure, accessibility (ARIA), design tokens and AI tools.",
   },
@@ -631,7 +641,7 @@ export const sixMonthPlan: Month[] = [
   {
     month: 1,
     title: "Browser basics",
-    learn: ["Semantic HTML", "Flexbox", "CSS Grid", "DevTools"],
+    learn: ["Semantic HTML & forms", "Flexbox, CSS Grid & breakpoints", "Typography, color & hierarchy", "Browser DevTools"],
     build: "3 responsive landing pages",
     focus: "HTML, CSS layout (Flexbox, Grid) and checking layouts in DevTools.",
     deliverable: "3 responsive landing pages, built from scratch with no frameworks.",
@@ -639,8 +649,32 @@ export const sixMonthPlan: Month[] = [
     aiPolicy: "none",
     start: "Pick a landing page you like and rebuild its layout from a blank HTML file.",
     doneWhen: "You can rebuild a layout from a screenshot and fix it at phone width without help.",
+    roadmapTopics: [
+      {
+        slug: "frontend",
+        source: "Frontend",
+        area: "Internet & Core Web Trio",
+        topics: [
+          "How Browsers Parse & Render Pages",
+          "Semantic HTML, Forms & Validation",
+          "CSS Layouts (Flexbox, Grid) & Responsive Design",
+          "DevTools Inspection & Box Model",
+        ],
+      },
+      {
+        slug: "product-design",
+        source: "Product Design",
+        area: "Build the Interface",
+        topics: [
+          "Color, Typography, Layout & Grid",
+          "Visual Hierarchy & Responsive Breakpoints",
+          "Inclusive Design & Accessibility Basics",
+        ],
+      },
+    ],
     resources: [
       { label: "MDN: Learn web development", url: "https://developer.mozilla.org/en-US/docs/Learn_web_development", cost: "free" },
+      { label: "roadmap.sh: Frontend Developer roadmap", url: "https://roadmap.sh/frontend", cost: "free" },
       { label: "Josh W. Comeau: Interactive guide to Flexbox", url: "https://www.joshwcomeau.com/css/interactive-guide-to-flexbox/", cost: "free" },
       { label: "Josh W. Comeau: Interactive guide to CSS Grid", url: "https://www.joshwcomeau.com/css/interactive-guide-to-grid/", cost: "free" },
       { label: "Chrome DevTools docs", url: "https://developer.chrome.com/docs/devtools", cost: "free" },
@@ -649,7 +683,7 @@ export const sixMonthPlan: Month[] = [
   {
     month: 2,
     title: "JavaScript & React",
-    learn: ["DOM & events", "async/await & fetch", "Components & props", "State & hooks"],
+    learn: ["DOM, events & async/fetch", "React components, props & hooks", "Interface states & motion", "API & data constraints"],
     build: "Change an existing React app",
     focus: "Plain JavaScript (DOM, events, async/await, fetch), then React (components, props, state, hooks).",
     deliverable: "Read, find your way around and change an existing React app.",
@@ -657,15 +691,39 @@ export const sixMonthPlan: Month[] = [
     aiPolicy: "read",
     start: "Run a small open-source React app on your computer, then change one piece of text and one style.",
     doneWhen: "You can find where a piece of UI lives in the code and change how it behaves.",
+    roadmapTopics: [
+      {
+        slug: "frontend",
+        source: "Frontend",
+        area: "JavaScript & React Core",
+        topics: [
+          "JavaScript DOM, Events, Fetch & async/await",
+          "Package Managers (npm, pnpm)",
+          "React (Components, Props, State, Hooks)",
+        ],
+      },
+      {
+        slug: "product-design",
+        source: "Product Design",
+        area: "Interaction & Engineering Constraints",
+        topics: [
+          "Interface States (Hover, Focus, Active, Disabled)",
+          "Micro-interactions & Motion Principles",
+          "API & Data Limitations",
+        ],
+      },
+    ],
     resources: [
       { label: "The Modern JavaScript Tutorial", url: "https://javascript.info/", cost: "free" },
       { label: "React docs: Learn React", url: "https://react.dev/learn", cost: "free" },
+      { label: "roadmap.sh: JavaScript roadmap", url: "https://roadmap.sh/javascript", cost: "free" },
+      { label: "roadmap.sh: React roadmap", url: "https://roadmap.sh/react", cost: "free" },
     ],
   },
   {
     month: 3,
     title: "Styling & types",
-    learn: ["Tailwind CSS", "Design tokens", "TypeScript basics"],
+    learn: ["Tailwind CSS & Vite", "Design tokens & dark mode", "TypeScript basics", "Type, color & spacing scales"],
     build: "Launch 1 small tool or web app",
     focus: "Tailwind CSS, design tokens and TypeScript basics.",
     deliverable: "Build and launch 1 small tool or live web app.",
@@ -673,9 +731,34 @@ export const sixMonthPlan: Month[] = [
     aiPolicy: "assist",
     start: "Turn the colors, spacing and type of one month-1 page into design tokens.",
     doneWhen: "Your tool is live at a public link, and you can explain every file in it.",
+    roadmapTopics: [
+      {
+        slug: "frontend",
+        source: "Frontend",
+        area: "Styling, Types & Build Tools",
+        topics: [
+          "Tailwind CSS Utility Architecture",
+          "TypeScript Type Checking for Props & Data",
+          "Bundlers (Vite) & Deployment (Vercel, Netlify)",
+        ],
+      },
+      {
+        slug: "design-system",
+        source: "Design System",
+        area: "Defining Design Tokens",
+        topics: [
+          "Functional Colors & Accessibility Contrast",
+          "Dark Mode Tokens",
+          "Units, Grid, Breakpoints & Spacing",
+          "Responsive Type Scale & Readability",
+        ],
+      },
+    ],
     resources: [
       { label: "Tailwind CSS docs", url: "https://tailwindcss.com/docs", cost: "free" },
       { label: "TypeScript Handbook", url: "https://www.typescriptlang.org/docs/handbook/intro.html", cost: "free" },
+      { label: "roadmap.sh: TypeScript roadmap", url: "https://roadmap.sh/typescript", cost: "free" },
+      { label: "roadmap.sh: Design System roadmap", url: "https://roadmap.sh/design-system", cost: "free" },
       { label: "React TypeScript Cheatsheet", url: "https://react-typescript-cheatsheet.netlify.app/", cost: "free" },
       { label: "Design Tokens Community Group (W3C)", url: "https://www.designtokens.org/", cost: "free" },
     ],
@@ -683,7 +766,7 @@ export const sixMonthPlan: Month[] = [
   {
     month: 4,
     title: "Building with AI",
-    learn: ["Components & variants", "Tokens in code", "Empty, loading & error states", "Deploying"],
+    learn: ["Core UI primitives & variants", "Tokens in code & WCAG/ARIA", "Empty, loading & error states", "Plan mode, CLAUDE.md & deploy"],
     build: "Live component library",
     focus: "Building components with AI help: variants, every state, tokens in code, and deploying.",
     deliverable: "A small component library (button, input, card, dialog) built on your tokens, with every state, live at a public link.",
@@ -691,17 +774,41 @@ export const sixMonthPlan: Month[] = [
     aiPolicy: "oversee",
     start: "List the components you use most in your Figma work, and build the first one with all its states.",
     doneWhen: "Each component has hover, focus, disabled, empty and error states, and works with a keyboard.",
+    roadmapTopics: [
+      {
+        slug: "design-system",
+        source: "Design System",
+        area: "Core Components & Accessibility",
+        topics: [
+          "Core Primitives (Button, Card, Input, Select, Modal, Tabs, Toast)",
+          "Accessibility Testing & Keyboard Navigation",
+          "Component Catalog & Documentation",
+        ],
+      },
+      {
+        slug: "claude-code",
+        source: "Claude Code",
+        area: "Daily Workflow & Context",
+        topics: [
+          "Plan Mode, Rewind & Permission Controls",
+          "Structuring CLAUDE.md for Project Conventions",
+          "Spec-Driven Prompts & Context Grounding",
+        ],
+      },
+    ],
     resources: [
       { label: "WAI-ARIA patterns for components", url: "https://www.w3.org/WAI/ARIA/apg/patterns/", cost: "free" },
       { label: "Radix Primitives docs", url: "https://www.radix-ui.com/primitives/docs/overview/introduction", cost: "free" },
       { label: "Figma: How designers can use Claude Code", url: "https://www.figma.com/resource-library/claude-code-for-designers/", cost: "free" },
+      { label: "roadmap.sh: Claude Code roadmap", url: "https://roadmap.sh/claude-code", cost: "free" },
+      { label: "roadmap.sh: Prompt & Context Engineering", url: "https://roadmap.sh/prompt-engineering", cost: "free" },
       { label: "Getting started with Vercel", url: "https://vercel.com/docs/getting-started-with-vercel", cost: "free" },
     ],
   },
   {
     month: 5,
     title: "Real codebases",
-    learn: ["Branches & rebasing", "Merge conflicts", "Design system in code", "Reviewing code"],
+    learn: ["Git branches, rebasing & PRs", "Linters, tests & performance", "Edge cases & launch readiness", "Code review in real repos"],
     build: "1–3 merged PRs",
     focus: "Git at work (branches, rebasing, conflicts), using the design system in code, and reviewing others' code.",
     deliverable: "Get 1–3 PRs into a real product: CSS bugs, accessibility fixes or component variants.",
@@ -709,26 +816,74 @@ export const sixMonthPlan: Month[] = [
     aiPolicy: "production",
     start: "Ask a front-end lead which small UI bugs they'd review from you. No access at work? Filter an open-source UI library's issues by “good first issue”.",
     doneWhen: "At least one pull request is merged after a real review.",
+    roadmapTopics: [
+      {
+        slug: "frontend",
+        source: "Frontend",
+        area: "Git, Testing & Quality Gates",
+        topics: [
+          "Git, GitHub & Pull Requests",
+          "Linters & Formatters (ESLint, Prettier, Biome)",
+          "Testing (Vitest, Playwright) & Lighthouse Performance",
+        ],
+      },
+      {
+        slug: "product-design",
+        source: "Product Design",
+        area: "Working with Engineering",
+        topics: [
+          "Stack & Platform Constraints",
+          "Edge Cases & Interface States",
+          "Launch Readiness & Developer Collaboration",
+        ],
+      },
+    ],
     resources: [
       { label: "Pro Git book", url: "https://git-scm.com/book/en/v2", cost: "free" },
       { label: "GitHub Skills", url: "https://learn.github.com/skills", cost: "free" },
+      { label: "roadmap.sh: Git and GitHub roadmap", url: "https://roadmap.sh/git-github", cost: "free" },
+      { label: "roadmap.sh: Code Review roadmap", url: "https://roadmap.sh/code-review", cost: "free" },
       { label: "Good First Issue", url: "https://goodfirstissue.dev/", cost: "free" },
       { label: "First Contributions", url: "https://github.com/firstcontributions/first-contributions", cost: "free" },
     ],
   },
   {
     month: 6,
-    title: "Portfolio & applications",
-    learn: ["Live-code portfolio", "Public GitHub repos", "~20 focused applications"],
-    build: "Portfolio of live apps & merged PRs",
-    focus: "Show yourself as a hybrid, build a portfolio of live code and apply with focus.",
-    deliverable: "Rebuild your portfolio around live apps, public GitHub repos and merged PRs.",
-    guardrail: "Send about 20 careful applications to teams that hire hybrids. Skip mass applying.",
+    title: "Proof & positioning",
+    learn: ["Live demos & clean repos", "Problem framing & HEART metrics", "Accessibility & security polish", "Internal case or ~20 applications"],
+    build: "Live work, write-ups & merged PRs",
+    focus: "Package what you've built so teammates, managers or hiring teams can see the impact — whether you're expanding your current role or looking for a new one.",
+    deliverable: "Document two live builds and your merged PRs for an internal demo, promotion case, or updated portfolio.",
+    guardrail: "Staying in your role? Share a demo with your design and engineering leads to widen your scope. Looking to move? Send ~20 careful applications to teams that hire hybrids instead of mass applying.",
     aiPolicy: "position",
-    start: "Pick your two strongest projects and write a 2–3 paragraph write-up for each.",
-    doneWhen: "Every item on the portfolio checklist is ticked.",
+    start: "Pick your two strongest builds and write a 2–3 paragraph write-up of the problem, trade-offs and result.",
+    doneWhen: "Every item on the readiness checklist is ticked.",
+    roadmapTopics: [
+      {
+        slug: "product-design",
+        source: "Product Design",
+        area: "Framing Outcomes & Impact",
+        topics: [
+          "Problem Statements, Product Vision & Success Metrics",
+          "Critiques, Trade-offs & Decision Rationale",
+          "Product Analytics, HEART Framework & A/B Testing",
+        ],
+      },
+      {
+        slug: "frontend",
+        source: "Frontend",
+        area: "Production Polish",
+        topics: [
+          "Accessibility (WCAG, ARIA, Keyboard Navigation)",
+          "Web Security (HTTPS, CSP) & Core Web Vitals",
+          "Clean Public Repos & Live Serverless Deployment",
+        ],
+      },
+    ],
     resources: [
       { label: "Design engineering resources", url: "https://designengineering.arun.is/", cost: "free" },
+      { label: "roadmap.sh: Product Design roadmap", url: "https://roadmap.sh/product-design", cost: "free" },
+      { label: "roadmap.sh: Frontend Performance best practices", url: "https://roadmap.sh/frontend-performance-best-practices", cost: "free" },
     ],
   },
 ];
@@ -738,7 +893,7 @@ const metaMonths: Month[] = [
   {
     month: 4,
     title: "Systems AI can read",
-    learn: ["Token naming & structure", "Figma variables", "Code Connect", "Figma MCP"],
+    learn: ["Visual audit & token taxonomy", "Figma variables & Code Connect", "Figma MCP & CLAUDE.md rules", "Governance & contribution docs"],
     build: "Tokens wired from Figma to code",
     focus: "Name and structure design tokens, set up Figma variables and Code Connect, and connect them to an AI coding tool through Figma MCP.",
     deliverable: "A small design system whose tokens and components an AI coding tool can read and use correctly.",
@@ -746,17 +901,43 @@ const metaMonths: Month[] = [
     aiPolicy: "oversee",
     start: "Audit one Figma file: list every color and spacing value that isn't a variable yet.",
     doneWhen: "An AI tool builds a screen using only your tokens and components.",
+    roadmapTopics: [
+      {
+        slug: "design-system",
+        source: "Design System",
+        area: "Audit, Language & Tokens",
+        topics: [
+          "Performing a Visual Audit & Component Inventory",
+          "Design Principles, Writing Guidelines & Terminology",
+          "Token Taxonomy (Color, Dark Mode, Spacing, Typography, Icons)",
+          "Semantic Versioning, PR Templates & Contribution Governance",
+        ],
+      },
+      {
+        slug: "prompt-engineering",
+        source: "Prompt & Context",
+        area: "Context Layers for Design Systems",
+        topics: [
+          "Context Sources, Context Layers & Failure Modes",
+          "CLAUDE.md & AGENTS.md System Instructions",
+          "MCP Tool Descriptions & Spec-Driven Prompts",
+          "Context Compaction & Keeping Rules Lean",
+        ],
+      },
+    ],
     resources: [
       { label: "Figma: Guide to variables", url: "https://help.figma.com/hc/en-us/articles/15339657135383-Guide-to-variables-in-Figma", cost: "free" },
       { label: "Figma: Code Connect docs", url: "https://developers.figma.com/docs/code-connect/", cost: "free" },
       { label: "Figma: Guide to the Figma MCP server", url: "https://help.figma.com/hc/en-us/articles/32132100833559-Guide-to-the-Figma-MCP-server", cost: "free" },
+      { label: "roadmap.sh: Design System roadmap", url: "https://roadmap.sh/design-system", cost: "free" },
+      { label: "roadmap.sh: Prompt & Context Engineering", url: "https://roadmap.sh/prompt-engineering", cost: "free" },
       { label: "Design Tokens Community Group (W3C)", url: "https://www.designtokens.org/", cost: "free" },
     ],
   },
   {
     month: 5,
     title: "Agent trust flows",
-    learn: ["Approval & escalation", "Showing confidence", "Undo & recovery", "Reviewing AI code"],
+    learn: ["Agent loop, MCP & memory", "Approval, confidence & undo", "Decision making & cognitive load", "HITL evals, sandboxing & 1 PR"],
     build: "Trust flows + 1 merged PR",
     focus: "Design how an AI feature asks for approval, shows how sure it is, and recovers from mistakes. Keep reviewing AI-written UI code.",
     deliverable: "Approval, status, error and undo states for one agent feature, prototyped in code, plus one merged PR that fixes tokens or accessibility.",
@@ -764,25 +945,76 @@ const metaMonths: Month[] = [
     aiPolicy: "production",
     start: "Pick one AI feature you use daily and map every point where it acts without asking you.",
     doneWhen: "Every risky action in your flow has an approval step, a visible status and a way to undo it.",
+    roadmapTopics: [
+      {
+        slug: "ai-agents",
+        source: "AI Agents",
+        area: "Agent Loop, Memory & Safety",
+        topics: [
+          "4-Step Agent Loop (Perception, Plan, Act, Reflect)",
+          "MCP Hosts, Clients & Servers + Tool Schemas",
+          "Short-Term vs Long-Term Agent Memory",
+          "Human-in-the-Loop Evaluation & Tool Sandboxing",
+          "Prompt Injection, PII Redaction & Red-Team Testing",
+        ],
+      },
+      {
+        slug: "ux-design",
+        source: "UX Design",
+        area: "Decision Making & Cognitive Load",
+        topics: [
+          "Dual Process Theory & CREATE Action Funnel",
+          "Status Reports, Clear Actions & Avoiding Cognitive Overhead",
+          "Make Progress & Completion Clearly Visible",
+          "Incremental A/B Testing & Gathering Lessons",
+        ],
+      },
+    ],
     resources: [
       { label: "Google PAIR: People + AI Guidebook", url: "https://pair.withgoogle.com/guidebook", cost: "free" },
       { label: "Microsoft: Guidelines for Human-AI Interaction", url: "https://www.microsoft.com/en-us/haxtoolkit/ai-guidelines/", cost: "free" },
+      { label: "roadmap.sh: AI Agents roadmap", url: "https://roadmap.sh/ai-agents", cost: "free" },
+      { label: "roadmap.sh: UX Design roadmap", url: "https://roadmap.sh/ux-design", cost: "free" },
       { label: "WAI-ARIA patterns for components", url: "https://www.w3.org/WAI/ARIA/apg/patterns/", cost: "free" },
     ],
   },
   {
     month: 6,
-    title: "Portfolio & applications",
-    learn: ["Systems case study", "Live prototypes", "~20 focused applications"],
-    build: "Portfolio of systems & trust work",
-    focus: "Show yourself as a systems and AI-product hybrid, with live links behind every claim.",
-    deliverable: "Rebuild your portfolio around your design system, your trust flows and any merged PRs.",
-    guardrail: "Send about 20 careful applications to teams that hire hybrids. Skip mass applying.",
+    title: "Proof & adoption",
+    learn: ["Systems & adoption case study", "Component health & OKRs", "Live trust-flow prototypes", "Team rollout or ~20 applications"],
+    build: "Systems rollout & trust-flow demos",
+    focus: "Show the impact of your system and AI-product work with live links behind every claim — to drive team adoption or anchor a hybrid portfolio.",
+    deliverable: "Package your AI-readable design system, trust flows and merged PRs as an internal rollout deck or live portfolio.",
+    guardrail: "Growing in your current role? Run a working session so your team adopts the tokens and MCP setup. Looking to move? Send ~20 careful applications to teams hiring hybrids.",
     aiPolicy: "position",
-    start: "Write a short case study showing an AI tool using your system: what broke, what you fixed.",
-    doneWhen: "Every item on the portfolio checklist is ticked.",
+    start: "Write a short case study showing an AI tool using your system: what broke, what you fixed, and what it saves the team.",
+    doneWhen: "Every item on the readiness checklist is ticked.",
+    roadmapTopics: [
+      {
+        slug: "design-system",
+        source: "Design System",
+        area: "Governance & Health Metrics",
+        topics: [
+          "System Roadmap, Milestones & Adoption",
+          "Component, Tooling & Health Analytics",
+          "Documentation, Open Hours & Contribution Guidelines",
+        ],
+      },
+      {
+        slug: "product-design",
+        source: "Product Design",
+        area: "Strategy & Stakeholder Proof",
+        topics: [
+          "Business Metrics & OKRs",
+          "Stakeholder Alignment & DesignOps",
+          "Assumption Mapping & Risk Identification",
+        ],
+      },
+    ],
     resources: [
       { label: "Design engineering resources", url: "https://designengineering.arun.is/", cost: "free" },
+      { label: "roadmap.sh: Design System roadmap", url: "https://roadmap.sh/design-system", cost: "free" },
+      { label: "roadmap.sh: AI Agents roadmap", url: "https://roadmap.sh/ai-agents", cost: "free" },
     ],
   },
 ];
@@ -797,7 +1029,7 @@ export const aiPolicyLabel: Record<Month["aiPolicy"], string> = {
   assist: "AI assist",
   oversee: "AI + oversight",
   production: "Real PRs",
-  position: "Go to market",
+  position: "Prove impact",
 };
 
 export const leverageHabits: ChecklistItem[] = [
@@ -844,20 +1076,47 @@ export interface LaunchStage {
   output: string;
   start: string;
   doneWhen: string;
+  roadmapTopics: PlanTopicGroup[];
   resources: Resource[];
 }
 
 export const launchStages: LaunchStage[] = [
   {
     n: 1,
-    learn: ["Usability", "Accessibility (WCAG)", "Typography", "Information architecture", "Interaction patterns"],
+    learn: ["Decision making & UX patterns", "Research, personas & JTBD", "IA, user flows & wireframing", "Typography, layout & WCAG", "Usability & heuristic critique"],
     name: "Learn the lasting basics",
     detail:
       "Before you use AI screen tools, learn usability, accessibility (WCAG), typography, information architecture and interaction patterns. Take real products apart to see where they fail and why.",
     output: "Basics you can explain",
     start: "Pick an app you use daily and write down three places it fails a new user, and why.",
     doneWhen: "You can explain a usability or accessibility problem, and its fix, in plain words. Covered this in school or a bootcamp? Check yourself against this and move on.",
+    roadmapTopics: [
+      {
+        slug: "ux-design",
+        source: "UX Design",
+        area: "Decision Making, Flows & UX Patterns",
+        topics: [
+          "BJ Fogg's Behavior Model & Dual Process Theory",
+          "Target Outcome, Target Actor & Target Action",
+          "Good Layout Rules, User Stories & Simple Flowcharts",
+          "Clear Distractions, Avoid Choice & Cognitive Overload",
+        ],
+      },
+      {
+        slug: "product-design",
+        source: "Product Design",
+        area: "Foundations, IA & Visual Craft",
+        topics: [
+          "User-Centered Design & Functionality over Polish",
+          "Site Maps, Navigation, User Flows & Task Flows",
+          "Color, Typography, Layout, Grid & Visual Hierarchy",
+          "Usability Testing & Accessibility Testing",
+        ],
+      },
+    ],
     resources: [
+      { label: "roadmap.sh: UX Design roadmap", url: "https://roadmap.sh/ux-design", cost: "free" },
+      { label: "roadmap.sh: Product Design roadmap", url: "https://roadmap.sh/product-design", cost: "free" },
       { label: "NN/g: 10 usability heuristics", url: "https://www.nngroup.com/articles/ten-usability-heuristics/", cost: "free" },
       { label: "WebAIM: WCAG 2 checklist", url: "https://webaim.org/standards/wcag/checklist", cost: "free" },
       { label: "Butterick's Practical Typography", url: "https://practicaltypography.com/", cost: "free" },
@@ -866,14 +1125,38 @@ export const launchStages: LaunchStage[] = [
   },
   {
     n: 2,
-    learn: ["HTML & CSS", "AI prototyping tools", "Prototypes that run in a browser"],
+    learn: ["Semantic HTML, Flexbox & Grid", "Browser DevTools", "App scoping & AI prototyping", "v0, Figma Make & Cursor", "Live browser prototypes"],
     name: "Prototype in code",
     detail:
       "Learn HTML and CSS first, then add one AI prototyping tool (Figma Make or v0, for example). Knowing the basics is what lets you judge what the AI makes. Build prototypes that run in a browser.",
     output: "Working prototypes in a browser",
     start: "Rebuild one screen from a past case study in plain HTML and CSS, then use one AI tool to extend it.",
     doneWhen: "A prototype runs in the browser at a link you can share.",
+    roadmapTopics: [
+      {
+        slug: "frontend",
+        source: "Frontend",
+        area: "HTML, CSS & Browser Basics",
+        topics: [
+          "Semantic HTML, Forms & Validation",
+          "CSS Flexbox, Grid & Responsive Design",
+          "Browsers, DevTools & GitHub Pages / Vercel Deploy",
+        ],
+      },
+      {
+        slug: "ai-product-builder",
+        source: "AI Product Builder",
+        area: "Prototyping & Generation",
+        topics: [
+          "Problem Definition, App Anatomy & Feature Scoping",
+          "Choosing a Prototype Tool (v0, Figma Make, Lovable, Bolt)",
+          "Targeted Changes vs Structural Refactors in Cursor",
+        ],
+      },
+    ],
     resources: [
+      { label: "roadmap.sh: Frontend Developer roadmap", url: "https://roadmap.sh/frontend", cost: "free" },
+      { label: "roadmap.sh: AI Product Builder roadmap", url: "https://roadmap.sh/ai-product-builder", cost: "free" },
       { label: "MDN: Learn web development", url: "https://developer.mozilla.org/en-US/docs/Learn_web_development", cost: "free" },
       { label: "web.dev: Learn CSS", url: "https://web.dev/learn/css", cost: "free" },
       { label: "GitHub Pages quickstart", url: "https://docs.github.com/en/pages/quickstart", cost: "free" },
@@ -881,29 +1164,79 @@ export const launchStages: LaunchStage[] = [
   },
   {
     n: 3,
-    learn: ["Local businesses", "Community groups", "Open-source projects", "Small SaaS"],
+    learn: ["Interviews & contextual inquiry", "Local orgs, OSS & small SaaS", "Usability testing & critiques", "Analytics, HEART & A/B testing"],
     name: "Ship real work for real users",
     detail:
       "Skip made-up Spotify or Uber redesigns. Solve real problems for local businesses, community groups, open-source projects or small SaaS. Start small: one group, one problem, a handful of real users. Test it live and write down how feedback changed your mind.",
     output: "Live work with proof from real users",
     start: "Ask one local business, club or open-source project what slows them down each week.",
     doneWhen: "Real people used what you built, and you can show what changed because of their feedback.",
+    roadmapTopics: [
+      {
+        slug: "product-design",
+        source: "Product Design",
+        area: "Discover, Validate & Measure",
+        topics: [
+          "Interviews, Contextual Inquiry & Session Recordings",
+          "Personas, Jobs-to-be-Done & Problem Statements",
+          "Usability Testing, Critiques & UX Benchmarking",
+          "Product Analytics, HEART Framework & A/B Testing",
+        ],
+      },
+      {
+        slug: "ai-product-builder",
+        source: "AI Product Builder",
+        area: "Testing, Git & Live Launch",
+        topics: [
+          "User Testing with Live Prototypes",
+          "Change Management with GitHub Pull Requests",
+          "Serverless Hosting (Vercel, Cloudflare) & Real Data",
+        ],
+      },
+    ],
     resources: [
+      { label: "roadmap.sh: Product Design roadmap", url: "https://roadmap.sh/product-design", cost: "free" },
+      { label: "roadmap.sh: UX Design roadmap", url: "https://roadmap.sh/ux-design", cost: "free" },
       { label: "Good First Issue", url: "https://goodfirstissue.dev/", cost: "free" },
       { label: "First Contributions", url: "https://github.com/firstcontributions/first-contributions", cost: "free" },
     ],
   },
   {
     n: 4,
-    learn: ["3–4 short case studies", "Seed-stage startups", "Small agencies", "Industry B2B companies"],
+    learn: ["Product sense, OKRs & RICE/Kano", "3–4 outcome-led case studies", "Feasibility specs & edge cases", "Seed startups, agencies & B2B"],
     name: "Aim at the right employers",
     detail:
       "Write 3–4 short, easy-to-scan case studies. Aim them at early (seed-stage) startups, which hire the most designers relative to size (25%). Also try small agencies and industry-focused B2B companies, not only big tech junior programs.",
     output: "A portfolio aimed at where hiring happens",
     start: "Rewrite the opening of your best case study: who you are, the problem, and what you did.",
     doneWhen: "Every item on the portfolio checklist is ticked.",
+    roadmapTopics: [
+      {
+        slug: "product-design",
+        source: "Product Design",
+        area: "Strategy & Team Readiness",
+        topics: [
+          "Product Sense, Business Metrics & OKRs",
+          "Prioritization Frameworks (Kano, RICE, MoSCoW)",
+          "Feasibility Specs, Edge Cases & Developer Collaboration",
+          "Design Systems & Multi-Platform Thinking",
+        ],
+      },
+      {
+        slug: "ux-design",
+        source: "UX Design",
+        area: "Impact & Business Framing",
+        topics: [
+          "Business Model Canvas, Lean Canvas & SWOT Analysis",
+          "Customer Experience Maps & Process Flowcharts",
+          "Gather Lessons, Prioritize & Show Measured Impact",
+        ],
+      },
+    ],
     resources: [
       { label: "Design engineering resources", url: "https://designengineering.arun.is/", cost: "free" },
+      { label: "roadmap.sh: Product Design roadmap", url: "https://roadmap.sh/product-design", cost: "free" },
+      { label: "roadmap.sh: Design System roadmap", url: "https://roadmap.sh/design-system", cost: "free" },
     ],
   },
 ];
@@ -955,12 +1288,12 @@ export const icGrowth = [
 /* ───────────── Self-assessment ───────────── */
 
 export const readinessItems: ChecklistItem[] = [
-  { id: "demo", title: "A live demo that works in 10 seconds", detail: "A link a reviewer can open and use right away." },
-  { id: "repo", title: "A public GitHub repository", detail: "Clear components, state, CSS structure and ARIA labels." },
+  { id: "demo", title: "A live demo that works in 10 seconds", detail: "A link a teammate, manager or reviewer can open and use right away." },
+  { id: "repo", title: "A clean GitHub repository (public or team)", detail: "Clear components, state, CSS structure and ARIA labels others can read and review." },
   { id: "writeup", title: "A 2–3 paragraph design and code write-up", detail: "What you wanted, your decisions, trade-offs and next steps." },
   { id: "ai", title: "Proof of an AI-assisted workflow", detail: "Show you guided Cursor or Claude Code to ship real features." },
-  { id: "access", title: "Easy to open", detail: "No password walls, no broken links, no clutter." },
-  { id: "scope", title: "Honest about your role", detail: "Say exactly what you did. Label made-up projects clearly." },
+  { id: "access", title: "Easy to open", detail: "No broken links, setup hoops or clutter — anyone you share it with can try it right away." },
+  { id: "scope", title: "Honest about your role", detail: "Say clearly what you designed, built and reviewed — and label practice projects as such." },
   { id: "deployed", title: "A live project you built and launched", detail: "Components with every state and layouts that fit any screen, live on Vercel or similar. Month 4 of the plan." },
   { id: "merged", title: "A merged pull request in a real codebase", detail: "Even a small UI fix in your team's code or an open-source project counts. Month 5 of the plan." },
 ];

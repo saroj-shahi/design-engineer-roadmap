@@ -82,11 +82,11 @@ export function HandoffPlate({ className = "" }: { className?: string }) {
             <rect x="138" y="198" width="240" height="172" fill="var(--hard)" />
             <rect x="130" y="190" width="240" height="172" fill="var(--card)" stroke="var(--edge)" strokeWidth="2" />
             <g id="code-titlebar">
-              <rect x="130" y="190" width="240" height="26" fill="var(--edge)" />
-              <rect x="142" y="200" width="6" height="6" fill="var(--card)" />
-              <rect x="153" y="200" width="6" height="6" fill="var(--card)" />
-              <rect x="164" y="200" width="6" height="6" fill="none" stroke="var(--card)" strokeWidth="1.5" />
-              <text x="184" y="207" fontSize="10" fill="var(--card)" style={mono}>
+              <rect x="130" y="190" width="240" height="26" fill="var(--inverse-bg)" />
+              <rect x="142" y="200" width="6" height="6" fill="var(--inverse-fg)" />
+              <rect x="153" y="200" width="6" height="6" fill="var(--inverse-fg)" />
+              <rect x="164" y="200" width="6" height="6" fill="none" stroke="var(--inverse-fg)" strokeWidth="1.5" />
+              <text x="184" y="207" fontSize="10" fill="var(--inverse-fg)" style={mono}>
                 Button.tsx
               </text>
             </g>

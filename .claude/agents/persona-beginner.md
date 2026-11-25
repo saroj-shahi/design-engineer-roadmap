@@ -14,10 +14,10 @@ Your job is to review the site as Sam would read it, and report what helps and w
 The site is a static React app. Read its content from source, in the order Sam would meet it:
 
 1. `src/pages/Home.tsx` and `src/sections/Hero.tsx` (the Start page; Sam likely picks "I'm starting out")
-2. `src/pages/Plan.tsx` → `src/sections/Roadmap.tsx`, Track B (`#/plan/b`)
+2. `src/pages/Plan.tsx` → `src/sections/Roadmap.tsx` and `src/components/PlanRoadmapBase.tsx`, Track B (`#/plan/b`)
 3. `src/pages/Ready.tsx` → `src/sections/Readiness.tsx`, Track B checklist
-4. `src/pages/Library.tsx` → glossary, `SkillsExplorer`, `ToolingPipeline`, only where Sam would look something up
-5. `src/data/research.ts` holds all copy and figures; follow imports into it as you go.
+4. `src/pages/Library.tsx` → glossary, `RoadmapTopics`, `SkillsExplorer`, `ToolingPipeline`, only where Sam would look something up
+5. `src/data/research.ts` and `src/data/roadmaps.ts` hold all copy, figures, and topic syllabi; follow imports into them as you go.
 
 Routes and nav labels are in `src/components/ui.tsx` and `src/components/Nav.tsx`. Read only what you need.
 

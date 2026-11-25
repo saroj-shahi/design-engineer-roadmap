@@ -1,6 +1,8 @@
 import { type CSSProperties } from "react";
-import { ArrowBackGlyph, ArrowGlyph, ExternalGlyph, Glyph } from "../components/icons";
+import { ArrowBackGlyph, ArrowGlyph, ExternalGlyph, Glyph, type GlyphName } from "../components/icons";
 import { AiAutonomyRamp } from "../components/AiAutonomyRamp";
+import { BrandLogosFor } from "../components/BrandLogo";
+import { PlanRoadmapBase, type BaseRoadmapItem } from "../components/PlanRoadmapBase";
 import { RoadmapMap } from "../components/RoadmapMap";
 import {
   aiPolicyLabel,
@@ -13,6 +15,7 @@ import {
   planFor,
   sixMonthPlan,
   trackAOptions,
+  type PlanTopicGroup,
   type Resource,
 } from "../data/research";
 import {
@@ -28,6 +31,7 @@ import {
   SectionHeader,
   SubHead,
   Tag,
+  TopicCheckbox,
   usePersistentSet,
   useSaveNote,
   useTabList,
@@ -69,7 +73,7 @@ export function Roadmap({ plan }: { plan: PlanRoute | null }) {
     else go({ track: "b", stage: 1 });
   };
   const tracks = [
-    { id: "a" as const, glyph: "stairs" as const, kicker: "Track A", title: "I'm a practising product designer", sub: "Evolve into a hybrid role" },
+    { id: "a" as const, glyph: "stairs" as const, kicker: "Track A", title: "I'm a working designer", sub: "Upskill in your current job, or grow into a hybrid role" },
     { id: "b" as const, glyph: "launch" as const, kicker: "Track B", title: "I'm starting out", sub: "Get your first role, with code in your portfolio" },
   ];
   const { listProps, tabProps, panelProps } = useTabList({
@@ -94,12 +98,14 @@ export function Roadmap({ plan }: { plan: PlanRoute | null }) {
       ? [
           { id: "plan-map", label: "Map" },
           { id: "month-detail", label: "This month" },
+          { id: "plan-base", label: "Skill base" },
           { id: "plan-habits", label: "Habits" },
-          { id: "plan-portfolio", label: "Portfolio" },
+          { id: "plan-portfolio", label: "Show work" },
         ]
       : [
           { id: "plan-map", label: "Map" },
           { id: "stage-detail", label: "This stage" },
+          { id: "plan-base", label: "Skill base" },
           { id: "plan-market", label: "Market" },
           { id: "plan-stack", label: "Stack" },
           { id: "plan-portfolio", label: "Portfolio" },
@@ -134,7 +140,10 @@ export function Roadmap({ plan }: { plan: PlanRoute | null }) {
                 className={`absolute inset-0 -z-10 origin-bottom bg-inverse transition-transform duration-[900ms] ease-silk ${on ? "scale-y-100" : "scale-y-0"}`}
               />
               <span className="flex items-start justify-between gap-4">
-                <span className={`label ${on ? "text-inverse-muted" : "text-ink-3"}`}>{t.kicker}</span>
+                <span className={`label inline-flex items-center gap-1.5 ${on ? "text-inverse-muted" : "text-ink-3"}`}>
+                  <Glyph name="user" className={`!size-3.5 ${on ? "[--accent:currentColor]" : ""}`} />
+                  <span>{t.kicker}</span>
+                </span>
                 {on && <SelectedMark className="text-inverse-accent">Your track</SelectedMark>}
               </span>
               <span className="mt-auto flex items-end justify-between gap-4">
@@ -150,12 +159,36 @@ export function Roadmap({ plan }: { plan: PlanRoute | null }) {
 
       {track === null && <p className="mt-6 text-[1.0625rem] font-medium tracking-tight text-ink">Pick where you are today to see your plan.</p>}
 
-      <p className="mt-6 text-sm text-ink-3">
-        New to a term like PR, tokens or MCP?{" "}
-        <a href={pageHref("library", "glossary")} className="hit link-ul-static font-medium text-ink">
-          See the glossary
-        </a>
-      </p>
+      <div className="mt-6 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3 border-t border-line pt-5 text-sm text-ink-3">
+        <p>
+          New to a term like PR, tokens or MCP?{" "}
+          <a href={pageHref("library", "glossary")} className="hit link-ul-static font-medium text-ink">
+            See the glossary
+          </a>
+        </p>
+        <p className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <span>Full topic checklists from roadmap.sh:</span>
+          <a href={pageHref("library", "roadmaps", "ux-design")} className="hit link-ul-static font-medium text-ink">
+            UX Design
+          </a>
+          <span aria-hidden>·</span>
+          <a href={pageHref("library", "roadmaps", "product-design")} className="hit link-ul-static font-medium text-ink">
+            Product Design
+          </a>
+          <span aria-hidden>·</span>
+          <a href={pageHref("library", "roadmaps", "design-system")} className="hit link-ul-static font-medium text-ink">
+            Design System
+          </a>
+          <span aria-hidden>·</span>
+          <a href={pageHref("library", "roadmaps", "frontend")} className="hit link-ul-static font-medium text-ink">
+            Frontend
+          </a>
+          <span aria-hidden>·</span>
+          <a href={pageHref("library", "roadmaps")} className="hit link-ul-static font-medium text-accent-ink">
+            All 8 roadmaps →
+          </a>
+        </p>
+      </div>
 
       {plan && (
         <>
@@ -170,6 +203,31 @@ export function Roadmap({ plan }: { plan: PlanRoute | null }) {
     </Section>
   );
 }
+
+const trackABaseRoadmaps: Record<TrackAOption, BaseRoadmapItem[]> = {
+  pde: [
+    { slug: "ux-design", role: "Base" },
+    { slug: "product-design", role: "Base" },
+    { slug: "design-system", role: "Build layer" },
+    { slug: "frontend", role: "Build layer" },
+    { slug: "claude-code", role: "Systems & AI" },
+  ],
+  meta: [
+    { slug: "ux-design", role: "Base" },
+    { slug: "product-design", role: "Base" },
+    { slug: "design-system", role: "Systems & AI" },
+    { slug: "prompt-engineering", role: "Systems & AI" },
+    { slug: "ai-agents", role: "Systems & AI" },
+  ],
+};
+
+const trackBBaseRoadmaps: BaseRoadmapItem[] = [
+  { slug: "ux-design", role: "Base" },
+  { slug: "product-design", role: "Base" },
+  { slug: "frontend", role: "Build layer" },
+  { slug: "ai-product-builder", role: "Build layer" },
+  { slug: "design-system", role: "Build layer" },
+];
 
 /* ───────────── Track A ───────────── */
 
@@ -207,7 +265,10 @@ function TrackA({ plan: route }: { plan: PlanA }) {
                     <span aria-hidden className={`mt-2 grid size-4 shrink-0 place-items-center border transition-colors duration-500 ${on ? "border-accent" : "border-line-strong group-hover:border-ink"}`}>
                       <span className={`size-2 bg-accent transition-transform duration-500 ease-silk ${on ? "scale-100" : "scale-0"}`} />
                     </span>
-                    <span className={`display-m min-w-0 flex-1 transition-colors duration-500 ${on ? "text-ink" : "text-ink-3 group-hover:text-ink"}`}>{o.name}</span>
+                    <span className={`display-m min-w-0 flex-1 inline-flex items-start gap-2.5 transition-colors duration-500 ${on ? "text-ink" : "text-ink-3 group-hover:text-ink"}`}>
+                      <Glyph name="user" className="mt-0.5 !size-6 shrink-0" />
+                      <span>{o.name}</span>
+                    </span>
                     {on && <SelectedMark className="mt-2 text-accent-ink">Selected</SelectedMark>}
                   </span>
                   <span className="mt-4 block pl-8 text-sm leading-relaxed text-ink-2">Best for: {o.for}</span>
@@ -230,33 +291,56 @@ function TrackA({ plan: route }: { plan: PlanA }) {
         </p>
       </div>
 
-      {/* Map of the whole plan */}
+      {/* Map of the whole plan, starting from the shared UX & Product Design base */}
       <div id="plan-map">
-        <SubHead n="A.map" title="Your plan at a glance" note="Six months, one step at a time. Pick a month to open its details." />
+        <SubHead n="A.map" title="Your plan at a glance" note="Built on your UX & Product Design base, then six months one step at a time. Pick the base or any month to open its details." />
         <RoadmapMap
           label="Six-month plan"
           leftLabel="Learn"
           rightLabel="Build"
           active={String(month)}
-          hrefFor={(id) => planHref({ ...route, month: Number(id) })}
+          hrefFor={(id) => (id === "base" ? pageHref("library", "roadmaps", "ux-design") : planHref({ ...route, month: Number(id) }))}
           onPick={(id) => {
+            if (id === "base") {
+              jumpTo("plan-base");
+              return;
+            }
             setMonth(Number(id));
             jumpTo("month-detail");
           }}
-          steps={plan.map((x) => ({
-            id: String(x.month),
-            kicker: `Month ${x.month}`,
-            title: x.title,
-            note: aiPolicyLabel[x.aiPolicy],
-            left: x.learn,
-            right: x.build,
-          }))}
+          steps={[
+            {
+              id: "base",
+              kicker: "Base · Foundation",
+              title: "UX & Product Design",
+              note: "Open base checklists ↓",
+              base: "UX Design · Product Design",
+              foundation: true,
+              left: [
+                "Decision making & UX patterns",
+                "Research, personas & JTBD",
+                "IA, user flows & wireframing",
+                "Visual craft, layout & WCAG",
+                "Usability & A/B impact testing",
+              ],
+              right: "Design base you build code & AI on",
+            },
+            ...plan.map((x) => ({
+              id: String(x.month),
+              kicker: `Month ${x.month}`,
+              title: x.title,
+              note: aiPolicyLabel[x.aiPolicy],
+              base: x.roadmapTopics.map((g) => g.source).join(" · "),
+              left: x.learn,
+              right: x.build,
+            })),
+          ]}
         />
       </div>
 
       {/* 6-month timeline */}
       <div id="month-detail" className="scroll-mt-36 lg:scroll-mt-32">
-        <SubHead n="A.2" title="A six-month technical transition" note="Learn the browser before AI tools. The plan uses React, TypeScript and Tailwind." />
+        <SubHead n="A.2" title="A six-month skill ramp" note="Learn the browser before AI tools. Apply each month in your current job or in side projects — the plan uses React, TypeScript and Tailwind." />
 
         <AiAutonomyRamp plan={plan} activeMonth={month} onSelect={setMonth} />
 
@@ -316,7 +400,7 @@ function TrackA({ plan: route }: { plan: PlanA }) {
             <Eyebrow className="!text-accent-ink">Guardrail · {aiPolicyLabel[m.aiPolicy]}</Eyebrow>
             <p className="leading-relaxed text-ink">{m.guardrail}</p>
           </div>
-          <StartAndDone start={m.start} doneWhen={m.doneWhen} resources={m.resources} />
+          <StartAndDone stepKey={`a-${choice}-m${m.month}`} start={m.start} doneWhen={m.doneWhen} topics={m.roadmapTopics} resources={m.resources} />
           </div>
         </div>
         <StepNav
@@ -328,10 +412,23 @@ function TrackA({ plan: route }: { plan: PlanA }) {
         />
       </div>
 
-      {/* Leverage + portfolio */}
+      {/* Full interactive roadmap base checklists */}
+      <PlanRoadmapBase
+        id="plan-base"
+        n="A.base"
+        title="The roadmap base behind this plan"
+        note={
+          choice === "pde"
+            ? "UX Design and Product Design are your foundation. Open any stage to audit what you know and track Design Systems, Frontend and Claude Code topics."
+            : "UX Design and Product Design are your foundation. Open any stage to audit what you know and track Design Systems, Prompt & Context and AI Agents topics."
+        }
+        items={trackABaseRoadmaps[choice]}
+      />
+
+      {/* Leverage + proof of work */}
       <div className="grid gap-y-24 lg:grid-cols-12 lg:gap-x-6">
         <div id="plan-habits" className="lg:col-span-5">
-          <SubHead n="A.3" title="Using it in your current job" />
+          <SubHead n="A.3" title="Using it in your current job" note="Most designers build hybrid scope right where they already work, before any title changes." />
           <Meter value={habitsDone} max={leverageHabits.length} label="Habits in place" />
           <ul className="card mt-6 px-5 sm:px-6 [&>li:last-child]:border-b-0">
             {leverageHabits.map((h, i) => (
@@ -340,10 +437,10 @@ function TrackA({ plan: route }: { plan: PlanA }) {
           </ul>
         </div>
         <div id="plan-portfolio" className="lg:col-span-6 lg:col-start-7">
-          <SubHead n="A.4" title="Hybrid portfolio & interviews" />
-          <ChecklistLink href={pageHref("ready", "a")} title="Your portfolio checklist" detail="Live demo, public repo, writeup, proof you build with AI, and more. Track it on the Checklist page." />
+          <SubHead n="A.4" title="Show your work — at work or on the market" />
+          <ChecklistLink href={pageHref("ready", "a")} title="Your readiness checklist" detail="Live demo, clean repo, short write-up, merged PR and proof you build with AI. Useful for team demos, promotion cases or job applications." />
           <div className="mt-10 border-2 border-edge bg-inverse p-6 text-on-inverse shadow-[var(--sh-accent)] sm:p-8">
-            <p className="label mb-4 text-inverse-accent">Expect in interviews</p>
+            <p className="label mb-4 text-inverse-accent">If you do interview</p>
             <p className="font-display text-[1.625rem] leading-[1.15] tracking-tight">{interviewFocus.hybrid}</p>
             <p className="mt-4 text-sm leading-relaxed text-inverse-muted">Alongside the usual: {interviewFocus.traditional}</p>
           </div>
@@ -369,7 +466,7 @@ function StepNav({ n, total, unit, onStep, doneHref }: { n: number; total: numbe
         </StepButton>
       ) : (
         <a href={doneHref} className="hit group label flex items-center gap-1.5 text-ink">
-          <span className="link-ul-static">Check your portfolio</span>
+          <span className="link-ul-static">Open the checklist</span>
           <ArrowGlyph />
         </a>
       )}
@@ -393,8 +490,27 @@ function ChecklistLink({ href, title, detail }: { href: string; title: string; d
   );
 }
 
-/** The first task for a step, the sign you can move on, and where to learn it. Spans a 12-column row. */
-function StartAndDone({ start, doneWhen, resources }: { start: string; doneWhen: string; resources: Resource[] }) {
+/** The first task for a step, the sign you can move on, paired roadmap.sh topics, and where to learn it. Spans a 12-column row. */
+function StartAndDone({
+  stepKey,
+  start,
+  doneWhen,
+  topics,
+  resources,
+}: {
+  stepKey: string;
+  start: string;
+  doneWhen: string;
+  topics: PlanTopicGroup[];
+  resources: Resource[];
+}) {
+  const planTicks = usePersistentSet("de-guide:plan-topics");
+  const totalTopics = topics.reduce((sum, g) => sum + g.topics.length, 0);
+  const doneTopics = topics.reduce(
+    (sum, g) => sum + g.topics.filter((t) => planTicks.set.has(`${stepKey}:${g.slug}:${t}`)).length,
+    0,
+  );
+
   return (
     <>
       <div className="border-t border-line pt-5 md:col-span-6">
@@ -405,15 +521,54 @@ function StartAndDone({ start, doneWhen, resources }: { start: string; doneWhen:
         <Eyebrow>Move on when</Eyebrow>
         <p className="leading-relaxed text-ink-2">{doneWhen}</p>
       </div>
+      {topics.length > 0 && (
+        <div className="border-t border-line pt-5 md:col-span-12">
+          <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
+            <Eyebrow className="!mb-0">Key topics to cover · from roadmap.sh</Eyebrow>
+            <span className="label tabular text-ink-3">
+              {doneTopics} / {totalTopics} ticked
+            </span>
+          </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            {topics.map((g) => (
+              <div key={`${g.slug}-${g.area}`} className="border border-line bg-surface/60 p-4">
+                <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-line pb-3">
+                  <div>
+                    <span className="label block text-accent-ink">{g.source} roadmap</span>
+                    <span className="mt-0.5 block text-sm font-medium text-ink">{g.area}</span>
+                  </div>
+                  <a
+                    href={pageHref("library", "roadmaps", g.slug)}
+                    className="hit label link-ul-static shrink-0 text-ink-3 hover:text-ink"
+                  >
+                    Full checklist →
+                  </a>
+                </div>
+                <ul className="mt-2 divide-y divide-line">
+                  {g.topics.map((t) => {
+                    const key = `${stepKey}:${g.slug}:${t}`;
+                    return (
+                      <li key={key} className="py-1.5">
+                        <TopicCheckbox checked={planTicks.set.has(key)} onToggle={() => planTicks.toggle(key)} label={t} />
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
       {resources.length > 0 && (
         <div className="border-t border-line pt-5 md:col-span-12">
           <Eyebrow>Learn from</Eyebrow>
           <ul className="grid gap-x-6 sm:grid-cols-2">
             {resources.map((r) => (
               <li key={r.url} className="flex items-center justify-between gap-3 border-b border-line">
-                <a href={r.url} target="_blank" rel="noopener noreferrer" className="group inline-flex min-h-11 min-w-0 flex-1 items-center py-2.5 text-ink">
+                <a href={r.url} target="_blank" rel="noopener noreferrer" className="group inline-flex min-h-11 min-w-0 flex-1 items-center gap-2 py-2.5 text-ink">
+                  <BrandLogosFor text={`${r.label} ${r.url}`} max={1} className="size-4 text-ink-2 transition-colors duration-300 group-hover:text-accent-ink" />
                   <span className="link-ul">{r.label}</span>
-                  <ExternalGlyph className="ml-1 shrink-0 text-ink-3 transition-colors duration-300 group-hover:text-accent-ink" />
+                  <ExternalGlyph className="shrink-0 text-ink-3 transition-colors duration-300 group-hover:text-accent-ink" />
                   <span className="sr-only"> (opens in new tab)</span>
                 </a>
                 <span className={`label shrink-0 ${r.cost === "free" ? "text-ink-3" : "text-accent-ink"}`}>{r.cost === "free" ? "Free" : "Paid"}</span>
@@ -469,26 +624,49 @@ function TrackB({ stage }: { stage: number }) {
 
   return (
     <div className="space-y-24 sm:space-y-36">
-      {/* Map of the whole plan */}
+      {/* Map of the whole plan, starting from the shared UX & Product Design base */}
       <div id="plan-map">
-        <SubHead n="B.map" title="Your plan at a glance" note="Four stages, in order. Pick a stage to open its details." />
+        <SubHead n="B.map" title="Your plan at a glance" note="Start from the UX & Product Design base, then move through four stages in order. Pick the base or any stage to open its details." />
         <RoadmapMap
           label="Four-stage launch plan"
           leftLabel="Focus"
           rightLabel="Result"
           active={String(stage)}
-          hrefFor={(id) => planHref({ track: "b", stage: Number(id) })}
+          hrefFor={(id) => (id === "base" ? pageHref("library", "roadmaps", "ux-design") : planHref({ track: "b", stage: Number(id) }))}
           onPick={(id) => {
+            if (id === "base") {
+              jumpTo("plan-base");
+              return;
+            }
             setStage(Number(id));
             jumpTo("stage-detail");
           }}
-          steps={launchStages.map((x) => ({
-            id: String(x.n),
-            kicker: `Stage ${x.n}`,
-            title: x.name,
-            left: x.learn,
-            right: x.output,
-          }))}
+          steps={[
+            {
+              id: "base",
+              kicker: "Base · Foundation",
+              title: "UX & Product Design",
+              note: "Open base checklists ↓",
+              base: "UX Design · Product Design",
+              foundation: true,
+              left: [
+                "Behavior & decision making",
+                "Interviews, personas & JTBD",
+                "IA, flows & wireframing",
+                "Visual craft, layout & WCAG",
+                "Usability & impact testing",
+              ],
+              right: "UX & Product Design foundation",
+            },
+            ...launchStages.map((x) => ({
+              id: String(x.n),
+              kicker: `Stage ${x.n}`,
+              title: x.name,
+              base: x.roadmapTopics.map((g) => g.source).join(" · "),
+              left: x.learn,
+              right: x.output,
+            })),
+          ]}
         />
       </div>
 
@@ -521,27 +699,42 @@ function TrackB({ stage }: { stage: number }) {
           </p>
           <p className="col-span-4 mt-3 max-w-[60ch] text-lg leading-relaxed text-ink lg:col-span-8 lg:col-start-5 lg:mt-0">{s.detail}</p>
           <div className="col-span-4 mt-10 grid gap-y-8 lg:col-span-8 lg:col-start-5 md:grid-cols-12 md:gap-x-6">
-            <StartAndDone start={s.start} doneWhen={s.doneWhen} resources={s.resources} />
+            <StartAndDone stepKey={`b-s${s.n}`} start={s.start} doneWhen={s.doneWhen} topics={s.roadmapTopics} resources={s.resources} />
           </div>
         </div>
         <StepNav n={stage} total={STAGES} unit="stage" onStep={setStage} doneHref={pageHref("ready", "b")} />
       </div>
 
+      {/* Full interactive roadmap base checklists */}
+      <PlanRoadmapBase
+        id="plan-base"
+        n="B.base"
+        title="The roadmap base behind this plan"
+        note="Build your base in UX Design and Product Design first, then layer Frontend, AI Product Builder and Design Systems. Expand any stage to tick off topics as you learn."
+        items={trackBBaseRoadmaps}
+      />
+
       <div id="plan-market">
         <SubHead n="B.2" title="The market you're entering" note="Seed-stage startups (young companies on their first funding round) have the highest design hiring rate (25%). With 300–800 applicants per role, a portfolio with something that runs is one way to stand out." />
         <dl className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
-          {beginnerContext.map((c, i) => (
-            <div
-              key={c.label}
-              data-reveal
-              style={{ "--i": i } as CSSProperties}
-              className="card flex flex-col p-4 sm:p-6"
-            >
-              <dt className="order-2 mt-3 text-sm text-ink-2">{c.label}</dt>
-              <dd className="numeral order-1 whitespace-nowrap text-[clamp(2.25rem,4.5vw,4.5rem)]">{c.value}</dd>
-              <dd className="label order-3 mt-auto pt-4 text-ink-3">{c.source}</dd>
-            </div>
-          ))}
+          {beginnerContext.map((c, i) => {
+            const icon: GlyphName = (["trendDown", "trendDown", "stack", "survey"] as const)[i] ?? "survey";
+            return (
+              <div
+                key={c.label}
+                data-reveal
+                style={{ "--i": i } as CSSProperties}
+                className="card group flex flex-col p-4 sm:p-6"
+              >
+                <dd aria-hidden="true" className="order-1 mb-5">
+                  <Glyph name={icon} className="glyph-xl !size-10 text-ink" />
+                </dd>
+                <dt className="order-3 mt-3 text-sm text-ink-2">{c.label}</dt>
+                <dd className="numeral order-2 whitespace-nowrap text-[clamp(2.25rem,4.5vw,4.5rem)]">{c.value}</dd>
+                <dd className="label order-4 mt-auto pt-4 text-ink-3">{c.source}</dd>
+              </div>
+            );
+          })}
         </dl>
       </div>
 
