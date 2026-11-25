@@ -2,7 +2,7 @@ import { Comparison } from "../sections/Comparison";
 import { RoadmapTopics } from "../sections/RoadmapTopics";
 import { SkillsExplorer } from "../sections/SkillsExplorer";
 import { ToolingPipeline } from "../sections/ToolingPipeline";
-import { glossary } from "../data/research";
+import { glossary, glossaryTopicLabel, type GlossaryTopic } from "../data/research";
 import { externalRoadmaps } from "../data/roadmaps";
 import { useEffect, useState } from "react";
 import { ContextBar, Lines, NextPage, jumpTo, lastPlanHref, navigate, pageHref } from "../components/ui";
@@ -75,10 +75,22 @@ export function Library({ shelf: raw, term }: { shelf?: string; term?: string })
 
 function Glossary({ term }: { term?: string }) {
   const [q, setQ] = useState("");
+  const [topic, setTopic] = useState<GlossaryTopic | "all">("all");
   const needle = q.trim().toLowerCase();
-  const terms = needle
-    ? sortedGlossary.filter((g) => g.term.toLowerCase().includes(needle) || g.meaning.toLowerCase().includes(needle))
-    : sortedGlossary;
+  const terms = sortedGlossary.filter(
+    (g) =>
+      (topic === "all" || g.topic === topic) &&
+      (!needle || g.term.toLowerCase().includes(needle) || g.meaning.toLowerCase().includes(needle)),
+  );
+  const topics: { id: GlossaryTopic | "all"; label: string }[] = [
+    { id: "all", label: "All" },
+    ...(Object.keys(glossaryTopicLabel) as GlossaryTopic[]).map((id) => ({ id, label: glossaryTopicLabel[id] })),
+  ];
+  const openTerm = (name: string) => {
+    setQ("");
+    setTopic("all");
+    navigate(pageHref("library", "glossary", slugify(name)), { replace: true });
+  };
 
   useEffect(() => {
     if (term) jumpTo(`term-${term}`);
@@ -89,6 +101,9 @@ function Glossary({ term }: { term?: string }) {
       <h2 id="glossary-title" className="display-l mt-10 text-ink">
         Plain words for <em>the jargon.</em>
       </h2>
+      <p className="mt-4 max-w-[60ch] text-pretty text-ink-2">
+        Skip what you know. Look a term up when it comes up in a course, a job post or a team meeting.
+      </p>
       <div className="mt-8 flex flex-wrap items-end gap-x-6 gap-y-2">
         <div className="w-full max-w-md">
           <label htmlFor="glossary-filter" className="label block text-ink-3">
@@ -96,14 +111,29 @@ function Glossary({ term }: { term?: string }) {
           </label>
           <input id="glossary-filter" type="search" value={q} onChange={(e) => setQ(e.target.value)} autoComplete="off" className="input-line" />
         </div>
+        <div role="group" aria-label="Show terms by topic" className="flex flex-wrap gap-2 pb-2">
+          {topics.map((l) => (
+            <button
+              key={l.id}
+              type="button"
+              aria-pressed={topic === l.id}
+              onClick={() => setTopic(l.id)}
+              className={`label border px-3 py-2 transition-colors duration-300 ${
+                topic === l.id ? "border-inverse bg-inverse text-on-inverse" : "border-line-strong text-ink-2 hover:border-ink hover:text-ink"
+              }`}
+            >
+              {l.label}
+            </button>
+          ))}
+        </div>
         <p aria-live="polite" className="label pb-3 text-ink-3">
           {terms.length} {terms.length === 1 ? "term" : "terms"}
         </p>
       </div>
       {terms.length === 0 ? (
         <div className="mt-10">
-          <p className="text-ink-2">No term matches “{q.trim()}”.</p>
-          <button type="button" onClick={() => setQ("")} className="hit label link-ul-static mt-3 text-ink">
+          <p className="text-ink-2">{needle ? <>No term matches “{q.trim()}”.</> : "No terms here yet."}</p>
+          <button type="button" onClick={() => { setQ(""); setTopic("all"); }} className="hit label link-ul-static mt-3 text-ink">
             Clear filter
           </button>
         </div>
@@ -127,6 +157,27 @@ function Glossary({ term }: { term?: string }) {
                   </a>
                 </dt>
                 <dd className="mt-2 text-sm leading-relaxed text-ink-2">{g.meaning}</dd>
+                {g.see && g.see.length > 0 && (
+                  <dd className="mt-3 text-sm text-ink-3">
+                    See{" "}
+                    {g.see.map((name, i) => (
+                      <span key={name}>
+                        {i > 0 && ", "}
+                        <a
+                          href={pageHref("library", "glossary", slugify(name))}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            openTerm(name);
+                          }}
+                          className="link-ul-static text-ink hover:text-accent-ink"
+                        >
+                          {name}
+                        </a>
+                      </span>
+                    ))}
+                  </dd>
+                )}
+                <dd className="label mt-4 text-ink-3">{glossaryTopicLabel[g.topic]}</dd>
               </div>
             );
           })}

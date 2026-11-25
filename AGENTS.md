@@ -39,6 +39,7 @@ Always run `npm run typecheck` (or `npm run build`) after edits.
 ## Non-negotiable content rules
 
 1. **Zero invented data:** Every figure, stat, percentage, company example, and citation must trace to `src/data/research.ts` ("The 2026 Product Design Evolution" brief). Edit data in `research.ts`, never hard-code numbers in JSX.
+   - *Glossary exception:* `glossary` entries may also draw on well-established outside standards and common design knowledge (e.g., WCAG contrast ratios and levels, Hick's and Fitts's laws, IC levels). Keep them accurate to the original source, and hedge where practice varies. This covers definitions only; market stats and claims elsewhere still need the brief.
 2. **Honest metric basis:** Every `Metric` carries `basis: "survey" | "analytics" | "projection" | "case"` and renders through `BasisBadge`.
 3. **Respectful bridge tone:** Plain, direct prose. Never frame designers as "catching up" or engineers as gatekeepers; frame hybrid work as shrinking the handoff.
 4. **Dual Track A framing:** Track A copy (`Home`, `Roles`, `Plan`, `Ready`, `Comparison`) must serve working designers upskilling in their current job **and** those preparing for a new role.
@@ -61,3 +62,4 @@ Before finishing any UI or content change:
 
 - Commit messages: imperative, sentence case, no prefix (e.g., `Align home stat card footers across breakpoints`).
 - Never include AI agent attribution lines or `Co-Authored-By:` trailers for AI tools/models.
+- Never attribute work to an AI agent anywhere: not as commit author or committer, and not in commit messages, PR text, comments, or footers, on any surface including the mobile app. Commit as the repository owner (match the owner's earlier commits in `git config user.name`/`user.email`).

@@ -71,6 +71,14 @@ export function Footer() {
         </details>
 
         <div className="label mt-20 flex flex-wrap items-baseline justify-between gap-4 border-t border-inverse-line pt-5 text-inverse-muted">
+          <span className="flex items-baseline gap-2">
+            Created by
+            <a href="https://sarojshahi.com" target="_blank" rel="noopener noreferrer author" className="hit group inline-flex items-baseline text-on-inverse">
+              <span className="link-ul">Saroj Shahi</span>
+              <ExternalGlyph className="ml-1 text-inverse-muted transition-colors duration-300 group-hover:text-inverse-accent" />
+              <span className="sr-only"> (opens in new tab)</span>
+            </a>
+          </span>
           <span className="hidden lg:inline">
             Press <kbd className="border border-inverse-line px-1.5 py-0.5 text-on-inverse">Alt</kbd> <kbd className="border border-inverse-line px-1.5 py-0.5 text-on-inverse">G</kbd> to show the grid
           </span>
