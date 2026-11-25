@@ -41,9 +41,7 @@
   --sh-2: 8px 8px 0 var(--hard);
   --sh-accent: 4px 4px 0 var(--accent);
   --spring: cubic-bezier(0.34, 1.32, 0.64, 1);
-  --rail: 0px;
 }
-@media (min-width: 1024px) { :root { --rail: 64px; } }
 @media (min-width: 640px) { :root { --gutter: 24px; } }
 @media (min-width: 1024px) { :root { --gutter: 40px; } }
 
@@ -132,7 +130,7 @@
 /* ───────── Base ───────── */
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 64px;
+  scroll-padding-top: 80px;
   -webkit-text-size-adjust: 100%;
 }
 body {
@@ -175,7 +173,7 @@ body {
 /* Exposed column structure, fixed behind content. Toggle with "G". */
 .grid-overlay {
   position: fixed;
-  inset: 0 0 0 var(--rail);
+  inset: 0;
   z-index: 0;
   pointer-events: none;
   transition: opacity 600ms var(--ease);
@@ -462,18 +460,8 @@ em, .italic { font-style: italic; }
 .card-dim:hover { opacity: 1; }
 .sideways { writing-mode: vertical-rl; transform: rotate(180deg); }
 
-/* Chapter rail (desktop) */
-.rail {
-  position: fixed;
-  inset: 0 auto 0 0;
-  z-index: 45;
-  width: var(--rail);
-  background: var(--card);
-  border-right: 2px solid var(--edge);
-}
-.with-rail { padding-left: var(--rail); }
-/* On the orange active chapter, the glyph's accent parts flip to paper so they stay visible */
-.rail a[aria-current] .glyph { --accent: var(--card); }
+/* Top nav: on the orange current page, the glyph's accent parts flip to paper so they stay visible */
+.nav-link[aria-current] .glyph { --accent: var(--card); }
 
 /* Index square marker */
 .tick { display: inline-block; width: 7px; height: 7px; background: currentColor; flex-shrink: 0; }

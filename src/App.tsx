@@ -63,7 +63,7 @@ export default function App() {
       <GridOverlay on={grid} />
       <div aria-hidden className="grain" />
       <Nav page={route.page} grid={grid} onToggleGrid={() => setGrid((g) => !g)} />
-      <div className="with-rail">
+      <div>
         <main id="main" tabIndex={-1} className="relative z-[1] outline-none" key={route.page}>
           {route.page === "home" && <Home />}
           {route.page === "roles" && <Roles />}

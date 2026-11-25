@@ -90,7 +90,7 @@ function Checklist({ track }: { track: Track }) {
   return (
     <div role="tabpanel" id={`ready-panel-${track}`} aria-labelledby={`ready-tab-${track}`} tabIndex={0} className="panel-in grid-12 gap-y-12">
       <div className="col-span-4 lg:col-span-4">
-        <div className="card group p-6 sm:p-8 lg:sticky lg:top-8">
+        <div className="card group p-6 sm:p-8 lg:sticky lg:top-24">
           <p className="label flex items-start justify-between gap-4 text-ink-3">
             <span>
               Portfolio readiness

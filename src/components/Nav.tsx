@@ -49,81 +49,57 @@ export function Nav({ page, grid, onToggleGrid }: { page: Page; grid: boolean; o
   }, [page]);
 
   return (
-    <>
-      <PageRail page={page} progress={progress} grid={grid} onToggleGrid={onToggleGrid} />
-      <header className="sticky top-0 z-40 border-b-2 border-edge bg-card lg:hidden">
-        <div className="wrap grid h-12 grid-cols-[auto_1fr_auto] items-center gap-4 sm:gap-6">
-          <a href={pageHref("home")} className="group label flex items-center gap-2.5 self-stretch text-ink">
-            <span aria-hidden className="tick text-accent transition-transform duration-700 ease-silk group-hover:rotate-45" />
-            <span>DE/26</span>
-          </a>
-          <nav ref={navRef} aria-label="Pages" className="no-scrollbar flex gap-5 self-stretch overflow-x-auto">
-            {pages.map((p) => {
-              const on = page === p.id;
-              return (
-                <a
-                  key={p.id}
-                  href={pageHref(p.id)}
-                  aria-current={on ? "page" : undefined}
-                  className={`label flex shrink-0 items-center transition-colors duration-300 ${on ? "text-ink" : "text-ink-3 hover:text-ink"}`}
-                >
-                  <span className="link-ul" data-on={on}>
-                    {p.label}
-                  </span>
-                </a>
-              );
-            })}
-          </nav>
-          <ThemeToggle className="-mr-2 grid size-11 place-items-center" />
-        </div>
-        <div aria-hidden className="absolute inset-x-0 -bottom-0.5 h-0.5">
-          <div className="h-0.5 origin-left bg-accent" style={{ transform: `scaleX(${progress})` }} />
-        </div>
-      </header>
-    </>
-  );
-}
+    <header className="sticky top-0 z-40 border-b-2 border-edge bg-card">
+      <div className="wrap grid h-12 grid-cols-[auto_1fr_auto] items-center gap-4 sm:gap-6 lg:h-16 lg:grid-cols-[1fr_auto_1fr]">
+        <a href={pageHref("home")} className="group label flex items-center gap-2.5 self-stretch text-ink">
+          <span aria-hidden className="tick text-accent transition-transform duration-700 ease-silk group-hover:rotate-45" />
+          <span>DE/26</span>
+          <span className="hidden text-ink-3 xl:inline">· Field Guide</span>
+        </a>
 
-/** Desktop spine: one cell per page, icon and name always visible; the current page is pressed in orange. */
-function PageRail({ page, progress, grid, onToggleGrid }: { page: Page; progress: number; grid: boolean; onToggleGrid: () => void }) {
-  return (
-    <aside className="rail hidden flex-col lg:flex" aria-label="Site">
-      <a href={pageHref("home")} className="group grid h-16 shrink-0 place-items-center border-b-2 border-edge" aria-label="DE/26 Field Guide: start page">
-        <span aria-hidden className="tick !size-3 text-accent transition-transform duration-500 ease-silk group-hover:rotate-45" />
-      </a>
-      <nav aria-label="Pages" className="flex flex-1 flex-col">
-        {pages.map((p) => {
-          const on = page === p.id;
-          return (
-            <a
-              key={p.id}
-              href={pageHref(p.id)}
-              aria-current={on ? "page" : undefined}
-              className={`group relative flex flex-col items-center gap-2 border-b-2 border-edge px-1 py-4 text-center transition-colors duration-300 ${
-                on ? "bg-accent text-[var(--on-accent)]" : "text-ink-3 hover:bg-sunken hover:text-ink"
-              }`}
-            >
-              <Glyph name={pageGlyph[p.id]} on={on} className="!size-6" />
-              <span className="font-mono text-[10px] leading-none tracking-tight">{p.label}</span>
-            </a>
-          );
-        })}
-      </nav>
-      <div className="border-t-2 border-edge">
-        <ThemeToggle className="grid h-12 w-full place-items-center border-b-2 border-edge hover:bg-sunken" />
-        <button
-          type="button"
-          onClick={onToggleGrid}
-          aria-pressed={grid}
-          title="Show the 12-column grid (Alt+G)"
-          aria-keyshortcuts="Alt+G"
-          className={`label grid h-12 w-full place-items-center transition-colors ${grid ? "bg-ink text-paper" : "text-ink-3 hover:text-ink"}`}
-        >
-          Grid
-        </button>
+        <nav ref={navRef} aria-label="Pages" className="no-scrollbar flex items-center gap-5 self-stretch overflow-x-auto lg:gap-1.5">
+          {pages.map((p) => {
+            const on = page === p.id;
+            return (
+              <a
+                key={p.id}
+                href={pageHref(p.id)}
+                aria-current={on ? "page" : undefined}
+                className={`nav-link group label flex shrink-0 items-center gap-2 transition-colors duration-300 lg:h-10 lg:border-2 lg:px-3 ${
+                  on
+                    ? "text-ink lg:border-edge lg:bg-accent lg:text-[var(--on-accent)]"
+                    : "text-ink-3 hover:text-ink lg:border-transparent lg:hover:border-edge lg:hover:bg-sunken"
+                }`}
+              >
+                <span aria-hidden className="hidden lg:contents">
+                  <Glyph name={pageGlyph[p.id]} on={on} className="!size-5" />
+                </span>
+                <span className="link-ul lg:!bg-none" data-on={on}>
+                  {p.label}
+                </span>
+              </a>
+            );
+          })}
+        </nav>
+
+        <div className="flex items-center justify-end gap-1 self-stretch">
+          <button
+            type="button"
+            onClick={onToggleGrid}
+            aria-pressed={grid}
+            title="Show the 12-column grid (Alt+G)"
+            aria-keyshortcuts="Alt+G"
+            className={`label hidden h-10 px-3 transition-colors lg:block ${grid ? "bg-ink text-paper" : "text-ink-3 hover:text-ink"}`}
+          >
+            Grid
+          </button>
+          <ThemeToggle className="-mr-2 grid size-11 place-items-center lg:mr-0 lg:size-10 lg:hover:bg-sunken" />
+        </div>
       </div>
-      <span aria-hidden className="absolute inset-y-0 right-[-2px] w-0.5 origin-top bg-accent" style={{ transform: `scaleY(${progress})` }} />
-    </aside>
+      <div aria-hidden className="absolute inset-x-0 -bottom-0.5 h-0.5">
+        <div className="h-0.5 origin-left bg-accent" style={{ transform: `scaleX(${progress})` }} />
+      </div>
+    </header>
   );
 }
 
