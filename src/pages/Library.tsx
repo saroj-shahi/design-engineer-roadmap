@@ -2,7 +2,7 @@ import { Comparison } from "../sections/Comparison";
 import { RoadmapTopics } from "../sections/RoadmapTopics";
 import { SkillsExplorer } from "../sections/SkillsExplorer";
 import { ToolingPipeline } from "../sections/ToolingPipeline";
-import { glossary } from "../data/research";
+import { glossary, glossaryLevelLabel, type GlossaryLevel } from "../data/research";
 import { externalRoadmaps } from "../data/roadmaps";
 import { useEffect, useState } from "react";
 import { ContextBar, Lines, NextPage, jumpTo, lastPlanHref, navigate, pageHref } from "../components/ui";
@@ -75,10 +75,18 @@ export function Library({ shelf: raw, term }: { shelf?: string; term?: string })
 
 function Glossary({ term }: { term?: string }) {
   const [q, setQ] = useState("");
+  const [level, setLevel] = useState<GlossaryLevel | "all">("all");
   const needle = q.trim().toLowerCase();
-  const terms = needle
-    ? sortedGlossary.filter((g) => g.term.toLowerCase().includes(needle) || g.meaning.toLowerCase().includes(needle))
-    : sortedGlossary;
+  const terms = sortedGlossary.filter(
+    (g) =>
+      (level === "all" || g.level === level) &&
+      (!needle || g.term.toLowerCase().includes(needle) || g.meaning.toLowerCase().includes(needle)),
+  );
+  const levels: { id: GlossaryLevel | "all"; label: string }[] = [
+    { id: "all", label: "All" },
+    { id: "new", label: glossaryLevelLabel.new },
+    { id: "pro", label: glossaryLevelLabel.pro },
+  ];
 
   useEffect(() => {
     if (term) jumpTo(`term-${term}`);
@@ -96,14 +104,29 @@ function Glossary({ term }: { term?: string }) {
           </label>
           <input id="glossary-filter" type="search" value={q} onChange={(e) => setQ(e.target.value)} autoComplete="off" className="input-line" />
         </div>
+        <div role="group" aria-label="Show terms for" className="flex flex-wrap gap-2 pb-2">
+          {levels.map((l) => (
+            <button
+              key={l.id}
+              type="button"
+              aria-pressed={level === l.id}
+              onClick={() => setLevel(l.id)}
+              className={`label border px-3 py-2 transition-colors duration-300 ${
+                level === l.id ? "border-inverse bg-inverse text-on-inverse" : "border-line-strong text-ink-2 hover:border-ink hover:text-ink"
+              }`}
+            >
+              {l.label}
+            </button>
+          ))}
+        </div>
         <p aria-live="polite" className="label pb-3 text-ink-3">
           {terms.length} {terms.length === 1 ? "term" : "terms"}
         </p>
       </div>
       {terms.length === 0 ? (
         <div className="mt-10">
-          <p className="text-ink-2">No term matches “{q.trim()}”.</p>
-          <button type="button" onClick={() => setQ("")} className="hit label link-ul-static mt-3 text-ink">
+          <p className="text-ink-2">{needle ? <>No term matches “{q.trim()}”.</> : "No terms here yet."}</p>
+          <button type="button" onClick={() => { setQ(""); setLevel("all"); }} className="hit label link-ul-static mt-3 text-ink">
             Clear filter
           </button>
         </div>
@@ -127,6 +150,7 @@ function Glossary({ term }: { term?: string }) {
                   </a>
                 </dt>
                 <dd className="mt-2 text-sm leading-relaxed text-ink-2">{g.meaning}</dd>
+                <dd className="label mt-4 text-ink-3">{glossaryLevelLabel[g.level]}</dd>
               </div>
             );
           })}
