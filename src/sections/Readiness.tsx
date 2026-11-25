@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { juniorChecklist, readinessItems, type ChecklistItem } from "../data/research";
-import { CheckRow, Section, SectionHeader, Tabs, navigate, pageHref, usePersistentSet, useSaveNote, type Track } from "../components/ui";
+import { CheckRow, Section, SectionHeader, Tabs, navigate, pageHref, parseStringArray, usePersistentSet, useSaveNote, type Track } from "../components/ui";
 import { Glyph } from "../components/icons";
 
 /** One checklist per track, each with its own saved ticks. Chapter 05 links here instead of repeating them. */
@@ -37,8 +37,8 @@ function migrateHybridPortfolio() {
   try {
     const old = localStorage.getItem("de-guide:hybrid-portfolio");
     if (!old) return;
-    const cur = new Set<string>(JSON.parse(localStorage.getItem("de-guide:readiness") ?? "[]"));
-    for (const id of JSON.parse(old) as string[]) cur.add(id === "aiproof" ? "ai" : id);
+    const cur = new Set<string>(parseStringArray(localStorage.getItem("de-guide:readiness")));
+    for (const id of parseStringArray(old)) cur.add(id === "aiproof" ? "ai" : id);
     localStorage.setItem("de-guide:readiness", JSON.stringify([...cur]));
     localStorage.removeItem("de-guide:hybrid-portfolio");
   } catch {

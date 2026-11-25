@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Glyph, type GlyphName } from "./icons";
 import { pageHref, pages, useTheme, type Page } from "./ui";
+
+const BASE = import.meta.env.BASE_URL || "/";
 
 const pageGlyph: Record<Page, GlyphName> = {
   home: "shift",
@@ -10,16 +12,19 @@ const pageGlyph: Record<Page, GlyphName> = {
   library: "library",
 };
 
-/** Reading progress through the current page (0–1). */
-function useScrollProgress() {
-  const [progress, setProgress] = useState(0);
+/** Drives the reading progress bar directly via ref so scrolling never re-renders Nav. */
+function useScrollProgressRef() {
+  const barRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     let frame = 0;
     const update = () => {
       frame = 0;
+      const bar = barRef.current;
+      if (!bar) return;
       const h = document.documentElement;
       const max = h.scrollHeight - h.clientHeight;
-      setProgress(max > 0 ? h.scrollTop / max : 0);
+      const p = max > 0 ? Math.min(1, Math.max(0, h.scrollTop / max)) : 0;
+      bar.style.transform = `scaleX(${p})`;
     };
     const onScroll = () => {
       if (!frame) frame = requestAnimationFrame(update);
@@ -27,23 +32,27 @@ function useScrollProgress() {
     update();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
+    const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(onScroll) : null;
+    ro?.observe(document.documentElement);
     return () => {
       cancelAnimationFrame(frame);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
+      ro?.disconnect();
     };
   }, []);
-  return progress;
+  return barRef;
 }
 
-export function Nav({ page }: { page: Page }) {
-  const progress = useScrollProgress();
+export function Nav({ page }: { page: Page | null }) {
+  const barRef = useScrollProgressRef();
+  const rootPrefix = page === null ? BASE : "";
 
   return (
     <header className="sticky top-0 z-40 border-b-2 border-edge bg-card">
       <div className="wrap grid grid-cols-[1fr_auto] grid-rows-[3rem_3rem] items-center gap-x-4 sm:gap-x-6 lg:h-16 lg:grid-cols-[1fr_auto_1fr] lg:grid-rows-1">
-        <a href={pageHref("home")} className="group label flex items-center gap-2.5 self-stretch text-ink">
-          <span aria-hidden className="tick text-accent transition-transform duration-700 ease-silk group-hover:rotate-45" />
+        <a href={`${rootPrefix}${pageHref("home")}`} className="group label flex items-center gap-2.5 self-stretch text-ink">
+          <span aria-hidden className="tick text-accent transition-transform duration-700 ease-silk motion-safe:group-hover:rotate-45" />
           <span>Field Guide</span>
         </a>
 
@@ -56,9 +65,9 @@ export function Nav({ page }: { page: Page }) {
             return (
               <a
                 key={p.id}
-                href={pageHref(p.id)}
+                href={`${rootPrefix}${pageHref(p.id)}`}
                 aria-current={on ? "page" : undefined}
-                className={`nav-link group label relative flex min-h-11 items-center justify-center gap-2 text-center transition-colors duration-300 lg:h-10 lg:border-2 lg:px-3 ${
+                className={`nav-link group label relative flex min-h-11 items-center justify-center gap-2 px-1 text-center transition-colors duration-300 max-sm:text-[10px] max-sm:tracking-[0.04em] lg:h-10 lg:border-2 lg:px-3 ${
                   on
                     ? "text-ink lg:border-edge lg:bg-accent lg:text-[var(--on-accent)]"
                     : "text-ink-3 hover:text-ink lg:border-transparent lg:hover:border-edge lg:hover:bg-sunken"
@@ -79,7 +88,7 @@ export function Nav({ page }: { page: Page }) {
         </div>
       </div>
       <div aria-hidden className="absolute inset-x-0 -bottom-0.5 h-0.5">
-        <div className="h-0.5 origin-left bg-accent" style={{ transform: `scaleX(${progress})` }} />
+        <div ref={barRef} className="h-0.5 origin-left bg-accent" style={{ transform: "scaleX(0)" }} />
       </div>
     </header>
   );

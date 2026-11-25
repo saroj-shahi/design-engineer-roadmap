@@ -14,7 +14,7 @@ import { ArrowGlyph, Glyph, type GlyphName } from "./icons";
 
 /* ───────── Motion plumbing ───────── */
 
-const prefersReducedMotion = () =>
+export const prefersReducedMotion = () =>
   typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 /** One observer for the whole page: anything with [data-reveal] gets .is-in once it enters the viewport,
@@ -36,7 +36,14 @@ export function useRevealObserver() {
       root.querySelectorAll<HTMLElement>("[data-reveal]:not(.is-in)").forEach((el) => io.observe(el));
     scan(document);
     const mo = new MutationObserver((muts) => {
-      for (const m of muts) m.addedNodes.forEach((n) => n instanceof HTMLElement && (n.matches("[data-reveal]") ? io.observe(n) : scan(n)));
+      for (const m of muts) {
+        m.addedNodes.forEach((n) => {
+          if (n instanceof HTMLElement) {
+            if (n.matches("[data-reveal]:not(.is-in)")) io.observe(n);
+            scan(n);
+          }
+        });
+      }
     });
     mo.observe(document.body, { childList: true, subtree: true });
     return () => {
@@ -44,6 +51,44 @@ export function useRevealObserver() {
       mo.disconnect();
     };
   }, []);
+}
+
+/** Shared rAF-throttled pointer parallax that writes --px and --py in [-1, 1] and skips reduced motion / touch. */
+export function usePointerParallax<T extends Element>() {
+  const ref = useRef<T>(null);
+  const frame = useRef(0);
+  const pos = useRef({ x: 0, y: 0 });
+
+  useEffect(() => () => cancelAnimationFrame(frame.current), []);
+
+  const onPointerMove = (e: PointerEvent<T>) => {
+    const el = ref.current;
+    if (!el || e.pointerType === "touch" || prefersReducedMotion()) return;
+    pos.current = { x: e.clientX, y: e.clientY };
+    if (frame.current) return;
+    frame.current = requestAnimationFrame(() => {
+      frame.current = 0;
+      const node = ref.current;
+      if (!node) return;
+      const r = node.getBoundingClientRect();
+      if (r.width <= 0 || r.height <= 0) return;
+      const s = (node as unknown as HTMLElement).style;
+      s.setProperty("--px", (((pos.current.x - r.left) / r.width) * 2 - 1).toFixed(3));
+      s.setProperty("--py", (((pos.current.y - r.top) / r.height) * 2 - 1).toFixed(3));
+    });
+  };
+
+  const onPointerLeave = () => {
+    cancelAnimationFrame(frame.current);
+    frame.current = 0;
+    const node = ref.current;
+    if (!node) return;
+    const s = (node as unknown as HTMLElement).style;
+    s.setProperty("--px", "0");
+    s.setProperty("--py", "0");
+  };
+
+  return { ref, onPointerMove, onPointerLeave };
 }
 
 /** Headline revealed line by line through overflow masks. */
@@ -87,6 +132,10 @@ export function CountUp({ value, className = "" }: { value: string; className?: 
     }
     const [, pre, num, post] = match;
     const target = parseFloat(num.replace(/,/g, ""));
+    if (!Number.isFinite(target)) {
+      setShown(value);
+      return;
+    }
     const decimals = num.includes(".") ? num.split(".")[1].length : 0;
     const grouped = num.includes(",");
     setShown(`${pre}0${post}`);
@@ -103,10 +152,17 @@ export function CountUp({ value, className = "" }: { value: string; className?: 
         const start = performance.now();
         const dur = 1600;
         const tick = (t: number) => {
-          const p = Math.min(1, (t - start) / dur);
+          const p = Math.max(0, Math.min(1, (t - start) / dur));
+          if (p >= 1) {
+            setShown(value);
+            return;
+          }
           const n = target * (1 - Math.pow(1 - p, 4));
-          setShown(`${pre}${grouped ? Math.round(n).toLocaleString("en-US") : n.toFixed(decimals)}${post}`);
-          if (p < 1) raf = requestAnimationFrame(tick);
+          const formatted = grouped
+            ? n.toLocaleString("en-US", { minimumFractionDigits: decimals, maximumFractionDigits: decimals })
+            : n.toFixed(decimals);
+          setShown(`${pre}${formatted}${post}`);
+          raf = requestAnimationFrame(tick);
         };
         raf = requestAnimationFrame(tick);
       },
@@ -125,32 +181,6 @@ export function CountUp({ value, className = "" }: { value: string; className?: 
     <span ref={ref} className={className}>
       <span aria-hidden>{shown}</span>
       <span className="sr-only">{value}</span>
-    </span>
-  );
-}
-
-/** Pulls its child toward the pointer with a weighted lag. Inert on touch and reduced motion. */
-export function Magnetic({ children, strength = 0.3 }: { children: ReactNode; strength?: number }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const onMove = (e: PointerEvent<HTMLSpanElement>) => {
-    const el = ref.current;
-    if (!el || e.pointerType !== "mouse" || prefersReducedMotion()) return;
-    const r = el.getBoundingClientRect();
-    const x = (e.clientX - (r.left + r.width / 2)) * strength;
-    const y = (e.clientY - (r.top + r.height / 2)) * strength * 1.2;
-    el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-  };
-  const onLeave = () => {
-    if (ref.current) ref.current.style.transform = "";
-  };
-  return (
-    <span
-      ref={ref}
-      onPointerMove={onMove}
-      onPointerLeave={onLeave}
-      className="inline-block transition-transform duration-700 ease-silk"
-    >
-      {children}
     </span>
   );
 }
@@ -252,18 +282,11 @@ export function Tag({ children, tone = "neutral" }: { children: ReactNode; tone?
   );
 }
 
-const basisStyle: Record<BasisKind, string> = {
-  survey: "text-ink-3",
-  analytics: "text-ink-3",
-  projection: "text-ink-3",
-  case: "text-ink-3",
-};
-
 /** `onBand` takes the text colour of a filled band (e.g. a card head) instead of the muted ink. */
 export function BasisBadge({ basis, onBand = false }: { basis: BasisKind; onBand?: boolean }) {
   return (
-    <span className={`label inline-flex items-center gap-1.5 whitespace-nowrap ${onBand ? "text-current" : basisStyle[basis]}`}>
-      <span aria-hidden className={`size-[5px] bg-current`} />
+    <span className={`label inline-flex items-center gap-1.5 whitespace-nowrap ${onBand ? "text-current" : "text-ink-3"}`}>
+      <span aria-hidden className="size-[5px] bg-current" />
       {basisLabel[basis]}
     </span>
   );
@@ -316,7 +339,7 @@ export function useTabList({
         type: "button",
         id: `${idPrefix}-tab-${id}`,
         "aria-selected": id === value,
-        "aria-controls": `${idPrefix}-panel-${id}`,
+        "aria-controls": id === value ? `${idPrefix}-panel-${id}` : undefined,
         tabIndex: id === value ? 0 : -1,
         onClick: () => onChange(id),
       }) as const,
@@ -383,7 +406,7 @@ export function Tabs({
             {variant === "list" && orientation === "vertical" ? (
               <>
                 {t.sub && <span className="label w-8 shrink-0 text-ink-3">{t.sub}</span>}
-                <span className={`font-display text-2xl leading-tight tracking-tight transition-transform duration-700 ease-silk ${selected ? "translate-x-2" : "group-hover:translate-x-1"}`}>
+                <span className={`font-display text-2xl leading-tight tracking-tight transition-transform duration-700 ease-silk ${selected ? "motion-safe:translate-x-2" : "motion-safe:group-hover:translate-x-1"}`}>
                   {t.label}
                 </span>
                 <span aria-hidden className={`tick ml-auto self-center text-accent transition-transform duration-500 ease-silk ${selected ? "scale-100" : "scale-0"}`} />
@@ -432,17 +455,19 @@ export function Disclosure({
   children,
   defaultOpen = false,
   meta,
+  headingLevel: Heading = "h3",
 }: {
   summary: ReactNode;
   children: ReactNode;
   defaultOpen?: boolean;
   meta?: ReactNode;
+  headingLevel?: "h2" | "h3" | "h4";
 }) {
   const [open, setOpen] = useState(defaultOpen);
   const id = useId();
   return (
     <div className="border-b border-line">
-      <h3>
+      <Heading>
         <button
           type="button"
           aria-expanded={open}
@@ -457,7 +482,7 @@ export function Disclosure({
             <span className={`absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-current transition-transform duration-700 ease-silk ${open ? "scale-y-0" : ""}`} />
           </span>
         </button>
-      </h3>
+      </Heading>
       <div id={id} hidden={!open} className="pb-6">
         {open && <div className="panel-in">{children}</div>}
       </div>
@@ -511,11 +536,21 @@ export function CheckRow({
 
 /* ───────── Persisted checklist state ───────── */
 
+/** Safely parses a JSON string array from storage, rejecting non-arrays and non-string entries. */
+export function parseStringArray(raw: string | null): string[] {
+  if (!raw) return [];
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed.filter((x): x is string => typeof x === "string") : [];
+  } catch {
+    return [];
+  }
+}
+
 export function usePersistentSet(key: string) {
   const [set, setSet] = useState<Set<string>>(() => {
     try {
-      const raw = localStorage.getItem(key);
-      return new Set(raw ? (JSON.parse(raw) as string[]) : []);
+      return new Set(parseStringArray(localStorage.getItem(key)));
     } catch {
       return new Set();
     }
@@ -553,11 +588,9 @@ export function usePersistentSet(key: string) {
 }
 
 /* ───────── Reader's track: shared, persisted, deep-linkable ─────────
-   One stored choice per key, kept in localStorage and broadcast so every
-   component reading it stays in sync. Deep links like #roadmap/b,
+   One stored choice per key, kept in localStorage. Deep links like #roadmap/b,
    #roadmap/a/meta or #readiness/b write the choice, then scroll there. */
 
-const STORE_EVENT = "de-guide:store";
 export type Track = "a" | "b";
 export const TRACK_KEY = "de-guide:track";
 export const TRACK_A_OPTION_KEY = "de-guide:track-a-option";
@@ -577,37 +610,12 @@ function writeStored(key: string, value: string) {
   } catch {
     /* storage unavailable: the choice lives for this page view only */
   }
-  window.dispatchEvent(new CustomEvent(STORE_EVENT, { detail: { key, value } }));
-}
-
-/** A persisted single choice (track, option…) that stays in sync across components. */
-export function useStoredChoice<T extends string>(key: string, fallback: T, allowed: readonly T[]) {
-  const [value, setValue] = useState<T>(() => readStored(key, fallback, allowed));
-  useEffect(() => {
-    const on = (e: Event) => {
-      const d = (e as CustomEvent<{ key: string; value: string }>).detail;
-      if (d?.key === key && allowed.includes(d.value as T)) setValue(d.value as T);
-    };
-    window.addEventListener(STORE_EVENT, on);
-    return () => window.removeEventListener(STORE_EVENT, on);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [key]);
-  const set = (v: T) => {
-    setValue(v);
-    writeStored(key, v);
-  };
-  return [value, set] as const;
 }
 
 /** The reader's saved track, or null if they haven't picked one. No silent default. */
 export function readStoredTrack(): Track | null {
   const v = readStored<Track | "none">(TRACK_KEY, "none", ["a", "b", "none"]);
   return v === "none" ? null : v;
-}
-
-export function useTrack() {
-  const [v, set] = useStoredChoice<Track | "none">(TRACK_KEY, "none", ["a", "b", "none"]);
-  return [v === "none" ? null : v, set as (t: Track) => void] as const;
 }
 
 /* ───────── Pages (hash router) ─────────
@@ -653,7 +661,14 @@ const legacy: Record<string, string> = {
   "#tooling": "#/library/tools",
 };
 
+const BASE = import.meta.env.BASE_URL || "/";
+const isAppBasePath = (pathname: string) =>
+  pathname === BASE || pathname === `${BASE}index.html` || (BASE.endsWith("/") && BASE.length > 1 && pathname === BASE.slice(0, -1));
+
 function parseRoute(hash: string): Route | null {
+  if (typeof location !== "undefined" && !isAppBasePath(location.pathname)) {
+    return { page: "home", parts: [], notFound: true };
+  }
   let h = hash;
   const old = h.match(/^#(roadmap|readiness)\/(.+)$/);
   if (old) h = `#/${old[1] === "roadmap" ? "plan" : "ready"}/${old[2]}`;
@@ -696,7 +711,13 @@ export const PLAN_ROUTE_KEY = "de-guide:plan-route";
 export function lastPlanHref() {
   try {
     const saved = localStorage.getItem(PLAN_ROUTE_KEY);
-    if (saved && saved.startsWith("#/plan/")) return saved;
+    if (saved) {
+      const r = parseRoute(saved);
+      if (r && !r.notFound && r.page === "plan") {
+        const plan = planFromParts(r.parts);
+        if (plan) return planHref(plan);
+      }
+    }
   } catch {
     /* ignore */
   }
@@ -725,14 +746,15 @@ function canonical(r: Route): string | null {
 }
 
 /** Remember the choices a URL carries, so a bare #/plan or #/ready can be filled in next time. */
-function remember(r: Route, hash: string) {
+function remember(r: Route) {
+  if (r.notFound) return;
   if (r.page === "plan") {
     const plan = planFromParts(r.parts);
     if (!plan) return;
     writeStored(TRACK_KEY, plan.track);
     if (plan.track === "a") writeStored(TRACK_A_OPTION_KEY, plan.option);
     try {
-      localStorage.setItem(PLAN_ROUTE_KEY, hash);
+      localStorage.setItem(PLAN_ROUTE_KEY, planHref(plan));
     } catch {
       /* ignore */
     }
@@ -747,20 +769,16 @@ const SCROLL_PREFIX = "de-guide:scroll:";
 
 /** Change the URL from code. `replace` swaps the current history entry (a change of view, not of place). */
 export function navigate(hash: string, { replace = false }: { replace?: boolean } = {}) {
-  if (hash === location.hash) return;
+  if (hash === location.hash && isAppBasePath(location.pathname)) return;
+  const target = isAppBasePath(location.pathname) ? hash : `${BASE}${hash}`;
   try {
-    if (replace) history.replaceState(null, "", hash);
-    else history.pushState(null, "", hash);
+    if (replace) history.replaceState(null, "", target);
+    else history.pushState(null, "", target);
   } catch {
     location.hash = hash; // falls back to a normal hashchange
     return;
   }
   window.dispatchEvent(new CustomEvent(NAV_EVENT, { detail: { replace } }));
-}
-
-/** @deprecated use navigate(hash, { replace: true }) so the route updates too. */
-export function replaceHash(hash: string) {
-  navigate(hash, { replace: true });
 }
 
 /**
@@ -782,6 +800,8 @@ export function useRoute() {
     }
     return r;
   });
+  const routeRef = useRef(route);
+  routeRef.current = route;
 
   useEffect(() => {
     try {
@@ -789,8 +809,8 @@ export function useRoute() {
     } catch {
       /* ignore */
     }
-    let fromLink = false; // set by clicks on in-app links, so hashchange can tell them from Back/Forward
-    let current = location.hash;
+    let fromLink = false; // set by clicks on in-app links, so popstate/hashchange can tell them from Back/Forward
+    let current = location.pathname + location.hash;
 
     const saveScroll = () => {
       try {
@@ -812,50 +832,60 @@ export function useRoute() {
         }
       }
       const final = (fix ? parseRoute(fix) : null) ?? r;
-      remember(final, location.hash);
-      current = location.hash;
-      setRoute((prev) => {
-        const pageChanged = prev.page !== final.page || prev.notFound !== final.notFound || (final.page === "library" && prev.parts[0] !== final.parts[0]);
-        if (kind === "history") {
-          let y = 0;
-          try {
-            y = Number(sessionStorage.getItem(SCROLL_PREFIX + location.hash) ?? 0);
-          } catch {
-            /* ignore */
-          }
-          // Wait for the page to render before restoring.
-          requestAnimationFrame(() => requestAnimationFrame(() => window.scrollTo({ top: y, behavior: "instant" as ScrollBehavior })));
-        } else if (pageChanged) {
-          window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+      remember(final);
+      current = location.pathname + location.hash;
+      const prev = routeRef.current;
+      const pageChanged =
+        prev.page !== final.page ||
+        prev.notFound !== final.notFound ||
+        (final.page === "library" && prev.parts[0] !== final.parts[0]);
+      routeRef.current = final;
+      setRoute(final);
+      if (kind === "history") {
+        let y = 0;
+        try {
+          const parsed = Number(sessionStorage.getItem(SCROLL_PREFIX + current) ?? 0);
+          y = Number.isFinite(parsed) && parsed >= 0 ? parsed : 0;
+        } catch {
+          /* ignore */
         }
-        return final;
-      });
+        // Wait for the page to render before restoring.
+        requestAnimationFrame(() => requestAnimationFrame(() => window.scrollTo({ top: y, behavior: "instant" as ScrollBehavior })));
+      } else if (pageChanged) {
+        window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+      }
     };
 
-    remember(route, location.hash);
+    remember(routeRef.current);
 
     const onClick = (e: MouseEvent) => {
-      const a = (e.target as HTMLElement | null)?.closest?.("a[href^='#']");
-      if (a && !e.defaultPrevented && e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey) {
+      const a = (e.target as HTMLElement | null)?.closest?.("a[href^='#'], a[href^='/#']");
+      if (a && !e.defaultPrevented && e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) {
         saveScroll();
         fromLink = true;
       }
     };
     const onHash = () => {
+      if (location.pathname + location.hash === current) {
+        fromLink = false;
+        return;
+      }
       const kind = fromLink ? "link" : "history";
       fromLink = false;
       apply(kind);
     };
     const onNav = (e: Event) => {
+      fromLink = false;
       const replace = (e as CustomEvent<{ replace: boolean }>).detail?.replace;
       if (!replace) saveScroll();
       apply(replace ? "replace" : "push");
     };
     const onPop = () => {
-      // pushState entries don't fire hashchange on Back; popstate covers them.
-      if (location.hash !== current) {
+      // Link clicks fire popstate before hashchange; read and clear fromLink here so they scroll to top.
+      if (location.pathname + location.hash !== current) {
+        const kind = fromLink ? "link" : "history";
         fromLink = false;
-        apply("history");
+        apply(kind);
       }
     };
     let t = 0;
@@ -864,20 +894,19 @@ export function useRoute() {
       t = window.setTimeout(saveScroll, 150);
     };
 
-    document.addEventListener("click", onClick, true);
+    document.addEventListener("click", onClick, false);
     window.addEventListener("hashchange", onHash);
     window.addEventListener("popstate", onPop);
     window.addEventListener(NAV_EVENT, onNav);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
-      document.removeEventListener("click", onClick, true);
+      document.removeEventListener("click", onClick, false);
       window.removeEventListener("hashchange", onHash);
       window.removeEventListener("popstate", onPop);
       window.removeEventListener(NAV_EVENT, onNav);
       window.removeEventListener("scroll", onScroll);
       clearTimeout(t);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return route;
 }
@@ -933,7 +962,7 @@ export function ContextBar({
 }) {
   return (
     <div className="sticky top-24 z-30 -mx-[var(--gutter)] border-b border-line bg-paper/95 px-[var(--gutter)] backdrop-blur-[2px] lg:top-16">
-      <div className="flex min-h-10 items-center gap-6 overflow-hidden">
+      <div className="flex min-h-11 items-center gap-6 overflow-hidden">
         <nav aria-label={label} className="min-w-0 flex-1">
           <ol className="label flex min-w-0 items-center gap-2 text-ink-3">
             {trail.map((t, i) => {
@@ -983,23 +1012,34 @@ const THEME_KEY = "de-guide:theme";
 const systemTheme = (): Theme =>
   typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 
+const THEME_COLORS: Record<Theme, string> = { light: "#f7f6f2", dark: "#131312" };
+
+function syncThemeColorMeta(theme: Theme) {
+  let meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]:not([media])');
+  if (!meta) {
+    meta = document.createElement("meta");
+    meta.name = "theme-color";
+    document.head.appendChild(meta);
+  }
+  meta.content = THEME_COLORS[theme];
+}
+
 export function useTheme() {
   const [theme, setTheme] = useState<Theme>(() => {
     const set = document.documentElement.dataset.theme;
     return set === "light" || set === "dark" ? set : systemTheme();
   });
 
-  // Follow the system while the reader hasn't chosen.
+  // Follow the system while the reader hasn't chosen (keyed off DOM data-theme, so blocked storage stays in sync).
   useEffect(() => {
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
     const on = () => {
-      let saved: string | null = null;
-      try {
-        saved = localStorage.getItem(THEME_KEY);
-      } catch {
-        /* ignore */
+      const explicit = document.documentElement.dataset.theme;
+      if (explicit !== "light" && explicit !== "dark") {
+        const next = systemTheme();
+        setTheme(next);
+        syncThemeColorMeta(next);
       }
-      if (!saved) setTheme(systemTheme());
     };
     const onPick = (e: Event) => setTheme((e as CustomEvent<Theme>).detail);
     mq.addEventListener("change", on);
@@ -1013,6 +1053,7 @@ export function useTheme() {
   const toggle = () => {
     const next: Theme = theme === "dark" ? "light" : "dark";
     document.documentElement.dataset.theme = next;
+    syncThemeColorMeta(next);
     try {
       localStorage.setItem(THEME_KEY, next);
     } catch {

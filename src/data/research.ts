@@ -18,7 +18,7 @@ export interface Metric {
 }
 
 export interface Archetype {
-  id: string;
+  id: ArchetypeId;
   name: string;
   short: string;
   focus: string;
@@ -147,6 +147,22 @@ export const heroMetrics: Metric[] = [
   designerJobsOutlook,
 ];
 
+const usJobPostsMetric: Metric = {
+  value: "3,423 vs. 20,726",
+  label: "US job posts: Design Engineer vs. Product Designer",
+  scope: "US job posts, Oct 2026 (+15% month on month, with AI product design roles)",
+  source: "Academy UX (aggregator)",
+  basis: "analytics",
+};
+
+const seniorDeShareMetric: Metric = {
+  value: "97%",
+  label: "Design Engineer roles that ask for senior level (open 57 days on average)",
+  scope: "European job posts, July 2026",
+  source: "Hymera",
+  basis: "analytics",
+};
+
 export const marketMetrics: Metric[] = [
   designHiringBigTech,
   { value: "−22%", label: "Design hiring at early-stage startups, compared with 2019", scope: "Startup group, June 2026", source: "SignalFire", basis: "analytics" },
@@ -156,16 +172,15 @@ export const marketMetrics: Metric[] = [
   { value: "−65% / −76%", label: "Entry-level hiring: big tech / startups", scope: "All of tech, June 2026", source: "SignalFire", basis: "analytics" },
   { value: "−25%", label: "Front-end share of engineering hiring, compared with 2022", scope: "Engineering roles, June 2026", source: "SignalFire", basis: "analytics" },
   { value: "12.6–13%", label: "Designers who leave their job each year (about 9% for engineers)", scope: "2026", source: "SignalFire", basis: "analytics" },
-  { value: "3,423 vs. 20,726", label: "US job posts: Design Engineer vs. Product Designer", scope: "US job posts, Oct 2026 (+15% month on month, with AI product design roles)", source: "Academy UX (aggregator)", basis: "analytics" },
-  { value: "97%", label: "Design Engineer roles that ask for senior level (open 57 days on average)", scope: "European job posts, July 2026", source: "Hymera", basis: "analytics" },
+  usJobPostsMetric,
+  seniorDeShareMetric,
   designerJobsOutlook,
 ];
 
 /** What the job-post numbers mean for a working designer. Figures from `marketMetrics`. */
-const metricValue = (label: string) => marketMetrics.find((m) => m.label.startsWith(label))!.value;
-const [dePosts, pdPosts] = metricValue("US job posts").split(" vs. ");
+const [dePosts, pdPosts] = usJobPostsMetric.value.split(" vs. ");
 
-export const titleReality = `Design Engineer is still a small, senior title: about ${dePosts} US job posts against ${pdPosts} for Product Designer, and ${metricValue("Design Engineer roles that ask for senior level")} of European listings ask for senior level. For most designers, the first step is hybrid work in the job they already have, not a new title.`;
+export const titleReality = `Design Engineer is still a small, senior title: about ${dePosts} US job posts against ${pdPosts} for Product Designer, and ${seniorDeShareMetric.value} of European listings ask for senior level. For most designers, the first step is hybrid work in the job they already have, not a new title.`;
 
 export const orgFlattening = [
   { value: "12", label: "Engineers per engineering manager at big tech", delta: "+14% vs. 2019" },
@@ -273,6 +288,12 @@ export const archetypes: Archetype[] = [
 
 /* ───────────── §3.4 Comparison ───────────── */
 
+export const interviewFocus: CompareRow = {
+  dimension: "Interview focus",
+  traditional: "Portfolio walkthroughs, visual design critiques and whiteboard wireframes.",
+  hybrid: "Code reviews, walkthroughs of how you built things, live AI workflow demos and talks about technical trade-offs.",
+};
+
 export const comparison: CompareRow[] = [
   {
     dimension: "What carries over",
@@ -294,11 +315,7 @@ export const comparison: CompareRow[] = [
     traditional: "Engineers build the design in code. Speed depends on how smooth the handoff is.",
     hybrid: "You take an idea from visual design to working code, with engineers reviewing.",
   },
-  {
-    dimension: "Interview focus",
-    traditional: "Portfolio walkthroughs, visual design critiques and whiteboard wireframes.",
-    hybrid: "Code reviews, walkthroughs of how you built things, live AI workflow demos and talks about technical trade-offs.",
-  },
+  interviewFocus,
 ];
 
 export const basisLabel: Record<BasisKind, string> = {
@@ -946,18 +963,18 @@ export const sources: Source[] = [
 export const worksCited: { title: string; url: string }[] = [
   { title: "Is design engineer a real job? Why the role exists now - Modeinspect", url: "https://modeinspect.com/design-engineer/why-design-engineers-now" },
   { title: "SignalFire State of Talent Report 2026", url: "https://www.signalfire.com/blog/signalfire-state-of-talent-report-2026" },
-  { title: "The Next Curve: Why the Design Engineer is the Future of Product", url: "https://medium.com/@moeinsaboohi96/the-next-curve-why-the-design-engineer-is-the-future-of-product-creation-87dc0199ff03" },
-  { title: "From UX Designer to UX Engineer: The Hybrid Role AI Just Made", url: "https://www.designsystemscollective.com/from-ux-designer-to-ux-engineer-the-hybrid-role-ai-just-made-inevitable-e75090f37e02" },
+  { title: "The Next Curve: Why the Design Engineer is the Future of Product Creation", url: "https://medium.com/@moeinsaboohi96/the-next-curve-why-the-design-engineer-is-the-future-of-product-creation-87dc0199ff03" },
+  { title: "From UX Designer to UX Engineer: The Hybrid Role AI Just Made Inevitable", url: "https://www.designsystemscollective.com/from-ux-designer-to-ux-engineer-the-hybrid-role-ai-just-made-inevitable-e75090f37e02" },
   { title: "Designer hiring at big tech is down 48% since 2019 — Design Bootcamp", url: "https://medium.com/design-bootcamp/designer-hiring-at-big-tech-is-down-48-since-2019-new-job-titles-keep-appearing-d02260aa305f" },
   { title: "Craft - AI in Design Report 2026", url: "https://stateofaidesign.com/chapters/craft" },
   { title: "State of UX 2026 — NN/g", url: "https://www.nngroup.com/articles/state-of-ux-2026/" },
   { title: "Is it realistic to land a junior UX/UI job in 2026? - Mate academy", url: "https://mate.academy/en/answers/ui-ux-design/uxui-junior-market-2026" },
   { title: "Entry Level UI UX Jobs in 2026 Are Disappearing | by Ahnaf Tahmid", url: "https://medium.com/design-bootcamp/entry-level-ui-ux-jobs-in-2026-are-disappearing-364d3b5e04ee" },
   { title: "Being a Product Designer in 2026 Without Losing Your Mind - Medium", url: "https://medium.com/design-bootcamp/being-a-product-designer-in-2026-without-losing-your-mind-5ca7f4e683b6" },
-  { title: "What a Junior Product Designer Portfolio Needs in 2026 (Hiring", url: "https://fueler.io/blog/what-a-junior-product-designer-portfolio-needs" },
-  { title: "SignalFire data shows engineering hiring is more resilient than", url: "https://startupfortune.com/signalfire-data-shows-engineering-hiring-is-more-resilient-than-almost-anyone-expected/" },
+  { title: "What a Junior Product Designer Portfolio Needs in 2026 (Hiring Manager Checklist)", url: "https://fueler.io/blog/what-a-junior-product-designer-portfolio-needs" },
+  { title: "SignalFire data shows engineering hiring is more resilient than almost anyone expected", url: "https://startupfortune.com/signalfire-data-shows-engineering-hiring-is-more-resilient-than-almost-anyone-expected/" },
   { title: "UX Designer Demand and Hiring Market Outlook for Employers 2026", url: "https://designcareers.aiga.org/career-resources/hire-designers-11/ux-designer-hiring-market-demand-and-supply-2026-158" },
-  { title: "How Figma, Midjourney, Databricks, and Modyfi Harness AI with", url: "https://designerfund.com/blog/how-figma-midjourney-and-databricks-harness-ai-in-design" },
+  { title: "How Figma, Midjourney, Databricks, and Modyfi Harness AI with Design", url: "https://designerfund.com/blog/how-figma-midjourney-and-databricks-harness-ai-in-design" },
   { title: "Careers at Profound", url: "https://www.tryprofound.com/careers" },
   { title: "Careers at Raycast: Build, Innovate, and Work from Anywhere", url: "https://www.raycast.com/careers" },
   { title: "Best AI Tools for Designers in 2026: Choose by Workflow - The Crit", url: "https://thecrit.co/resources/best-ai-coding-tools-designers-2026" },
@@ -965,7 +982,7 @@ export const worksCited: { title: string; url: string }[] = [
   { title: "Interleavings: Notes & Thoughts on Recent Reads, 9 November 2026", url: "https://sajithpai.com/interleavings-notes-thoughts-on-recent-reads-9-november-2026/" },
   { title: "AX Design Explained: The 2026 Guide to Agentic Experience", url: "https://www.pixelmojo.io/blogs/what-is-ax-design-complete-guide-agentic-experience-2026" },
   { title: "Agentic UI/UX Design Patterns", url: "https://agentic-design.ai/patterns/ui-ux-patterns" },
-  { title: "Design Team Promotion Framework: Timelines, KPIs, and What It", url: "https://medium.muz.li/design-team-promotion-framework-timelines-kpis-and-what-it-really-takes-to-grow-028ac1f98ebf" },
+  { title: "Design Team Promotion Framework: Timelines, KPIs, and What It Really Takes to Grow", url: "https://medium.muz.li/design-team-promotion-framework-timelines-kpis-and-what-it-really-takes-to-grow-028ac1f98ebf" },
   { title: "What is the best AI for designers? 2026 tools compared - Modeinspect", url: "https://modeinspect.com/blog/best-ai-tools-for-designers" },
   { title: "12 designer portfolio examples that landed interviews (2026)", url: "https://personal.ink/blog/designer-portfolio-examples-2026/" },
   { title: "Best AI Tools for Product Design in 2026 - Mowgli", url: "https://mowgli.ai/blog/best-ai-tools-product-design-2026" },

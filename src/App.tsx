@@ -1,12 +1,42 @@
-import { useEffect, useRef, useState } from "react";
+import { Component, Suspense, lazy, useEffect, useRef, useState, type ReactNode } from "react";
 import { Nav } from "./components/Nav";
 import { pageHref, pages, planFromParts, useRevealObserver, useRoute, type Route } from "./components/ui";
 import { Home } from "./pages/Home";
-import { Roles } from "./pages/Roles";
-import { Plan } from "./pages/Plan";
-import { Ready } from "./pages/Ready";
-import { Library } from "./pages/Library";
 import { Footer } from "./sections/Footer";
+
+const Roles = lazy(() => import("./pages/Roles").then((m) => ({ default: m.Roles })));
+const Plan = lazy(() => import("./pages/Plan").then((m) => ({ default: m.Plan })));
+const Ready = lazy(() => import("./pages/Ready").then((m) => ({ default: m.Ready })));
+const Library = lazy(() => import("./pages/Library").then((m) => ({ default: m.Library })));
+
+const BASE = import.meta.env.BASE_URL || "/";
+
+class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean }> {
+  state = { hasError: false };
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  render() {
+    if (!this.state.hasError) return this.props.children;
+    return (
+      <section aria-labelledby="err-title" className="wrap pb-24 pt-20 sm:pb-36 sm:pt-28">
+        <p className="label text-accent-ink">Something went wrong</p>
+        <h1 id="err-title" className="display-xl mt-4 text-ink">
+          This page hit an <em>unexpected error.</em>
+        </h1>
+        <p className="lede mt-8">Reload the page or return to the start of the guide.</p>
+        <div className="mt-10 flex flex-wrap gap-4">
+          <button type="button" onClick={() => window.location.reload()} className="btn">
+            Reload page
+          </button>
+          <a href={`${BASE}#/`} className="btn btn-ghost">
+            Back to start
+          </a>
+        </div>
+      </section>
+    );
+  }
+}
 
 function GridOverlay({ on }: { on: boolean }) {
   return (
@@ -31,8 +61,7 @@ export default function App() {
   // firing on stray keystrokes or dictated words (WCAG 2.1.4); e.code survives macOS Option glyphs.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      const t = e.target as HTMLElement;
-      if (!e.altKey || e.metaKey || e.ctrlKey || t.closest("input, textarea, [contenteditable]")) return;
+      if (!e.altKey || e.metaKey || e.ctrlKey || (e.target instanceof Element && e.target.closest("input, textarea, [contenteditable]"))) return;
       if (e.code === "KeyG") {
         e.preventDefault();
         setGrid((g) => !g);
@@ -48,14 +77,32 @@ export default function App() {
     document.title = title;
   }, [title]);
 
-  // On a page change, move focus to the new page's heading so screen readers announce it.
-  const pageKey = route.notFound ? "404" : route.page;
-  const first = useRef(true);
+  // Keep client-side NotFound routes out of search indexes.
   useEffect(() => {
-    if (first.current) {
-      first.current = false;
-      return;
+    const selector = 'meta[name="robots"][data-not-found]';
+    const existing = document.head.querySelector(selector);
+    if (route.notFound) {
+      if (!existing) {
+        const meta = document.createElement("meta");
+        meta.name = "robots";
+        meta.content = "noindex, nofollow";
+        meta.setAttribute("data-not-found", "");
+        document.head.appendChild(meta);
+      }
+    } else if (existing) {
+      existing.remove();
     }
+  }, [route.notFound]);
+
+  // On a page change, move focus to the new page's heading so screen readers announce it.
+  // Skip on initial mount (StrictMode-safe) and when a child deep link already moved focus inside <main>.
+  const pageKey = route.notFound ? "404" : route.page;
+  const prevPageKey = useRef(pageKey);
+  useEffect(() => {
+    if (prevPageKey.current === pageKey) return;
+    prevPageKey.current = pageKey;
+    const main = document.getElementById("main");
+    if (main && document.activeElement && main.contains(document.activeElement) && document.activeElement !== main) return;
     const h1 = document.querySelector<HTMLElement>("main h1");
     if (!h1) return;
     h1.setAttribute("tabindex", "-1");
@@ -76,20 +123,22 @@ export default function App() {
       </a>
       <GridOverlay on={grid} />
       <div aria-hidden className="grain" />
-      <Nav page={route.page} />
+      <Nav page={route.notFound ? null : route.page} />
       <div>
         <main id="main" tabIndex={-1} className="relative z-[1] outline-none" key={pageKey}>
-          {route.notFound ? (
-            <NotFound />
-          ) : (
-            <>
-              {route.page === "home" && <Home />}
-              {route.page === "roles" && <Roles role={route.parts[0]} />}
-              {route.page === "plan" && <Plan parts={route.parts} />}
-              {route.page === "ready" && <Ready parts={route.parts} />}
-              {route.page === "library" && <Library shelf={route.parts[0]} term={route.parts[1]} />}
-            </>
-          )}
+          <ErrorBoundary>
+            {route.notFound ? (
+              <NotFound />
+            ) : (
+              <Suspense fallback={<div className="wrap py-24 label text-ink-3">Loading…</div>}>
+                {route.page === "home" && <Home />}
+                {route.page === "roles" && <Roles role={route.parts[0]} />}
+                {route.page === "plan" && <Plan parts={route.parts} />}
+                {route.page === "ready" && <Ready parts={route.parts} />}
+                {route.page === "library" && <Library shelf={route.parts[0]} term={route.parts[1]} />}
+              </Suspense>
+            )}
+          </ErrorBoundary>
         </main>
         <Footer />
       </div>
@@ -130,7 +179,7 @@ function NotFound() {
       <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         {pages.map((p) => (
           <li key={p.id}>
-            <a href={pageHref(p.id)} className="card card-lift group flex h-full flex-col p-5">
+            <a href={`${BASE}${pageHref(p.id)}`} className="card card-lift group flex h-full flex-col p-5">
               <span className="label text-ink-3">{p.label}</span>
               <span className="mt-3 block text-[1.0625rem] font-medium leading-snug tracking-tight text-ink">{p.title}</span>
               <span className="label mt-auto pt-6 text-accent-ink">Open →</span>

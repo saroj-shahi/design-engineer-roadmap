@@ -5,6 +5,8 @@
    Motion lives in index.css under .glyph and only moves sub-paths.
    ───────────────────────────────────────────────────────────── */
 
+import type { ArchetypeId } from "../data/research";
+
 type GlyphProps = { className?: string };
 
 const base = {
@@ -56,14 +58,14 @@ export function ExternalGlyph({ className = "" }: GlyphProps) {
 function DiffMark() {
   return (
     <>
-      <g id="mark-de-selection">
+      <g>
         <rect className="g-select" x="9.25" y="7.5" width="5.5" height="9" fill="var(--accent)" stroke="none" />
       </g>
-      <g id="mark-de-brackets">
+      <g>
         <path className="g-left" d="M7.5 6.5L2 12l5.5 5.5" />
         <path className="g-right" d="M16.5 6.5L22 12l-5.5 5.5" />
       </g>
-      <g id="mark-de-caret">
+      <g>
         <path className="g-caret" d="M12 7v10" stroke="var(--accent)" />
       </g>
     </>
@@ -74,12 +76,12 @@ function DiffMark() {
 function SystemMark() {
   return (
     <>
-      <g id="mark-meta-modules">
+      <g>
         <rect className="g-tl" x="3.75" y="3.75" width="7" height="7" />
         <rect className="g-tr" x="13.25" y="3.75" width="7" height="7" />
         <rect className="g-bl" x="3.75" y="13.25" width="7" height="7" />
       </g>
-      <g id="mark-meta-token">
+      <g>
         <rect className="g-br g-token" x="13.25" y="13.25" width="7" height="7" stroke="var(--accent)" fill="var(--accent)" />
       </g>
     </>
@@ -90,16 +92,16 @@ function SystemMark() {
 function OrbitMark() {
   return (
     <>
-      <g id="mark-ax-orbit">
+      <g>
         <circle cx="12" cy="12" r="8" strokeOpacity="0.3" strokeDasharray="1.5 2.5" strokeLinecap="butt" />
       </g>
-      <g id="mark-ax-agents" className="g-agents">
+      <g className="g-agents">
         <path d="M12 8.5V5.75M15.03 13.75l2.39 1.38M8.97 13.75l-2.39 1.38" strokeOpacity="0.55" />
         <circle cx="12" cy="4" r="1.75" fill="var(--paper)" />
         <circle cx="18.93" cy="16" r="1.75" fill="var(--paper)" />
         <circle cx="5.07" cy="16" r="1.75" fill="var(--paper)" />
       </g>
-      <g id="mark-ax-conductor">
+      <g>
         <circle className="g-halo" cx="12" cy="12" r="4.5" fill="var(--accent)" stroke="none" />
         <circle cx="12" cy="12" r="2.5" fill="var(--accent)" stroke="var(--accent)" />
       </g>
@@ -107,8 +109,7 @@ function OrbitMark() {
   );
 }
 
-const marks = { de: DiffMark, meta: SystemMark, ax: OrbitMark } as const;
-export type ArchetypeId = keyof typeof marks;
+const marks: Record<ArchetypeId, () => JSX.Element> = { de: DiffMark, meta: SystemMark, ax: OrbitMark };
 
 export function ArchetypeGlyph({ id, on = false, className = "" }: { id: string; on?: boolean; className?: string }) {
   const Mark = marks[id as ArchetypeId];
@@ -214,8 +215,6 @@ const library = {
       <rect className="g-top" x="8.25" y="3" width="7.5" height="7.5" {...tint} />
     </>
   ),
-  /** A four-point spark that turns a quarter on hover. */
-  spark: () => <path className="g-star" d="M12 2.75l2.2 7.05 7.05 2.2-7.05 2.2L12 21.25l-2.2-7.05L2.75 12l7.05-2.2z" {...tint} />,
   /** Judgment: an eye with a square pupil that glances on hover. */
   eye: () => (
     <>

@@ -5,8 +5,8 @@ import {
   aiPolicyLabel,
   beginnerContext,
   beginnerStack,
-  comparison,
   icGrowth,
+  interviewFocus,
   launchStages,
   leverageHabits,
   planFor,
@@ -64,7 +64,8 @@ export function Roadmap({ plan }: { plan: PlanRoute | null }) {
   const saveNote = useSaveNote();
   const setTrack = (t: Track) => {
     if (t === track) return;
-    go(t === "a" ? { track: "a", option: plan?.track === "a" ? plan.option : "pde", month: 1 } : { track: "b", stage: 1 });
+    if (t === "a") navigate(pageHref("plan", "a"), { replace: true });
+    else go({ track: "b", stage: 1 });
   };
   const tracks = [
     { id: "a" as const, glyph: "stairs" as const, kicker: "Track A", title: "I'm a practising product designer", sub: "Evolve into a hybrid role" },
@@ -123,7 +124,6 @@ export function Roadmap({ plan }: { plan: PlanRoute | null }) {
               {...tabProps(t.id, i)}
               // With nothing picked, keep the first card reachable by Tab.
               tabIndex={on || (track === null && i === 0) ? 0 : -1}
-              aria-controls={on ? `track-panel-${t.id}` : undefined}
               className={`card card-lift group relative isolate flex min-h-[15rem] flex-col overflow-hidden p-5 text-left transition-colors duration-700 ease-silk sm:min-h-[19rem] sm:p-8 ${
                 on ? "card-on text-on-inverse" : "text-ink"
               }`}
@@ -177,7 +177,7 @@ function TrackA({ plan: route }: { plan: PlanA }) {
   const habits = usePersistentSet("de-guide:habits");
   const plan = planFor(choice);
   const m = plan[month - 1];
-  const interview = comparison.find((r) => r.dimension === "Interview focus")!;
+  const habitsDone = leverageHabits.filter((h) => habits.set.has(h.id)).length;
   const setMonth = (n: number) => go({ ...route, month: n });
   const months = useTabList({
     ids: plan.map((x) => String(x.month)),
@@ -254,7 +254,7 @@ function TrackA({ plan: route }: { plan: PlanA }) {
       </div>
 
       {/* 6-month timeline */}
-      <div id="month-detail" className="scroll-mt-24">
+      <div id="month-detail" className="scroll-mt-36 lg:scroll-mt-32">
         <SubHead n="A.2" title="A six-month technical transition" note="Learn the browser before AI tools. The plan uses React, TypeScript and Tailwind." />
 
         <ol aria-label="Phases" className="mb-3 grid grid-cols-6 gap-x-2">
@@ -329,7 +329,7 @@ function TrackA({ plan: route }: { plan: PlanA }) {
       <div className="grid gap-y-24 lg:grid-cols-12 lg:gap-x-6">
         <div id="plan-habits" className="lg:col-span-5">
           <SubHead n="A.3" title="Using it in your current job" />
-          <Meter value={habits.set.size} max={leverageHabits.length} label="Habits in place" />
+          <Meter value={habitsDone} max={leverageHabits.length} label="Habits in place" />
           <ul className="card mt-6 px-5 sm:px-6 [&>li:last-child]:border-b-0">
             {leverageHabits.map((h, i) => (
               <CheckRow key={h.id} index={i + 1} checked={habits.set.has(h.id)} onToggle={() => habits.toggle(h.id)} title={h.title} detail={h.detail} />
@@ -341,8 +341,8 @@ function TrackA({ plan: route }: { plan: PlanA }) {
           <ChecklistLink href={pageHref("ready", "a")} title="Your portfolio checklist" detail="Live demo, public repo, writeup, proof you build with AI, and more. Track it on the Checklist page." />
           <div className="mt-10 border-2 border-edge bg-inverse p-6 text-on-inverse shadow-[var(--sh-accent)] sm:p-8">
             <p className="label mb-4 text-inverse-accent">Expect in interviews</p>
-            <p className="font-display text-[1.625rem] leading-[1.15] tracking-tight">{interview.hybrid}</p>
-            <p className="mt-4 text-sm leading-relaxed text-inverse-muted">Alongside the usual: {interview.traditional}</p>
+            <p className="font-display text-[1.625rem] leading-[1.15] tracking-tight">{interviewFocus.hybrid}</p>
+            <p className="mt-4 text-sm leading-relaxed text-inverse-muted">Alongside the usual: {interviewFocus.traditional}</p>
           </div>
         </div>
       </div>
@@ -405,12 +405,12 @@ function StartAndDone({ start, doneWhen, resources }: { start: string; doneWhen:
       {resources.length > 0 && (
         <div className="border-t border-line pt-5 md:col-span-12">
           <Eyebrow>Learn from</Eyebrow>
-          <ul className="grid gap-x-6 gap-y-3 sm:grid-cols-2">
+          <ul className="grid gap-x-6 sm:grid-cols-2">
             {resources.map((r) => (
-              <li key={r.url} className="flex items-baseline justify-between gap-3 border-b border-line pb-3">
-                <a href={r.url} target="_blank" rel="noopener noreferrer" className="group min-w-0 text-ink">
+              <li key={r.url} className="flex items-center justify-between gap-3 border-b border-line">
+                <a href={r.url} target="_blank" rel="noopener noreferrer" className="group inline-flex min-h-11 min-w-0 flex-1 items-center py-2.5 text-ink">
                   <span className="link-ul">{r.label}</span>
-                  <ExternalGlyph className="ml-1 text-ink-3 transition-colors duration-300 group-hover:text-accent-ink" />
+                  <ExternalGlyph className="ml-1 shrink-0 text-ink-3 transition-colors duration-300 group-hover:text-accent-ink" />
                   <span className="sr-only"> (opens in new tab)</span>
                 </a>
                 <span className={`label shrink-0 ${r.cost === "free" ? "text-ink-3" : "text-accent-ink"}`}>{r.cost === "free" ? "Free" : "Paid"}</span>
@@ -490,7 +490,7 @@ function TrackB({ stage }: { stage: number }) {
       </div>
 
       {/* 4-stage plan */}
-      <div id="stage-detail" className="scroll-mt-24">
+      <div id="stage-detail" className="scroll-mt-36 lg:scroll-mt-32">
         <SubHead n="B.1" title="A four-stage launch plan" />
         <div {...stages.listProps} aria-label="Launch stage" className="grid gap-4 md:grid-cols-4">
           {launchStages.map((x, i) => {
@@ -526,7 +526,7 @@ function TrackB({ stage }: { stage: number }) {
 
       <div id="plan-market">
         <SubHead n="B.2" title="The market you're entering" note="Seed-stage startups (young companies on their first funding round) have the highest design hiring rate (25%). With 300–800 applicants per role, a portfolio with something that runs is one way to stand out." />
-        <dl className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-4">
+        <dl className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
           {beginnerContext.map((c, i) => (
             <div
               key={c.label}
@@ -535,7 +535,7 @@ function TrackB({ stage }: { stage: number }) {
               className="card flex flex-col p-4 sm:p-6"
             >
               <dt className="order-2 mt-3 text-sm text-ink-2">{c.label}</dt>
-              <dd className="numeral order-1 text-[clamp(3rem,6vw,5.5rem)]">{c.value}</dd>
+              <dd className="numeral order-1 whitespace-nowrap text-[clamp(2.25rem,4.5vw,4.5rem)]">{c.value}</dd>
               <dd className="label order-3 mt-auto pt-4 text-ink-3">{c.source}</dd>
             </div>
           ))}
@@ -573,7 +573,7 @@ function TrackB({ stage }: { stage: number }) {
               <li key={g.name} className="card grid grid-cols-[3rem_1fr] gap-x-3 p-5" data-reveal style={{ "--i": i } as CSSProperties}>
                 <span className="numeral text-4xl text-accent">{i + 1}</span>
                 <div>
-                  <h4 className="text-[1.0625rem] font-medium tracking-tight text-ink">{g.name}</h4>
+                  <h3 className="text-[1.0625rem] font-medium tracking-tight text-ink">{g.name}</h3>
                   <p className="mt-1.5 text-sm leading-relaxed text-ink-2">{g.detail}</p>
                 </div>
               </li>
