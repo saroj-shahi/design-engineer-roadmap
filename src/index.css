@@ -30,7 +30,20 @@
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
   --dur: 900ms;
   --gutter: 16px;
+
+  /* Workbench: cards on a desk, hard unblurred shadows */
+  --desk: #e2dfd6;
+  --card: #f7f6f2;
+  --edge: #111111;
+  --hard: #111111;
+  --dot: rgba(17, 17, 17, 0.14);
+  --sh-1: 4px 4px 0 var(--hard);
+  --sh-2: 8px 8px 0 var(--hard);
+  --sh-accent: 4px 4px 0 var(--accent);
+  --spring: cubic-bezier(0.34, 1.32, 0.64, 1);
+  --rail: 0px;
 }
+@media (min-width: 1024px) { :root { --rail: 64px; } }
 @media (min-width: 640px) { :root { --gutter: 24px; } }
 @media (min-width: 1024px) { :root { --gutter: 40px; } }
 
@@ -53,11 +66,19 @@
     --inverse-muted: #55534d;
     --inverse-line: rgba(10, 10, 10, 0.2);
     --inverse-accent: #b82a00;
+    --desk: #060606;
+    --card: #131312;
+    --edge: #8f8c84;
+    --hard: #3d3b37;
+    --dot: rgba(255, 255, 255, 0.07);
   }
 }
 
 @theme inline {
   --color-paper: var(--paper);
+  --color-desk: var(--desk);
+  --color-card: var(--card);
+  --color-edge: var(--edge);
   --color-surface: var(--surface);
   --color-sunken: var(--sunken);
   --color-ink: var(--ink);
@@ -86,7 +107,9 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 body {
-  background: var(--paper);
+  background-color: var(--desk);
+  background-image: radial-gradient(var(--dot) 1px, transparent 1.25px);
+  background-size: 16px 16px;
   color: var(--ink);
   font-family: var(--font-sans);
   font-optical-sizing: auto;
@@ -123,7 +146,7 @@ body {
 /* Exposed column structure, fixed behind content. Toggle with "G". */
 .grid-overlay {
   position: fixed;
-  inset: 0;
+  inset: 0 0 0 var(--rail);
   z-index: 0;
   pointer-events: none;
   transition: opacity 600ms var(--ease);
@@ -313,8 +336,12 @@ em, .italic { font-style: italic; }
   letter-spacing: -0.005em;
   overflow: hidden;
   isolation: isolate;
-  transition: transform 500ms var(--ease), color 500ms var(--ease);
+  border: 2px solid var(--edge);
+  box-shadow: var(--sh-1);
+  transition: translate 260ms var(--spring), box-shadow 260ms var(--spring), color 500ms var(--ease);
 }
+.btn:hover, .btn:focus-visible { translate: -2px -2px; box-shadow: var(--sh-2); }
+.btn:active { translate: 4px 4px; box-shadow: 0 0 0 var(--hard); }
 .btn::before {
   content: "";
   position: absolute;
@@ -336,6 +363,76 @@ em, .italic { font-style: italic; }
 }
 .btn-ghost::before { background: var(--ink); }
 .btn-ghost:hover, .btn-ghost:focus-visible { color: var(--paper); }
+
+/* ───────── Workbench cards ─────────
+   Movement uses the independent `translate` property so it composes
+   with reveal/stagger transforms instead of fighting them. */
+.card {
+  position: relative;
+  background: var(--card);
+  border: 2px solid var(--edge);
+  box-shadow: var(--sh-1);
+}
+.card-flat { box-shadow: none; }
+.card-accent { box-shadow: var(--sh-accent); }
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.5rem 1rem;
+  background: var(--edge);
+  color: var(--card);
+  transition: background-color 250ms var(--ease), color 250ms var(--ease);
+}
+.card-foot { border-top: 2px dashed var(--edge); padding: 0.75rem 1rem; }
+.card-tab {
+  position: absolute;
+  left: -2px;
+  top: -2px;
+  translate: 0 -100%;
+  padding: 0.3rem 0.75rem 0.25rem;
+  background: var(--edge);
+  color: var(--card);
+  transition: background-color 250ms var(--ease), color 250ms var(--ease);
+}
+.card-lift { transition: translate 260ms var(--spring), box-shadow 260ms var(--spring), opacity 400ms var(--ease); }
+[data-reveal].card-lift {
+  transition:
+    opacity var(--dur) var(--ease) calc(var(--i, 0) * 60ms + var(--d, 0ms)),
+    transform var(--dur) var(--ease) calc(var(--i, 0) * 60ms + var(--d, 0ms)),
+    translate 260ms var(--spring),
+    box-shadow 260ms var(--spring);
+}
+.card-lift:hover { translate: -2px -2px; box-shadow: var(--sh-2); }
+.card-lift:active,
+.card-on,
+.card-on:hover { translate: 4px 4px; box-shadow: 0 0 0 var(--hard); }
+.card-lift:hover > .card-head,
+.card-on > .card-head,
+.card-lift:hover > .card-tab,
+.card-on > .card-tab { background: var(--accent); color: var(--on-accent); }
+.card-lift:focus-visible, .card-lift:has(> input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 4px; }
+.card-empty {
+  position: relative;
+  border: 2px dashed var(--line-strong);
+  background: transparent;
+  box-shadow: none;
+}
+.card-dim { opacity: 0.6; }
+.card-dim:hover { opacity: 1; }
+.sideways { writing-mode: vertical-rl; transform: rotate(180deg); }
+
+/* Chapter rail (desktop) */
+.rail {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 45;
+  width: var(--rail);
+  background: var(--card);
+  border-right: 2px solid var(--edge);
+}
+.with-rail { padding-left: var(--rail); }
 
 /* Index square marker */
 .tick { display: inline-block; width: 7px; height: 7px; background: currentColor; flex-shrink: 0; }
@@ -363,8 +460,75 @@ em, .italic { font-style: italic; }
 .input-line::placeholder { color: var(--ink-3); }
 .input-line:focus { outline: none; border-color: var(--accent); }
 
+/* ───────── Glyphs (components/icons.tsx) ─────────
+   Rest poses are static; every movement below is a sub-path
+   gesture, gated on no-preference so reduced motion keeps the
+   state changes (fills, opacity) without the travel. */
+.glyph { display: inline-block; flex-shrink: 0; overflow: visible; stroke-width: 2; }
+.glyph * { transform-box: fill-box; }
+.glyph-arrow { width: 1.15em; height: 1.15em; }
+.glyph-ext { width: 0.95em; height: 0.95em; vertical-align: -0.1em; }
+.glyph-mark { width: 22px; height: 22px; }
+
+/* Rest / selected states (no movement) */
+.glyph-de .g-select { fill-opacity: 0.16; transform: scaleX(0); transform-origin: 50% 50%; }
+.glyph-de[data-on="true"] .g-select { transform: scaleX(1); }
+.glyph-de .g-caret { opacity: 0; }
+.glyph-de[data-on="true"] .g-caret { opacity: 1; }
+.glyph-meta .g-token { fill-opacity: 0.14; transition: fill-opacity 350ms var(--ease); }
+.glyph-meta[data-on="true"] .g-token { fill-opacity: 1; }
+.glyph-ax .g-halo { opacity: 0; }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Arrow: shaft extends from its tail, head rides the new tip */
+  .glyph-arrow .g-shaft { transform-origin: 0% 50%; transition: transform 320ms var(--ease); }
+  .glyph-arrow-back .g-shaft { transform-origin: 100% 50%; }
+  .glyph-arrow .g-head { transition: transform 320ms var(--ease); }
+  .group:hover .glyph-arrow .g-shaft,
+  .group:focus-visible .glyph-arrow .g-shaft { transform: scaleX(1.2); }
+  .group:hover .glyph-arrow .g-head,
+  .group:focus-visible .glyph-arrow .g-head { transform: translateX(2.85px); }
+  .group:hover .glyph-arrow-back .g-head,
+  .group:focus-visible .glyph-arrow-back .g-head { transform: translateX(-2.85px); }
+
+  /* External: head lifts away, shaft reaches after it from the anchored tail */
+  .glyph-ext .g-shaft { transform-origin: 0% 100%; transition: transform 300ms var(--ease); }
+  .glyph-ext .g-head { transition: transform 300ms var(--ease); }
+  .group:hover .glyph-ext .g-shaft,
+  .group:focus-visible .glyph-ext .g-shaft { transform: scale(1.18); }
+  .group:hover .glyph-ext .g-head,
+  .group:focus-visible .glyph-ext .g-head { transform: translate(1.8px, -1.8px); }
+
+  /* Design Engineer: brackets open a line's width; selection sweeps in; caret blinks */
+  .glyph-de .g-left, .glyph-de .g-right { transition: transform 300ms var(--ease); }
+  .group:hover .glyph-de .g-left { transform: translateX(-1.5px); }
+  .group:hover .glyph-de .g-right { transform: translateX(1.5px); }
+  .glyph-de .g-select { transition: transform 450ms var(--ease) 80ms; }
+  .glyph-de[data-on="true"] .g-caret { animation: glyph-blink 1.1s steps(1, end) infinite; }
+
+  /* Meta-Designer: exploded view, every module steps out from the centre */
+  .glyph-meta rect { transition: transform 340ms var(--ease), fill-opacity 350ms var(--ease); }
+  .group:hover .glyph-meta .g-tl { transform: translate(-1px, -1px); }
+  .group:hover .glyph-meta .g-tr { transform: translate(1px, -1px); }
+  .group:hover .glyph-meta .g-bl { transform: translate(-1px, 1px); }
+  .group:hover .glyph-meta .g-br { transform: translate(1px, 1px); }
+
+  /* AX: agents turn one third of the orbit and settle where they began; selected conductor breathes */
+  .glyph-ax .g-agents { transform-box: view-box; transform-origin: 12px 12px; transition: transform 700ms cubic-bezier(0.34, 1.32, 0.64, 1); }
+  .group:hover .glyph-ax .g-agents { transform: rotate(120deg); }
+  .glyph-ax[data-on="true"] .g-halo { transform-origin: 50% 50%; animation: glyph-breathe 2.6s var(--ease-in-out) infinite; }
+}
+
+@keyframes glyph-blink { 50% { opacity: 0; } }
+@keyframes glyph-breathe {
+  0%, 100% { opacity: 0; transform: scale(0.6); }
+  45% { opacity: 0.22; transform: scale(1); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  /* Workbench: shadows still change, cards and buttons stay put */
+  .card-lift, .card-on, .btn { translate: none !important; }
   .mask-line > span, [data-reveal], [data-reveal="bar"] .bar-fill, [data-reveal="rule"] {
     transform: none !important;
     opacity: 1 !important;

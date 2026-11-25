@@ -57,26 +57,29 @@ export function Comparison() {
               key={row.dimension}
               className="stagger col-span-4 lg:col-span-7 lg:col-start-6"
             >
-              <div className="border-t border-line pt-5" style={{ "--i": 0 } as CSSProperties}>
-                <Eyebrow>Traditional UX Designer</Eyebrow>
-                <p className="max-w-[48ch] text-lg leading-relaxed text-ink-3">{row.traditional}</p>
+              <div className="card card-flat" style={{ "--i": 0 } as CSSProperties}>
+                <p className="card-head label !bg-sunken !text-ink-3">
+                  <span>Before · Traditional UX Designer</span>
+                </p>
+                <p className="max-w-[48ch] px-5 py-6 text-lg leading-relaxed text-ink-3 sm:px-7">{row.traditional}</p>
               </div>
-              <div className="mt-12 border-t border-ink pt-5" style={{ "--i": 1 } as CSSProperties}>
-                <Eyebrow className="flex items-center gap-2 !text-accent-ink">
-                  <span aria-hidden className="tick" /> Hybrid UX / Design Engineer
-                </Eyebrow>
-                <p className="font-display text-[clamp(1.75rem,2.8vw,2.75rem)] leading-[1.08] tracking-tight text-ink">{row.hybrid}</p>
+              <div className="card card-accent mt-8" style={{ "--i": 1 } as CSSProperties}>
+                <p className="card-head label !bg-accent !text-[var(--on-accent)]">
+                  <span>After · Hybrid UX / Design Engineer</span>
+                  <span className="tabular">{String(dim + 1).padStart(2, "0")}</span>
+                </p>
+                <p className="px-5 py-7 font-display text-[clamp(1.75rem,2.8vw,2.75rem)] leading-[1.08] tracking-tight text-ink sm:px-7">{row.hybrid}</p>
               </div>
             </div>
           </div>
         </TabPanel>
       ) : (
         <TabPanel idPrefix="cmpview" id="table">
-          <div className="overflow-x-auto">
+          <div className="card overflow-x-auto px-5 sm:px-7">
             <table className="w-full min-w-[720px] text-left">
               <caption className="sr-only">Traditional UX Designer vs. Hybrid UX / Design Engineer</caption>
               <thead>
-                <tr className="label border-y border-ink text-ink-3">
+                <tr className="label border-b-2 border-edge text-ink-3">
                   <th scope="col" className="w-[22%] py-3 pr-6 font-normal">Dimension</th>
                   <th scope="col" className="py-3 pr-6 font-normal">Traditional UX Designer</th>
                   <th scope="col" className="py-3 font-normal text-accent-ink">Hybrid UX / Design Engineer</th>
@@ -118,9 +121,9 @@ function CompensationPanel() {
           <p className="mt-8 max-w-[40ch] leading-relaxed text-ink-2" data-reveal>
             Wages and total pay are different measures. Switch the basis; the bars only ever compare figures from the same dataset.
           </p>
-          <aside className="mt-8 border-l border-accent pl-4 text-sm leading-relaxed text-ink-2" data-reveal>
-            <p className="label mb-2 text-accent-ink">Data caveat</p>
-            {compCaveat}
+          <aside className="card card-accent mt-8 text-sm leading-relaxed text-ink-2" data-reveal>
+            <p className="card-head label">Data caveat</p>
+            <p className="px-5 py-4">{compCaveat}</p>
           </aside>
         </div>
       </div>
@@ -142,7 +145,7 @@ function CompensationPanel() {
         </div>
 
         <TabPanel idPrefix="comp" id={basis} className="mt-10">
-          <ul className="border-t border-ink">
+          <ul className="card px-5 sm:px-6 [&>li:last-child]:border-b-0">
             {rows.map((r, i) => {
               const hybrid = r.role === "UX Engineer" || r.role === "Software Developer";
               return (
@@ -162,9 +165,9 @@ function CompensationPanel() {
           <p className="label mt-4 text-ink-3">US annual median · Source: {rows[0]?.source}</p>
         </TabPanel>
 
-        <div className="mt-20 border-t border-ink">
+        <div className="mt-16 grid gap-6">
           {compContext.map((c) => (
-            <div key={c.label} className="grid gap-3 border-b border-line py-6 sm:grid-cols-12 sm:gap-6" data-reveal>
+            <div key={c.label} className="card card-lift grid gap-3 p-5 sm:grid-cols-12 sm:gap-6 sm:p-6" data-reveal>
               <div className="sm:col-span-5">
                 <p className="font-medium tracking-tight text-ink">{c.label}</p>
                 <div className="mt-2">

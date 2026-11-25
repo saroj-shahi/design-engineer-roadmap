@@ -76,7 +76,7 @@ export function SkillsExplorer() {
 function LayerStack({ value, onChange }: { value: string; onChange: (id: string) => void }) {
   const { listProps, tabProps } = useTabList({ ids: domains.map((d) => d.id), value, onChange, idPrefix: "skills", orientation: "vertical" });
   return (
-    <div {...listProps} aria-label="Skill layers" className="flex flex-col">
+    <div {...listProps} aria-label="Skill layers" className="flex flex-col gap-3">
       {domains.map((d, i) => {
         const on = d.id === value;
         const appendix = d.id === "patterns";
@@ -85,9 +85,9 @@ function LayerStack({ value, onChange }: { value: string; onChange: (id: string)
             key={d.id}
             {...tabProps(d.id, i)}
             style={{ "--step": i } as CSSProperties}
-            className={`group relative -mt-px grid grid-cols-[4.5rem_1fr] items-baseline gap-x-4 border px-4 py-5 text-left transition-colors duration-500 sm:grid-cols-[6rem_1fr_auto] sm:px-6 lg:ml-[calc(var(--step)*(100%_+_24px)/12)] ${
-              appendix ? "mt-4 border-dashed" : ""
-            } ${on ? "z-[1] border-ink bg-surface text-ink" : "border-line-strong text-ink-3 hover:text-ink"}`}
+            className={`group relative grid grid-cols-[4.5rem_1fr] items-baseline gap-x-4 px-4 py-5 text-left sm:grid-cols-[6rem_1fr_auto] sm:px-6 lg:ml-[calc(var(--step)*(100%_+_24px)/12)] ${
+              appendix && !on ? "card-empty mt-4 text-ink-3 hover:text-ink" : `card card-lift ${appendix ? "mt-4" : ""}`
+            } ${on ? "card-on text-ink" : "text-ink-3 hover:text-ink"}`}
           >
             <span aria-hidden className={`absolute inset-y-0 left-0 w-[3px] origin-top bg-accent transition-transform duration-700 ease-silk ${on ? "scale-y-100" : "scale-y-0"}`} />
             <span className={`label ${on ? "text-accent-ink" : "text-ink-3"}`}>{d.sub}</span>
@@ -96,7 +96,7 @@ function LayerStack({ value, onChange }: { value: string; onChange: (id: string)
               <span className={`mt-2 block text-sm leading-relaxed ${on ? "text-ink-2" : "text-ink-3"}`}>{d.items.join(" / ")}</span>
             </span>
             <span aria-hidden className={`label hidden self-center sm:block ${on ? "text-ink" : "text-ink-3"}`}>
-              {on ? "Reading ↓" : "Open"}
+              {on ? "Reading ↓" : appendix ? "Slot" : "Open"}
             </span>
           </button>
         );
@@ -119,9 +119,13 @@ function Footnote({ children }: { children: React.ReactNode }) {
 /** Skills as an index ledger: number, name, explanation, tags — one hairline row each. */
 function SkillLedger({ skills, large = false }: { skills: Skill[]; large?: boolean }) {
   return (
-    <ol className="stagger border-t border-ink">
+    <ol className="stagger space-y-4">
       {skills.map((s, i) => (
-        <li key={s.name} className="grid-12 group gap-y-3 border-b border-line py-7 sm:py-9" style={{ "--i": i } as CSSProperties}>
+        <li
+          key={s.name}
+          className="card card-lift grid-12 group gap-y-3 px-5 py-7 sm:px-7 sm:py-9 lg:sticky lg:top-[calc(2rem+var(--i)*14px)]"
+          style={{ "--i": i } as CSSProperties}
+        >
           <span className="label col-span-1 pt-2 text-ink-3 tabular">{String(i + 1).padStart(2, "0")}</span>
           <h3
             className={`col-span-3 tracking-tight text-ink transition-transform duration-700 ease-silk group-hover:translate-x-2 lg:col-span-4 ${
@@ -167,12 +171,12 @@ function AxPanel() {
         </div>
         <figure className="col-span-4 self-end lg:col-span-4 lg:col-start-9">
           <figcaption className="label mb-4 text-ink-3">Enterprise agent maturity</figcaption>
-          <div className="flex h-24 border border-ink" role="img" aria-label="21% no adoption, 68% piloting, 11% in production">
+          <div className="flex h-24 border-2 border-edge shadow-[var(--sh-1)]" role="img" aria-label="21% no adoption, 68% piloting, 11% in production">
             {agentMaturity.map((m) => (
               <div
                 key={m.level}
                 className={`flex items-end p-2 ${m.level === 3 ? "bg-accent text-[var(--on-accent)]" : m.level === 2 ? "bg-ink text-paper" : "text-ink"} ${
-                  m.level > 1 ? "border-l border-ink" : ""
+                  m.level > 1 ? "border-l-2 border-edge" : ""
                 }`}
                 style={{ width: `${m.value}%` }}
               >
@@ -212,10 +216,10 @@ function AxPanel() {
         </div>
         <TabPanel idPrefix="layer" id={layer} className="col-span-4 lg:col-span-7 lg:col-start-6">
           {/* Specimen of an agent console, showing where each surface lives */}
-          <div className="border border-ink bg-surface">
-            <div className="label flex items-center gap-3 border-b border-ink px-4 py-3 text-ink-3">
+          <div className="card">
+            <div className="card-head label !justify-start">
               <span className="tick text-accent" aria-hidden />
-              <span className="text-ink">agent://{L.id}</span>
+              <span>agent://{L.id}</span>
               <span className="ml-auto tabular">
                 layer {String(layerIndex + 1).padStart(2, "0")} / {String(agentLayers.length).padStart(2, "0")}
               </span>
@@ -250,7 +254,7 @@ function AxPanel() {
             ))}
           </div>
         </div>
-        <div className="col-span-4 border-t border-ink lg:col-span-7 lg:col-start-6">
+        <div className="card col-span-4 px-5 sm:px-6 lg:col-span-7 lg:col-start-6 [&>div:last-child]:border-b-0">
           {protocols.map((p, i) => (
             <Disclosure
               key={p.id}
@@ -343,8 +347,11 @@ function PatternLibrary() {
       </p>
 
       {results.length === 0 ? (
-        <div className="mt-6 border-y border-line py-16">
-          <p className="display-m text-ink">Nothing matches “{q}”.</p>
+        <div className="card-empty mt-6 grid grid-cols-[auto_1fr] items-center gap-6 py-14 pl-4 pr-6 sm:gap-10">
+          <p aria-hidden className="label sideways text-ink-3">Slot empty</p>
+          <div>
+          <p className="label text-ink-3">No matches · 00 / {total} patterns</p>
+          <p className="display-m mt-3 text-ink">Nothing matches “{q}”.</p>
           <button
             type="button"
             onClick={() => {
@@ -355,13 +362,14 @@ function PatternLibrary() {
           >
             Clear filters
           </button>
+          </div>
         </div>
       ) : (
-        <div className="mt-6 grid border-t border-ink md:grid-cols-2">
+        <div className="mt-6 grid gap-6 md:grid-cols-2">
           {results.map((c, i) => (
             <article
               key={c.id}
-              className={`panel-in border-b border-line py-8 md:py-10 ${i % 2 === 0 ? "md:border-r md:pr-8" : "md:pl-8"}`}
+              className="card card-lift panel-in p-6 sm:p-8"
               style={{ animationDelay: `${i * 60}ms` }}
             >
               <h3 className="display-m">{c.name}</h3>

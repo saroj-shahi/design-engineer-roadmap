@@ -191,16 +191,14 @@ export function SectionHeader({
   folio?: string;
 }) {
   return (
-    <header className="mb-16 sm:mb-24">
-      <div className="relative pt-4">
-        <span aria-hidden data-reveal="rule" className="absolute inset-x-0 top-0 h-px bg-ink" />
+    <header className="mb-16 pt-10 sm:mb-24">
+      <FolderTab index={index}>
         <div className="grid-12 label text-ink-3">
-          <p className="col-span-1 text-accent-ink lg:col-span-2">[{index}]</p>
-          <p className="col-span-3 text-ink lg:col-span-4">{kicker}</p>
+          <p className="col-span-4 text-ink lg:col-span-6">{kicker}</p>
           <p className="hidden lg:col-span-3 lg:block">Field Guide — Ed. 2026</p>
           <p className="hidden text-right lg:col-span-3 lg:block">{folio}</p>
         </div>
-      </div>
+      </FolderTab>
       <div className="grid-12 mt-10 sm:mt-16">
         <Lines as="h2" id={`${id}-title`} lines={title} className="display-xl col-span-4 text-ink lg:col-span-11" />
       </div>
@@ -212,6 +210,20 @@ export function SectionHeader({
         </div>
       )}
     </header>
+  );
+}
+
+/** A folder's label tab riding on a 2px rule: the chapter divider of the workbench. */
+export function FolderTab({ index, children }: { index: string; children: ReactNode }) {
+  return (
+    <div className="relative pt-4">
+      <span aria-hidden data-reveal="rule" className="absolute inset-x-0 top-0 h-0.5 bg-edge" />
+      <span className="label absolute left-0 top-0 -translate-y-full bg-edge px-3 pb-1 pt-1.5 text-card">
+        <span className="sr-only">Chapter </span>
+        {index}
+      </span>
+      {children}
+    </div>
   );
 }
 
@@ -354,7 +366,7 @@ export function Tabs({
 
   const wrap = {
     underline: "flex gap-8 overflow-x-auto no-scrollbar border-b border-line",
-    segmented: "inline-flex max-w-full overflow-x-auto no-scrollbar border border-line-strong",
+    segmented: "inline-flex max-w-full overflow-x-auto no-scrollbar border-2 border-edge bg-card shadow-[var(--sh-1)]",
     list: orientation === "vertical" ? "flex flex-col border-t border-line" : "grid grid-flow-col auto-cols-[minmax(13rem,1fr)] overflow-x-auto no-scrollbar border-t border-line",
   }[variant];
 
@@ -366,8 +378,8 @@ export function Tabs({
           underline: `group relative -mb-px shrink-0 pb-3 pt-1 label transition-colors duration-500 ${
             selected ? "text-ink" : "text-ink-3 hover:text-ink"
           }`,
-          segmented: `shrink-0 h-11 px-4 label transition-colors duration-500 ease-silk border-r border-line-strong last:border-r-0 ${
-            selected ? "bg-ink text-paper" : "text-ink-3 hover:text-ink hover:bg-sunken"
+          segmented: `shrink-0 h-11 px-4 label transition-colors duration-300 ease-silk border-r-2 border-edge last:border-r-0 ${
+            selected ? "bg-edge text-card" : "text-ink-3 hover:text-ink hover:bg-sunken"
           }`,
           list:
             orientation === "vertical"

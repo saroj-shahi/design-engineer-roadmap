@@ -1,4 +1,5 @@
 import { useState, type CSSProperties } from "react";
+import { ArrowBackGlyph, ArrowGlyph } from "../components/icons";
 import {
   aiPolicyLabel,
   beginnerContext,
@@ -47,16 +48,16 @@ export function Roadmap() {
         lede="Pick the journey that matches where you are today. Checklists are saved in this browser and nowhere else."
       />
 
-      <div {...listProps} aria-label="Career track" className="grid border-y border-ink sm:grid-cols-2">
+      <div {...listProps} aria-label="Career track" className="grid gap-6 sm:grid-cols-2">
         {tracks.map((t, i) => {
           const on = track === t.id;
           return (
             <button
               key={t.id}
               {...tabProps(t.id, i)}
-              className={`group relative isolate flex min-h-[15rem] flex-col overflow-hidden p-5 text-left transition-colors duration-700 ease-silk sm:min-h-[19rem] sm:p-8 ${
-                i === 1 ? "border-t border-ink sm:border-l sm:border-t-0" : ""
-              } ${on ? "text-on-inverse" : "text-ink"}`}
+              className={`card card-lift group relative isolate flex min-h-[15rem] flex-col overflow-hidden p-5 text-left transition-colors duration-700 ease-silk sm:min-h-[19rem] sm:p-8 ${
+                on ? "card-on text-on-inverse" : "text-ink"
+              }`}
             >
               <span
                 aria-hidden
@@ -104,15 +105,13 @@ function TrackA() {
         <SubHead n="A.1" title="Choose your evolution track" />
         <fieldset className="min-w-0">
           <legend className="sr-only">Evolution track</legend>
-          <div className="grid border-t border-ink md:grid-cols-2">
-            {trackAOptions.map((o, i) => {
+          <div className="grid gap-6 md:grid-cols-2">
+            {trackAOptions.map((o) => {
               const on = choice === o.id;
               return (
                 <label
                   key={o.id}
-                  className={`group relative cursor-pointer border-b border-line py-7 transition-colors has-[:focus-visible]:outline has-[:focus-visible]:outline-1 has-[:focus-visible]:outline-offset-4 has-[:focus-visible]:outline-accent md:py-9 ${
-                    i === 1 ? "md:border-l md:pl-8" : "md:pr-8"
-                  }`}
+                  className={`card card-lift group relative cursor-pointer p-6 sm:p-8 ${on ? "card-on" : ""}`}
                 >
                   <input type="radio" name="trackA" value={o.id} checked={on} onChange={() => setChoice(o.id)} className="sr-only" />
                   <span className="flex items-start gap-4">
@@ -159,7 +158,7 @@ function TrackA() {
             );
           })}
         </ol>
-        <div {...months.listProps} aria-label="Month" className="grid grid-cols-6 border-t border-ink">
+        <div {...months.listProps} aria-label="Month" className="mt-4 grid grid-cols-6 gap-1.5 sm:gap-3">
           {sixMonthPlan.map((x, i) => {
             const on = month === x.month;
             const done = x.month < month;
@@ -167,9 +166,9 @@ function TrackA() {
               <button
                 key={x.month}
                 {...months.tabProps(String(x.month), i)}
-                className={`group relative pb-5 pt-4 text-left ${i > 0 ? "border-l border-line pl-2 sm:pl-4" : ""}`}
+                className={`card card-lift group relative overflow-hidden px-2 pb-4 pt-4 text-left sm:px-4 ${on ? "card-on" : ""}`}
               >
-                <span aria-hidden className={`absolute -top-px left-0 right-0 h-[3px] origin-left transition-transform duration-700 ease-silk ${on ? "scale-x-100 bg-accent" : done ? "scale-x-100 bg-ink" : "scale-x-0 bg-ink"}`} />
+                <span aria-hidden className={`absolute left-0 right-0 top-0 h-[4px] origin-left transition-transform duration-700 ease-silk ${on ? "scale-x-100 bg-accent" : done ? "scale-x-100 bg-ink" : "scale-x-0 bg-ink"}`} />
                 <span className={`numeral block text-[clamp(2rem,4.5vw,4rem)] transition-colors duration-500 ${on ? "text-ink" : "text-ink-3 group-hover:text-ink"}`}>
                   {String(x.month).padStart(2, "0")}
                 </span>
@@ -183,8 +182,13 @@ function TrackA() {
         <div
           {...months.panelProps(String(month))}
           key={month}
-          className="stagger grid gap-y-10 border-y border-line py-10 md:grid-cols-12 md:gap-x-6"
+          className="card mt-6"
         >
+          <p className="card-head label">
+            <span>Month {String(m.month).padStart(2, "0")}</span>
+            <span>{aiPolicyLabel[m.aiPolicy]}</span>
+          </p>
+          <div className="stagger grid gap-y-10 px-5 py-8 sm:px-7 md:grid-cols-12 md:gap-x-6">
           <div className="md:col-span-4" style={{ "--i": 0 } as CSSProperties}>
             <Eyebrow>Learning focus</Eyebrow>
             <p className="font-display text-[1.625rem] leading-[1.15] tracking-tight text-ink">{m.focus}</p>
@@ -197,16 +201,17 @@ function TrackA() {
             <Eyebrow className="!text-accent-ink">Guardrail · {aiPolicyLabel[m.aiPolicy]}</Eyebrow>
             <p className="leading-relaxed text-ink">{m.guardrail}</p>
           </div>
+          </div>
         </div>
         <div className="mt-5 flex items-center justify-between">
-          <StepButton disabled={month === 1} onClick={() => setMonth((v) => Math.max(1, v - 1))}>
-            ← Previous
+          <StepButton disabled={month === 1} onClick={() => setMonth((v) => Math.max(1, v - 1))} dir="back">
+            Previous
           </StepButton>
           <span className="label tabular text-ink-3">
             {String(month).padStart(2, "0")} / 06
           </span>
-          <StepButton disabled={month === 6} onClick={() => setMonth((v) => Math.min(6, v + 1))}>
-            Next →
+          <StepButton disabled={month === 6} onClick={() => setMonth((v) => Math.min(6, v + 1))} dir="next">
+            Next
           </StepButton>
         </div>
       </div>
@@ -216,7 +221,7 @@ function TrackA() {
         <div className="lg:col-span-5">
           <SubHead n="A.3" title="In-role leverage" />
           <Meter value={habits.set.size} max={leverageHabits.length} label="Habits in place" />
-          <ul className="mt-6 border-t border-ink">
+          <ul className="card mt-6 px-5 sm:px-6 [&>li:last-child]:border-b-0">
             {leverageHabits.map((h, i) => (
               <CheckRow key={h.id} index={i + 1} checked={habits.set.has(h.id)} onToggle={() => habits.toggle(h.id)} title={h.title} detail={h.detail} />
             ))}
@@ -225,12 +230,12 @@ function TrackA() {
         <div className="lg:col-span-6 lg:col-start-7">
           <SubHead n="A.4" title="Hybrid portfolio & interviews" />
           <Meter value={portfolio.set.size} max={hybridPortfolio.length} label="Portfolio components" />
-          <ul className="mt-6 border-t border-ink">
+          <ul className="card mt-6 px-5 sm:px-6 [&>li:last-child]:border-b-0">
             {hybridPortfolio.map((h, i) => (
               <CheckRow key={h.id} index={i + 1} checked={portfolio.set.has(h.id)} onToggle={() => portfolio.toggle(h.id)} title={h.title} detail={h.detail} />
             ))}
           </ul>
-          <div className="mt-10 bg-inverse p-6 text-on-inverse sm:p-8">
+          <div className="mt-10 border-2 border-edge bg-inverse p-6 text-on-inverse shadow-[var(--sh-accent)] sm:p-8">
             <p className="label mb-4 text-inverse-accent">Expect in interviews</p>
             <p className="font-display text-[1.625rem] leading-[1.15] tracking-tight">{interview.hybrid}</p>
             <p className="mt-4 text-sm leading-relaxed text-inverse-muted">Instead of: {interview.traditional}</p>
@@ -241,10 +246,12 @@ function TrackA() {
   );
 }
 
-function StepButton({ disabled, onClick, children }: { disabled: boolean; onClick: () => void; children: string }) {
+function StepButton({ disabled, onClick, children, dir }: { disabled: boolean; onClick: () => void; children: string; dir: "back" | "next" }) {
   return (
-    <button type="button" onClick={onClick} disabled={disabled} className="hit group label text-ink transition-opacity disabled:cursor-not-allowed disabled:opacity-30">
+    <button type="button" onClick={onClick} disabled={disabled} className="hit group label flex items-center gap-1.5 text-ink transition-opacity disabled:cursor-not-allowed disabled:opacity-30">
+      {dir === "back" && <ArrowBackGlyph />}
       <span className="link-ul-static">{children}</span>
+      {dir === "next" && <ArrowGlyph />}
     </button>
   );
 }
@@ -265,15 +272,13 @@ function TrackB() {
   return (
     <div className="space-y-28">
       <div>
-        <dl className="grid grid-cols-2 border-y border-ink md:grid-cols-4">
+        <dl className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-4">
           {beginnerContext.map((c, i) => (
             <div
               key={c.label}
               data-reveal
               style={{ "--i": i } as CSSProperties}
-              className={`flex flex-col py-6 sm:py-8 ${i % 2 === 1 ? "border-l border-line pl-4 sm:pl-6" : "pr-4 md:pr-6"} ${
-                i === 2 ? "border-t border-line md:border-l md:border-t-0 md:pl-6" : ""
-              } ${i === 3 ? "border-t border-line md:border-t-0" : ""}`}
+              className="card card-lift flex flex-col p-4 sm:p-6"
             >
               <dt className="order-2 mt-3 text-sm text-ink-2">{c.label}</dt>
               <dd className="numeral order-1 text-[clamp(3rem,6vw,5.5rem)]">{c.value}</dd>
@@ -289,16 +294,16 @@ function TrackB() {
       {/* 4-stage plan */}
       <div>
         <SubHead n="B.1" title="A four-stage launch plan" />
-        <div {...stages.listProps} aria-label="Launch stage" className="grid border-t border-ink md:grid-cols-4">
+        <div {...stages.listProps} aria-label="Launch stage" className="grid gap-4 md:grid-cols-4">
           {launchStages.map((x, i) => {
             const on = stage === x.n;
             return (
               <button
                 key={x.n}
                 {...stages.tabProps(String(x.n), i)}
-                className={`group relative flex h-full w-full flex-col border-b border-line py-6 text-left md:px-5 md:first:pl-0 ${i > 0 ? "md:border-l" : ""}`}
+                className={`card card-lift group relative flex h-full w-full flex-col overflow-hidden p-5 text-left ${on ? "card-on" : ""}`}
               >
-                  <span aria-hidden className={`absolute -top-px left-0 right-0 h-[3px] origin-left bg-accent transition-transform duration-700 ease-silk ${on ? "scale-x-100" : "scale-x-0"}`} />
+                  <span aria-hidden className={`absolute left-0 right-0 top-0 h-[4px] origin-left bg-accent transition-transform duration-700 ease-silk ${on ? "scale-x-100" : "scale-x-0"}`} />
                   <span className={`label ${on ? "text-accent-ink" : "text-ink-3"}`}>Stage 0{x.n}</span>
                   <span className={`mt-3 font-display text-2xl leading-tight tracking-tight transition-colors duration-500 ${on ? "text-ink" : "text-ink-3 group-hover:text-ink"}`}>{x.name}</span>
                   <span className="mt-4 text-xs text-ink-3">{x.output}</span>
@@ -306,7 +311,7 @@ function TrackB() {
             );
           })}
         </div>
-        <div {...stages.panelProps(String(stage))} key={stage} className="panel-in grid-12 border-b border-line py-10">
+        <div {...stages.panelProps(String(stage))} key={stage} className="card panel-in grid-12 mt-6 px-5 py-8 sm:px-7">
           <p className="label col-span-4 text-ink-3 lg:col-span-3">
             Stage 0{s.n} — {s.name}
           </p>
@@ -317,9 +322,9 @@ function TrackB() {
       {/* Stack */}
       <div>
         <SubHead n="B.2" title="One focused stack, in order" note="Resist tool sprawl. Learn the fundamentals before AI screen generation." />
-        <ol className="grid border-t border-ink md:grid-cols-3">
+        <ol className="grid gap-4 md:grid-cols-3">
           {beginnerStack.map((p, i) => (
-            <li key={p.phase} className={`border-b border-line py-6 ${i > 0 ? "md:border-l md:pl-6" : "md:pr-6"}`}>
+            <li key={p.phase} className="card card-lift p-5 sm:p-6">
               <span className="label text-ink-3">
                 0{i + 1} — {p.phase}
               </span>
@@ -337,7 +342,7 @@ function TrackB() {
         <div className="lg:col-span-6">
           <SubHead n="B.3" title="Junior portfolio screening" />
           <Meter value={junior.set.size} max={juniorChecklist.length} label="Screening criteria met" />
-          <ul className="mt-6 border-t border-ink">
+          <ul className="card mt-6 px-5 sm:px-6 [&>li:last-child]:border-b-0">
             {juniorChecklist.map((h, i) => (
               <CheckRow key={h.id} index={i + 1} checked={junior.set.has(h.id)} onToggle={() => junior.toggle(h.id)} title={h.title} detail={h.detail} />
             ))}
@@ -345,9 +350,9 @@ function TrackB() {
         </div>
         <div className="lg:col-span-5 lg:col-start-8">
           <SubHead n="B.4" title="Year one: IC1 → IC2" />
-          <ol className="border-t border-ink">
+          <ol className="space-y-4">
             {icGrowth.map((g, i) => (
-              <li key={g.name} className="grid grid-cols-[3rem_1fr] gap-x-3 border-b border-line py-6" data-reveal style={{ "--i": i } as CSSProperties}>
+              <li key={g.name} className="card card-lift grid grid-cols-[3rem_1fr] gap-x-3 p-5" data-reveal style={{ "--i": i } as CSSProperties}>
                 <span className="numeral text-4xl text-accent">{i + 1}</span>
                 <div>
                   <h4 className="text-[1.0625rem] font-medium tracking-tight text-ink">{g.name}</h4>

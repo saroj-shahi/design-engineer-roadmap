@@ -54,7 +54,9 @@ export function Nav({ grid, onToggleGrid }: { grid: boolean; onToggleGrid: () =>
   const pct = String(Math.round(progress * 100)).padStart(3, "0");
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-paper">
+    <>
+    <ChapterRail active={active} progress={progress} grid={grid} onToggleGrid={onToggleGrid} />
+    <header className="sticky top-0 z-40 border-b-2 border-edge bg-card lg:hidden">
       <div className="wrap grid h-12 grid-cols-[auto_1fr] items-center gap-6 lg:grid-cols-12 lg:gap-6">
         <a href="#top" className="group label flex items-center gap-2.5 self-stretch text-ink lg:col-span-3">
           <span aria-hidden className="tick text-accent transition-transform duration-700 ease-silk group-hover:rotate-45" />
@@ -95,9 +97,58 @@ export function Nav({ grid, onToggleGrid }: { grid: boolean; onToggleGrid: () =>
           </span>
         </div>
       </div>
-      <div aria-hidden className="absolute inset-x-0 -bottom-px h-px">
-        <div className="h-px origin-left bg-accent" style={{ transform: `scaleX(${progress})` }} />
+      <div aria-hidden className="absolute inset-x-0 -bottom-0.5 h-0.5">
+        <div className="h-0.5 origin-left bg-accent" style={{ transform: `scaleX(${progress})` }} />
       </div>
     </header>
+    </>
+  );
+}
+
+/** Desktop spine: one square per chapter, the active one pressed in with its name running up the rail. */
+function ChapterRail({ active, progress, grid, onToggleGrid }: { active: string; progress: number; grid: boolean; onToggleGrid: () => void }) {
+  return (
+    <aside className="rail hidden flex-col lg:flex" aria-label="Chapters">
+      <a href="#top" className="group grid h-16 shrink-0 place-items-center border-b-2 border-edge" aria-label="Back to top: DE/26 Field Guide">
+        <span aria-hidden className="tick !size-3 text-accent transition-transform duration-500 ease-silk group-hover:rotate-45" />
+      </a>
+      <nav aria-label="Sections" className="flex flex-1 flex-col">
+        {navSections.map((s, i) => {
+          const on = active === s.id;
+          return (
+            <a
+              key={s.id}
+              href={`#${s.id}`}
+              aria-current={on ? "true" : undefined}
+              aria-label={`${String(i + 1).padStart(2, "0")} ${s.label}`}
+              className={`group relative flex flex-col items-center gap-3 border-b-2 border-edge py-4 transition-colors duration-300 ${
+                on ? "flex-1 bg-accent text-[var(--on-accent)]" : "text-ink-3 hover:bg-sunken hover:text-ink"
+              }`}
+            >
+              <span className="label tabular">0{i + 1}</span>
+              <span aria-hidden className={`label sideways whitespace-nowrap ${on ? "" : "hidden group-hover:block"}`}>
+                {s.label}
+              </span>
+            </a>
+          );
+        })}
+      </nav>
+      <div className="border-t-2 border-edge">
+        <button
+          type="button"
+          onClick={onToggleGrid}
+          aria-pressed={grid}
+          title="Show the 12-column grid (Alt+G)"
+          aria-keyshortcuts="Alt+G"
+          className={`label grid h-12 w-full place-items-center transition-colors ${grid ? "bg-ink text-paper" : "text-ink-3 hover:text-ink"}`}
+        >
+          Grid
+        </button>
+        <p aria-hidden className="label grid h-12 place-items-center border-t-2 border-edge tabular text-ink">
+          {String(Math.round(progress * 100)).padStart(2, "0")}
+        </p>
+      </div>
+      <span aria-hidden className="absolute inset-y-0 right-[-2px] w-0.5 origin-top bg-accent" style={{ transform: `scaleY(${progress})` }} />
+    </aside>
   );
 }

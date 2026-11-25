@@ -53,15 +53,17 @@ export default function App() {
       <GridOverlay on={grid} />
       <div aria-hidden className="grain" />
       <Nav grid={grid} onToggleGrid={() => setGrid((g) => !g)} />
-      <main id="main" className="relative z-[1]">
-        <Hero />
-        <Comparison />
-        <SkillsExplorer />
-        <ToolingPipeline />
-        <Roadmap />
-        <Readiness />
-      </main>
-      <Footer />
+      <div className="with-rail">
+        <main id="main" className="relative z-[1]">
+          <Hero />
+          <Comparison />
+          <SkillsExplorer />
+          <ToolingPipeline />
+          <Roadmap />
+          <Readiness />
+        </main>
+        <Footer />
+      </div>
     </>
   );
 }

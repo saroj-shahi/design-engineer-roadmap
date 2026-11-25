@@ -29,7 +29,7 @@ export function Readiness() {
 
       <div className="grid-12 gap-y-12">
         <div className="col-span-4 lg:col-span-4">
-          <div className="lg:sticky lg:top-24">
+          <div className="card p-6 sm:p-8 lg:sticky lg:top-8">
             <p className="label text-ink-3">Readiness</p>
             <p className="numeral mt-4 flex items-start text-[clamp(7rem,15vw,13rem)] text-ink">
               <span className="tabular">{pct}</span>
@@ -64,7 +64,7 @@ export function Readiness() {
           </div>
         </div>
 
-        <ul className="col-span-4 border-t border-ink lg:col-span-7 lg:col-start-6">
+        <ul className="card col-span-4 self-start px-5 sm:px-6 lg:col-span-7 lg:col-start-6 [&>li:last-child]:border-b-0">
           {readinessItems.map((it, i) => (
             <CheckRow key={it.id} index={i + 1} checked={set.has(it.id)} onToggle={() => toggle(it.id)} title={it.title} detail={it.detail} />
           ))}

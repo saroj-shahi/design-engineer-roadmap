@@ -18,7 +18,7 @@ export function ToolingPipeline() {
       />
 
       <div className="grid-12 gap-y-6">
-        <div className="col-span-4 lg:col-span-8">
+        <div className="card col-span-4 p-4 sm:p-5 lg:col-span-8">
           <RoleMatrix value={roleId} onChange={setRoleId} />
         </div>
         <p className="col-span-4 self-end text-sm leading-relaxed text-ink-3 lg:col-span-3 lg:col-start-10">
@@ -29,7 +29,7 @@ export function ToolingPipeline() {
       </div>
 
       <TabPanel idPrefix="role" id={roleId} className="mt-12">
-        <div className="grid-12 gap-y-6 border-t border-ink pt-6">
+        <div className="card grid-12 gap-y-6 px-5 py-6 sm:px-7">
           <p className="label col-span-4 text-ink-3 lg:col-span-2">Recommended chain</p>
           <ol className="col-span-4 flex flex-wrap items-baseline gap-x-3 gap-y-2 lg:col-span-10">
             {role.chain.map((c, i) => (
@@ -46,7 +46,7 @@ export function ToolingPipeline() {
           <p className="col-span-4 max-w-[60ch] text-sm leading-relaxed text-ink-2 lg:col-span-6 lg:col-start-3">{role.summary}</p>
         </div>
 
-        <ol className="mt-14 grid border-y border-line lg:grid-cols-5">
+        <ol className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           {toolStages.map((s, i) => {
             const on = role.stages.includes(s.id);
             const highlighted = role.toolsByStage[s.id] ?? [];
@@ -54,14 +54,11 @@ export function ToolingPipeline() {
               <li
                 key={s.id}
                 aria-label={`Stage ${s.id}: ${s.name}${on ? ", in your stack" : ""}`}
-                className={`panel-in relative flex flex-col border-line py-8 transition-colors duration-700 lg:px-5 lg:first:pl-0 lg:last:pr-0 ${
-                  i > 0 ? "border-t lg:border-l lg:border-t-0" : ""
-                }`}
+                className={`panel-in relative flex flex-col p-5 ${on ? "card card-lift" : "card-empty"}`}
                 style={{ animationDelay: `${i * 70}ms` } as CSSProperties}
               >
-                <span aria-hidden className={`absolute -top-px left-0 right-0 h-[2px] origin-left bg-accent transition-transform duration-1000 ease-silk ${on ? "scale-x-100" : "scale-x-0"}`} />
                 <div className="flex items-baseline justify-between">
-                  <span className={`numeral text-[4.5rem] transition-colors duration-700 ${on ? "text-ink" : "text-ink-3"}`}>0{s.id}</span>
+                  <span className={`numeral text-[4rem] transition-colors duration-700 ${on ? "text-ink" : "text-ink-3"}`}>0{s.id}</span>
                   <span className={`label ${on ? "text-accent-ink" : "text-ink-3"}`}>{on ? "In stack" : "Outside"}</span>
                 </div>
                 <h3 className={`mt-4 text-[1.0625rem] font-medium leading-snug tracking-tight transition-colors duration-700 ${on ? "text-ink" : "text-ink-3"}`}>{s.name}</h3>
@@ -103,7 +100,7 @@ function RoleMatrix({ value, onChange }: { value: string; onChange: (id: string)
 
   return (
     <div>
-      <div aria-hidden className={`${cols} border-b border-ink pb-3`}>
+      <div aria-hidden className={`${cols} border-b-2 border-edge pb-3`}>
         <span className="label self-end text-ink-3">Role</span>
         {toolStages.map((s) => (
           <span key={s.id} className="flex min-w-0 flex-col">

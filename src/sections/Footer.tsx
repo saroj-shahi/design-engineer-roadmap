@@ -1,15 +1,14 @@
 import { sources, worksCited } from "../data/research";
 import { Lines } from "../components/ui";
+import { ExternalGlyph } from "../components/icons";
 
 function ExtLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <>
-      <a href={href} target="_blank" rel="noopener noreferrer" className="link-ul">
-        {children}
-      </a>
-      <span aria-hidden className="ml-1 text-inverse-muted">↗</span>
+    <a href={href} target="_blank" rel="noopener noreferrer" className="group">
+      <span className="link-ul">{children}</span>
+      <ExternalGlyph className="ml-1 text-inverse-muted transition-colors duration-300 group-hover:text-inverse-accent" />
       <span className="sr-only"> (opens in new tab)</span>
-    </>
+    </a>
   );
 }
 
