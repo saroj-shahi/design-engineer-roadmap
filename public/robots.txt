@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://design-engineer-roadmap.vercel.app/sitemap.xml

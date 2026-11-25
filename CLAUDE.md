@@ -14,7 +14,7 @@ A static, five-page field guide for designers moving into design engineering ("D
 - `src/pages/*`: one file per page (`Home`, `Roles`, `Plan`, `Ready`, `Library`). Pages are thin; they compose sections.
 - `src/sections/*`: the real content blocks (`Hero`, `Roadmap`, `Readiness`, `Comparison`, `SkillsExplorer`, `ToolingPipeline`, `Footer`).
 - `src/components/ui.tsx`: shared primitives and hooks: `Section`, `SectionHeader`, `Tabs`/`TabPanel`/`useTabList`, `Disclosure`, `CheckRow`, `Tag`, `BasisBadge`, the router, theme, and persisted state. Check here before writing a new primitive.
-- `src/components/*`: larger illustrations/widgets (`HeroStage`, `ArchetypeVenn`, `HandoffFlow`, `HandoffPlate`, `Nav`, `icons`).
+- `src/components/*`: larger illustrations/widgets (`HeroStage`, `ArchetypeVenn`, `HandoffFlow`, `HandoffPlate`, `RoadmapMap`, `Nav`, `icons`).
 - `src/data/research.ts`: all content data and types.
 - `src/index.css`: design tokens, Tailwind `@theme` mapping, and global component classes.
 
@@ -29,7 +29,7 @@ A static, five-page field guide for designers moving into design engineering ("D
 - Hash router in `ui.tsx` (`useRoute`, `pageHref`, `parseRoute`) so it works on any static host. Routes look like `#/plan/a/meta`, `#/ready/b`, `#/library/skills`.
 - URL sub-parts write reader choices (track `a|b`, Track A option `pde|meta`) into storage. Old single-page anchors (`#roadmap`, `#skills`, …) map through the `legacy` table; keep them working.
 - Adding a page means: add it to `Page` and `pages` in `ui.tsx`, render it in `App.tsx`, and it appears in `Nav` automatically.
-- Use `replaceHash` to reflect a choice in the URL without adding history.
+- Use `navigate(hash, { replace: true })` to reflect a choice in the URL without adding history.
 - Persisted state uses `localStorage` keys prefixed `de-guide:` via `useStoredChoice` / `usePersistentSet`. Always wrap storage access in try/catch; the page must work with storage blocked.
 
 ## Design system
