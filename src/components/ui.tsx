@@ -209,7 +209,7 @@ export function SectionHeader({
 /** Specimen plate: one chapter glyph drawn large on a blueprint field. Hover plays its gesture. */
 export function Plate({ glyph, className = "" }: { glyph: GlyphName; className?: string }) {
   return (
-    <figure aria-hidden data-reveal className={`card card-lift group ${className}`} style={{ "--d": "200ms" } as CSSProperties}>
+    <figure aria-hidden data-reveal className={`card group ${className}`} style={{ "--d": "200ms" } as CSSProperties}>
       <div className="plate-field grid aspect-square place-items-center">
         <Glyph name={glyph} className="glyph-xl !size-[62%] text-ink" />
       </div>
@@ -496,7 +496,7 @@ export function CheckRow({
         </span>
         <span
           aria-hidden
-          className={`relative mt-0.5 grid size-5 place-items-center border transition-colors duration-500 ease-silk peer-focus-visible:outline peer-focus-visible:outline-1 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent ${
+          className={`relative mt-0.5 grid size-5 place-items-center border transition-colors duration-500 ease-silk peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent ${
             checked ? "border-accent bg-accent" : "border-line-strong group-hover:border-ink"
           }`}
         >
@@ -532,6 +532,15 @@ export function usePersistentSet(key: string) {
       }
       return next;
     });
+  /** Put back a set captured before a reset (undo). */
+  const restore = (prev: Set<string>) => {
+    setSet(new Set(prev));
+    try {
+      localStorage.setItem(key, JSON.stringify([...prev]));
+    } catch {
+      /* ignore */
+    }
+  };
   const reset = () => {
     setSet(new Set());
     try {
@@ -540,7 +549,7 @@ export function usePersistentSet(key: string) {
       /* ignore */
     }
   };
-  return { set, toggle, reset };
+  return { set, toggle, reset, restore };
 }
 
 /* ───────── Reader's track: shared, persisted, deep-linkable ─────────
@@ -590,25 +599,48 @@ export function useStoredChoice<T extends string>(key: string, fallback: T, allo
   return [value, set] as const;
 }
 
+/** The reader's saved track, or null if they haven't picked one. No silent default. */
+export function readStoredTrack(): Track | null {
+  const v = readStored<Track | "none">(TRACK_KEY, "none", ["a", "b", "none"]);
+  return v === "none" ? null : v;
+}
+
 export function useTrack() {
-  return useStoredChoice<Track>(TRACK_KEY, "a", ["a", "b"]);
+  const [v, set] = useStoredChoice<Track | "none">(TRACK_KEY, "none", ["a", "b", "none"]);
+  return [v === "none" ? null : v, set as (t: Track) => void] as const;
 }
 
 /* ───────── Pages (hash router) ─────────
-   Five pages, one question each. Routes are hashes (#/plan/b) so the site
-   works on any static host. Sub-parts carry choices: #/plan/a/meta picks
-   Track A + the Meta option, #/ready/b the starter checklist,
-   #/library/skills a Library tab. Old single-page anchors still resolve. */
+   Five pages, one question each. Routes are hashes so the site works on any
+   static host. The URL is the source of truth for where the reader is and what
+   is selected; storage only remembers the last choice to fill in a bare URL.
+
+     #/roles/{de|meta|ax}            selected role
+     #/plan/a/{pde|meta}/m{1-6}      Track A, option, month
+     #/plan/b/s{1-4}                 Track B, stage
+     #/ready/{a|b}                   checklist for a track
+     #/library/{shelf}[/{term}]      shelf, optional glossary term
+
+   Rule: a change of place (page, shelf) is a link that pushes history; a change
+   of view inside a place (track, month, stage, role) calls navigate(…, { replace: true }).
+   Old single-page anchors still resolve through `legacy`. */
 
 export type Page = "home" | "roles" | "plan" | "ready" | "library";
 export const pages: { id: Page; label: string; title: string }[] = [
   { id: "home", label: "Start", title: "Start here" },
   { id: "roles", label: "Roles", title: "Which role fits you" },
   { id: "plan", label: "Plan", title: "Your six-month plan" },
-  { id: "ready", label: "Ready?", title: "Am I ready to apply?" },
+  { id: "ready", label: "Checklist", title: "Portfolio checklist" },
   { id: "library", label: "Library", title: "Reference library" },
 ];
 export const pageHref = (id: Page, ...parts: string[]) => (id === "home" ? "#/" : `#/${[id, ...parts].join("/")}`);
+
+export interface Route {
+  page: Page;
+  parts: string[];
+  /** The hash named a page that doesn't exist. */
+  notFound?: boolean;
+}
 
 const legacy: Record<string, string> = {
   "#top": "#/",
@@ -621,48 +653,324 @@ const legacy: Record<string, string> = {
   "#tooling": "#/library/tools",
 };
 
-function parseRoute(hash: string): { page: Page; parts: string[] } | null {
+function parseRoute(hash: string): Route | null {
   let h = hash;
   const old = h.match(/^#(roadmap|readiness)\/(.+)$/);
   if (old) h = `#/${old[1] === "roadmap" ? "plan" : "ready"}/${old[2]}`;
   else if (legacy[h]) h = legacy[h];
-  if (h === "" || h === "#") return { page: "home", parts: [] };
+  if (h === "" || h === "#" || h === "#/") return { page: "home", parts: [] };
   if (!h.startsWith("#/")) return null; // a plain in-page anchor such as #main
   const [first = "", ...parts] = h.slice(2).split("/").filter(Boolean);
-  const page = (pages.find((p) => p.id === first)?.id ?? "home") as Page;
+  const page = pages.find((p) => p.id === first)?.id;
+  if (!page) return { page: "home", parts: [], notFound: true };
   return { page, parts };
 }
 
-/** Current page + sub-parts. Applies choices carried in the URL and scrolls to the top on page change. */
+/* ── Plan sub-route ── */
+
+export type TrackAOption = "pde" | "meta";
+export type PlanRoute = { track: "a"; option: TrackAOption; month: number } | { track: "b"; stage: number };
+
+const clampStep = (raw: string | undefined, prefix: string, max: number) => {
+  const n = Number(raw?.startsWith(prefix) ? raw.slice(1) : NaN);
+  return Number.isInteger(n) && n >= 1 && n <= max ? n : 1;
+};
+
+/** Reads #/plan/… parts. Returns null when no track is named. */
+export function planFromParts(parts: string[]): PlanRoute | null {
+  const [track, b, c] = parts;
+  if (track === "a") {
+    const option: TrackAOption =
+      b === "pde" || b === "meta" ? b : readStored<TrackAOption>(TRACK_A_OPTION_KEY, "pde", ["pde", "meta"]);
+    return { track: "a", option, month: clampStep(c, "m", 6) };
+  }
+  if (track === "b") return { track: "b", stage: clampStep(b, "s", 4) };
+  return null;
+}
+
+export const planHref = (p: PlanRoute) => (p.track === "a" ? `#/plan/a/${p.option}/m${p.month}` : `#/plan/b/s${p.stage}`);
+
+export const PLAN_ROUTE_KEY = "de-guide:plan-route";
+
+/** Where "back to your plan" should go: the last plan the reader looked at, else the bare plan page. */
+export function lastPlanHref() {
+  try {
+    const saved = localStorage.getItem(PLAN_ROUTE_KEY);
+    if (saved && saved.startsWith("#/plan/")) return saved;
+  } catch {
+    /* ignore */
+  }
+  return pageHref("plan");
+}
+
+/** Track from a #/ready/{a|b} or #/plan/{a|b} part, or null. */
+export const trackFromPart = (part: string | undefined): Track | null => (part === "a" || part === "b" ? part : null);
+
+/** Fills in a bare or partial URL from stored choices, so the address bar always names what's shown. */
+function canonical(r: Route): string | null {
+  if (r.notFound) return null;
+  if (r.page === "plan") {
+    const plan = planFromParts(r.parts);
+    if (plan) return planHref(plan);
+    const saved = lastPlanHref();
+    if (saved !== pageHref("plan")) return saved;
+    const t = readStoredTrack();
+    return t ? planHref(t === "a" ? { track: "a", option: readStored<TrackAOption>(TRACK_A_OPTION_KEY, "pde", ["pde", "meta"]), month: 1 } : { track: "b", stage: 1 }) : null;
+  }
+  if (r.page === "ready" && !trackFromPart(r.parts[0])) {
+    const t = readStoredTrack();
+    return t ? pageHref("ready", t) : null;
+  }
+  return null;
+}
+
+/** Remember the choices a URL carries, so a bare #/plan or #/ready can be filled in next time. */
+function remember(r: Route, hash: string) {
+  if (r.page === "plan") {
+    const plan = planFromParts(r.parts);
+    if (!plan) return;
+    writeStored(TRACK_KEY, plan.track);
+    if (plan.track === "a") writeStored(TRACK_A_OPTION_KEY, plan.option);
+    try {
+      localStorage.setItem(PLAN_ROUTE_KEY, hash);
+    } catch {
+      /* ignore */
+    }
+  } else if (r.page === "ready") {
+    const t = trackFromPart(r.parts[0]);
+    if (t) writeStored(TRACK_KEY, t);
+  }
+}
+
+const NAV_EVENT = "de-guide:navigate";
+const SCROLL_PREFIX = "de-guide:scroll:";
+
+/** Change the URL from code. `replace` swaps the current history entry (a change of view, not of place). */
+export function navigate(hash: string, { replace = false }: { replace?: boolean } = {}) {
+  if (hash === location.hash) return;
+  try {
+    if (replace) history.replaceState(null, "", hash);
+    else history.pushState(null, "", hash);
+  } catch {
+    location.hash = hash; // falls back to a normal hashchange
+    return;
+  }
+  window.dispatchEvent(new CustomEvent(NAV_EVENT, { detail: { replace } }));
+}
+
+/** @deprecated use navigate(hash, { replace: true }) so the route updates too. */
+export function replaceHash(hash: string) {
+  navigate(hash, { replace: true });
+}
+
+/**
+ * Current route. Fills in bare URLs from stored choices, remembers choices the URL carries,
+ * and handles scroll: a new page starts at the top, Back/Forward restores where the reader was.
+ * Call it once (App) and pass what pages need down as props.
+ */
 export function useRoute() {
-  const [route, setRoute] = useState(() => parseRoute(location.hash) ?? { page: "home" as Page, parts: [] });
+  const [route, setRoute] = useState<Route>(() => {
+    const r = parseRoute(location.hash) ?? { page: "home" as Page, parts: [] };
+    const fix = canonical(r);
+    if (fix) {
+      try {
+        history.replaceState(null, "", fix);
+      } catch {
+        /* ignore */
+      }
+      return parseRoute(fix) ?? r;
+    }
+    return r;
+  });
+
   useEffect(() => {
-    const apply = (initial = false) => {
+    try {
+      history.scrollRestoration = "manual";
+    } catch {
+      /* ignore */
+    }
+    let fromLink = false; // set by clicks on in-app links, so hashchange can tell them from Back/Forward
+    let current = location.hash;
+
+    const saveScroll = () => {
+      try {
+        sessionStorage.setItem(SCROLL_PREFIX + current, String(Math.round(window.scrollY)));
+      } catch {
+        /* ignore */
+      }
+    };
+
+    const apply = (kind: "link" | "history" | "replace" | "push") => {
       const r = parseRoute(location.hash);
       if (!r) return;
-      const [a, b] = r.parts;
-      if ((r.page === "plan" || r.page === "ready") && (a === "a" || a === "b")) writeStored(TRACK_KEY, a);
-      if (r.page === "plan" && a === "a" && (b === "pde" || b === "meta")) writeStored(TRACK_A_OPTION_KEY, b);
+      const fix = canonical(r);
+      if (fix && fix !== location.hash) {
+        try {
+          history.replaceState(null, "", fix);
+        } catch {
+          /* ignore */
+        }
+      }
+      const final = (fix ? parseRoute(fix) : null) ?? r;
+      remember(final, location.hash);
+      current = location.hash;
       setRoute((prev) => {
-        if (!initial && prev.page !== r.page) window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
-        return r;
+        const pageChanged = prev.page !== final.page || prev.notFound !== final.notFound || (final.page === "library" && prev.parts[0] !== final.parts[0]);
+        if (kind === "history") {
+          let y = 0;
+          try {
+            y = Number(sessionStorage.getItem(SCROLL_PREFIX + location.hash) ?? 0);
+          } catch {
+            /* ignore */
+          }
+          // Wait for the page to render before restoring.
+          requestAnimationFrame(() => requestAnimationFrame(() => window.scrollTo({ top: y, behavior: "instant" as ScrollBehavior })));
+        } else if (pageChanged) {
+          window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+        }
+        return final;
       });
     };
-    apply(true);
-    const onHash = () => apply();
+
+    remember(route, location.hash);
+
+    const onClick = (e: MouseEvent) => {
+      const a = (e.target as HTMLElement | null)?.closest?.("a[href^='#']");
+      if (a && !e.defaultPrevented && e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey) {
+        saveScroll();
+        fromLink = true;
+      }
+    };
+    const onHash = () => {
+      const kind = fromLink ? "link" : "history";
+      fromLink = false;
+      apply(kind);
+    };
+    const onNav = (e: Event) => {
+      const replace = (e as CustomEvent<{ replace: boolean }>).detail?.replace;
+      if (!replace) saveScroll();
+      apply(replace ? "replace" : "push");
+    };
+    const onPop = () => {
+      // pushState entries don't fire hashchange on Back; popstate covers them.
+      if (location.hash !== current) {
+        fromLink = false;
+        apply("history");
+      }
+    };
+    let t = 0;
+    const onScroll = () => {
+      clearTimeout(t);
+      t = window.setTimeout(saveScroll, 150);
+    };
+
+    document.addEventListener("click", onClick, true);
     window.addEventListener("hashchange", onHash);
-    return () => window.removeEventListener("hashchange", onHash);
+    window.addEventListener("popstate", onPop);
+    window.addEventListener(NAV_EVENT, onNav);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      document.removeEventListener("click", onClick, true);
+      window.removeEventListener("hashchange", onHash);
+      window.removeEventListener("popstate", onPop);
+      window.removeEventListener(NAV_EVENT, onNav);
+      window.removeEventListener("scroll", onScroll);
+      clearTimeout(t);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return route;
 }
 
-/** Point the address bar at the current choice without adding history entries or jumping. */
-export function replaceHash(hash: string) {
+/* ───────── Storage status ─────────
+   One probe for the whole page. When storage is blocked, copy that promises
+   "saved in this browser" must say so instead. */
+
+let storageProbe: boolean | null = null;
+export function storageAvailable() {
+  if (storageProbe !== null) return storageProbe;
   try {
-    history.replaceState(null, "", hash);
+    const k = "de-guide:probe";
+    localStorage.setItem(k, "1");
+    localStorage.removeItem(k);
+    storageProbe = true;
   } catch {
-    /* ignore */
+    storageProbe = false;
   }
+  return storageProbe;
+}
+
+/** Plain sentence about where ticks are kept, true to whether storage works. */
+export function useSaveNote() {
+  return storageAvailable()
+    ? "Your ticks are saved in this browser only; nothing is sent anywhere."
+    : "Your browser is blocking storage, so ticks clear when you leave this page.";
+}
+
+/* ───────── Context bar ─────────
+   Sticky strip under the nav on long pages: where you are (trail) and jump
+   links to the page's parts. Jumps are buttons, not #anchors, so they never
+   overwrite the route in the address bar. */
+
+export function jumpTo(id: string) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const reduce = prefersReducedMotion();
+  const top = el.getBoundingClientRect().top + window.scrollY - (window.innerWidth >= 1024 ? 128 : 152);
+  window.scrollTo({ top, behavior: reduce ? "auto" : "smooth" });
+  if (!el.hasAttribute("tabindex")) el.setAttribute("tabindex", "-1");
+  el.focus({ preventScroll: true });
+}
+
+export function ContextBar({
+  trail,
+  jumps = [],
+  label = "You are here",
+}: {
+  trail: { label: string; href?: string }[];
+  jumps?: { id: string; label: string }[];
+  label?: string;
+}) {
+  return (
+    <div className="sticky top-24 z-30 -mx-[var(--gutter)] border-b border-line bg-paper/95 px-[var(--gutter)] backdrop-blur-[2px] lg:top-16">
+      <div className="flex min-h-10 items-center gap-6 overflow-hidden">
+        <nav aria-label={label} className="min-w-0 flex-1">
+          <ol className="label flex min-w-0 items-center gap-2 text-ink-3">
+            {trail.map((t, i) => {
+              const last = i === trail.length - 1;
+              return (
+                <li key={i} className={`flex min-w-0 items-center gap-2 ${last ? "" : "shrink-0 max-sm:[&:not(:first-child)]:hidden"}`}>
+                  {i > 0 && <span aria-hidden className={last ? "" : "max-sm:hidden"}>›</span>}
+                  {t.href && !last ? (
+                    <a href={t.href} className="hit link-ul-static text-ink-2 hover:text-ink">
+                      {t.label}
+                    </a>
+                  ) : (
+                    <span aria-current={last ? "location" : undefined} className={`truncate ${last ? "text-ink" : ""}`}>
+                      {t.label}
+                    </span>
+                  )}
+                </li>
+              );
+            })}
+          </ol>
+        </nav>
+        {jumps.length > 0 && (
+          <nav aria-label="On this page" className="hidden shrink-0 md:block">
+            <ul className="label flex items-center gap-4 text-ink-3">
+              {jumps.map((j) => (
+                <li key={j.id}>
+                  <button type="button" onClick={() => jumpTo(j.id)} className="hit link-ul text-ink-3 hover:text-ink">
+                    {j.label}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )}
+      </div>
+    </div>
+  );
 }
 
 /* ───────── Theme ─────────
@@ -752,10 +1060,10 @@ export function useMediaQuery(query: string) {
 }
 
 /** End-of-page signpost: the one obvious next step. */
-export function NextPage({ to, title, note }: { to: Page; title: string; note: string }) {
+export function NextPage({ to, href, title, note }: { to: Page; href?: string; title: string; note: string }) {
   return (
     <div className="wrap pb-24 sm:pb-32">
-      <a href={pageHref(to)} className="card card-lift group flex flex-col gap-4 p-6 sm:flex-row sm:items-end sm:justify-between sm:p-8">
+      <a href={href ?? pageHref(to)} className="card card-lift group flex flex-col gap-4 p-6 sm:flex-row sm:items-end sm:justify-between sm:p-8">
         <span>
           <span className="label text-accent-ink">Next</span>
           <span className="display-m mt-3 block text-ink">{title}</span>

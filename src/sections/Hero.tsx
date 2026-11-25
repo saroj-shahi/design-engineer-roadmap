@@ -1,4 +1,4 @@
-import { useState, type CSSProperties } from "react";
+import { type CSSProperties } from "react";
 import {
   adoptionShift,
   archetypes,
@@ -13,7 +13,7 @@ import { HandoffFlow } from "../components/HandoffFlow";
 import { HandoffPlate } from "../components/HandoffPlate";
 import { HeroStage } from "../components/HeroStage";
 import { ArchetypeGlyph, ArrowGlyph } from "../components/icons";
-import { BasisBadge, CountUp, Disclosure, Eyebrow, Lines, Roll, TRACK_A_OPTION_KEY, Tag, useMediaQuery, useStoredChoice, useTabList, useTrack } from "../components/ui";
+import { BasisBadge, CountUp, Disclosure, Eyebrow, Lines, Roll, Tag, navigate, pageHref, useMediaQuery, useTabList } from "../components/ui";
 
 export function Hero() {
   return (
@@ -82,7 +82,7 @@ export function Hero() {
               key={m.label}
               data-reveal
               style={{ "--i": i } as CSSProperties}
-              className="card card-lift flex min-h-[17rem] flex-col sm:min-h-[21rem]"
+              className="card flex min-h-[17rem] flex-col sm:min-h-[21rem]"
             >
               <dt className="order-3 mt-4 max-w-[26ch] px-4 text-sm leading-snug text-ink-2 sm:px-5">{m.label}</dt>
               <dd className="card-head label order-1">
@@ -265,16 +265,14 @@ export function HandoffEconomics() {
   );
 }
 
-export function Archetypes() {
-  const [sel, setSel] = useState(archetypes[0].id);
-  const [, setTrack] = useTrack();
-  const [, setOption] = useStoredChoice(TRACK_A_OPTION_KEY, "pde", ["pde", "meta"]);
+export function Archetypes({ role }: { role?: string }) {
+  const sel = archetypes.find((x) => x.id === role)?.id ?? archetypes[0].id;
   const a = archetypes.find((x) => x.id === sel)!;
   const isLg = useMediaQuery("(min-width: 1024px)");
   const { listProps, tabProps, panelProps } = useTabList({
     ids: archetypes.map((x) => x.id),
     value: sel,
-    onChange: setSel,
+    onChange: (id) => navigate(pageHref("roles", id), { replace: true }),
     idPrefix: "arch",
     orientation: isLg ? "horizontal" : "vertical",
   });
@@ -300,6 +298,7 @@ export function Archetypes() {
               {...tabProps(x.id, i)}
               className={`card card-lift group flex flex-col p-5 text-left sm:min-h-[17rem] sm:p-6 ${on ? "card-on" : ""}`}
             >
+              {on && <span className="label mb-3 text-accent-ink">✓ Selected</span>}
               <ArchetypeGlyph id={x.id} on={on} className={`glyph-xl !size-20 ${on ? "text-ink" : "text-ink-3 group-hover:text-ink"}`} />
               <span className={`display-m mt-auto pt-6 transition-colors sm:pt-10 duration-300 ${on ? "text-ink" : "text-ink-2 group-hover:text-ink"}`}>{x.name}</span>
               <span className="mt-3 text-sm text-ink-2">{x.focus}</span>
@@ -318,17 +317,18 @@ export function Archetypes() {
           <p className="max-w-[60ch] font-display text-[clamp(1.375rem,2vw,1.75rem)] leading-[1.15] tracking-tight text-ink">
             <span className="text-accent-ink">This fits you if</span> {a.fitsIf}
           </p>
+          <div className="shrink-0">
           <a
             href={`#/plan/a/${a.plan}`}
-            onClick={() => {
-              setTrack("a");
-              setOption(a.plan);
-            }}
-            className="btn group shrink-0"
+            className="btn group"
           >
             <Roll>See the plan for this role</Roll>
             <ArrowGlyph />
           </a>
+          <a href="#/plan/b/s1" className="hit link-ul-static mt-3 inline-flex items-center gap-2 text-sm text-ink-2 hover:text-ink">
+            Starting out? See the beginner plan <ArrowGlyph />
+          </a>
+          </div>
         </div>
         <div className="grid-12 stagger gap-y-10 px-5 py-8 sm:px-8 sm:py-10">
         <div className="col-span-4 lg:col-span-5" style={{ "--i": 0 } as CSSProperties}>

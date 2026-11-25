@@ -86,7 +86,7 @@ function Row({
             <li
               key={s.name}
               style={{ "--i": i } as CSSProperties}
-              className={`card card-lift group relative flex min-h-[10rem] flex-col p-3 sm:min-h-[11.5rem] sm:p-4 ${solid ? "!bg-inverse text-on-inverse" : "text-ink"}`}
+              className={`card group relative flex min-h-[10rem] flex-col p-3 sm:min-h-[11.5rem] sm:p-4 ${solid ? "!bg-inverse text-on-inverse" : "text-ink"}`}
             >
               <span className={`label ${solid ? "text-inverse-muted" : "text-ink-3"}`}>
                 {String(i + 1).padStart(2, "0")} · {s.who}

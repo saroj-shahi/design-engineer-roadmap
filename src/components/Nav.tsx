@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Glyph, type GlyphName } from "./icons";
 import { pageHref, pages, useTheme, type Page } from "./ui";
 
@@ -36,28 +36,21 @@ function useScrollProgress() {
   return progress;
 }
 
-export function Nav({ page, grid, onToggleGrid }: { page: Page; grid: boolean; onToggleGrid: () => void }) {
+export function Nav({ page }: { page: Page }) {
   const progress = useScrollProgress();
-  const navRef = useRef<HTMLElement>(null);
-
-  // Keep the current page visible in the horizontally scrolling phone bar.
-  useEffect(() => {
-    const nav = navRef.current;
-    const link = nav?.querySelector<HTMLElement>('a[aria-current="page"]');
-    if (!nav || !link || nav.scrollWidth <= nav.clientWidth) return;
-    nav.scrollTo({ left: link.offsetLeft - nav.clientWidth / 2 + link.offsetWidth / 2, behavior: "smooth" });
-  }, [page]);
 
   return (
     <header className="sticky top-0 z-40 border-b-2 border-edge bg-card">
-      <div className="wrap grid h-12 grid-cols-[auto_1fr_auto] items-center gap-4 sm:gap-6 lg:h-16 lg:grid-cols-[1fr_auto_1fr]">
+      <div className="wrap grid grid-cols-[1fr_auto] grid-rows-[3rem_3rem] items-center gap-x-4 sm:gap-x-6 lg:h-16 lg:grid-cols-[1fr_auto_1fr] lg:grid-rows-1">
         <a href={pageHref("home")} className="group label flex items-center gap-2.5 self-stretch text-ink">
           <span aria-hidden className="tick text-accent transition-transform duration-700 ease-silk group-hover:rotate-45" />
-          <span>DE/26</span>
-          <span className="hidden text-ink-3 xl:inline">· Field Guide</span>
+          <span>Field Guide</span>
         </a>
 
-        <nav ref={navRef} aria-label="Pages" className="no-scrollbar flex items-center gap-5 self-stretch overflow-x-auto lg:gap-1.5">
+        <nav
+          aria-label="Pages"
+          className="col-span-2 row-start-2 -mx-[var(--gutter)] grid h-12 grid-cols-5 border-t border-line lg:static lg:col-span-1 lg:col-start-2 lg:row-start-1 lg:mx-0 lg:flex lg:h-auto lg:items-center lg:gap-1.5 lg:self-stretch lg:border-t-0"
+        >
           {pages.map((p) => {
             const on = page === p.id;
             return (
@@ -65,7 +58,7 @@ export function Nav({ page, grid, onToggleGrid }: { page: Page; grid: boolean; o
                 key={p.id}
                 href={pageHref(p.id)}
                 aria-current={on ? "page" : undefined}
-                className={`nav-link group label flex shrink-0 items-center gap-2 transition-colors duration-300 lg:h-10 lg:border-2 lg:px-3 ${
+                className={`nav-link group label relative flex min-h-11 items-center justify-center gap-2 text-center transition-colors duration-300 lg:h-10 lg:border-2 lg:px-3 ${
                   on
                     ? "text-ink lg:border-edge lg:bg-accent lg:text-[var(--on-accent)]"
                     : "text-ink-3 hover:text-ink lg:border-transparent lg:hover:border-edge lg:hover:bg-sunken"
@@ -74,25 +67,14 @@ export function Nav({ page, grid, onToggleGrid }: { page: Page; grid: boolean; o
                 <span aria-hidden className="hidden lg:contents">
                   <Glyph name={pageGlyph[p.id]} on={on} className="!size-5" />
                 </span>
-                <span className="link-ul lg:!bg-none" data-on={on}>
-                  {p.label}
-                </span>
+                <span>{p.label}</span>
+                {on && <span aria-hidden className="absolute inset-x-0 bottom-0 h-0.5 bg-accent lg:hidden" />}
               </a>
             );
           })}
         </nav>
 
         <div className="flex items-center justify-end gap-1 self-stretch">
-          <button
-            type="button"
-            onClick={onToggleGrid}
-            aria-pressed={grid}
-            title="Show the 12-column grid (Alt+G)"
-            aria-keyshortcuts="Alt+G"
-            className={`label hidden h-10 px-3 transition-colors lg:block ${grid ? "bg-ink text-paper" : "text-ink-3 hover:text-ink"}`}
-          >
-            Grid
-          </button>
           <ThemeToggle className="-mr-2 grid size-11 place-items-center lg:mr-0 lg:size-10 lg:hover:bg-sunken" />
         </div>
       </div>

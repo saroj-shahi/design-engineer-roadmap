@@ -689,7 +689,7 @@ export const sixMonthPlan: Month[] = [
     guardrail: "Send about 20 careful applications to teams that hire hybrids. Skip mass applying.",
     aiPolicy: "position",
     start: "Pick your two strongest projects and write a 2–3 paragraph write-up for each.",
-    doneWhen: "Every item on the Ready? checklist is ticked.",
+    doneWhen: "Every item on the portfolio checklist is ticked.",
     resources: [
       { label: "Design engineering resources", url: "https://designengineering.arun.is/", cost: "free" },
     ],
@@ -743,7 +743,7 @@ const metaMonths: Month[] = [
     guardrail: "Send about 20 careful applications to teams that hire hybrids. Skip mass applying.",
     aiPolicy: "position",
     start: "Write a short case study showing an AI tool using your system: what broke, what you fixed.",
-    doneWhen: "Every item on the Ready? checklist is ticked.",
+    doneWhen: "Every item on the portfolio checklist is ticked.",
     resources: [
       { label: "Design engineering resources", url: "https://designengineering.arun.is/", cost: "free" },
     ],
@@ -864,7 +864,7 @@ export const launchStages: LaunchStage[] = [
       "Write 3–4 short, easy-to-scan case studies. Aim them at early (seed-stage) startups, which hire the most designers relative to size (25%). Also try small agencies and industry-focused B2B companies, not only big tech junior programs.",
     output: "A portfolio aimed at where hiring happens",
     start: "Rewrite the opening of your best case study: who you are, the problem, and what you did.",
-    doneWhen: "Every item on the Ready? checklist is ticked.",
+    doneWhen: "Every item on the portfolio checklist is ticked.",
     resources: [
       { label: "Design engineering resources", url: "https://designengineering.arun.is/", cost: "free" },
     ],

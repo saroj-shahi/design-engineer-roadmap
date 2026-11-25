@@ -73,7 +73,7 @@ export function Footer() {
           <span className="hidden lg:inline">
             Press <kbd className="border border-inverse-line px-1.5 py-0.5 text-on-inverse">Alt</kbd> <kbd className="border border-inverse-line px-1.5 py-0.5 text-on-inverse">G</kbd> to show the grid
           </span>
-          <a href="#main" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0 }); }} className="hit group flex items-center gap-2 text-on-inverse">
+          <a href="#main" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0 }); document.getElementById("main")?.focus({ preventScroll: true }); }} className="hit group flex items-center gap-2 text-on-inverse">
             <span className="link-ul">Back to top</span>
             <span aria-hidden className="transition-transform duration-700 ease-silk group-hover:-translate-y-1">↑</span>
           </a>

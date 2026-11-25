@@ -124,7 +124,7 @@ function SkillLedger({ skills, large = false }: { skills: Skill[]; large?: boole
       {skills.map((s, i) => (
         <li
           key={s.name}
-          className="card card-lift grid-12 group gap-y-3 px-5 py-7 sm:px-7 sm:py-9 lg:sticky lg:top-[calc(5.5rem+var(--i)*14px)]"
+          className="card grid-12 group gap-y-3 px-5 py-7 sm:px-7 sm:py-9 lg:sticky lg:top-[calc(5.5rem+var(--i)*14px)]"
           style={{ "--i": i } as CSSProperties}
         >
           <h3
@@ -289,7 +289,7 @@ function PatternLibrary() {
   return (
     <div className="grid gap-6 md:grid-cols-2">
       {patternCategories.map((c) => (
-        <article key={c.id} className="card card-lift p-6 sm:p-8">
+        <article key={c.id} className="card p-6 sm:p-8">
           <h3 className="display-m">{c.name}</h3>
           <p className="mt-3 max-w-[48ch] text-sm leading-relaxed text-ink-2">{c.objective}</p>
           <ul className="mt-6 border-t border-line">

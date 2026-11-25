@@ -33,6 +33,18 @@ const marker = (r: SkillRegion) => String(overlaps.indexOf(r) + 1);
 export function ArchetypeVenn({ selected }: { selected: string }) {
   const uid = useId().replace(/:/g, "");
   const [hot, setHot] = useState<string | null>(null);
+  const [pinned, setPinned] = useState<string | null>(null);
+  const keyProps = (rid: string) => ({
+    type: "button" as const,
+    "aria-pressed": pinned === rid,
+    onPointerEnter: () => setHot(rid),
+    onFocus: () => setHot(rid),
+    onBlur: () => setHot(pinned),
+    onClick: () => {
+      setPinned(pinned === rid ? null : rid);
+      setHot(pinned === rid ? null : rid);
+    },
+  });
   const id = (s: string) => `${uid}-${s}`;
 
   return (
@@ -47,7 +59,7 @@ export function ArchetypeVenn({ selected }: { selected: string }) {
           role="img"
           aria-labelledby={id("title")}
           className="mx-auto block h-auto w-full max-w-[760px] overflow-visible"
-          onPointerLeave={() => setHot(null)}
+          onPointerLeave={() => setHot(pinned)}
         >
           <title id={id("title")}>
             Venn diagram of the Design Engineer, Meta-Designer and AX Designer archetypes. Each has its own skills, each pair shares
@@ -165,7 +177,7 @@ export function ArchetypeVenn({ selected }: { selected: string }) {
       </figure>
 
       {/* Key: carries all the words, so the diagram stays legible at phone width. */}
-      <div className="col-span-4 lg:col-span-5 lg:col-start-8 lg:self-center" onPointerLeave={() => setHot(null)}>
+      <div className="col-span-4 lg:col-span-5 lg:col-start-8 lg:self-center" onPointerLeave={() => setHot(pinned)}>
         <p className="label mb-4 text-ink-3">Key</p>
         <ul className="border-t border-ink">
           {skillMap
@@ -173,11 +185,8 @@ export function ArchetypeVenn({ selected }: { selected: string }) {
             .map((r) => {
               const s = r.sets[0];
               return (
-                <li
-                  key={r.id}
-                  onPointerEnter={() => setHot(r.id)}
-                  className={`grid grid-cols-[3.5rem_1fr] gap-x-3 border-b border-line py-4 transition-colors duration-500 ${hot === r.id ? "bg-sunken" : ""}`}
-                >
+                <li key={r.id} className="border-b border-line">
+                <button {...keyProps(r.id)} className={`grid w-full grid-cols-[3.5rem_1fr] gap-x-3 py-4 text-left transition-colors duration-500 ${hot === r.id ? "bg-sunken" : ""}`}>
                   <span className={`label pt-1 ${s === selected ? "text-accent-ink" : "text-ink"}`}>{code[s]}</span>
                   <div>
                     <p className="font-medium tracking-tight text-ink">
@@ -185,15 +194,13 @@ export function ArchetypeVenn({ selected }: { selected: string }) {
                     </p>
                     <p className="mt-1 text-sm leading-relaxed text-ink-2">{r.skills?.join(" / ")}</p>
                   </div>
+                </button>
                 </li>
               );
             })}
           {overlaps.map((r) => (
-            <li
-              key={r.id}
-              onPointerEnter={() => setHot(r.id)}
-              className={`grid grid-cols-[3.5rem_1fr] gap-x-3 border-b border-line py-4 transition-colors duration-500 ${hot === r.id ? "bg-sunken" : ""}`}
-            >
+            <li key={r.id} className="border-b border-line">
+            <button {...keyProps(r.id)} className={`grid w-full grid-cols-[3.5rem_1fr] gap-x-3 py-4 text-left transition-colors duration-500 ${hot === r.id ? "bg-sunken" : ""}`}>
               <span className="pt-0.5">
                 <span className={`label inline-grid size-6 place-items-center ${hot === r.id ? "bg-accent text-[var(--on-accent)]" : "bg-ink text-paper"}`}>
                   {marker(r)}
@@ -206,6 +213,7 @@ export function ArchetypeVenn({ selected }: { selected: string }) {
                 </p>
                 <p className="mt-1 text-sm leading-relaxed text-ink-2">{r.detail}</p>
               </div>
+            </button>
             </li>
           ))}
         </ul>

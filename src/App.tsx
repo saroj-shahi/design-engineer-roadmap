@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Nav } from "./components/Nav";
-import { pages, useRevealObserver, useRoute } from "./components/ui";
+import { pageHref, pages, planFromParts, useRevealObserver, useRoute, type Route } from "./components/ui";
 import { Home } from "./pages/Home";
 import { Roles } from "./pages/Roles";
 import { Plan } from "./pages/Plan";
@@ -42,11 +42,25 @@ export default function App() {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  // Each page gets its own document title.
+  // Each page gets its own document title, naming the sub-state where there is one.
+  const title = titleFor(route);
   useEffect(() => {
-    const p = pages.find((x) => x.id === route.page)!;
-    document.title = route.page === "home" ? "Designer → Design Engineer · 2026 Field Guide" : `${p.title} · Design Engineer Field Guide`;
-  }, [route.page]);
+    document.title = title;
+  }, [title]);
+
+  // On a page change, move focus to the new page's heading so screen readers announce it.
+  const pageKey = route.notFound ? "404" : route.page;
+  const first = useRef(true);
+  useEffect(() => {
+    if (first.current) {
+      first.current = false;
+      return;
+    }
+    const h1 = document.querySelector<HTMLElement>("main h1");
+    if (!h1) return;
+    h1.setAttribute("tabindex", "-1");
+    h1.focus({ preventScroll: true });
+  }, [pageKey]);
 
   return (
     <>
@@ -62,17 +76,68 @@ export default function App() {
       </a>
       <GridOverlay on={grid} />
       <div aria-hidden className="grain" />
-      <Nav page={route.page} grid={grid} onToggleGrid={() => setGrid((g) => !g)} />
+      <Nav page={route.page} />
       <div>
-        <main id="main" tabIndex={-1} className="relative z-[1] outline-none" key={route.page}>
-          {route.page === "home" && <Home />}
-          {route.page === "roles" && <Roles />}
-          {route.page === "plan" && <Plan />}
-          {route.page === "ready" && <Ready />}
-          {route.page === "library" && <Library shelf={route.parts[0]} />}
+        <main id="main" tabIndex={-1} className="relative z-[1] outline-none" key={pageKey}>
+          {route.notFound ? (
+            <NotFound />
+          ) : (
+            <>
+              {route.page === "home" && <Home />}
+              {route.page === "roles" && <Roles role={route.parts[0]} />}
+              {route.page === "plan" && <Plan parts={route.parts} />}
+              {route.page === "ready" && <Ready parts={route.parts} />}
+              {route.page === "library" && <Library shelf={route.parts[0]} term={route.parts[1]} />}
+            </>
+          )}
         </main>
         <Footer />
       </div>
     </>
+  );
+}
+
+const SITE = "Design Engineer Field Guide";
+
+function titleFor(route: Route) {
+  if (route.notFound) return `Page not found · ${SITE}`;
+  if (route.page === "home") return "Designer → Design Engineer · 2026 Field Guide";
+  const p = pages.find((x) => x.id === route.page)!;
+  if (route.page === "plan") {
+    const plan = planFromParts(route.parts);
+    if (plan) {
+      const step = plan.track === "a" ? `Month ${plan.month} · Track A` : `Stage ${plan.stage} · Track B`;
+      return `${step} · ${p.title} · ${SITE}`;
+    }
+  }
+  if (route.page === "ready" && (route.parts[0] === "a" || route.parts[0] === "b")) {
+    return `Track ${route.parts[0].toUpperCase()} · ${p.title} · ${SITE}`;
+  }
+  return `${p.title} · ${SITE}`;
+}
+
+/** Shown for any hash that names no page. Keeps the bad URL so the reader can see what went wrong. */
+function NotFound() {
+  return (
+    <section aria-labelledby="nf-title" className="wrap pb-24 pt-20 sm:pb-36 sm:pt-28">
+      <p className="label text-accent-ink">Page not found</p>
+      <h1 id="nf-title" className="display-xl mt-4 text-ink">
+        That page <em>doesn't exist.</em>
+      </h1>
+      <p className="lede mt-8">
+        The link may be mistyped or out of date. Pick one of the guide's five pages instead.
+      </p>
+      <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        {pages.map((p) => (
+          <li key={p.id}>
+            <a href={pageHref(p.id)} className="card card-lift group flex h-full flex-col p-5">
+              <span className="label text-ink-3">{p.label}</span>
+              <span className="mt-3 block text-[1.0625rem] font-medium leading-snug tracking-tight text-ink">{p.title}</span>
+              <span className="label mt-auto pt-6 text-accent-ink">Open →</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }

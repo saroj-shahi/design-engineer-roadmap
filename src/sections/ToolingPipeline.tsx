@@ -55,7 +55,7 @@ export function ToolingPipeline() {
               <li
                 key={s.id}
                 aria-label={`Stage ${s.id}: ${s.name}${on ? ", in your stack" : ""}`}
-                className={`panel-in group relative flex flex-col p-5 ${on ? "card card-lift" : "card-empty"}`}
+                className={`panel-in group relative flex flex-col p-5 ${on ? "card" : "card-empty"}`}
                 style={{ animationDelay: `${i * 70}ms` } as CSSProperties}
               >
                 <div className="flex items-start justify-between gap-3">

@@ -7,7 +7,7 @@ import { pageHref, type Page } from "../components/ui";
 const inside: { to: Page; glyph: GlyphName; question: string; answer: string }[] = [
   { to: "roles", glyph: "eye", question: "Which role fits me?", answer: "Three new roles, what each one does, and who it suits." },
   { to: "plan", glyph: "route", question: "What do I do next?", answer: "A month-by-month plan, for working designers and for beginners." },
-  { to: "ready", glyph: "check", question: "Am I ready to apply?", answer: "A short portfolio checklist. Your ticks stay in this browser." },
+  { to: "ready", glyph: "check", question: "Am I ready to apply?", answer: "A short portfolio checklist you can tick off." },
   { to: "library", glyph: "library", question: "I want the detail", answer: "Role comparison, skills, tools, AI patterns and a glossary." },
 ];
 

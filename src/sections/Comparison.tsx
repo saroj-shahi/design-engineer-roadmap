@@ -31,7 +31,7 @@ export function Comparison() {
             { id: "table", label: "Full matrix" },
           ]}
         />
-        <p className="label hidden text-ink-3 sm:block">← → to step through dimensions</p>
+        {view === "focus" && <p className="label hidden text-ink-3 sm:block">← → to step through dimensions</p>}
       </div>
 
       {view === "focus" ? (

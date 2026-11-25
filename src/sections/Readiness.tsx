@@ -1,5 +1,6 @@
+import { useEffect, useRef, useState } from "react";
 import { juniorChecklist, readinessItems, type ChecklistItem } from "../data/research";
-import { CheckRow, Section, SectionHeader, Tabs, usePersistentSet, useTrack, type Track } from "../components/ui";
+import { CheckRow, Section, SectionHeader, Tabs, navigate, pageHref, usePersistentSet, useSaveNote, type Track } from "../components/ui";
 import { Glyph } from "../components/icons";
 
 /** One checklist per track, each with its own saved ticks. Chapter 05 links here instead of repeating them. */
@@ -46,8 +47,9 @@ function migrateHybridPortfolio() {
 }
 migrateHybridPortfolio();
 
-export function Readiness() {
-  const [track, setTrack] = useTrack();
+export function Readiness({ track }: { track: Track | null }) {
+  const saveNote = useSaveNote();
+  const pick = (t: Track) => navigate(pageHref("ready", t), { replace: true });
   return (
     <Section id="readiness">
       <SectionHeader
@@ -55,33 +57,65 @@ export function Readiness() {
         level="h1"
         glyph="check"
         title={["Is your portfolio", <em>ready to ship?</em>]}
-        lede="Tick what's true today. Progress is saved in this browser only; nothing is sent anywhere."
+        lede={`Tick what's true today. ${saveNote}`}
       />
 
-      <div className="mb-10 flex flex-wrap items-center justify-between gap-4">
-        <Tabs
-          idPrefix="ready"
-          label="Checklist for"
-          variant="segmented"
-          value={track}
-          onChange={(v) => setTrack(v as Track)}
-          items={[
-            { id: "a", label: "Working designer" },
-            { id: "b", label: "Starting out" },
-          ]}
-        />
-        <p className="text-sm text-ink-3">Matches the track you picked in your plan.</p>
-      </div>
-
-      {/* Keyed by track so each list loads its own saved ticks */}
-      <Checklist key={track} track={track} />
+      {track ? (
+        <>
+          <div className="mb-10 flex flex-wrap items-center justify-between gap-4">
+            <Tabs
+              idPrefix="ready"
+              label="Checklist for"
+              variant="segmented"
+              value={track}
+              onChange={(v) => pick(v as Track)}
+              items={[
+                { id: "a", label: "Working designer" },
+                { id: "b", label: "Starting out" },
+              ]}
+            />
+            <p className="text-sm text-ink-3">Same track as your plan.</p>
+          </div>
+          {/* Keyed by track so each list loads its own saved ticks */}
+          <Checklist key={track} track={track} />
+        </>
+      ) : (
+        <div className="mb-10">
+          <p className="mb-4 text-ink-2">Pick your track to see your checklist.</p>
+          <div className="flex flex-wrap gap-3">
+            <button type="button" onClick={() => pick("a")} className="hit label h-11 border-2 border-edge bg-card px-4 text-ink shadow-[var(--sh-1)] hover:bg-sunken">
+              I'm a working designer
+            </button>
+            <button type="button" onClick={() => pick("b")} className="hit label h-11 border-2 border-edge bg-card px-4 text-ink shadow-[var(--sh-1)] hover:bg-sunken">
+              I'm starting out
+            </button>
+          </div>
+        </div>
+      )}
     </Section>
   );
 }
 
 function Checklist({ track }: { track: Track }) {
   const list = lists[track];
-  const { set, toggle, reset } = usePersistentSet(list.key);
+  const { set, toggle, reset, restore } = usePersistentSet(list.key);
+  const [undo, setUndo] = useState<"idle" | "offer" | "restored">("idle");
+  const prev = useRef<Set<string>>(new Set());
+  const timer = useRef<number>();
+  useEffect(() => () => window.clearTimeout(timer.current), []);
+  const clear = () => {
+    prev.current = new Set(set);
+    reset();
+    setUndo("offer");
+    window.clearTimeout(timer.current);
+    timer.current = window.setTimeout(() => setUndo("idle"), 10000);
+  };
+  const undoClear = () => {
+    restore(prev.current);
+    setUndo("restored");
+    window.clearTimeout(timer.current);
+    timer.current = window.setTimeout(() => setUndo("idle"), 10000);
+  };
   const total = list.items.length;
   const done = list.items.filter((it) => set.has(it.id)).length;
   const pct = Math.round((done / total) * 100);
@@ -89,8 +123,8 @@ function Checklist({ track }: { track: Track }) {
 
   return (
     <div role="tabpanel" id={`ready-panel-${track}`} aria-labelledby={`ready-tab-${track}`} tabIndex={0} className="panel-in grid-12 gap-y-12">
-      <div className="col-span-4 lg:col-span-4">
-        <div className="card group p-6 sm:p-8 lg:sticky lg:top-24">
+      <div className="col-span-4 lg:col-span-4 lg:sticky lg:top-24 lg:self-start">
+        <div className="card group p-6 sm:p-8">
           <div className="flex justify-end">
             <Glyph name="check" on={done === total} className="glyph-xl !size-16 text-ink" />
           </div>
@@ -112,15 +146,26 @@ function Checklist({ track }: { track: Track }) {
           <p className="label mt-3 tabular text-ink-3">
             {String(done).padStart(2, "0")} / {String(total).padStart(2, "0")} complete
           </p>
-          <div aria-live="polite" className="mt-10 border-t border-ink pt-5">
+          <div className="mt-10 border-t border-ink pt-5">
             <p className="label text-accent-ink">{level.label}</p>
             <p className="mt-2 max-w-[34ch] font-display text-[1.625rem] leading-[1.15] tracking-tight text-ink">{level.note}</p>
           </div>
+          <div aria-live="polite" className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-1">
+            {undo === "offer" && (
+              <>
+                <p className="label text-ink-2">Checklist cleared.</p>
+                <button type="button" onClick={undoClear} className="hit label link-ul-static text-ink">
+                  Undo
+                </button>
+              </>
+            )}
+            {undo === "restored" && <p className="label text-ink-2">Ticks restored.</p>}
+          </div>
           <button
             type="button"
-            onClick={reset}
+            onClick={clear}
             disabled={done === 0}
-            className="hit label link-ul-static mt-8 text-ink-3 transition-colors hover:text-ink disabled:pointer-events-none disabled:opacity-30"
+            className="hit label link-ul-static mt-2 text-ink-3 transition-colors hover:text-ink disabled:pointer-events-none disabled:opacity-50"
           >
             Reset checklist
           </button>
