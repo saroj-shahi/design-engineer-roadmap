@@ -381,7 +381,7 @@ export function Tabs({
             {variant === "list" && orientation === "vertical" ? (
               <>
                 {t.sub && <span className="label w-8 shrink-0 text-ink-3">{t.sub}</span>}
-                <span className={`font-serif text-2xl leading-tight tracking-tight transition-transform duration-700 ease-silk ${selected ? "translate-x-2" : "group-hover:translate-x-1"}`}>
+                <span className={`font-display text-2xl leading-tight tracking-tight transition-transform duration-700 ease-silk ${selected ? "translate-x-2" : "group-hover:translate-x-1"}`}>
                   {t.label}
                 </span>
                 <span aria-hidden className={`tick ml-auto self-center text-accent transition-transform duration-500 ease-silk ${selected ? "scale-100" : "scale-0"}`} />

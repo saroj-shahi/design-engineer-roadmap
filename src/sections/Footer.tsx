@@ -63,7 +63,7 @@ export function Footer() {
 
         <div className="label mt-20 flex flex-wrap items-baseline justify-between gap-4 border-t border-inverse-line pt-5 text-inverse-muted">
           <span>Field Guide — Ed. 2026 · Rev. 11</span>
-          <span>Set in Instrument Serif, DM Sans & JetBrains Mono</span>
+          <span>Set in Archivo &amp; Martian Mono</span>
           <span className="hidden lg:inline">
             Press <kbd className="border border-inverse-line px-1.5 py-0.5 text-on-inverse">Alt</kbd> <kbd className="border border-inverse-line px-1.5 py-0.5 text-on-inverse">G</kbd> to show the grid
           </span>

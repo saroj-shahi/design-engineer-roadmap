@@ -65,7 +65,7 @@ export function Comparison() {
                 <Eyebrow className="flex items-center gap-2 !text-accent-ink">
                   <span aria-hidden className="tick" /> Hybrid UX / Design Engineer
                 </Eyebrow>
-                <p className="font-serif text-[clamp(1.75rem,2.8vw,2.75rem)] leading-[1.08] tracking-tight text-ink">{row.hybrid}</p>
+                <p className="font-display text-[clamp(1.75rem,2.8vw,2.75rem)] leading-[1.08] tracking-tight text-ink">{row.hybrid}</p>
               </div>
             </div>
           </div>
@@ -87,7 +87,7 @@ export function Comparison() {
                   <tr key={r.dimension} className="border-b border-line align-top">
                     <th scope="row" className="py-6 pr-6 font-normal">
                       <span className="label mr-3 text-ink-3">{String(i + 1).padStart(2, "0")}</span>
-                      <span className="font-serif text-2xl leading-tight tracking-tight text-ink">{r.dimension}</span>
+                      <span className="font-display text-2xl leading-tight tracking-tight text-ink">{r.dimension}</span>
                     </th>
                     <td className="py-6 pr-6 text-sm leading-relaxed text-ink-3">{r.traditional}</td>
                     <td className="py-6 leading-relaxed text-ink">{r.hybrid}</td>
@@ -172,7 +172,7 @@ function CompensationPanel() {
                 </div>
               </div>
               <div className="sm:col-span-7">
-                <p className="font-serif text-2xl leading-tight tracking-tight text-ink">{c.value}</p>
+                <p className="font-display text-2xl leading-tight tracking-tight text-ink">{c.value}</p>
                 <p className="mt-2 text-xs leading-relaxed text-ink-3">
                   {c.note ? `${c.note} ` : ""}
                   {c.source}

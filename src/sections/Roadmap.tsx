@@ -60,7 +60,7 @@ export function Roadmap() {
                 <span className={`label ${on ? "text-inverse-accent" : "text-ink-3"}`}>{on ? "Reading" : "Select"}</span>
               </span>
               <span className="numeral mt-auto text-[clamp(4rem,8vw,7rem)]">{t.id.toUpperCase()}</span>
-              <span className="mt-4 block font-serif text-[clamp(1.5rem,2.4vw,2.25rem)] leading-[1.05] tracking-tight">{t.title}</span>
+              <span className="mt-4 block font-display text-[clamp(1.5rem,2.4vw,2.25rem)] leading-[1.05] tracking-tight">{t.title}</span>
               <span className={`mt-2 block text-sm ${on ? "text-inverse-muted" : "text-ink-3"}`}>{t.sub}</span>
             </button>
           );
@@ -166,7 +166,7 @@ function TrackA() {
         >
           <div className="md:col-span-4" style={{ "--i": 0 } as CSSProperties}>
             <Eyebrow>Learning focus</Eyebrow>
-            <p className="font-serif text-[1.625rem] leading-[1.15] tracking-tight text-ink">{m.focus}</p>
+            <p className="font-display text-[1.625rem] leading-[1.15] tracking-tight text-ink">{m.focus}</p>
           </div>
           <div className="md:col-span-4" style={{ "--i": 1 } as CSSProperties}>
             <Eyebrow>Practical deliverable</Eyebrow>
@@ -211,7 +211,7 @@ function TrackA() {
           </ul>
           <div className="mt-10 bg-inverse p-6 text-on-inverse sm:p-8">
             <p className="label mb-4 text-inverse-accent">Expect in interviews</p>
-            <p className="font-serif text-[1.625rem] leading-[1.15] tracking-tight">{interview.hybrid}</p>
+            <p className="font-display text-[1.625rem] leading-[1.15] tracking-tight">{interview.hybrid}</p>
             <p className="mt-4 text-sm leading-relaxed text-inverse-muted">Instead of: {interview.traditional}</p>
           </div>
         </div>
@@ -279,7 +279,7 @@ function TrackB() {
               >
                   <span aria-hidden className={`absolute -top-px left-0 right-0 h-[3px] origin-left bg-accent transition-transform duration-700 ease-silk ${on ? "scale-x-100" : "scale-x-0"}`} />
                   <span className={`label ${on ? "text-accent-ink" : "text-ink-3"}`}>Stage 0{x.n}</span>
-                  <span className={`mt-3 font-serif text-2xl leading-tight tracking-tight transition-colors duration-500 ${on ? "text-ink" : "text-ink-3 group-hover:text-ink"}`}>{x.name}</span>
+                  <span className={`mt-3 font-display text-2xl leading-tight tracking-tight transition-colors duration-500 ${on ? "text-ink" : "text-ink-3 group-hover:text-ink"}`}>{x.name}</span>
                   <span className="mt-4 text-xs text-ink-3">{x.output}</span>
               </button>
             );

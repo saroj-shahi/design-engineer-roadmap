@@ -89,7 +89,7 @@ function SkillLedger({ skills, large = false }: { skills: Skill[]; large?: boole
           <span className="label col-span-1 pt-2 text-ink-3 tabular">{String(i + 1).padStart(2, "0")}</span>
           <h3
             className={`col-span-3 tracking-tight text-ink transition-transform duration-700 ease-silk group-hover:translate-x-2 lg:col-span-4 ${
-              large ? "display-m" : "font-serif text-[1.75rem] leading-[1.05]"
+              large ? "display-m" : "font-display text-[1.75rem] leading-[1.05]"
             }`}
           >
             {s.name}
@@ -188,7 +188,7 @@ function AxPanel() {
               {L.surfaces.map((s, i) => (
                 <li key={s} className="flex items-baseline gap-5 border-b border-line px-4 py-5 last:border-b-0" style={{ "--i": i } as CSSProperties}>
                   <span className="label text-ink-3 tabular">{String(i + 1).padStart(2, "0")}</span>
-                  <span className="font-serif text-[1.625rem] leading-tight tracking-tight text-ink">{s}</span>
+                  <span className="font-display text-[1.625rem] leading-tight tracking-tight text-ink">{s}</span>
                 </li>
               ))}
             </ul>

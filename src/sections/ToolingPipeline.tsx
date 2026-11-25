@@ -30,7 +30,7 @@ export function ToolingPipeline() {
           <ol className="col-span-4 flex flex-wrap items-baseline gap-x-3 gap-y-2 lg:col-span-10">
             {role.chain.map((c, i) => (
               <li key={c} className="flex items-baseline gap-3">
-                <span className="font-serif text-[clamp(1.75rem,3vw,2.75rem)] leading-none tracking-tight text-ink">{c}</span>
+                <span className="font-display text-[clamp(1.75rem,3vw,2.75rem)] leading-none tracking-tight text-ink">{c}</span>
                 {i < role.chain.length - 1 && (
                   <span aria-hidden className="font-mono text-sm text-accent">
                     →

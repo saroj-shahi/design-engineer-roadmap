@@ -296,7 +296,7 @@ function Archetypes() {
       >
         <div className="col-span-4 lg:col-span-5" style={{ "--i": 0 } as CSSProperties}>
           <Eyebrow>Core deliverable & scope</Eyebrow>
-          <p className="font-serif text-[1.75rem] leading-[1.15] tracking-tight text-ink">{a.deliverable}</p>
+          <p className="font-display text-[1.75rem] leading-[1.15] tracking-tight text-ink">{a.deliverable}</p>
         </div>
         <div className="col-span-4 lg:col-span-3 lg:col-start-7" style={{ "--i": 1 } as CSSProperties}>
           <Eyebrow>Market signal</Eyebrow>

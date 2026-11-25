@@ -51,7 +51,7 @@ export function Readiness() {
             </p>
             <div aria-live="polite" className="mt-10 border-t border-ink pt-5">
               <p className="label text-accent-ink">{level.label}</p>
-              <p className="mt-2 max-w-[34ch] font-serif text-[1.625rem] leading-[1.15] tracking-tight text-ink">{level.note}</p>
+              <p className="mt-2 max-w-[34ch] font-display text-[1.625rem] leading-[1.15] tracking-tight text-ink">{level.note}</p>
             </div>
             <button
               type="button"
