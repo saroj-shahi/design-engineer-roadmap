@@ -1,5 +1,5 @@
 import { useState, type CSSProperties } from "react";
-import { ArrowBackGlyph, ArrowGlyph } from "../components/icons";
+import { ArrowBackGlyph, ArrowGlyph, Glyph } from "../components/icons";
 import {
   aiPolicyLabel,
   beginnerContext,
@@ -27,8 +27,8 @@ const phases = [
 export function Roadmap() {
   const [track, setTrack] = useState<Track>("a");
   const tracks = [
-    { id: "a" as const, kicker: "Track A", title: "I'm a practising product designer", sub: "Evolve into a hybrid role" },
-    { id: "b" as const, kicker: "Track B", title: "I'm starting out", sub: "Launch as a code-literate builder" },
+    { id: "a" as const, glyph: "stairs" as const, kicker: "Track A", title: "I'm a practising product designer", sub: "Evolve into a hybrid role" },
+    { id: "b" as const, glyph: "launch" as const, kicker: "Track B", title: "I'm starting out", sub: "Launch as a code-literate builder" },
   ];
   const { listProps, tabProps, panelProps } = useTabList({
     ids: tracks.map((t) => t.id),
@@ -44,6 +44,8 @@ export function Roadmap() {
         index="05"
         kicker="Dual career roadmap"
         folio="p. 05 / 06"
+        glyph="route"
+        plate="The route"
         title={["Two starting points.", <>One destination: <em>shipping.</em></>]}
         lede="Pick the journey that matches where you are today. Checklists are saved in this browser and nowhere else."
       />
@@ -67,7 +69,10 @@ export function Roadmap() {
                 <span className={`label ${on ? "text-inverse-muted" : "text-ink-3"}`}>{t.kicker}</span>
                 <span className={`label ${on ? "text-inverse-accent" : "text-ink-3"}`}>{on ? "Reading" : "Select"}</span>
               </span>
-              <span className="numeral mt-auto text-[clamp(4rem,8vw,7rem)]">{t.id.toUpperCase()}</span>
+              <span className="mt-auto flex items-end justify-between gap-4">
+                <span className="numeral text-[clamp(4rem,8vw,7rem)]">{t.id.toUpperCase()}</span>
+                <Glyph name={t.glyph} on={on} className="glyph-xl !size-20 sm:!size-28" />
+              </span>
               <span className="mt-4 block font-display text-[clamp(1.5rem,2.4vw,2.25rem)] leading-[1.05] tracking-tight">{t.title}</span>
               <span className={`mt-2 block text-sm ${on ? "text-inverse-muted" : "text-ink-3"}`}>{t.sub}</span>
             </button>

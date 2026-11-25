@@ -1,5 +1,6 @@
 import { readinessItems } from "../data/research";
 import { CheckRow, Section, SectionHeader, usePersistentSet } from "../components/ui";
+import { Glyph } from "../components/icons";
 
 const levels = [
   { min: 0, label: "Not started", note: "Start with one live demo. It's the quickest signal a reviewer can check." },
@@ -23,14 +24,19 @@ export function Readiness() {
         index="06"
         kicker="Self-assessment"
         folio="p. 06 / 06"
+        glyph="check"
+        plate="The check"
         title={["Is your portfolio", <em>ready to ship?</em>]}
         lede="Tick what's true today. Progress is saved in this browser only; nothing is sent anywhere."
       />
 
       <div className="grid-12 gap-y-12">
         <div className="col-span-4 lg:col-span-4">
-          <div className="card p-6 sm:p-8 lg:sticky lg:top-8">
-            <p className="label text-ink-3">Readiness</p>
+          <div className="card group p-6 sm:p-8 lg:sticky lg:top-8">
+            <p className="label flex items-start justify-between text-ink-3">
+              Readiness
+              <Glyph name="check" on={done === total} className="glyph-xl !size-16 text-ink" />
+            </p>
             <p className="numeral mt-4 flex items-start text-[clamp(7rem,15vw,13rem)] text-ink">
               <span className="tabular">{pct}</span>
               <span aria-hidden className="mt-[0.12em] text-[0.35em] text-accent">%</span>

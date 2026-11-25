@@ -11,15 +11,16 @@ import {
   protocols,
   type Skill,
 } from "../data/research";
+import { Glyph, type GlyphName } from "../components/icons";
 import { Disclosure, Eyebrow, Lines, Section, SectionHeader, TabPanel, Tabs, Tag, useTabList } from "../components/ui";
 
 const patternTotal = patternCategories.reduce((n, c) => n + c.patterns.length, 0);
 
 const domains = [
-  { id: "core", label: "Core design & judgment", sub: "Layer 01", items: coreSkills.map((s) => s.name) },
-  { id: "eng", label: "Front-end & repo fluency", sub: "Layer 02", items: engineeringSkills.map((s) => s.name) },
-  { id: "ax", label: "Agentic experience & protocols", sub: "Layer 03", items: [...axDomains.map((s) => s.name), "Protocols: " + protocols.map((p) => p.name).join(", ")] },
-  { id: "patterns", label: "Human-AI pattern library", sub: "Appendix", items: [`${patternTotal} named patterns in ${patternCategories.length} families`] },
+  { id: "core", glyph: "eye" as GlyphName, label: "Core design & judgment", sub: "Layer 01", items: coreSkills.map((s) => s.name) },
+  { id: "eng", glyph: "terminal" as GlyphName, label: "Front-end & repo fluency", sub: "Layer 02", items: engineeringSkills.map((s) => s.name) },
+  { id: "ax", glyph: "orbit" as GlyphName, label: "Agentic experience & protocols", sub: "Layer 03", items: [...axDomains.map((s) => s.name), "Protocols: " + protocols.map((p) => p.name).join(", ")] },
+  { id: "patterns", glyph: "library" as GlyphName, label: "Human-AI pattern library", sub: "Appendix", items: [`${patternTotal} named patterns in ${patternCategories.length} families`] },
 ];
 
 export function SkillsExplorer() {
@@ -31,6 +32,8 @@ export function SkillsExplorer() {
         index="03"
         kicker="Skills architecture"
         folio="p. 03 / 06"
+        glyph="layers"
+        plate="The stack"
         title={["Discernment,", "fluency,", <em>orchestration.</em>]}
         lede="Product design is now a layered stack. Work down it, from durable judgment to the protocols agents use to talk to each other."
       />
@@ -90,7 +93,10 @@ function LayerStack({ value, onChange }: { value: string; onChange: (id: string)
             } ${on ? "card-on text-ink" : "text-ink-3 hover:text-ink"}`}
           >
             <span aria-hidden className={`absolute inset-y-0 left-0 w-[3px] origin-top bg-accent transition-transform duration-700 ease-silk ${on ? "scale-y-100" : "scale-y-0"}`} />
-            <span className={`label ${on ? "text-accent-ink" : "text-ink-3"}`}>{d.sub}</span>
+            <span className="flex flex-col gap-3 self-start">
+              <span className={`label ${on ? "text-accent-ink" : "text-ink-3"}`}>{d.sub}</span>
+              <Glyph name={d.glyph} on={on} className={`!size-12 sm:!size-14 ${on ? "text-ink" : "text-ink-3 group-hover:text-ink"}`} />
+            </span>
             <span className="min-w-0">
               <span className="display-m block">{d.label}</span>
               <span className={`mt-2 block text-sm leading-relaxed ${on ? "text-ink-2" : "text-ink-3"}`}>{d.items.join(" / ")}</span>

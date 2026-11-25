@@ -1,6 +1,6 @@
 import { useState, type CSSProperties } from "react";
-import { compBenchmarks, compCaveat, compContext, comparison } from "../data/research";
-import { BasisBadge, Eyebrow, Lines, Section, SectionHeader, TabPanel, Tabs, useMediaQuery } from "../components/ui";
+import { comparison } from "../data/research";
+import { Section, SectionHeader, TabPanel, Tabs, useMediaQuery } from "../components/ui";
 
 type View = "focus" | "table";
 
@@ -17,6 +17,8 @@ export function Comparison() {
         index="02"
         kicker="Role comparison"
         folio="p. 02 / 06"
+        glyph="compare"
+        plate="Two roles"
         title={["Traditional UX", <>vs. <em>Design Engineer</em></>]}
         lede="How evaluation changes when the portfolio is running software instead of static frames."
       />
@@ -102,89 +104,6 @@ export function Comparison() {
         </TabPanel>
       )}
 
-      <CompensationPanel />
     </Section>
-  );
-}
-
-function CompensationPanel() {
-  const [basis, setBasis] = useState<"base" | "total">("total");
-  const rows = compBenchmarks.filter((b) => b.basis === basis).sort((a, b) => b.value - a.value);
-  const max = 160000;
-
-  return (
-    <div className="grid-12 mt-28 gap-y-14 sm:mt-40">
-      <div className="col-span-4 lg:col-span-4">
-        <div className="lg:sticky lg:top-24">
-          <Eyebrow className="!text-accent-ink">[02.b] — Compensation realities</Eyebrow>
-          <Lines as="h3" className="display-l" lines={["Code skills", "carry a", <em>measurable premium.</em>]} />
-          <p className="mt-8 max-w-[40ch] leading-relaxed text-ink-2" data-reveal>
-            Wages and total pay are different measures. Switch the basis; the bars only ever compare figures from the same dataset.
-          </p>
-          <aside className="card card-accent mt-8 text-sm leading-relaxed text-ink-2" data-reveal>
-            <p className="card-head label">Data caveat</p>
-            <p className="px-5 py-4">{compCaveat}</p>
-          </aside>
-        </div>
-      </div>
-
-      <div className="col-span-4 lg:col-span-7 lg:col-start-6">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <Tabs
-            idPrefix="comp"
-            label="Compensation basis"
-            variant="segmented"
-            value={basis}
-            onChange={(v) => setBasis(v as "base" | "total")}
-            items={[
-              { id: "total", label: "Total pay · Glassdoor" },
-              { id: "base", label: "Base wage · BLS" },
-            ]}
-          />
-          <BasisBadge basis={basis} />
-        </div>
-
-        <TabPanel idPrefix="comp" id={basis} className="mt-10">
-          <ul className="card px-5 sm:px-6 [&>li:last-child]:border-b-0">
-            {rows.map((r, i) => {
-              const hybrid = r.role === "UX Engineer" || r.role === "Software Developer";
-              return (
-                <li key={r.role} className="border-b border-line py-5" data-reveal="bar" style={{ "--i": i } as CSSProperties}>
-                  <div className="flex items-baseline justify-between gap-4">
-                    <span className={`text-[1.0625rem] tracking-tight ${hybrid ? "font-medium text-ink" : "text-ink-2"}`}>{r.role}</span>
-                    <span className={`numeral text-[clamp(2rem,3.2vw,3rem)] ${hybrid ? "text-ink" : "text-ink-3"}`}>{r.display}</span>
-                  </div>
-                  <div className="bar-track mt-3 !h-[5px]" aria-hidden>
-                    <span className={`bar-fill ${hybrid ? "!bg-accent" : "!bg-ink-3"}`} style={{ width: `${(r.value / max) * 100}%` }} />
-                  </div>
-                  {r.note && <p className="mt-2 text-xs text-ink-3">{r.note}</p>}
-                </li>
-              );
-            })}
-          </ul>
-          <p className="label mt-4 text-ink-3">US annual median · Source: {rows[0]?.source}</p>
-        </TabPanel>
-
-        <div className="mt-16 grid gap-6">
-          {compContext.map((c) => (
-            <div key={c.label} className="card card-lift grid gap-3 p-5 sm:grid-cols-12 sm:gap-6 sm:p-6" data-reveal>
-              <div className="sm:col-span-5">
-                <p className="font-medium tracking-tight text-ink">{c.label}</p>
-                <div className="mt-2">
-                  <BasisBadge basis={c.basis} />
-                </div>
-              </div>
-              <div className="sm:col-span-7">
-                <p className="font-display text-2xl leading-tight tracking-tight text-ink">{c.value}</p>
-                <p className="mt-2 text-xs leading-relaxed text-ink-3">
-                  {c.note ? `${c.note} ` : ""}
-                  {c.source}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
   );
 }

@@ -54,9 +54,8 @@ export function Footer() {
         <div className="grid-12 mt-16 gap-y-6 border-t border-inverse-line pt-8">
           <p className="label col-span-4 text-inverse-muted lg:col-span-3">Method</p>
           <p className="col-span-4 max-w-[62ch] text-xs leading-relaxed text-inverse-muted lg:col-span-6">
-            Figures are reproduced from “The 2026 Product Design Evolution” research brief with their original scope and vintage. Base
-            wages (BLS) and total pay (Glassdoor) are different measures and are never charted together. Single job listings are
-            examples, not market benchmarks.
+            Figures are reproduced from “The 2026 Product Design Evolution” research brief with their original scope and vintage. Case
+            studies describe single organisations and are not market benchmarks.
           </p>
         </div>
 

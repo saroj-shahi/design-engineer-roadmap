@@ -7,7 +7,7 @@
 
 /* ───────────── Types ───────────── */
 
-export type BasisKind = "base" | "total" | "single" | "survey" | "analytics" | "projection" | "case";
+export type BasisKind = "survey" | "analytics" | "projection" | "case";
 
 export interface Metric {
   value: string;
@@ -32,15 +32,6 @@ export interface CompareRow {
   dimension: string;
   traditional: string;
   hybrid: string;
-}
-
-export interface CompBenchmark {
-  role: string;
-  value: number; // USD, annual
-  display: string;
-  basis: BasisKind;
-  source: string;
-  note?: string;
 }
 
 export interface Skill {
@@ -266,38 +257,9 @@ export const comparison: CompareRow[] = [
     traditional: "Portfolio walkthroughs, visual design critiques, whiteboard wireframing.",
     hybrid: "Codebase reviews, architecture walkthroughs, AI workflow fluency demos, technical trade-off discussions.",
   },
-  {
-    dimension: "Compensation impact",
-    traditional: "Standard market baseline for design roles.",
-    hybrid: "25–40% premium over traditional design roles at equivalent experience levels.",
-  },
 ];
-
-/* ───────────── §1.3 Compensation ───────────── */
-
-export const compBenchmarks: CompBenchmark[] = [
-  { role: "Web & Digital Interface Designer", value: 104000, display: "$104,000", basis: "base", source: "US BLS OEWS, May 2025", note: "Median wage. Middle half $73,290–$158,820; 90th pct $201,550+." },
-  { role: "Software Developer", value: 135980, display: "$135,980", basis: "base", source: "US BLS OEWS, May 2025", note: "Median wage. +31% over interface designers before equity or bonus." },
-  { role: "UX Designer", value: 108000, display: "$108,000", basis: "total", source: "Glassdoor via Coursera, July 2026" },
-  { role: "UI Designer", value: 116000, display: "$116,000", basis: "total", source: "Glassdoor via Coursera, July 2026" },
-  { role: "UX Researcher", value: 121000, display: "$121,000", basis: "total", source: "Glassdoor via Coursera, July 2026" },
-  { role: "UX Engineer", value: 144000, display: "$144,000", basis: "total", source: "Glassdoor via Coursera, July 2026", note: "+33% hybrid premium over UX Designer." },
-];
-
-export const compContext = [
-  { label: "Senior / Staff Design Engineer", value: "$270,000 base + equity", basis: "single" as BasisKind, source: "Hacker News Hiring, Nov 2025", note: "One startup job posting. Not a market benchmark." },
-  { label: "UX Designer by tenure", value: "$70,285 (0–2 yrs) → $172,560 (11–15 yrs)", basis: "survey" as BasisKind, source: "UXPA International, 2026", note: "Self-selected global sample, n=383, 82% US-based." },
-  { label: "Regional peaks, interface designers", value: "San Jose $201,260 · San Francisco $163,810", basis: "base" as BasisKind, source: "US BLS OEWS, May 2025" },
-  { label: "International UX vs. UX Engineer (monthly gross)", value: "N. America $10,000 vs. $13,000 · CEE $3,500 vs. $4,250", basis: "analytics" as BasisKind, source: "Alcor Recruitment Report" },
-];
-
-export const compCaveat =
-  "Standardized salary benchmarks for software “Design Engineers” remain sparse. Public job classifications often lump the title together with mechanical, electrical, structural, and semiconductor design engineers.";
 
 export const basisLabel: Record<BasisKind, string> = {
-  base: "Base wage",
-  total: "Total pay",
-  single: "Single listing",
   survey: "Survey",
   analytics: "Talent analytics",
   projection: "Gov. projection",
@@ -832,11 +794,7 @@ export const sources: Source[] = [
   { label: "Figma 2025 trend & AI research" },
   { label: "CollabSoft" },
   { label: "Designer Fund / Foundation Capital, Q1 2026 survey", url: "https://designerfund.com/blog/how-figma-midjourney-and-databricks-harness-ai-in-design" },
-  { label: "US BLS OEWS, May 2025 · SOC 15-1255 projections" },
-  { label: "Glassdoor via Coursera, July 2026", url: "https://www.coursera.org/articles/ux-designer-salary-guide" },
-  { label: "UXPA International, 2026" },
-  { label: "Hacker News Hiring, Nov 2025", url: "https://hnhiring.com/november-2025" },
-  { label: "Alcor Recruitment Report", url: "https://alcor.com/average-ux-designer-salary-worldwide-research-overview/" },
+  { label: "US BLS Employment Projections · SOC 15-1255" },
   { label: "Academy UX (job aggregator), Oct 2026" },
   { label: "Hymera recruiting analysis, July 2026" },
 ];
@@ -858,13 +816,10 @@ export const worksCited: { title: string; url: string }[] = [
   { title: "Entry Level UI UX Jobs in 2026 Are Disappearing | by Ahnaf Tahmid", url: "https://medium.com/design-bootcamp/entry-level-ui-ux-jobs-in-2026-are-disappearing-364d3b5e04ee" },
   { title: "Being a Product Designer in 2026 Without Losing Your Mind - Medium", url: "https://medium.com/design-bootcamp/being-a-product-designer-in-2026-without-losing-your-mind-5ca7f4e683b6" },
   { title: "What a Junior Product Designer Portfolio Needs in 2026 (Hiring", url: "https://fueler.io/blog/what-a-junior-product-designer-portfolio-needs" },
-  { title: "EV Industry Jobs India 2026: Roles, Skills and Salary - Naukri.com", url: "https://www.naukri.com/campus/career-guidance/ev-industry-jobs-india" },
   { title: "Software Engineer Jobs at Startups | RFS", url: "https://www.recruitingfromscratch.com/roles/software-engineer" },
-  { title: "Salary: Software Developer (November, 2026) United States", url: "https://www.ziprecruiter.com/Salaries/Software-Developer-Salary" },
   { title: "SignalFire data shows engineering hiring is more resilient than", url: "https://startupfortune.com/signalfire-data-shows-engineering-hiring-is-more-resilient-than-almost-anyone-expected/" },
   { title: "Why storytelling is now the most valuable skill in tech : r/UXDesign", url: "https://www.reddit.com/r/UXDesign/comments/1x63dvr/why_storytelling_is_now_the_most_valuable_skill/" },
   { title: "UX Designer Demand and Hiring Market Outlook for Employers 2026", url: "https://designcareers.aiga.org/career-resources/hire-designers-11/ux-designer-hiring-market-demand-and-supply-2026-158" },
-  { title: "UX Designer Salary 2026: $104K Median, Top 10% Earn $201K+", url: "https://uxdesignersalary.com/" },
   { title: "How Figma, Midjourney, Databricks, and Modyfi Harness AI with", url: "https://designerfund.com/blog/how-figma-midjourney-and-databricks-harness-ai-in-design" },
   { title: "Careers at Profound", url: "https://www.tryprofound.com/careers" },
   { title: "Careers at Raycast: Build, Innovate, and Work from Anywhere", url: "https://www.raycast.com/careers" },
@@ -872,12 +827,8 @@ export const worksCited: { title: string; url: string }[] = [
   { title: "On the hunt for the elusive product-led employer | Melio's R&D blog", url: "https://medium.com/meliopayments/on-the-hunt-for-the-elusive-product-led-employer-106da39537e1" },
   { title: "Interleavings: Notes & Thoughts on Recent Reads, 9 November 2026", url: "https://sajithpai.com/interleavings-notes-thoughts-on-recent-reads-9-november-2026/" },
   { title: "One system, one conversation. Designing LowerOS for borrowers", url: "https://laurabsteele.com/portfolio/lower-end-to-end" },
-  { title: "How does your salary hold up compared to engineering in your org?", url: "https://www.reddit.com/r/UXDesign/comments/1851iet/how_does_your_salary_hold_up_compared_to/" },
   { title: "AX Design Explained: The 2026 Guide to Agentic Experience", url: "https://www.pixelmojo.io/blogs/what-is-ax-design-complete-guide-agentic-experience-2026" },
   { title: "Agentic UI/UX Design Patterns", url: "https://agentic-design.ai/patterns/ui-ux-patterns" },
-  { title: "UX Designer Salary: Your 2026 Guide - Coursera", url: "https://www.coursera.org/articles/ux-designer-salary-guide" },
-  { title: "All jobs from Hacker News 'Who is hiring? (November 2025)' post", url: "https://hnhiring.com/november-2025" },
-  { title: "Average UX Designer Salary Worldwide Research Overview - Alcor", url: "https://alcor.com/average-ux-designer-salary-worldwide-research-overview/" },
   { title: "Design Team Promotion Framework: Timelines, KPIs, and What It", url: "https://medium.muz.li/design-team-promotion-framework-timelines-kpis-and-what-it-really-takes-to-grow-028ac1f98ebf" },
   { title: "What is the best AI for designers? 2026 tools compared - Modeinspect", url: "https://modeinspect.com/blog/best-ai-tools-for-designers" },
   { title: "12 designer portfolio examples that landed interviews (2026)", url: "https://personal.ink/blog/designer-portfolio-examples-2026/" },

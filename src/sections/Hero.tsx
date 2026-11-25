@@ -11,6 +11,7 @@ import {
 } from "../data/research";
 import { ArchetypeVenn } from "../components/ArchetypeVenn";
 import { HandoffFlow } from "../components/HandoffFlow";
+import { HandoffPlate } from "../components/HandoffPlate";
 import { ArchetypeGlyph, ArrowGlyph } from "../components/icons";
 import { BasisBadge, CountUp, Disclosure, Eyebrow, FolderTab, Lines, Magnetic, Roll, Tag, useMediaQuery, useTabList } from "../components/ui";
 
@@ -127,6 +128,9 @@ function HandoffEconomics() {
               developers cite mismatched design assumptions. One designer in five sees a first build that matches the design;
               another quarter get there only after repeated rework.
             </p>
+            <div data-reveal className="mt-10 max-w-[440px]">
+              <HandoffPlate />
+            </div>
           </div>
         </div>
 
@@ -300,7 +304,7 @@ function Archetypes() {
             >
               <span className="card-tab label tabular">0{i + 1}</span>
               <span className="flex items-start justify-between gap-4">
-                <ArchetypeGlyph id={x.id} on={on} className={`!size-11 ${on ? "text-ink" : "text-ink-3 group-hover:text-ink"}`} />
+                <ArchetypeGlyph id={x.id} on={on} className={`glyph-xl !size-20 ${on ? "text-ink" : "text-ink-3 group-hover:text-ink"}`} />
                 <span className={`label ${on ? "text-accent-ink" : "text-ink-3"}`}>{on ? "Open ↓" : "Pick"}</span>
               </span>
               <span className={`display-m mt-auto pt-6 transition-colors sm:pt-10 duration-300 ${on ? "text-ink" : "text-ink-2 group-hover:text-ink"}`}>{x.name}</span>

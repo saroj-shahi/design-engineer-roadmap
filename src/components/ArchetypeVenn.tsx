@@ -37,12 +37,17 @@ export function ArchetypeVenn({ selected }: { selected: string }) {
 
   return (
     <div className="grid-12 gap-y-10">
-      <figure className="col-span-4 lg:col-span-6">
+      <figure className="card col-span-4 lg:col-span-7">
+        <figcaption className="card-head label">
+          <span>Plate II</span>
+          <span>Skill map</span>
+        </figcaption>
+        <div className="plate-field p-3 sm:p-6">
         <svg
           viewBox={`0 0 ${W} ${H}`}
           role="img"
           aria-labelledby={id("title")}
-          className="block h-auto w-full max-w-[640px] overflow-visible"
+          className="mx-auto block h-auto w-full max-w-[760px] overflow-visible"
           onPointerLeave={() => setHot(null)}
         >
           <title id={id("title")}>
@@ -157,10 +162,11 @@ export function ArchetypeVenn({ selected }: { selected: string }) {
             })}
           </g>
         </svg>
+        </div>
       </figure>
 
       {/* Key: carries all the words, so the diagram stays legible at phone width. */}
-      <div className="col-span-4 lg:col-span-5 lg:col-start-8" onPointerLeave={() => setHot(null)}>
+      <div className="col-span-4 lg:col-span-5 lg:col-start-8 lg:self-center" onPointerLeave={() => setHot(null)}>
         <p className="label mb-4 text-ink-3">Key</p>
         <ul className="border-t border-ink">
           {skillMap

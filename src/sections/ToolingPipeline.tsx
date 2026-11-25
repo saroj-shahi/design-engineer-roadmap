@@ -1,6 +1,9 @@
 import { useState, type CSSProperties } from "react";
 import { roleStacks, toolStages } from "../data/research";
 import { Section, SectionHeader, TabPanel, useTabList } from "../components/ui";
+import { Glyph, type GlyphName } from "../components/icons";
+
+const stageGlyph: Record<number, GlyphName> = { 1: "frame", 2: "roundtrip", 3: "branch", 4: "blocks", 5: "spark" };
 
 export function ToolingPipeline() {
   const [roleId, setRoleId] = useState("de");
@@ -13,6 +16,8 @@ export function ToolingPipeline() {
         index="04"
         kicker="2026 tooling pipeline"
         folio="p. 04 / 06"
+        glyph="pipeline"
+        plate="The pipe"
         title={["Five stages.", <>Each needs a <em>human check.</em></>]}
         lede="Pick your role to light up the stages and tools in your recommended stack. Commit to one chain; tool sprawl costs more than it saves."
       />
@@ -54,13 +59,14 @@ export function ToolingPipeline() {
               <li
                 key={s.id}
                 aria-label={`Stage ${s.id}: ${s.name}${on ? ", in your stack" : ""}`}
-                className={`panel-in relative flex flex-col p-5 ${on ? "card card-lift" : "card-empty"}`}
+                className={`panel-in group relative flex flex-col p-5 ${on ? "card card-lift" : "card-empty"}`}
                 style={{ animationDelay: `${i * 70}ms` } as CSSProperties}
               >
-                <div className="flex items-baseline justify-between">
-                  <span className={`numeral text-[4rem] transition-colors duration-700 ${on ? "text-ink" : "text-ink-3"}`}>0{s.id}</span>
+                <div className="flex items-start justify-between gap-3">
+                  <Glyph name={stageGlyph[s.id]} on={on} className={`!size-14 ${on ? "text-ink" : "text-ink-3"}`} />
                   <span className={`label ${on ? "text-accent-ink" : "text-ink-3"}`}>{on ? "In stack" : "Outside"}</span>
                 </div>
+                <span className={`numeral mt-5 text-[3.5rem] transition-colors duration-700 ${on ? "text-ink" : "text-ink-3"}`}>0{s.id}</span>
                 <h3 className={`mt-4 text-[1.0625rem] font-medium leading-snug tracking-tight transition-colors duration-700 ${on ? "text-ink" : "text-ink-3"}`}>{s.name}</h3>
                 <ul className="mt-4 flex flex-wrap gap-1">
                   {s.tools.map((t) => {

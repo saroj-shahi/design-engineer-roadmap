@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
+import { Glyph, type GlyphName } from "./icons";
 
-export const navSections = [
-  { id: "shift", label: "Shift" },
-  { id: "compare", label: "Compare" },
-  { id: "skills", label: "Skills" },
-  { id: "tooling", label: "Tooling" },
-  { id: "roadmap", label: "Roadmap" },
-  { id: "readiness", label: "Readiness" },
+export const navSections: { id: string; label: string; glyph: GlyphName }[] = [
+  { id: "shift", label: "Shift", glyph: "shift" },
+  { id: "compare", label: "Compare", glyph: "compare" },
+  { id: "skills", label: "Skills", glyph: "layers" },
+  { id: "tooling", label: "Tooling", glyph: "pipeline" },
+  { id: "roadmap", label: "Roadmap", glyph: "route" },
+  { id: "readiness", label: "Readiness", glyph: "check" },
 ];
 
 export function Nav({ grid, onToggleGrid }: { grid: boolean; onToggleGrid: () => void }) {
@@ -125,6 +126,7 @@ function ChapterRail({ active, progress, grid, onToggleGrid }: { active: string;
                 on ? "flex-1 bg-accent text-[var(--on-accent)]" : "text-ink-3 hover:bg-sunken hover:text-ink"
               }`}
             >
+              <Glyph name={s.glyph} on={on} className="!size-6" />
               <span className="label tabular">0{i + 1}</span>
               <span aria-hidden className={`label sideways whitespace-nowrap ${on ? "" : "hidden group-hover:block"}`}>
                 {s.label}

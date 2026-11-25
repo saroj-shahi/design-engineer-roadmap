@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import { basisLabel, type BasisKind } from "../data/research";
+import { Glyph, type GlyphName } from "./icons";
 
 /* ───────── Motion plumbing ───────── */
 
@@ -182,6 +183,8 @@ export function SectionHeader({
   title,
   lede,
   folio,
+  glyph,
+  plate,
 }: {
   id: string;
   index: string;
@@ -189,6 +192,8 @@ export function SectionHeader({
   title: ReactNode[];
   lede?: ReactNode;
   folio?: string;
+  glyph?: GlyphName;
+  plate?: string;
 }) {
   return (
     <header className="mb-16 pt-10 sm:mb-24">
@@ -199,8 +204,9 @@ export function SectionHeader({
           <p className="hidden text-right lg:col-span-3 lg:block">{folio}</p>
         </div>
       </FolderTab>
-      <div className="grid-12 mt-10 sm:mt-16">
-        <Lines as="h2" id={`${id}-title`} lines={title} className="display-xl col-span-4 text-ink lg:col-span-11" />
+      <div className="grid-12 mt-10 gap-y-10 sm:mt-16">
+        <Lines as="h2" id={`${id}-title`} lines={title} className={`display-xl col-span-4 text-ink ${glyph ? "lg:col-span-8" : "lg:col-span-11"}`} />
+        {glyph && <Plate index={index} glyph={glyph} label={plate} className="col-span-2 self-end sm:col-span-2 lg:col-span-3 lg:col-start-10" />}
       </div>
       {lede && (
         <div className="grid-12 mt-8 sm:mt-12">
@@ -210,6 +216,21 @@ export function SectionHeader({
         </div>
       )}
     </header>
+  );
+}
+
+/** Specimen plate: one chapter glyph drawn large on a blueprint field. Hover plays its gesture. */
+export function Plate({ index, glyph, label, className = "" }: { index: string; glyph: GlyphName; label?: string; className?: string }) {
+  return (
+    <figure data-reveal className={`card card-lift group ${className}`} style={{ "--d": "200ms" } as CSSProperties}>
+      <figcaption className="card-head label">
+        <span className="whitespace-nowrap">Plate {index}</span>
+        {label && <span className="hidden truncate lg:block">{label}</span>}
+      </figcaption>
+      <div className="plate-field grid aspect-square place-items-center">
+        <Glyph name={glyph} className="glyph-xl !size-[62%] text-ink" />
+      </div>
+    </figure>
   );
 }
 
@@ -263,9 +284,6 @@ export function Tag({ children, tone = "neutral" }: { children: ReactNode; tone?
 }
 
 const basisStyle: Record<BasisKind, string> = {
-  base: "text-ink-2",
-  total: "text-ink",
-  single: "text-accent-ink",
   survey: "text-ink-3",
   analytics: "text-ink-3",
   projection: "text-ink-3",
@@ -275,7 +293,7 @@ const basisStyle: Record<BasisKind, string> = {
 export function BasisBadge({ basis }: { basis: BasisKind }) {
   return (
     <span className={`label inline-flex items-center gap-1.5 whitespace-nowrap ${basisStyle[basis]}`}>
-      <span aria-hidden className={`size-[5px] ${basis === "single" ? "bg-accent" : "bg-current"}`} />
+      <span aria-hidden className={`size-[5px] bg-current`} />
       {basisLabel[basis]}
     </span>
   );
