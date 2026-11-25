@@ -50,10 +50,10 @@ export function Hero() {
               came out of that shift, and a six-month path into one.
             </p>
             <nav aria-label="Start here" className="mt-8 grid gap-4 sm:grid-cols-2" data-reveal style={{ "--d": "650ms" } as CSSProperties}>
-              <EntryCard href="#archetypes" who="I'm a designer" what="Find which of the three roles fits you" />
-              <EntryCard href="#roadmap/b" who="I'm starting out" what="Go straight to the beginner track" />
+              <EntryCard href="#/roles" who="I'm a designer" what="Find which of the three roles fits you" />
+              <EntryCard href="#/plan/b" who="I'm starting out" what="Go straight to the beginner track" />
             </nav>
-            <a href="#readiness" className="hit link-ul-static mt-6 inline-block text-[0.9375rem] font-medium text-ink" data-reveal style={{ "--d": "700ms" } as CSSProperties}>
+            <a href="#/ready" className="hit link-ul-static mt-6 inline-block text-[0.9375rem] font-medium text-ink" data-reveal style={{ "--d": "700ms" } as CSSProperties}>
               Or check if your portfolio is ready
             </a>
             <p className="label mt-9 flex flex-wrap gap-x-4 gap-y-1 text-ink-3" data-reveal style={{ "--d": "750ms" } as CSSProperties}>
@@ -114,15 +114,13 @@ export function Hero() {
               of designers already ship AI-generated code. Demand is shifting to people who can design <em>and</em> build. The rest of
               this guide shows how to become one.
             </p>
-            <a href="#archetypes" className="hit link-ul-static mt-5 inline-flex items-center gap-2 text-[0.9375rem] font-medium text-ink group">
+            <a href="#/roles" className="hit link-ul-static mt-5 inline-flex items-center gap-2 text-[0.9375rem] font-medium text-ink group">
               Find the role that fits you <ArrowGlyph />
             </a>
           </div>
         </div>
       </div>
 
-      <HandoffEconomics />
-      <Archetypes />
     </section>
   );
 }
@@ -140,18 +138,17 @@ function EntryCard({ href, who, what }: { href: string; who: string; what: strin
   );
 }
 
-function HandoffEconomics() {
+export function HandoffEconomics() {
   return (
     <div className="wrap py-24 sm:py-36">
       <div className="grid-12 gap-y-16">
         <div className="col-span-4 lg:col-span-4">
           <div className="lg:sticky lg:top-24">
-            <Eyebrow className="text-accent-ink">[01.a] — Economics of handoff collapse</Eyebrow>
+            <Eyebrow className="text-accent-ink">Why this is happening</Eyebrow>
             <Lines as="h2" className="display-l text-ink" lines={["Handoffs are", "the bottleneck."]} />
             <p className="mt-8 max-w-[42ch] leading-relaxed text-ink-2" data-reveal>
-              Nearly every designer and developer in Figma's 2025 research names handoff as a primary bottleneck. Half the
-              developers cite mismatched design assumptions. One designer in five sees a first build that matches the design;
-              another quarter get there only after repeated rework.
+              Passing a design to an engineer is slow, and detail gets lost on the way. In Figma's 2025 research, almost everyone
+              named handoff as a main bottleneck. Only 1 designer in 5 sees a first build that matches their design.
             </p>
             <div data-reveal className="mt-10 max-w-[440px]">
               <HandoffPlate />
@@ -162,15 +159,17 @@ function HandoffEconomics() {
         <div className="col-span-4 space-y-24 lg:col-span-7 lg:col-start-6">
           <HandoffFlow />
 
-          {/* Case studies */}
-          {/* Case cards stack as you scroll (desktop) */}
+          {/* Evidence: opened on request so the page stays short */}
+          <div className="border-t-2 border-edge [&>div]:border-b-0">
+          <Disclosure summary="See the evidence: case studies and survey data" meta={<Tag>4 sources</Tag>}>
+          <div className="space-y-12 pt-2">
           <div className="space-y-8">
             {handoffCases.map((c, i) => (
               <article
                 key={c.org}
                 data-reveal
                 style={{ "--i": i } as CSSProperties}
-                className="card lg:sticky lg:top-[calc(2rem+var(--i)*16px)]"
+                className="card"
               >
                 <p className="card-head label">
                   <span>Case 0{i + 1}</span>
@@ -281,13 +280,16 @@ function HandoffEconomics() {
               </div>
             </Disclosure>
           </div>
+          </div>
+          </Disclosure>
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-function Archetypes() {
+export function Archetypes() {
   const [sel, setSel] = useState(archetypes[0].id);
   const [, setTrack] = useTrack();
   const [, setOption] = useStoredChoice(TRACK_A_OPTION_KEY, "pde", ["pde", "meta"]);
@@ -301,23 +303,19 @@ function Archetypes() {
     orientation: isLg ? "horizontal" : "vertical",
   });
   return (
-    <div id="archetypes" className="wrap scroll-mt-16 pb-24 sm:pb-36">
-      <header className="mb-14 pt-10 sm:mb-20">
-        <FolderTab index="01.b">
-          <p className="label text-ink">Three emerging archetypes</p>
+    <div id="archetypes" className="wrap pb-24 pt-8 sm:pb-36 sm:pt-12">
+      <header className="mb-12 pt-10 sm:mb-16">
+        <FolderTab index="Roles">
+          <p className="label text-ink">Three new roles</p>
         </FolderTab>
         <div className="grid-12 mt-10 gap-y-8 sm:mt-14">
-          <Lines as="h2" id="archetypes-title" className="display-xl col-span-4 lg:col-span-7" lines={["One role,", <>split <em>three ways.</em></>]} />
+          <Lines as="h1" id="roles-title" className="display-xl col-span-4 lg:col-span-7" lines={["Which role", <>fits <em>you?</em></>]} />
           <p data-reveal className="lede col-span-4 self-end lg:col-span-4 lg:col-start-9">
-            Static handoffs are fading, so the generalist is specialising. Pick an archetype to see what it ships, where it is
-            hiring, and what sets it apart.
+            Design work is splitting into three new roles. Pick the one that sounds most like you to see what it does, and how to
+            get there.
           </p>
         </div>
       </header>
-
-      <div className="mb-20 sm:mb-28">
-        <ArchetypeVenn selected={sel} />
-      </div>
 
       {/* Archetype cards: tab sticks out of each; the chosen one is pressed into the desk */}
       <div {...listProps} aria-label="Role archetypes" className="grid gap-x-6 gap-y-10 pt-7 lg:grid-cols-3">
@@ -352,7 +350,7 @@ function Archetypes() {
             <span className="text-accent-ink">This fits you if</span> {a.fitsIf}
           </p>
           <a
-            href={`#roadmap/a/${a.plan}`}
+            href={`#/plan/a/${a.plan}`}
             onClick={() => {
               setTrack("a");
               setOption(a.plan);
@@ -402,6 +400,13 @@ function Archetypes() {
           )}
         </div>
         </div>
+      </div>
+
+      {/* The overlap map, for readers who want it */}
+      <div className="mt-12 border-t-2 border-edge [&>div]:border-b-0">
+        <Disclosure summary="How the three roles overlap" meta={<Tag>Skill map</Tag>}>
+          <ArchetypeVenn selected={sel} />
+        </Disclosure>
       </div>
     </div>
   );

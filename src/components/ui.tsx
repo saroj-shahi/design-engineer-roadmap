@@ -10,7 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import { basisLabel, type BasisKind } from "../data/research";
-import { Glyph, type GlyphName } from "./icons";
+import { ArrowGlyph, Glyph, type GlyphName } from "./icons";
 
 /* ───────── Motion plumbing ───────── */
 
@@ -182,9 +182,9 @@ export function SectionHeader({
   kicker,
   title,
   lede,
-  folio,
   glyph,
   plate,
+  level = "h2",
 }: {
   id: string;
   index: string;
@@ -194,19 +194,19 @@ export function SectionHeader({
   folio?: string;
   glyph?: GlyphName;
   plate?: string;
+  level?: "h1" | "h2";
 }) {
   return (
     <header className="mb-16 pt-10 sm:mb-24">
       <FolderTab index={index}>
         <div className="grid-12 label text-ink-3">
           <p className="col-span-4 text-ink lg:col-span-6">{kicker}</p>
-          <p className="hidden lg:col-span-3 lg:block">Field Guide — Ed. 2026</p>
-          <p className="hidden text-right lg:col-span-3 lg:block">{folio}</p>
+
         </div>
       </FolderTab>
       <div className="grid-12 mt-10 gap-y-10 sm:mt-16">
-        <Lines as="h2" id={`${id}-title`} lines={title} className={`display-xl col-span-4 text-ink ${glyph ? "lg:col-span-8" : "lg:col-span-11"}`} />
-        {glyph && <Plate index={index} glyph={glyph} label={plate} className="col-span-2 self-end sm:col-span-2 lg:col-span-3 lg:col-start-10" />}
+        <Lines as={level} id={`${id}-title`} lines={title} className={`display-xl col-span-4 text-ink ${glyph ? "lg:col-span-8" : "lg:col-span-11"}`} />
+        {glyph && <Plate index={index} glyph={glyph} label={plate} className="self-end max-lg:hidden lg:col-span-3 lg:col-start-10" />}
       </div>
       {lede && (
         <div className="grid-12 mt-8 sm:mt-12">
@@ -224,8 +224,7 @@ export function Plate({ index, glyph, label, className = "" }: { index: string; 
   return (
     <figure data-reveal className={`card card-lift group ${className}`} style={{ "--d": "200ms" } as CSSProperties}>
       <figcaption className="card-head label">
-        <span className="whitespace-nowrap">Plate {index}</span>
-        {label && <span className="hidden truncate lg:block">{label}</span>}
+        <span className="truncate">{label ?? index}</span>
       </figcaption>
       <div className="plate-field grid aspect-square place-items-center">
         <Glyph name={glyph} className="glyph-xl !size-[62%] text-ink" />
@@ -254,9 +253,8 @@ export function Eyebrow({ children, className = "" }: { children: ReactNode; cla
 
 export function SubHead({ n, title, note }: { n: string; title: string; note?: string }) {
   return (
-    <div className="mb-8 grid-12 gap-y-3">
-      <p className="label col-span-4 pt-2 text-accent-ink lg:col-span-2">[{n}]</p>
-      <div className="col-span-4 lg:col-span-10">
+    <div className="mb-8 grid-12 gap-y-3" data-n={n}>
+      <div className="col-span-4 lg:col-span-12">
         <Lines as="h3" lines={[title]} className="display-m text-ink" />
         {note && (
           <p data-reveal className="prose-measure mt-3 text-sm text-ink-3">
@@ -624,32 +622,66 @@ export function useTrack() {
   return useStoredChoice<Track>(TRACK_KEY, "a", ["a", "b"]);
 }
 
-/** Reads deep links (#roadmap/b, #roadmap/a/meta, #readiness/a), stores the choice and scrolls to the section.
- *  Mount once, at the app root. */
-export function useDeepLinks() {
+/* ───────── Pages (hash router) ─────────
+   Five pages, one question each. Routes are hashes (#/plan/b) so the site
+   works on any static host. Sub-parts carry choices: #/plan/a/meta picks
+   Track A + the Meta option, #/ready/b the starter checklist,
+   #/library/skills a Library tab. Old single-page anchors still resolve. */
+
+export type Page = "home" | "roles" | "plan" | "ready" | "library";
+export const pages: { id: Page; label: string; title: string }[] = [
+  { id: "home", label: "Start", title: "Start here" },
+  { id: "roles", label: "Roles", title: "Which role fits you" },
+  { id: "plan", label: "Plan", title: "Your six-month plan" },
+  { id: "ready", label: "Ready?", title: "Am I ready to apply?" },
+  { id: "library", label: "Library", title: "Reference library" },
+];
+export const pageHref = (id: Page, ...parts: string[]) => (id === "home" ? "#/" : `#/${[id, ...parts].join("/")}`);
+
+const legacy: Record<string, string> = {
+  "#top": "#/",
+  "#shift": "#/",
+  "#archetypes": "#/roles",
+  "#roadmap": "#/plan",
+  "#readiness": "#/ready",
+  "#compare": "#/library/compare",
+  "#skills": "#/library/skills",
+  "#tooling": "#/library/tools",
+};
+
+function parseRoute(hash: string): { page: Page; parts: string[] } | null {
+  let h = hash;
+  const old = h.match(/^#(roadmap|readiness)\/(.+)$/);
+  if (old) h = `#/${old[1] === "roadmap" ? "plan" : "ready"}/${old[2]}`;
+  else if (legacy[h]) h = legacy[h];
+  if (h === "" || h === "#") return { page: "home", parts: [] };
+  if (!h.startsWith("#/")) return null; // a plain in-page anchor such as #main
+  const [first = "", ...parts] = h.slice(2).split("/").filter(Boolean);
+  const page = (pages.find((p) => p.id === first)?.id ?? "home") as Page;
+  return { page, parts };
+}
+
+/** Current page + sub-parts. Applies choices carried in the URL and scrolls to the top on page change. */
+export function useRoute() {
+  const [route, setRoute] = useState(() => parseRoute(location.hash) ?? { page: "home" as Page, parts: [] });
   useEffect(() => {
-    const apply = () => {
-      const m = location.hash.match(/^#(roadmap|readiness)\/(a|b)(?:\/(pde|meta))?$/);
-      if (!m) return;
-      const [, section, track, option] = m;
-      writeStored(TRACK_KEY, track);
-      if (option) writeStored(TRACK_A_OPTION_KEY, option);
-      // Let React render the chosen track first, then scroll to its section.
-      window.setTimeout(() => document.getElementById(section)?.scrollIntoView({ block: "start" }), 60);
+    const apply = (initial = false) => {
+      const r = parseRoute(location.hash);
+      if (!r) return;
+      const [a, b] = r.parts;
+      if ((r.page === "plan" || r.page === "ready") && (a === "a" || a === "b")) writeStored(TRACK_KEY, a);
+      if (r.page === "plan" && a === "a" && (b === "pde" || b === "meta")) writeStored(TRACK_A_OPTION_KEY, b);
+      setRoute((prev) => {
+        if (!initial && prev.page !== r.page) window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+        return r;
+      });
     };
-    // Re-clicking a link to the hash already in the address bar fires no hashchange: handle it here.
-    const onClick = (e: MouseEvent) => {
-      const link = (e.target as Element | null)?.closest?.("a[href^='#']");
-      if (link && link.getAttribute("href") === location.hash) apply();
-    };
-    apply();
-    window.addEventListener("hashchange", apply);
-    document.addEventListener("click", onClick);
-    return () => {
-      window.removeEventListener("hashchange", apply);
-      document.removeEventListener("click", onClick);
-    };
+    apply(true);
+    const onHash = () => apply();
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
   }, []);
+  return route;
 }
 
 /** Point the address bar at the current choice without adding history entries or jumping. */
@@ -659,6 +691,56 @@ export function replaceHash(hash: string) {
   } catch {
     /* ignore */
   }
+}
+
+/* ───────── Theme ─────────
+   "light" | "dark" chosen by the reader, saved under de-guide:theme.
+   With no saved choice the page follows the system setting. index.html
+   applies the saved choice before first paint so there is no flash. */
+
+export type Theme = "light" | "dark";
+const THEME_KEY = "de-guide:theme";
+const systemTheme = (): Theme =>
+  typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+
+export function useTheme() {
+  const [theme, setTheme] = useState<Theme>(() => {
+    const set = document.documentElement.dataset.theme;
+    return set === "light" || set === "dark" ? set : systemTheme();
+  });
+
+  // Follow the system while the reader hasn't chosen.
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    const on = () => {
+      let saved: string | null = null;
+      try {
+        saved = localStorage.getItem(THEME_KEY);
+      } catch {
+        /* ignore */
+      }
+      if (!saved) setTheme(systemTheme());
+    };
+    const onPick = (e: Event) => setTheme((e as CustomEvent<Theme>).detail);
+    mq.addEventListener("change", on);
+    window.addEventListener("de-guide:theme", onPick);
+    return () => {
+      mq.removeEventListener("change", on);
+      window.removeEventListener("de-guide:theme", onPick);
+    };
+  }, []);
+
+  const toggle = () => {
+    const next: Theme = theme === "dark" ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    try {
+      localStorage.setItem(THEME_KEY, next);
+    } catch {
+      /* storage unavailable: applies for this page view */
+    }
+    window.dispatchEvent(new CustomEvent<Theme>("de-guide:theme", { detail: next }));
+  };
+  return { theme, toggle };
 }
 
 /** Segmented meter: one cell per item, filled cells in accent. */
@@ -695,4 +777,22 @@ export function useMediaQuery(query: string) {
     return () => mq.removeEventListener("change", on);
   }, [query]);
   return match;
+}
+
+/** End-of-page signpost: the one obvious next step. */
+export function NextPage({ to, title, note }: { to: Page; title: string; note: string }) {
+  return (
+    <div className="wrap pb-24 sm:pb-32">
+      <a href={pageHref(to)} className="card card-lift group flex flex-col gap-4 p-6 sm:flex-row sm:items-end sm:justify-between sm:p-8">
+        <span>
+          <span className="label text-accent-ink">Next</span>
+          <span className="display-m mt-3 block text-ink">{title}</span>
+          <span className="mt-3 block max-w-[52ch] text-ink-2">{note}</span>
+        </span>
+        <span className="label flex items-center gap-2 text-ink">
+          Continue <ArrowGlyph />
+        </span>
+      </a>
+    </div>
+  );
 }

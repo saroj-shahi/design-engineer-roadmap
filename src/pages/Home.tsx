@@ -1,0 +1,40 @@
+import type { CSSProperties } from "react";
+import { Hero } from "../sections/Hero";
+import { Glyph, type GlyphName } from "../components/icons";
+import { pageHref, type Page } from "../components/ui";
+
+/** What's on each page, in the reader's words: one question per page. */
+const inside: { to: Page; glyph: GlyphName; question: string; answer: string }[] = [
+  { to: "roles", glyph: "eye", question: "Which role fits me?", answer: "Three new roles, what each one does, and who it suits." },
+  { to: "plan", glyph: "route", question: "What do I do next?", answer: "A month-by-month plan, for working designers and for beginners." },
+  { to: "ready", glyph: "check", question: "Am I ready to apply?", answer: "A short portfolio checklist. Your ticks stay in this browser." },
+  { to: "library", glyph: "library", question: "I want the detail", answer: "Role comparison, skills, tools, AI patterns and a glossary." },
+];
+
+export function Home() {
+  return (
+    <>
+      <Hero />
+      <section aria-labelledby="inside-title" className="wrap pb-24 pt-20 sm:pb-32 sm:pt-28">
+        <h2 id="inside-title" className="display-l text-ink" data-reveal>
+          Four questions, <em>four pages.</em>
+        </h2>
+        <p className="mt-5 max-w-[52ch] leading-relaxed text-ink-2" data-reveal>
+          Read in any order. Each page answers one question, and the detail stays tucked away until you ask for it.
+        </p>
+        <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {inside.map((x, i) => (
+            <li key={x.to} data-reveal style={{ "--i": i } as CSSProperties}>
+              <a href={pageHref(x.to)} className="card card-lift group flex h-full flex-col p-5 sm:p-6">
+                <Glyph name={x.glyph} className="!size-14 text-ink" />
+                <span className="display-m mt-8 block text-ink">{x.question}</span>
+                <span className="mt-3 block flex-1 text-sm leading-relaxed text-ink-2">{x.answer}</span>
+                <span className="label mt-6 text-accent-ink">Open →</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </>
+  );
+}

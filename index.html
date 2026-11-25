@@ -7,6 +7,13 @@
     <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#f4f3ef" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
+    <script>
+      // Apply a saved theme choice before first paint (see useTheme in src/components/ui.tsx).
+      try {
+        var t = localStorage.getItem("de-guide:theme");
+        if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script>
     <title>Designer → Design Engineer · 2026 Field Guide</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

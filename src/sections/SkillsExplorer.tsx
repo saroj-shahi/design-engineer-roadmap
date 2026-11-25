@@ -29,13 +29,13 @@ export function SkillsExplorer() {
     <Section id="skills">
       <SectionHeader
         id="skills"
-        index="03"
+        index="Skills"
         kicker="Skills architecture"
         folio="p. 03 / 06"
         glyph="layers"
         plate="The stack"
-        title={["Discernment,", "fluency,", <em>orchestration.</em>]}
-        lede="Product design is now a layered stack. Work down it, from durable judgment to the protocols agents use to talk to each other."
+        title={["What to learn,", <em>layer by layer.</em>]}
+        lede="Start with the judgment AI can't replace. Then front-end skills. Then how to design products that use AI agents."
       />
 
       <LayerStack value={tab} onChange={setTab} />

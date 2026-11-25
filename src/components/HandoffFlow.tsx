@@ -21,7 +21,7 @@ const after: Step[] = [
   { who: "Builder", name: "Ship", glyph: "launch" },
 ];
 
-/** Before / after process diagram for the thesis of chapter 01: the handoff, and what replaces it. */
+/** Before / after process diagram for the site's thesis: the handoff, and what replaces it. */
 export function HandoffFlow() {
   return (
     <figure aria-labelledby="handoff-flow-cap">

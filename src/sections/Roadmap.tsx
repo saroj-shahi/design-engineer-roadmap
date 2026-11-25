@@ -25,7 +25,7 @@ export function Roadmap() {
   const [track, setTrackStored] = useTrack();
   const setTrack = (t: Track) => {
     setTrackStored(t);
-    replaceHash(`#roadmap/${t}`);
+    replaceHash(`#/plan/${t}`);
   };
   const tracks = [
     { id: "a" as const, glyph: "stairs" as const, kicker: "Track A", title: "I'm a practising product designer", sub: "Evolve into a hybrid role" },
@@ -42,13 +42,14 @@ export function Roadmap() {
     <Section id="roadmap">
       <SectionHeader
         id="roadmap"
-        index="05"
+        index="Plan"
+        level="h1"
         kicker="Dual career roadmap"
         folio="p. 05 / 06"
         glyph="route"
         plate="The route"
-        title={["Two starting points.", <>One destination: <em>shipping.</em></>]}
-        lede="Pick the journey that matches where you are today. Checklists are saved in this browser and nowhere else."
+        title={["Your plan,", <em>month by month.</em>]}
+        lede="Pick where you are today. The plan changes to match. Your ticks are saved in this browser only."
       />
 
       <div {...listProps} aria-label="Career track" className="grid gap-6 sm:grid-cols-2">
@@ -234,7 +235,7 @@ function TrackA() {
         </div>
         <div className="lg:col-span-6 lg:col-start-7">
           <SubHead n="A.4" title="Hybrid portfolio & interviews" />
-          <ChecklistLink href="#readiness/a" title="Your portfolio checklist" detail="Live demo, public repo, writeup, AI workflow proof and more. One list, tracked in chapter 06." />
+          <ChecklistLink href="#/ready/a" title="Your portfolio checklist" detail="Live demo, public repo, writeup, proof you build with AI, and more. Track it on the Ready? page." />
           <div className="mt-10 border-2 border-edge bg-inverse p-6 text-on-inverse shadow-[var(--sh-accent)] sm:p-8">
             <p className="label mb-4 text-inverse-accent">Expect in interviews</p>
             <p className="font-display text-[1.625rem] leading-[1.15] tracking-tight">{interview.hybrid}</p>
@@ -356,7 +357,7 @@ function TrackB() {
       <div className="grid gap-y-24 lg:grid-cols-12 lg:gap-x-6">
         <div className="lg:col-span-6">
           <SubHead n="B.4" title="Junior portfolio screening" />
-          <ChecklistLink href="#readiness/b" title="Your screening checklist" detail="Clear scope, changed thinking, a live build, zero-friction access. Tick it off in chapter 06." />
+          <ChecklistLink href="#/ready/b" title="Your screening checklist" detail="Clear scope, how your thinking changed, a live build, easy access. Tick it off on the Ready? page." />
         </div>
         <div className="lg:col-span-5 lg:col-start-8">
           <SubHead n="B.5" title="Year one: IC1 → IC2" />

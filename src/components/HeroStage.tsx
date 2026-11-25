@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState, type CSSProperties, type PointerEvent, type ReactNode } from "react";
 import { Glyph, ArchetypeGlyph, type GlyphName } from "./icons";
+import { archetypes } from "../data/research";
+
+const tagline = (id: string) => archetypes.find((a) => a.id === id)?.short ?? "";
 
 /* ─────────────────────────────────────────────────────────────
    Hero stage: the whole thesis in one move.
@@ -143,9 +146,9 @@ export function HeroStage() {
         <StageCard className="hs-builder card-accent" depth={4} head="Now · One builder" glyph="shift" on title="Builds it" sub="Designs in code, ships the PR" accent />
 
         {[
-          { id: "de", n: "01", title: "Design Engineer", sub: "Owns the diff" },
-          { id: "meta", n: "02", title: "Meta-Designer", sub: "Encodes the system" },
-          { id: "ax", n: "03", title: "AX Designer", sub: "Directs the agent" },
+          { id: "de", n: "01", title: "Design Engineer", sub: tagline("de") },
+          { id: "meta", n: "02", title: "Meta-Designer", sub: tagline("meta") },
+          { id: "ax", n: "03", title: "AX Designer", sub: tagline("ax") },
         ].map((a, i) => (
           <div key={a.id} className={`hs-card hs-arch hs-a${i + 1} card`} style={{ "--i": i, "--depth": 6 + i } as CSSProperties}>
             <p className="card-head label">Path {a.n}</p>

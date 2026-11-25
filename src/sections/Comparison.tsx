@@ -14,13 +14,13 @@ export function Comparison() {
     <Section id="compare">
       <SectionHeader
         id="compare"
-        index="02"
+        index="Compare"
         kicker="Role comparison"
         folio="p. 02 / 06"
         glyph="compare"
         plate="Two roles"
-        title={["Traditional UX", <>vs. <em>Design Engineer</em></>]}
-        lede="How evaluation changes when the portfolio is running software instead of static frames."
+        title={["What changes", <>when you <em>build it too.</em></>]}
+        lede="The same job, judged two ways: a traditional UX designer next to a designer who ships code."
       />
 
       <div className="mb-10 flex flex-wrap items-center justify-between gap-4">

@@ -49,6 +49,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
+    color-scheme: dark;
     --paper: #0a0a0a;
     --surface: #111110;
     --sunken: #1a1a18;
@@ -73,6 +74,34 @@
     --dot: rgba(255, 255, 255, 0.07);
   }
 }
+
+/* Explicit choice from the theme toggle (set before first paint in index.html) */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #0a0a0a;
+  --surface: #111110;
+  --sunken: #1a1a18;
+  --ink: #edebe5;
+  --ink-2: #bab8b0;
+  --ink-3: #85837c;
+  --line: rgba(255, 255, 255, 0.12);
+  --line-strong: rgba(255, 255, 255, 0.28);
+  --accent: #ff4a12;
+  --accent-ink: #ff7a4d;
+  --accent-soft: #2a130a;
+  --on-accent: #0a0a0a;
+  --grid-line: rgba(255, 255, 255, 0.035);
+  --grain-opacity: 0.07;
+  --inverse-muted: #55534d;
+  --inverse-line: rgba(10, 10, 10, 0.2);
+  --inverse-accent: #b82a00;
+  --desk: #060606;
+  --card: #131312;
+  --edge: #8f8c84;
+  --hard: #3d3b37;
+  --dot: rgba(255, 255, 255, 0.07);
+}
+:root[data-theme="light"] { color-scheme: light; }
 
 @theme inline {
   --color-paper: var(--paper);
@@ -775,6 +804,14 @@ em, .italic { font-style: italic; }
   .is-in .handoff-plate .handoff-strike { animation: glyph-draw 700ms var(--ease) 900ms both; }
 }
 @keyframes plate-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+
+/* Theme glyph: the lit half turns over when the theme flips */
+.glyph-theme .g-half { transform-origin: 50% 50%; }
+.glyph-theme[data-on="true"] .g-half { transform: rotate(180deg); }
+@media (prefers-reduced-motion: no-preference) {
+  .glyph-theme .g-half { transition: transform 600ms var(--spring); }
+  :is(.group:hover, .group:focus-visible) .glyph-theme .g-ring { transform: scale(1.08); transform-origin: 50% 50%; }
+}
 
 @keyframes glyph-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
 @keyframes glyph-measure { from { transform: scaleX(0); } to { transform: scaleX(1); } }

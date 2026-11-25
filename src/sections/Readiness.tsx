@@ -48,7 +48,8 @@ export function Readiness() {
     <Section id="readiness">
       <SectionHeader
         id="readiness"
-        index="06"
+        index="Ready?"
+        level="h1"
         kicker="Self-assessment"
         folio="p. 06 / 06"
         glyph="check"
@@ -69,7 +70,7 @@ export function Readiness() {
             { id: "b", label: "Starting out" },
           ]}
         />
-        <p className="text-sm text-ink-3">Follows the track you picked in chapter 05.</p>
+        <p className="text-sm text-ink-3">Matches the track you picked in your plan.</p>
       </div>
 
       {/* Keyed by track so each list loads its own saved ticks */}

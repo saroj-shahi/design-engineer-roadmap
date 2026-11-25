@@ -15,14 +15,23 @@ function ExtLink({ href, children }: { href: string; children: React.ReactNode }
 export function Footer() {
   return (
     <footer className="relative z-[1] bg-inverse text-on-inverse">
-      <div className="wrap pb-10 pt-20 sm:pt-32">
+      <div className="wrap pb-10 pt-16 sm:pt-24">
         <Lines
           as="p"
-          className="display-xxl"
+          className="display-xl"
           lines={["Learn the browser.", <em className="text-inverse-accent">Then direct the AI.</em>]}
         />
 
-        <div className="grid-12 mt-24 gap-y-12 border-t border-inverse-line pt-8 sm:mt-36">
+        {/* Sources stay one click away instead of filling every page */}
+        <details className="group/src mt-16 border-t border-inverse-line sm:mt-24">
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-6 [&::-webkit-details-marker]:hidden">
+            <span className="text-base font-medium">Sources and method</span>
+            <span className="label text-inverse-muted">
+              {sources.length} sources · {worksCited.length} articles
+              <span aria-hidden className="ml-3 inline-block transition-transform duration-300 group-open/src:rotate-45">+</span>
+            </span>
+          </summary>
+        <div className="grid-12 gap-y-12 border-t border-inverse-line pt-8">
           <p className="label col-span-4 text-inverse-muted lg:col-span-3">Sources cited in the research brief</p>
           <ul className="col-span-4 grid gap-x-6 gap-y-2 text-sm text-on-inverse sm:grid-cols-2 lg:col-span-9">
             {sources.map((s, i) => (
@@ -58,6 +67,7 @@ export function Footer() {
             studies describe single organisations and are not market benchmarks.
           </p>
         </div>
+        </details>
 
         <div className="label mt-20 flex flex-wrap items-baseline justify-between gap-4 border-t border-inverse-line pt-5 text-inverse-muted">
           <span>Field Guide — Ed. 2026 · Rev. 11</span>
@@ -65,7 +75,7 @@ export function Footer() {
           <span className="hidden lg:inline">
             Press <kbd className="border border-inverse-line px-1.5 py-0.5 text-on-inverse">Alt</kbd> <kbd className="border border-inverse-line px-1.5 py-0.5 text-on-inverse">G</kbd> to show the grid
           </span>
-          <a href="#top" className="hit group flex items-center gap-2 text-on-inverse">
+          <a href="#main" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0 }); }} className="hit group flex items-center gap-2 text-on-inverse">
             <span className="link-ul">Back to top</span>
             <span aria-hidden className="transition-transform duration-700 ease-silk group-hover:-translate-y-1">↑</span>
           </a>

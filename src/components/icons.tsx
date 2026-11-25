@@ -276,6 +276,14 @@ const library = {
       <path className="g-dim" d="M2.75 6.25h18.5M2.75 4.5v3.5M21.25 4.5v3.5" stroke={A} />
     </>
   ),
+  /** Theme: a disc lit on one half; the lit half turns over with the theme. */
+  theme: () => (
+    <>
+      <circle className="g-ring" cx="12" cy="12" r="8.25" />
+      <path className="g-half" d="M12 3.75a8.25 8.25 0 0 1 0 16.5z" fill="currentColor" />
+      <path d="M12 2v3M12 19v3" stroke={A} />
+    </>
+  ),
   /** Explore in the browser: a window whose hero block builds out on hover. */
   browser: () => (
     <>
