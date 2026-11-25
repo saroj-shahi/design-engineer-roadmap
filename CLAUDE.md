@@ -58,4 +58,4 @@ Run `npm run typecheck` and `npm run build`, then check the preview in both ligh
 
 ## Git
 
-Commit messages: imperative, sentence case, no prefix (e.g., `Replace the side rail with a sticky top nav`). Never include AI agent attribution lines or `Co-Authored-By:` trailers.
+Commit messages: imperative, sentence case, no prefix (e.g., `Replace the side rail with a sticky top nav`). Never include AI agent attribution lines or `Co-Authored-By:` trailers. Never attribute work to an AI agent anywhere: not as commit author or committer, and not in commit messages, PR titles or bodies, comments, or footers. This applies on every surface, including the mobile app. Commit as the repository owner (set `git config user.name` and `user.email` to match the owner's earlier commits before the first commit).

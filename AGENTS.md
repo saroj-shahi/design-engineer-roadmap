@@ -62,3 +62,4 @@ Before finishing any UI or content change:
 
 - Commit messages: imperative, sentence case, no prefix (e.g., `Align home stat card footers across breakpoints`).
 - Never include AI agent attribution lines or `Co-Authored-By:` trailers for AI tools/models.
+- Never attribute work to an AI agent anywhere: not as commit author or committer, and not in commit messages, PR text, comments, or footers, on any surface including the mobile app. Commit as the repository owner (match the owner's earlier commits in `git config user.name`/`user.email`).
