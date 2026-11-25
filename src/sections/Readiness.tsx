@@ -3,13 +3,14 @@ import { CheckRow, Section, SectionHeader, Tabs, usePersistentSet, useTrack, typ
 import { Glyph } from "../components/icons";
 
 /** One checklist per track, each with its own saved ticks. Chapter 05 links here instead of repeating them. */
-const lists: Record<Track, { key: string; items: ChecklistItem[]; who: string; lede: string; start: string }> = {
+const lists: Record<Track, { key: string; items: ChecklistItem[]; who: string; lede: string; start: string; ready: string }> = {
   a: {
     key: "de-guide:readiness",
     items: readinessItems,
     who: "Working designer",
     lede: "Proof a hiring team can open: something that runs, the code behind it, and evidence you can build with AI.",
     start: "Start with one live demo. It's the quickest signal a reviewer can check.",
+    ready: "Every item checked. Send about 20 careful applications to teams that hire hybrids.",
   },
   b: {
     key: "de-guide:junior-checklist",
@@ -17,16 +18,17 @@ const lists: Record<Track, { key: string; items: ChecklistItem[]; who: string; l
     who: "Starting out",
     lede: "What screeners look for in a junior portfolio alongside your case studies.",
     start: "Start with the first item. It needs no code: open each case study with who you are and the problem you solved.",
+    ready: "Every item checked. Aim at seed-stage startups, small agencies and industry B2B companies, not only big tech.",
   },
 };
 
-/** Status line by share of items done, so the copy fits lists of any length. */
-function levelFor(done: number, total: number, start: string) {
-  if (done === 0) return { label: "Not started", note: start };
-  if (done === total) return { label: "Ready to apply", note: "Every item checked. Aim at hybrid-friendly teams with ~20 targeted applications." };
-  if (done === total - 1) return { label: "Almost ready", note: "One item left. Finish it before you send applications." };
-  if (done >= total / 2) return { label: "Getting close", note: "Over halfway. Close the remaining gaps before you apply." };
-  return { label: "Foundations", note: "Keep going. Reviewers will ask for the live build and the repo next." };
+/** Status line by share of items done. Mid-way notes name the first unticked item, so they fit either track's list. */
+function levelFor(done: number, total: number, list: (typeof lists)[Track], next?: ChecklistItem) {
+  if (done === 0) return { label: "Not started", note: list.start };
+  if (done === total || !next) return { label: "Ready to apply", note: list.ready };
+  if (done === total - 1) return { label: "Almost ready", note: `One item left: “${next.title}”. Finish it before you apply.` };
+  if (done >= total / 2) return { label: "Getting close", note: `${done * 2 === total ? "Halfway there" : "Over halfway"}. Next up: “${next.title}”.` };
+  return { label: "Foundations", note: `Keep going. Next up: “${next.title}”.` };
 }
 
 /** One-time move of ticks from the old Track A copy of this list (same ids; "aiproof" became "ai"). */
@@ -83,7 +85,7 @@ function Checklist({ track }: { track: Track }) {
   const total = list.items.length;
   const done = list.items.filter((it) => set.has(it.id)).length;
   const pct = Math.round((done / total) * 100);
-  const level = levelFor(done, total, list.start);
+  const level = levelFor(done, total, list, list.items.find((it) => !set.has(it.id)));
 
   return (
     <div role="tabpanel" id={`ready-panel-${track}`} aria-labelledby={`ready-tab-${track}`} tabIndex={0} className="panel-in grid-12 gap-y-12">
