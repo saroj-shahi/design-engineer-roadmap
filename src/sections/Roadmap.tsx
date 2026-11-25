@@ -1,5 +1,6 @@
 import { useState, type CSSProperties } from "react";
 import { ArrowBackGlyph, ArrowGlyph, Glyph } from "../components/icons";
+import { RoadmapMap } from "../components/RoadmapMap";
 import {
   aiPolicyLabel,
   beginnerContext,
@@ -13,6 +14,12 @@ import {
 } from "../data/research";
 import { CheckRow, Eyebrow, Meter, pageHref, Section, SectionHeader, SubHead, Tag, TRACK_A_OPTION_KEY, replaceHash, usePersistentSet, useStoredChoice, useTabList, useTrack, type Track } from "../components/ui";
 
+
+/** Bring a step's detail into view after it is picked on the map. */
+function showDetail(id: string) {
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  document.getElementById(id)?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+}
 
 /** The six months fall into three two-month phases; notes are the months' own AI policies. */
 const phases = [
@@ -146,8 +153,31 @@ function TrackA() {
         </p>
       </div>
 
-      {/* 6-month timeline */}
+      {/* Map of the whole plan */}
       <div>
+        <SubHead n="A.map" title="Your plan at a glance" note="Six months, one step at a time. Pick a month to open its details." />
+        <RoadmapMap
+          label="Six-month plan"
+          leftLabel="Learn"
+          rightLabel="Build"
+          active={String(month)}
+          onPick={(id) => {
+            setMonth(Number(id));
+            showDetail("month-detail");
+          }}
+          steps={sixMonthPlan.map((x) => ({
+            id: String(x.month),
+            kicker: `Month ${x.month}`,
+            title: x.title,
+            note: aiPolicyLabel[x.aiPolicy],
+            left: x.learn,
+            right: x.build,
+          }))}
+        />
+      </div>
+
+      {/* 6-month timeline */}
+      <div id="month-detail" className="scroll-mt-24">
         <SubHead n="A.2" title="A six-month technical transition" note="Learn the browser before AI tools. The plan uses React, TypeScript and Tailwind." />
 
         <ol aria-label="Phases" className="mb-3 grid grid-cols-6 gap-x-2">
@@ -286,8 +316,30 @@ function TrackB() {
 
   return (
     <div className="space-y-24 sm:space-y-36">
-      {/* 4-stage plan */}
+      {/* Map of the whole plan */}
       <div>
+        <SubHead n="B.map" title="Your plan at a glance" note="Four stages, in order. Pick a stage to open its details." />
+        <RoadmapMap
+          label="Four-stage launch plan"
+          leftLabel="Focus"
+          rightLabel="Result"
+          active={String(stage)}
+          onPick={(id) => {
+            setStage(Number(id));
+            showDetail("stage-detail");
+          }}
+          steps={launchStages.map((x) => ({
+            id: String(x.n),
+            kicker: `Stage ${x.n}`,
+            title: x.name,
+            left: x.learn,
+            right: x.output,
+          }))}
+        />
+      </div>
+
+      {/* 4-stage plan */}
+      <div id="stage-detail" className="scroll-mt-24">
         <SubHead n="B.1" title="A four-stage launch plan" />
         <div {...stages.listProps} aria-label="Launch stage" className="grid gap-4 md:grid-cols-4">
           {launchStages.map((x, i) => {

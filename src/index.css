@@ -240,7 +240,8 @@ body {
 }
 .hero-title {
   font-family: var(--font-display);
-  font-size: clamp(3.75rem, 6.2vw, 7.25rem);
+  /* Sized to its column (an @container), not the viewport: the longest line is ~5.1em, so 18cqi keeps four lines at any width. */
+  font-size: clamp(3.75rem, 18cqi, 7.25rem);
   font-stretch: 62%;
   font-weight: 600;
   line-height: 0.86;
@@ -702,7 +703,7 @@ em, .italic { font-style: italic; }
   color: var(--accent-ink);
   font-size: max(10px, var(--fs-label));
 }
-.hs-tag-sub { font-size: max(9px, calc(var(--fs-label) * 0.9)); color: var(--ink-3); background: var(--card); padding: 0 0.3rem; }
+.hs-tag-sub { font-size: max(9px, calc(var(--fs-label) * 0.9)); color: var(--ink-3); background: var(--card); padding: 0 0.3rem; max-width: 44cqw; text-align: center; }
 .hs-strike {
   position: absolute;
   left: -6%;
@@ -807,6 +808,84 @@ em, .italic { font-style: italic; }
 @keyframes glyph-breathe {
   0%, 100% { opacity: 0; transform: scale(0.6); }
   45% { opacity: 0.22; transform: scale(1); }
+}
+
+/* ───────── Roadmap map (roadmap.sh-style): spine, steps, branches ───────── */
+.rm { position: relative; list-style: none; }
+/* Spine, drawn per row so it starts at the first step and ends at the last */
+.rm-row::after { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; margin-left: -1px; background: var(--edge); }
+.rm-row:first-child::after { top: 50%; }
+.rm-row:last-child::after { bottom: 50%; }
+.rm-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr minmax(13rem, 17rem) 1fr;
+  grid-template-areas: "left node right";
+  align-items: center;
+  padding-block: 1.75rem;
+}
+.rm-node { grid-area: node; z-index: 1; padding: 1rem 1.25rem; text-align: center; }
+.rm-node-on { border-color: var(--accent); }
+.rm-node-on .label { color: var(--accent-ink); }
+.rm-branch { position: relative; display: flex; flex-direction: column; gap: 0.5rem; list-style: none; }
+.rm-left { grid-area: left; align-items: flex-end; padding-right: 3rem; }
+.rm-right { grid-area: right; align-items: flex-start; padding-left: 3rem; }
+.rm-leaf {
+  position: relative;
+  padding: 0.45rem 0.8rem;
+  border: 1.5px solid var(--line-strong);
+  background: var(--card);
+  color: var(--ink-2);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  white-space: nowrap;
+}
+.rm-out {
+  max-width: 22rem;
+  padding: 0.6rem 0.9rem;
+  border: 2px dashed var(--accent);
+  background: var(--card);
+  color: var(--ink);
+  font-size: 0.9375rem;
+  line-height: 1.35;
+}
+/* Bracket joining the topics, a tick from each topic, and one line on to the step */
+.rm-left::before { content: ""; position: absolute; right: 1.5rem; top: 1.1rem; bottom: 1.1rem; width: 2px; background: var(--line-strong); }
+.rm-left::after { content: ""; position: absolute; right: 0; top: 50%; width: 1.5rem; height: 2px; margin-top: -1px; background: var(--line-strong); }
+.rm-left .rm-leaf::after { content: ""; position: absolute; top: 50%; right: calc(-1.5rem - 1.5px); width: 1.5rem; height: 2px; margin-top: -1px; background: var(--line-strong); }
+.rm-right::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 3rem;
+  height: 2px;
+  margin-top: -1px;
+  background: repeating-linear-gradient(to right, var(--accent) 0 6px, transparent 6px 10px);
+}
+.rm-key { display: inline-block; width: 1.1rem; height: 0.8rem; background: var(--card); }
+.rm-key-node { border: 2px solid var(--edge); box-shadow: 2px 2px 0 var(--hard); }
+.rm-key-leaf { border: 1.5px solid var(--line-strong); }
+.rm-key-out { border: 2px dashed var(--accent); }
+
+/* Narrow: spine on the left, branches stacked under each step */
+@media (max-width: 1023px) {
+  .rm-row::after { left: 0.75rem; }
+  .rm-row:first-child::after { top: 3rem; }
+  .rm-row:last-child::after { bottom: auto; height: 3rem; }
+  .rm-row {
+    grid-template-columns: 1fr;
+    grid-template-areas: "node" "left" "right";
+    align-items: start;
+    gap: 0.75rem;
+    padding: 1.25rem 0 1.25rem 2.25rem;
+  }
+  .rm-row::before { content: ""; position: absolute; left: 0.75rem; top: 3rem; width: 1.5rem; height: 2px; background: var(--edge); }
+  .rm-node { margin-right: 6px; text-align: left; }
+  .rm-left, .rm-right { padding: 0; align-items: flex-start; }
+  .rm-left { flex-direction: row; flex-wrap: wrap; gap: 0.4rem; }
+  .rm-leaf { white-space: normal; padding: 0.35rem 0.65rem; font-size: 0.8125rem; }
+  .rm-left::before, .rm-left::after, .rm-left .rm-leaf::after, .rm-right::after { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -20,15 +20,14 @@ type Phase = "before" | "after";
 const captions: Record<Phase, ReactNode> = {
   before: (
     <>
-      <strong className="font-medium text-ink">Before:</strong> a designer makes the screen in Figma, then an engineer builds it in code
-      from a spec. Even with great people on both sides, intent gets lost between tools: only 1 in 5 first builds match the design.
+      <strong className="font-medium text-ink">Before:</strong> a designer makes the screen in Figma, then an engineer rebuilds it from a
+      spec. Even with great people on both sides, only 1 in 5 first builds match the design.
     </>
   ),
   after: (
     <>
-      <strong className="font-medium text-ink">Now:</strong> designers and engineers work in the same codebase. Designers shape the UI in
-      code and engineers review and own the system. Three design roles are growing from this: Design Engineer, Meta-Designer and
-      AX Designer.
+      <strong className="font-medium text-ink">Now:</strong> designers and engineers work in the same code. Designers shape the UI;
+      engineers review it and own the system. Three roles grow from this.
     </>
   ),
 };
@@ -145,12 +144,11 @@ export function HeroStage() {
         <StageCard className="hs-builder card-accent" depth={4} head="Now · One codebase" glyph="shift" on title="Built together" sub="Designers in code, engineers reviewing" accent />
 
         {[
-          { id: "de", n: "01", title: "Design Engineer", sub: tagline("de") },
-          { id: "meta", n: "02", title: "Meta-Designer", sub: tagline("meta") },
-          { id: "ax", n: "03", title: "AX Designer", sub: tagline("ax") },
+          { id: "de", title: "Design Engineer", sub: tagline("de") },
+          { id: "meta", title: "Meta-Designer", sub: tagline("meta") },
+          { id: "ax", title: "AX Designer", sub: tagline("ax") },
         ].map((a, i) => (
           <div key={a.id} className={`hs-card hs-arch hs-a${i + 1} card`} style={{ "--i": i, "--depth": 6 + i } as CSSProperties}>
-            <p className="card-head label">Path {a.n}</p>
             <div className="hs-body">
               <ArchetypeGlyph id={a.id} on className="hs-glyph text-ink" />
               <p className="hs-title mt-auto">{a.title}</p>

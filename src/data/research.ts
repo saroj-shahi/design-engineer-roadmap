@@ -83,6 +83,12 @@ export interface RoleStack {
 
 export interface Month {
   month: number;
+  /** Short name for the roadmap map. */
+  title: string;
+  /** Topics from `focus`, one per map leaf. */
+  learn: string[];
+  /** Short form of `deliverable` for the map. */
+  build: string;
   focus: string;
   deliverable: string;
   guardrail: string;
@@ -613,6 +619,9 @@ export const trackAOptions = [
 export const sixMonthPlan: Month[] = [
   {
     month: 1,
+    title: "Browser basics",
+    learn: ["Semantic HTML", "Flexbox", "CSS Grid", "DevTools"],
+    build: "3 responsive landing pages",
     focus: "HTML, CSS layout (Flexbox, Grid) and checking layouts in DevTools.",
     deliverable: "3 responsive landing pages, built from scratch with no frameworks.",
     guardrail: "No AI code and no CSS frameworks. Learn to fix layouts by hand.",
@@ -620,6 +629,9 @@ export const sixMonthPlan: Month[] = [
   },
   {
     month: 2,
+    title: "JavaScript & React",
+    learn: ["DOM & events", "async/await & fetch", "Components & props", "State & hooks"],
+    build: "Change an existing React app",
     focus: "Plain JavaScript (DOM, events, async/await, fetch), then React (components, props, state, hooks).",
     deliverable: "Read, find your way around and change an existing React app.",
     guardrail: "Focus on reading and changing real code, not memorizing syntax.",
@@ -627,6 +639,9 @@ export const sixMonthPlan: Month[] = [
   },
   {
     month: 3,
+    title: "Styling & types",
+    learn: ["Tailwind CSS", "Design tokens", "TypeScript basics"],
+    build: "Launch 1 small tool or web app",
     focus: "Tailwind CSS, design tokens and TypeScript basics.",
     deliverable: "Build and launch 1 small tool or live web app.",
     guardrail: "Use AI coding tools (Cursor, Claude Code) freely to write code faster.",
@@ -634,6 +649,9 @@ export const sixMonthPlan: Month[] = [
   },
   {
     month: 4,
+    title: "Building with AI",
+    learn: ["Managing a codebase with AI", "App state", "UI patterns for AI agents"],
+    build: "Multi-page app with login",
     focus: "Managing a codebase with AI, app state and UI patterns for AI agents.",
     deliverable: "Launch a multi-page app with login, like an AI dashboard or a SaaS tool.",
     guardrail: "Set up Cursor (Design Mode) or Claude Code. You still decide the structure and check the AI's edge cases.",
@@ -641,6 +659,9 @@ export const sixMonthPlan: Month[] = [
   },
   {
     month: 5,
+    title: "Real codebases",
+    learn: ["Branches & rebasing", "Merge conflicts", "Design system in code", "Reviewing code"],
+    build: "1–3 merged PRs",
     focus: "Git at work (branches, rebasing, conflicts), using the design system in code, and reviewing others' code.",
     deliverable: "Get 1–3 PRs into a real product: CSS bugs, accessibility fixes or component variants.",
     guardrail: "Pick up real front-end fixes at work, or help with open-source UI libraries.",
@@ -648,6 +669,9 @@ export const sixMonthPlan: Month[] = [
   },
   {
     month: 6,
+    title: "Portfolio & applications",
+    learn: ["Live-code portfolio", "Public GitHub repos", "~20 focused applications"],
+    build: "Portfolio of live apps & merged PRs",
     focus: "Show yourself as a hybrid, build a portfolio of live code and apply with focus.",
     deliverable: "Rebuild your portfolio around live apps, public GitHub repos and merged PRs.",
     guardrail: "Send about 20 careful applications to teams that hire hybrids. Skip mass applying.",
@@ -710,6 +734,7 @@ export const beginnerContext = [
 export const launchStages = [
   {
     n: 1,
+    learn: ["Usability", "Accessibility (WCAG)", "Typography", "Information architecture", "Interaction patterns"],
     name: "Learn the lasting basics",
     detail:
       "Before you use AI screen tools, learn usability, accessibility (WCAG), typography, information architecture and interaction patterns. Take real products apart to see where they fail and why.",
@@ -717,6 +742,7 @@ export const launchStages = [
   },
   {
     n: 2,
+    learn: ["HTML & CSS", "AI prototyping tools", "Prototypes that run in a browser"],
     name: "Prototype in code",
     detail:
       "Learn HTML and CSS alongside AI prototyping tools (Figma Make, v0, Lovable, Bolt, Cursor). Build prototypes that run in a browser.",
@@ -724,6 +750,7 @@ export const launchStages = [
   },
   {
     n: 3,
+    learn: ["Local businesses", "Community groups", "Open-source projects", "Small SaaS"],
     name: "Ship real work for real users",
     detail:
       "Skip made-up Spotify or Uber redesigns. Solve real problems for local businesses, community groups, open-source projects or small SaaS. Test it live and write down how feedback changed your mind.",
@@ -731,6 +758,7 @@ export const launchStages = [
   },
   {
     n: 4,
+    learn: ["3–4 short case studies", "Seed-stage startups", "Small agencies", "Industry B2B companies"],
     name: "Aim at the right employers",
     detail:
       "Write 3–4 short, easy-to-scan case studies. Aim them at early (seed-stage) startups, which hire the most designers relative to size (25%). Also try small agencies and industry-focused B2B companies, not only big tech junior programs.",

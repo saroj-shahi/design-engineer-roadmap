@@ -19,7 +19,7 @@ export function Hero() {
     <section id="shift" aria-labelledby="shift-title" className="relative">
       <div id="top" className="wrap pt-5 sm:pt-8">
         <div className="grid-12 mt-6 gap-y-10 sm:mt-10 lg:items-end">
-          <div className="col-span-4 lg:col-span-5 lg:row-start-1">
+          <div className="@container col-span-4 lg:col-span-5 lg:row-start-1">
             <Lines
               as="h1"
               id="shift-title"
@@ -35,8 +35,8 @@ export function Hero() {
               shows three roles growing out of that shift, and a six-month path into one.
             </p>
             <nav aria-label="Start here" className="mt-8 grid gap-4 sm:grid-cols-2" data-reveal style={{ "--d": "650ms" } as CSSProperties}>
-              <EntryCard href="#/roles" who="I'm a designer" what="Find which of the three roles fits you" />
-              <EntryCard href="#/plan/b" who="I'm starting out" what="Go straight to the beginner track" />
+              <EntryCard href="#/roles" who="I'm a designer" what="Find the role that fits you" />
+              <EntryCard href="#/plan/b" who="I'm starting out" what="Start the beginner track" />
             </nav>
             <a href="#/ready" className="hit link-ul-static mt-6 inline-block text-[0.9375rem] font-medium text-ink" data-reveal style={{ "--d": "700ms" } as CSSProperties}>
               Or check if your portfolio is ready
@@ -69,7 +69,7 @@ export function Hero() {
               also work in code with developers. The rest of this guide shows how.
             </p>
             <a href="#/roles" className="hit link-ul-static mt-5 inline-flex items-center gap-2 text-[0.9375rem] font-medium text-ink group">
-              Find the role that fits you <ArrowGlyph />
+              See the three roles <ArrowGlyph />
             </a>
           </div>
         </div>
@@ -104,7 +104,7 @@ function EntryCard({ href, who, what }: { href: string; who: string; what: strin
   return (
     <a href={href} className="card card-lift group flex flex-col">
       <span className="card-head label">{who}</span>
-      <span className="flex items-center justify-between gap-3 px-4 py-4 text-[0.9375rem] font-medium leading-snug text-ink">
+      <span className="flex items-center justify-between gap-3 px-4 py-4 font-display text-[1.375rem] font-medium leading-[1.1] tracking-tight text-ink sm:px-5 sm:py-5">
         {what}
         <ArrowGlyph />
       </span>
