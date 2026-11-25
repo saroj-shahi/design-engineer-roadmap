@@ -12,7 +12,7 @@ import {
   sixMonthPlan,
   trackAOptions,
 } from "../data/research";
-import { CheckRow, Eyebrow, Meter, Section, SectionHeader, SubHead, Tag, usePersistentSet } from "../components/ui";
+import { CheckRow, Eyebrow, Meter, Section, SectionHeader, SubHead, Tag, usePersistentSet, useTabList } from "../components/ui";
 
 type Track = "a" | "b";
 
@@ -22,6 +22,12 @@ export function Roadmap() {
     { id: "a" as const, kicker: "Track A", title: "I'm a practising product designer", sub: "Evolve into a hybrid role" },
     { id: "b" as const, kicker: "Track B", title: "I'm starting out", sub: "Launch as a code-literate builder" },
   ];
+  const { listProps, tabProps, panelProps } = useTabList({
+    ids: tracks.map((t) => t.id),
+    value: track,
+    onChange: (id) => setTrack(id as Track),
+    idPrefix: "track",
+  });
 
   return (
     <Section id="roadmap">
@@ -34,47 +40,34 @@ export function Roadmap() {
         lede="Pick the journey that matches where you are today. Checklists are saved in this browser and nowhere else."
       />
 
-      <div role="tablist" aria-label="Career track" className="grid border-y border-ink sm:grid-cols-2">
+      <div {...listProps} aria-label="Career track" className="grid border-y border-ink sm:grid-cols-2">
         {tracks.map((t, i) => {
           const on = track === t.id;
           return (
             <button
               key={t.id}
-              type="button"
-              role="tab"
-              id={`track-tab-${t.id}`}
-              aria-selected={on}
-              aria-controls={`track-panel-${t.id}`}
-              tabIndex={on ? 0 : -1}
-              onClick={() => setTrack(t.id)}
-              onKeyDown={(e) => {
-                if (!["ArrowLeft", "ArrowRight"].includes(e.key)) return;
-                e.preventDefault();
-                const n = tracks[(i + 1) % 2];
-                setTrack(n.id);
-                document.getElementById(`track-tab-${n.id}`)?.focus();
-              }}
+              {...tabProps(t.id, i)}
               className={`group relative isolate flex min-h-[15rem] flex-col overflow-hidden p-5 text-left transition-colors duration-700 ease-silk sm:min-h-[19rem] sm:p-8 ${
                 i === 1 ? "border-t border-ink sm:border-l sm:border-t-0" : ""
-              } ${on ? "text-paper" : "text-ink"}`}
+              } ${on ? "text-on-inverse" : "text-ink"}`}
             >
               <span
                 aria-hidden
-                className={`absolute inset-0 -z-10 origin-bottom bg-ink transition-transform duration-[900ms] ease-silk ${on ? "scale-y-100" : "scale-y-0"}`}
+                className={`absolute inset-0 -z-10 origin-bottom bg-inverse transition-transform duration-[900ms] ease-silk ${on ? "scale-y-100" : "scale-y-0"}`}
               />
               <span className="flex items-baseline justify-between">
-                <span className={`label ${on ? "text-paper/60" : "text-ink-3"}`}>{t.kicker}</span>
-                <span className={`label ${on ? "text-accent" : "text-ink-3"}`}>{on ? "Reading" : "Select"}</span>
+                <span className={`label ${on ? "text-inverse-muted" : "text-ink-3"}`}>{t.kicker}</span>
+                <span className={`label ${on ? "text-inverse-accent" : "text-ink-3"}`}>{on ? "Reading" : "Select"}</span>
               </span>
               <span className="numeral mt-auto text-[clamp(4rem,8vw,7rem)]">{t.id.toUpperCase()}</span>
               <span className="mt-4 block font-serif text-[clamp(1.5rem,2.4vw,2.25rem)] leading-[1.05] tracking-tight">{t.title}</span>
-              <span className={`mt-2 block text-sm ${on ? "text-paper/70" : "text-ink-3"}`}>{t.sub}</span>
+              <span className={`mt-2 block text-sm ${on ? "text-inverse-muted" : "text-ink-3"}`}>{t.sub}</span>
             </button>
           );
         })}
       </div>
 
-      <div role="tabpanel" id={`track-panel-${track}`} aria-labelledby={`track-tab-${track}`} key={track} className="panel-in mt-24">
+      <div {...panelProps(track)} key={track} className="panel-in mt-24 focus-visible:outline-offset-8">
         {track === "a" ? <TrackA /> : <TrackB />}
       </div>
     </Section>
@@ -90,6 +83,12 @@ function TrackA() {
   const portfolio = usePersistentSet("de-guide:hybrid-portfolio");
   const m = sixMonthPlan[month - 1];
   const interview = comparison.find((r) => r.dimension === "Interview focus")!;
+  const months = useTabList({
+    ids: sixMonthPlan.map((x) => String(x.month)),
+    value: String(month),
+    onChange: (id) => setMonth(Number(id)),
+    idPrefix: "month",
+  });
 
   return (
     <div className="space-y-28">
@@ -139,35 +138,21 @@ function TrackA() {
       <div>
         <SubHead n="A.2" title="A six-month technical transition" note="Browser standards first, AI acceleration second. Standardised on React, TypeScript and Tailwind." />
 
-        <div role="tablist" aria-label="Month" className="grid grid-cols-6 border-t border-ink">
+        <div {...months.listProps} aria-label="Month" className="grid grid-cols-6 border-t border-ink">
           {sixMonthPlan.map((x, i) => {
             const on = month === x.month;
             const done = x.month < month;
             return (
               <button
                 key={x.month}
-                type="button"
-                role="tab"
-                id={`month-tab-${x.month}`}
-                aria-selected={on}
-                aria-controls={`month-panel-${x.month}`}
-                tabIndex={on ? 0 : -1}
-                onClick={() => setMonth(x.month)}
-                onKeyDown={(e) => {
-                  const d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
-                  if (!d) return;
-                  e.preventDefault();
-                  const n = ((i + d + 6) % 6) + 1;
-                  setMonth(n);
-                  document.getElementById(`month-tab-${n}`)?.focus();
-                }}
+                {...months.tabProps(String(x.month), i)}
                 className={`group relative pb-5 pt-4 text-left ${i > 0 ? "border-l border-line pl-2 sm:pl-4" : ""}`}
               >
                 <span aria-hidden className={`absolute -top-px left-0 right-0 h-[3px] origin-left transition-transform duration-700 ease-silk ${on ? "scale-x-100 bg-accent" : done ? "scale-x-100 bg-ink" : "scale-x-0 bg-ink"}`} />
                 <span className={`numeral block text-[clamp(2rem,4.5vw,4rem)] transition-colors duration-500 ${on ? "text-ink" : "text-ink-3 group-hover:text-ink"}`}>
                   {String(x.month).padStart(2, "0")}
                 </span>
-                <span className={`label mt-2 hidden !text-[10px] sm:block ${on ? "text-accent-ink" : "text-ink-3"}`}>{aiPolicyLabel[x.aiPolicy]}</span>
+                <span className={`label mt-2 hidden sm:block ${on ? "text-accent-ink" : "text-ink-3"}`}>{aiPolicyLabel[x.aiPolicy]}</span>
                 <span className="sr-only">Month {x.month}</span>
               </button>
             );
@@ -175,10 +160,7 @@ function TrackA() {
         </div>
 
         <div
-          role="tabpanel"
-          id={`month-panel-${month}`}
-          aria-labelledby={`month-tab-${month}`}
-          tabIndex={0}
+          {...months.panelProps(String(month))}
           key={month}
           className="stagger grid gap-y-10 border-y border-line py-10 md:grid-cols-12 md:gap-x-6"
         >
@@ -227,10 +209,10 @@ function TrackA() {
               <CheckRow key={h.id} index={i + 1} checked={portfolio.set.has(h.id)} onToggle={() => portfolio.toggle(h.id)} title={h.title} detail={h.detail} />
             ))}
           </ul>
-          <div className="mt-10 bg-ink p-6 text-paper sm:p-8">
-            <p className="label mb-4 text-accent">Expect in interviews</p>
+          <div className="mt-10 bg-inverse p-6 text-on-inverse sm:p-8">
+            <p className="label mb-4 text-inverse-accent">Expect in interviews</p>
             <p className="font-serif text-[1.625rem] leading-[1.15] tracking-tight">{interview.hybrid}</p>
-            <p className="mt-4 text-sm leading-relaxed text-paper/60">Instead of: {interview.traditional}</p>
+            <p className="mt-4 text-sm leading-relaxed text-inverse-muted">Instead of: {interview.traditional}</p>
           </div>
         </div>
       </div>
@@ -240,7 +222,7 @@ function TrackA() {
 
 function StepButton({ disabled, onClick, children }: { disabled: boolean; onClick: () => void; children: string }) {
   return (
-    <button type="button" onClick={onClick} disabled={disabled} className="group label text-ink transition-opacity disabled:cursor-not-allowed disabled:opacity-30">
+    <button type="button" onClick={onClick} disabled={disabled} className="hit group label text-ink transition-opacity disabled:cursor-not-allowed disabled:opacity-30">
       <span className="link-ul-static">{children}</span>
     </button>
   );
@@ -252,6 +234,12 @@ function TrackB() {
   const [stage, setStage] = useState(1);
   const junior = usePersistentSet("de-guide:junior-checklist");
   const s = launchStages[stage - 1];
+  const stages = useTabList({
+    ids: launchStages.map((x) => String(x.n)),
+    value: String(stage),
+    onChange: (id) => setStage(Number(id)),
+    idPrefix: "launch",
+  });
 
   return (
     <div className="space-y-28">
@@ -280,28 +268,24 @@ function TrackB() {
       {/* 4-stage plan */}
       <div>
         <SubHead n="B.1" title="A four-stage launch plan" />
-        <ol className="grid border-t border-ink md:grid-cols-4">
+        <div {...stages.listProps} aria-label="Launch stage" className="grid border-t border-ink md:grid-cols-4">
           {launchStages.map((x, i) => {
             const on = stage === x.n;
             return (
-              <li key={x.n} className={`border-b border-line ${i > 0 ? "md:border-l" : ""}`}>
-                <button
-                  type="button"
-                  aria-expanded={on}
-                  aria-controls="launch-detail"
-                  onClick={() => setStage(x.n)}
-                  className="group relative flex h-full w-full flex-col py-6 text-left md:px-5 md:first:pl-0"
-                >
+              <button
+                key={x.n}
+                {...stages.tabProps(String(x.n), i)}
+                className={`group relative flex h-full w-full flex-col border-b border-line py-6 text-left md:px-5 md:first:pl-0 ${i > 0 ? "md:border-l" : ""}`}
+              >
                   <span aria-hidden className={`absolute -top-px left-0 right-0 h-[3px] origin-left bg-accent transition-transform duration-700 ease-silk ${on ? "scale-x-100" : "scale-x-0"}`} />
                   <span className={`label ${on ? "text-accent-ink" : "text-ink-3"}`}>Stage 0{x.n}</span>
                   <span className={`mt-3 font-serif text-2xl leading-tight tracking-tight transition-colors duration-500 ${on ? "text-ink" : "text-ink-3 group-hover:text-ink"}`}>{x.name}</span>
                   <span className="mt-4 text-xs text-ink-3">{x.output}</span>
-                </button>
-              </li>
+              </button>
             );
           })}
-        </ol>
-        <div id="launch-detail" key={stage} className="panel-in grid-12 border-b border-line py-10" aria-live="polite">
+        </div>
+        <div {...stages.panelProps(String(stage))} key={stage} className="panel-in grid-12 border-b border-line py-10">
           <p className="label col-span-4 text-ink-3 lg:col-span-3">
             Stage 0{s.n} — {s.name}
           </p>

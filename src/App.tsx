@@ -27,12 +27,16 @@ export default function App() {
   useRevealObserver();
   const [grid, setGrid] = useState(false);
 
-  // "G" highlights the 12-column structure the page is set on.
+  // Alt+G highlights the 12-column structure the page is set on. A modifier keeps it from
+  // firing on stray keystrokes or dictated words (WCAG 2.1.4); e.code survives macOS Option glyphs.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const t = e.target as HTMLElement;
-      if (e.metaKey || e.ctrlKey || e.altKey || t.closest("input, textarea, [contenteditable]")) return;
-      if (e.key === "g" || e.key === "G") setGrid((g) => !g);
+      if (!e.altKey || e.metaKey || e.ctrlKey || t.closest("input, textarea, [contenteditable]")) return;
+      if (e.code === "KeyG") {
+        e.preventDefault();
+        setGrid((g) => !g);
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);

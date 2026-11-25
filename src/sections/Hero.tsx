@@ -9,7 +9,7 @@ import {
   patternCategories,
   sources,
 } from "../data/research";
-import { BasisBadge, CountUp, Disclosure, Eyebrow, Lines, Magnetic, Roll, Tag } from "../components/ui";
+import { BasisBadge, CountUp, Disclosure, Eyebrow, Lines, Magnetic, Roll, Tag, useTabList } from "../components/ui";
 
 const patternCount = patternCategories.reduce((n, c) => n + c.patterns.length, 0);
 
@@ -66,7 +66,7 @@ export function Hero() {
                   <span aria-hidden className="arrow font-mono">→</span>
                 </a>
               </Magnetic>
-              <a href="#readiness" className="link-ul-static text-[0.9375rem] font-medium text-ink">
+              <a href="#readiness" className="hit link-ul-static text-[0.9375rem] font-medium text-ink">
                 Or check your portfolio first
               </a>
             </div>
@@ -90,7 +90,7 @@ export function Hero() {
                 <dd className={`numeral order-2 mt-auto text-[clamp(3.5rem,7.5vw,7.5rem)] ${i === 0 ? "text-accent" : "text-ink"}`}>
                   <CountUp value={m.value} />
                 </dd>
-                <dd className="label order-4 mt-4 !text-[10px] text-ink-3">{m.source}</dd>
+                <dd className="label order-4 mt-4 text-ink-3">{m.source}</dd>
               </div>
             ))}
           </dl>
@@ -194,7 +194,7 @@ function HandoffEconomics() {
                 <div key={o.label} className={`flex flex-col pt-5 ${i > 0 ? "border-l border-line pl-3 sm:pl-5" : "pr-3"}`}>
                   <dt className="order-2 mt-3 text-xs leading-snug text-ink-2 sm:text-sm">{o.label}</dt>
                   <dd className="numeral order-1 text-[clamp(2.5rem,4.5vw,4rem)]">{o.value}</dd>
-                  <dd className="label order-3 mt-3 !text-[10px] text-accent-ink">{o.delta}</dd>
+                  <dd className="label order-3 mt-3 text-accent-ink">{o.delta}</dd>
                 </div>
               ))}
             </dl>
@@ -236,6 +236,13 @@ function HandoffEconomics() {
 function Archetypes() {
   const [sel, setSel] = useState(archetypes[0].id);
   const a = archetypes.find((x) => x.id === sel)!;
+  const { listProps, tabProps, panelProps } = useTabList({
+    ids: archetypes.map((x) => x.id),
+    value: sel,
+    onChange: setSel,
+    idPrefix: "arch",
+    orientation: "vertical",
+  });
   return (
     <div className="wrap pb-24 sm:pb-36">
       <header className="mb-14 sm:mb-20">
@@ -255,27 +262,13 @@ function Archetypes() {
         </div>
       </header>
 
-      <div role="tablist" aria-label="Role archetypes" aria-orientation="vertical" className="border-t border-ink">
+      <div {...listProps} aria-label="Role archetypes" className="border-t border-ink">
         {archetypes.map((x, i) => {
           const on = x.id === sel;
           return (
             <button
               key={x.id}
-              type="button"
-              role="tab"
-              id={`arch-tab-${x.id}`}
-              aria-selected={on}
-              aria-controls={`arch-panel-${x.id}`}
-              tabIndex={on ? 0 : -1}
-              onClick={() => setSel(x.id)}
-              onKeyDown={(e) => {
-                const d = e.key === "ArrowRight" || e.key === "ArrowDown" ? 1 : e.key === "ArrowLeft" || e.key === "ArrowUp" ? -1 : 0;
-                if (!d) return;
-                e.preventDefault();
-                const n = archetypes[(i + d + archetypes.length) % archetypes.length];
-                setSel(n.id);
-                document.getElementById(`arch-tab-${n.id}`)?.focus();
-              }}
+              {...tabProps(x.id, i)}
               className="group grid-12 relative w-full items-baseline gap-y-2 border-b border-line py-6 text-left sm:py-8"
             >
               <span className={`label col-span-1 tabular transition-colors duration-500 ${on ? "text-accent-ink" : "text-ink-3"}`}>0{i + 1}</span>
@@ -297,10 +290,7 @@ function Archetypes() {
       </div>
 
       <div
-        role="tabpanel"
-        id={`arch-panel-${a.id}`}
-        aria-labelledby={`arch-tab-${a.id}`}
-        tabIndex={0}
+        {...panelProps(a.id)}
         key={a.id}
         className="grid-12 stagger gap-y-10 border-b border-line py-10 sm:py-14"
       >

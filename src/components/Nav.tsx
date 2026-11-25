@@ -56,12 +56,12 @@ export function Nav({ grid, onToggleGrid }: { grid: boolean; onToggleGrid: () =>
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-paper">
       <div className="wrap grid h-12 grid-cols-[auto_1fr] items-center gap-6 lg:grid-cols-12 lg:gap-6">
-        <a href="#top" className="group label flex items-center gap-2.5 text-ink lg:col-span-3">
+        <a href="#top" className="group label flex items-center gap-2.5 self-stretch text-ink lg:col-span-3">
           <span aria-hidden className="tick text-accent transition-transform duration-700 ease-silk group-hover:rotate-45" />
           <span>DE/26</span>
           <span className="hidden text-ink-3 xl:inline">— Field Guide</span>
         </a>
-        <nav ref={navRef} aria-label="Sections" className="no-scrollbar -mr-4 flex gap-5 overflow-x-auto pr-4 lg:col-span-7 lg:mr-0 lg:justify-between lg:pr-0">
+        <nav ref={navRef} aria-label="Sections" className="no-scrollbar -mr-4 flex gap-5 self-stretch overflow-x-auto pr-4 lg:col-span-7 lg:mr-0 lg:justify-between lg:pr-0">
           {navSections.map((s, i) => {
             const on = active === s.id;
             return (
@@ -69,7 +69,7 @@ export function Nav({ grid, onToggleGrid }: { grid: boolean; onToggleGrid: () =>
                 key={s.id}
                 href={`#${s.id}`}
                 aria-current={on ? "true" : undefined}
-                className={`label flex shrink-0 items-baseline gap-1.5 transition-colors duration-500 ${on ? "text-ink" : "text-ink-3 hover:text-ink"}`}
+                className={`label flex shrink-0 items-center gap-1.5 transition-colors duration-500 ${on ? "text-ink" : "text-ink-3 hover:text-ink"}`}
               >
                 <span className={`tabular transition-colors duration-500 ${on ? "text-accent-ink" : ""}`}>0{i + 1}</span>
                 <span className="link-ul" data-on={on}>
@@ -84,8 +84,9 @@ export function Nav({ grid, onToggleGrid }: { grid: boolean; onToggleGrid: () =>
             type="button"
             onClick={onToggleGrid}
             aria-pressed={grid}
-            title="Show the 12-column grid (G)"
-            className={`link-ul transition-colors ${grid ? "text-accent-ink" : "hover:text-ink"}`}
+            title="Show the 12-column grid (Alt+G)"
+            aria-keyshortcuts="Alt+G"
+            className={`hit link-ul transition-colors ${grid ? "text-accent-ink" : "hover:text-ink"}`}
           >
             Grid
           </button>

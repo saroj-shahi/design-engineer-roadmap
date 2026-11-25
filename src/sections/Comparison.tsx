@@ -159,7 +159,7 @@ function CompensationPanel() {
               );
             })}
           </ul>
-          <p className="label mt-4 !text-[10px] text-ink-3">US annual median · Source: {rows[0]?.source}</p>
+          <p className="label mt-4 text-ink-3">US annual median · Source: {rows[0]?.source}</p>
         </TabPanel>
 
         <div className="mt-20 border-t border-ink">

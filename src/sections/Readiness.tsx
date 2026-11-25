@@ -31,9 +31,10 @@ export function Readiness() {
         <div className="col-span-4 lg:col-span-4">
           <div className="lg:sticky lg:top-24">
             <p className="label text-ink-3">Readiness</p>
-            <p className="numeral mt-4 flex items-start text-[clamp(7rem,15vw,13rem)] text-ink" aria-label={`${pct}% ready`}>
+            <p className="numeral mt-4 flex items-start text-[clamp(7rem,15vw,13rem)] text-ink">
               <span className="tabular">{pct}</span>
-              <span className="mt-[0.12em] text-[0.35em] text-accent">%</span>
+              <span aria-hidden className="mt-[0.12em] text-[0.35em] text-accent">%</span>
+              <span className="sr-only">percent ready</span>
             </p>
             <div className="mt-6 flex gap-1" aria-hidden>
               {readinessItems.map((it, i) => (
@@ -56,7 +57,7 @@ export function Readiness() {
               type="button"
               onClick={reset}
               disabled={done === 0}
-              className="label link-ul-static mt-8 text-ink-3 transition-colors hover:text-ink disabled:pointer-events-none disabled:opacity-30"
+              className="hit label link-ul-static mt-8 text-ink-3 transition-colors hover:text-ink disabled:pointer-events-none disabled:opacity-30"
             >
               Reset checklist
             </button>

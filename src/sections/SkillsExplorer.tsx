@@ -272,6 +272,7 @@ function PatternLibrary() {
   }, [q, cat]);
 
   const count = results.reduce((n, c) => n + c.patterns.length, 0);
+  const total = patternCategories.reduce((n, c) => n + c.patterns.length, 0);
 
   return (
     <div>
@@ -289,7 +290,7 @@ function PatternLibrary() {
             className="input-line mt-1"
           />
         </div>
-        <div role="group" aria-label="Filter by category" className="col-span-4 flex flex-wrap content-end gap-x-5 gap-y-2 lg:col-span-6 lg:col-start-7">
+        <div role="group" aria-label="Filter by category" className="col-span-4 flex flex-wrap content-end gap-x-5 lg:col-span-6 lg:col-start-7">
           <FilterChip on={cat === null} onClick={() => setCat(null)}>
             All
           </FilterChip>
@@ -302,7 +303,7 @@ function PatternLibrary() {
       </div>
 
       <p className="label mt-8 text-ink-3" aria-live="polite">
-        <span className="tabular text-ink">{String(count).padStart(2, "0")}</span> named mechanisms shown — from a 32-pattern taxonomy
+        <span className="tabular text-ink">{String(count).padStart(2, "0")}</span> of {total} named mechanisms shown
       </p>
 
       {results.length === 0 ? (
@@ -351,7 +352,7 @@ function FilterChip({ on, onClick, children }: { on: boolean; onClick: () => voi
       type="button"
       aria-pressed={on}
       onClick={onClick}
-      className={`label flex items-center gap-2 py-1 transition-colors duration-500 ${on ? "text-ink" : "text-ink-3 hover:text-ink"}`}
+      className={`label flex min-h-11 items-center gap-2 transition-colors duration-500 ${on ? "text-ink" : "text-ink-3 hover:text-ink"}`}
     >
       <span aria-hidden className={`tick transition-transform duration-500 ease-silk ${on ? "scale-100 text-accent" : "scale-0"}`} />
       <span className="link-ul" data-on={on}>

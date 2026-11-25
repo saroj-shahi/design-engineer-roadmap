@@ -1,6 +1,7 @@
 import {
   useEffect,
   useId,
+  useLayoutEffect,
   useRef,
   useState,
   type CSSProperties,
@@ -69,14 +70,16 @@ export function Lines({
   );
 }
 
-/** Counts the numeric part of a figure like "−48%" or "3,423" up from zero when it scrolls in. */
+/** Counts the numeric part of a figure like "−48%" or "3,423" up from zero when it scrolls in.
+ *  Renders the real figure first; only zeroes it (before paint) once motion is known to be allowed,
+ *  and snaps back to the real figure for print. */
 export function CountUp({ value, className = "" }: { value: string; className?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const match = value.match(/^([^\d]*)([\d,.]+)(.*)$/);
-  const [shown, setShown] = useState(match ? `${match[1]}0${match[3]}` : value);
+  const [shown, setShown] = useState(value);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const el = ref.current;
+    const match = value.match(/^([^\d]*)([\d,.]+)(.*)$/);
     if (!el || !match || prefersReducedMotion()) {
       setShown(value);
       return;
@@ -85,7 +88,13 @@ export function CountUp({ value, className = "" }: { value: string; className?: 
     const target = parseFloat(num.replace(/,/g, ""));
     const decimals = num.includes(".") ? num.split(".")[1].length : 0;
     const grouped = num.includes(",");
+    setShown(`${pre}0${post}`);
     let raf = 0;
+    const finish = () => {
+      io.disconnect();
+      cancelAnimationFrame(raf);
+      setShown(value);
+    };
     const io = new IntersectionObserver(
       ([e]) => {
         if (!e.isIntersecting) return;
@@ -94,10 +103,8 @@ export function CountUp({ value, className = "" }: { value: string; className?: 
         const dur = 1600;
         const tick = (t: number) => {
           const p = Math.min(1, (t - start) / dur);
-          const eased = 1 - Math.pow(1 - p, 4);
-          const n = target * eased;
-          const str = grouped ? Math.round(n).toLocaleString("en-US") : n.toFixed(decimals);
-          setShown(`${pre}${str}${post}`);
+          const n = target * (1 - Math.pow(1 - p, 4));
+          setShown(`${pre}${grouped ? Math.round(n).toLocaleString("en-US") : n.toFixed(decimals)}${post}`);
           if (p < 1) raf = requestAnimationFrame(tick);
         };
         raf = requestAnimationFrame(tick);
@@ -105,11 +112,12 @@ export function CountUp({ value, className = "" }: { value: string; className?: 
       { threshold: 0.4 },
     );
     io.observe(el);
+    window.addEventListener("beforeprint", finish);
     return () => {
       io.disconnect();
       cancelAnimationFrame(raf);
+      window.removeEventListener("beforeprint", finish);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   return (
@@ -236,7 +244,7 @@ export function Tag({ children, tone = "neutral" }: { children: ReactNode; tone?
     solid: "border-ink bg-ink text-paper",
   };
   return (
-    <span className={`inline-flex max-w-full items-center border px-1.5 py-[3px] font-mono text-[10.5px] leading-4 tracking-tight ${tones[tone]}`}>
+    <span className={`inline-flex max-w-full items-center border px-1.5 py-[3px] font-mono text-[11px] leading-4 tracking-tight ${tones[tone]}`}>
       {children}
     </span>
   );
@@ -254,7 +262,7 @@ const basisStyle: Record<BasisKind, string> = {
 
 export function BasisBadge({ basis }: { basis: BasisKind }) {
   return (
-    <span className={`label inline-flex items-center gap-1.5 whitespace-nowrap !text-[10px] ${basisStyle[basis]}`}>
+    <span className={`label inline-flex items-center gap-1.5 whitespace-nowrap ${basisStyle[basis]}`}>
       <span aria-hidden className={`size-[5px] ${basis === "single" ? "bg-accent" : "bg-current"}`} />
       {basisLabel[basis]}
     </span>
@@ -262,6 +270,58 @@ export function BasisBadge({ basis }: { basis: BasisKind }) {
 }
 
 /* ───────── Tabs (WAI-ARIA tabs pattern, roving tabindex) ───────── */
+
+/** Shared tab behaviour for every tablist on the page: roving tabindex, arrows by orientation, Home/End.
+ *  Spread `listProps` on the tablist, `tabProps(id, i)` on each tab and `panelProps(id)` on the panel. */
+export function useTabList({
+  ids,
+  value,
+  onChange,
+  idPrefix,
+  orientation = "horizontal",
+}: {
+  ids: string[];
+  value: string;
+  onChange: (id: string) => void;
+  idPrefix: string;
+  orientation?: "horizontal" | "vertical";
+}) {
+  const refs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  const onKeyDown = (e: KeyboardEvent<HTMLElement>) => {
+    const i = ids.indexOf(value);
+    const fwd = orientation === "vertical" ? ["ArrowDown", "ArrowRight"] : ["ArrowRight"];
+    const back = orientation === "vertical" ? ["ArrowUp", "ArrowLeft"] : ["ArrowLeft"];
+    let n = -1;
+    if (fwd.includes(e.key)) n = (i + 1) % ids.length;
+    else if (back.includes(e.key)) n = (i - 1 + ids.length) % ids.length;
+    else if (e.key === "Home") n = 0;
+    else if (e.key === "End") n = ids.length - 1;
+    if (n < 0) return;
+    e.preventDefault();
+    onChange(ids[n]);
+    refs.current[n]?.focus();
+  };
+
+  return {
+    listProps: { role: "tablist", "aria-orientation": orientation, onKeyDown } as const,
+    tabProps: (id: string, idx: number) =>
+      ({
+        ref: (el: HTMLButtonElement | null) => {
+          refs.current[idx] = el;
+        },
+        role: "tab",
+        type: "button",
+        id: `${idPrefix}-tab-${id}`,
+        "aria-selected": id === value,
+        "aria-controls": `${idPrefix}-panel-${id}`,
+        tabIndex: id === value ? 0 : -1,
+        onClick: () => onChange(id),
+      }) as const,
+    panelProps: (id: string) =>
+      ({ role: "tabpanel", id: `${idPrefix}-panel-${id}`, "aria-labelledby": `${idPrefix}-tab-${id}`, tabIndex: 0 }) as const,
+  };
+}
 
 export interface TabItem {
   id: string;
@@ -288,22 +348,7 @@ export function Tabs({
   orientation?: "horizontal" | "vertical";
   className?: string;
 }) {
-  const refs = useRef<(HTMLButtonElement | null)[]>([]);
-
-  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-    const i = items.findIndex((t) => t.id === value);
-    const next = orientation === "vertical" ? "ArrowDown" : "ArrowRight";
-    const prev = orientation === "vertical" ? "ArrowUp" : "ArrowLeft";
-    let n = -1;
-    if (e.key === next || (orientation === "vertical" && e.key === "ArrowRight")) n = (i + 1) % items.length;
-    else if (e.key === prev || (orientation === "vertical" && e.key === "ArrowLeft")) n = (i - 1 + items.length) % items.length;
-    else if (e.key === "Home") n = 0;
-    else if (e.key === "End") n = items.length - 1;
-    if (n < 0) return;
-    e.preventDefault();
-    onChange(items[n].id);
-    refs.current[n]?.focus();
-  };
+  const { listProps, tabProps } = useTabList({ ids: items.map((t) => t.id), value, onChange, idPrefix, orientation });
 
   const wrap = {
     underline: "flex gap-8 overflow-x-auto no-scrollbar border-b border-line",
@@ -312,14 +357,14 @@ export function Tabs({
   }[variant];
 
   return (
-    <div role="tablist" aria-label={label} aria-orientation={orientation} onKeyDown={onKeyDown} className={`${wrap} ${className}`}>
+    <div {...listProps} aria-label={label} className={`${wrap} ${className}`}>
       {items.map((t, idx) => {
         const selected = t.id === value;
         const base = {
           underline: `group relative -mb-px shrink-0 pb-3 pt-1 label transition-colors duration-500 ${
             selected ? "text-ink" : "text-ink-3 hover:text-ink"
           }`,
-          segmented: `shrink-0 h-10 px-4 label transition-colors duration-500 ease-silk border-r border-line-strong last:border-r-0 ${
+          segmented: `shrink-0 h-11 px-4 label transition-colors duration-500 ease-silk border-r border-line-strong last:border-r-0 ${
             selected ? "bg-ink text-paper" : "text-ink-3 hover:text-ink hover:bg-sunken"
           }`,
           list:
@@ -332,20 +377,7 @@ export function Tabs({
                 }`,
         }[variant];
         return (
-          <button
-            key={t.id}
-            ref={(el) => {
-              refs.current[idx] = el;
-            }}
-            role="tab"
-            type="button"
-            id={`${idPrefix}-tab-${t.id}`}
-            aria-selected={selected}
-            aria-controls={`${idPrefix}-panel-${t.id}`}
-            tabIndex={selected ? 0 : -1}
-            onClick={() => onChange(t.id)}
-            className={base}
-          >
+          <button key={t.id} {...tabProps(t.id, idx)} className={base}>
             {variant === "list" && orientation === "vertical" ? (
               <>
                 {t.sub && <span className="label w-8 shrink-0 text-ink-3">{t.sub}</span>}

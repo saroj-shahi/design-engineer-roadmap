@@ -57,8 +57,8 @@ export function ToolingPipeline() {
               >
                 <span aria-hidden className={`absolute -top-px left-0 right-0 h-[2px] origin-left bg-accent transition-transform duration-1000 ease-silk ${on ? "scale-x-100" : "scale-x-0"}`} />
                 <div className="flex items-baseline justify-between">
-                  <span className={`numeral text-[4.5rem] transition-colors duration-700 ${on ? "text-ink" : "text-ink-3/50"}`}>0{s.id}</span>
-                  <span className={`label !text-[10px] ${on ? "text-accent-ink" : "text-ink-3"}`}>{on ? "In stack" : "Outside"}</span>
+                  <span className={`numeral text-[4.5rem] transition-colors duration-700 ${on ? "text-ink" : "text-ink-3"}`}>0{s.id}</span>
+                  <span className={`label ${on ? "text-accent-ink" : "text-ink-3"}`}>{on ? "In stack" : "Outside"}</span>
                 </div>
                 <h3 className={`mt-4 text-[1.0625rem] font-medium leading-snug tracking-tight transition-colors duration-700 ${on ? "text-ink" : "text-ink-3"}`}>{s.name}</h3>
                 <ul className="mt-4 flex flex-wrap gap-1">
@@ -67,7 +67,7 @@ export function ToolingPipeline() {
                     return (
                       <li
                         key={t}
-                        className={`border px-1.5 py-[3px] font-mono text-[10.5px] leading-4 transition-colors duration-500 ${
+                        className={`border px-1.5 py-[3px] font-mono text-[11px] leading-4 transition-colors duration-500 ${
                           hit ? "border-accent text-accent-ink" : "border-line text-ink-3"
                         }`}
                       >
@@ -79,7 +79,7 @@ export function ToolingPipeline() {
                 <p className="mt-4 text-xs leading-relaxed text-ink-2">{s.capabilities}</p>
                 <div className="mt-auto pt-6">
                   <div className={`border-t pt-4 transition-colors duration-700 ${on ? "border-ink" : "border-line"}`}>
-                    <span className={`label mb-1.5 block !text-[10px] ${on ? "text-accent-ink" : "text-ink-3"}`}>Human guardrail</span>
+                    <span className={`label mb-1.5 block ${on ? "text-accent-ink" : "text-ink-3"}`}>Human guardrail</span>
                     <p className={`text-xs leading-relaxed ${on ? "text-ink" : "text-ink-3"}`}>{s.guardrail}</p>
                   </div>
                 </div>
