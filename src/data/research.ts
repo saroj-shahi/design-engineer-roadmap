@@ -26,6 +26,9 @@ export interface Archetype {
   signals: string;
   skills: string[];
   skillStats?: { label: string; value: number }[];
+  /** Plain "this fits you if…" line, and which Track A option its plan uses. */
+  fitsIf: string;
+  plan: "pde" | "meta";
 }
 
 export interface CompareRow {
@@ -189,6 +192,8 @@ export const archetypes: Archetype[] = [
     name: "Design Engineer",
     short: "Owns the diff",
     focus: "Product or Brand/Web track",
+    fitsIf: "you care about the last 10% of polish, already tinker in code, and want to own what actually ships.",
+    plan: "pde",
     deliverable:
       "Merged PRs in production codebases. Direct ownership of UI components, design tokens, responsive states, and visual fidelity inside the git diff.",
     signals: "High demand at Vercel, Cursor, Replit, Linear, Lovable, Raycast, and Profound.",
@@ -205,6 +210,8 @@ export const archetypes: Archetype[] = [
     name: "Meta-Designer / Systems Architect",
     short: "Encodes the system",
     focus: "Governance & guardrails",
+    fitsIf: "you think in systems, enjoy tokens and governance, and want to set the rules other people (and AI) build with.",
+    plan: "meta",
     deliverable:
       "Multi-surface design-system governance, Figma MCP data architecture, component constraints, and AI-ready design guardrails.",
     signals:
@@ -221,6 +228,8 @@ export const archetypes: Archetype[] = [
     name: "Agentic Experience (AX) Designer",
     short: "Orchestrates the agent",
     focus: "AI product design",
+    fitsIf: "you're drawn to AI products and research, and to designing for trust, uncertainty and handover between people and agents.",
+    plan: "meta",
     deliverable:
       "Intent-first user flows, human-in-the-loop delegation interfaces, confidence transparency, and probabilistic failure-recovery frameworks.",
     signals: "Deployed across AI-native SaaS, autonomous workflow suites, and complex conversational systems.",
@@ -782,6 +791,8 @@ export const readinessItems: ChecklistItem[] = [
   { id: "ai", title: "Demonstrated AI-assisted workflow", detail: "Evidence you directed Cursor or Claude Code to ship real features." },
   { id: "access", title: "Zero-friction access", detail: "No password walls, no broken links, no clutter." },
   { id: "scope", title: "Honest scope labeling", detail: "Your exact role stated; speculative work labeled as such." },
+  { id: "deployed", title: "A multi-page app you built and deployed", detail: "Routing, state and responsive layouts, live on Vercel or similar. Month 4 of the plan." },
+  { id: "merged", title: "A merged pull request in a real codebase", detail: "Even a small UI fix in your team's repo or an open-source project. Month 5 of the plan." },
 ];
 
 export interface Source {

@@ -14,7 +14,7 @@ import { HandoffFlow } from "../components/HandoffFlow";
 import { HandoffPlate } from "../components/HandoffPlate";
 import { HeroStage } from "../components/HeroStage";
 import { ArchetypeGlyph, ArrowGlyph } from "../components/icons";
-import { BasisBadge, CountUp, Disclosure, Eyebrow, FolderTab, Lines, Magnetic, Roll, Tag, useMediaQuery, useTabList } from "../components/ui";
+import { BasisBadge, CountUp, Disclosure, Eyebrow, FolderTab, Lines, Roll, TRACK_A_OPTION_KEY, Tag, useMediaQuery, useStoredChoice, useTabList, useTrack } from "../components/ui";
 
 const patternCount = patternCategories.reduce((n, c) => n + c.patterns.length, 0);
 
@@ -41,26 +41,21 @@ export function Hero() {
             />
           </div>
 
-          <div className="col-span-4 lg:col-span-7 lg:col-start-6 lg:row-span-2 lg:row-start-1 lg:self-center" data-reveal style={{ "--d": "350ms" } as CSSProperties}>
-            <HeroStage />
-          </div>
-
           <div className="col-span-4 lg:col-span-5 lg:row-start-2">
-            <p className="lede !max-w-[38ch] !text-ink" data-reveal style={{ "--d": "500ms" } as CSSProperties}>
+            <p className="label text-accent-ink" data-reveal style={{ "--d": "450ms" } as CSSProperties}>
+              For working product designers, and people just starting out
+            </p>
+            <p className="lede mt-4 !max-w-[38ch] !text-ink" data-reveal style={{ "--d": "500ms" } as CSSProperties}>
               AI made interface code cheap to write, so the people who design now ship it too. This guide shows the three roles that
               came out of that shift, and a six-month path into one.
             </p>
-            <div className="mt-9 flex flex-wrap items-center gap-x-8 gap-y-5" data-reveal style={{ "--d": "650ms" } as CSSProperties}>
-              <Magnetic>
-                <a href="#roadmap" className="btn group">
-                  <Roll>Find your path</Roll>
-                  <ArrowGlyph />
-                </a>
-              </Magnetic>
-              <a href="#readiness" className="hit link-ul-static text-[0.9375rem] font-medium text-ink">
-                Check your portfolio
-              </a>
-            </div>
+            <nav aria-label="Start here" className="mt-8 grid gap-4 sm:grid-cols-2" data-reveal style={{ "--d": "650ms" } as CSSProperties}>
+              <EntryCard href="#archetypes" who="I'm a designer" what="Find which of the three roles fits you" />
+              <EntryCard href="#roadmap/b" who="I'm starting out" what="Go straight to the beginner track" />
+            </nav>
+            <a href="#readiness" className="hit link-ul-static mt-6 inline-block text-[0.9375rem] font-medium text-ink" data-reveal style={{ "--d": "700ms" } as CSSProperties}>
+              Or check if your portfolio is ready
+            </a>
             <p className="label mt-9 flex flex-wrap gap-x-4 gap-y-1 text-ink-3" data-reveal style={{ "--d": "750ms" } as CSSProperties}>
               <span>06 chapters</span>
               <span aria-hidden>·</span>
@@ -70,6 +65,10 @@ export function Hero() {
               <span aria-hidden>·</span>
               <span>Rev. 2026.11</span>
             </p>
+          </div>
+
+          <div className="col-span-4 lg:col-span-7 lg:col-start-6 lg:row-span-2 lg:row-start-1 lg:self-center" data-reveal style={{ "--d": "350ms" } as CSSProperties}>
+            <HeroStage />
           </div>
         </div>
       </div>
@@ -96,11 +95,48 @@ export function Hero() {
             </div>
           ))}
         </dl>
+
+        {/* The question an anxious reader brings, answered next to the scariest number */}
+        <div data-reveal className="card card-accent mt-8 grid gap-y-6 sm:mt-10 lg:grid-cols-12">
+          <p className="card-head label lg:col-span-12">
+            <span>Is my job going away?</span>
+            <span className="hidden sm:inline">The short answer</span>
+          </p>
+          <div className="px-5 sm:px-7 lg:col-span-4 lg:pb-7">
+            <p className="numeral text-[clamp(4rem,8vw,7rem)] text-accent">+6%</p>
+            <p className="mt-3 max-w-[30ch] text-sm leading-snug text-ink-2">US web & interface design jobs, 2025 → 2035</p>
+            <p className="label mt-2 text-ink-3">US BLS projection</p>
+          </div>
+          <div className="px-5 pb-7 sm:px-7 lg:col-span-8 lg:pl-0 lg:pt-1">
+            <p className="font-display text-[clamp(1.75rem,3vw,2.75rem)] leading-[1.05] tracking-tight text-ink">No. It's moving.</p>
+            <p className="mt-4 max-w-[58ch] leading-relaxed text-ink-2">
+              Big-tech hiring for classic design roles is down sharply. But design jobs overall are still projected to grow, and half
+              of designers already ship AI-generated code. Demand is shifting to people who can design <em>and</em> build. The rest of
+              this guide shows how to become one.
+            </p>
+            <a href="#archetypes" className="hit link-ul-static mt-5 inline-flex items-center gap-2 text-[0.9375rem] font-medium text-ink group">
+              Find the role that fits you <ArrowGlyph />
+            </a>
+          </div>
+        </div>
       </div>
 
       <HandoffEconomics />
       <Archetypes />
     </section>
+  );
+}
+
+/** One of the two "start here" doors in the hero: a big, labelled tap target. */
+function EntryCard({ href, who, what }: { href: string; who: string; what: string }) {
+  return (
+    <a href={href} className="card card-lift group flex flex-col">
+      <span className="card-head label">{who}</span>
+      <span className="flex items-center justify-between gap-3 px-4 py-4 text-[0.9375rem] font-medium leading-snug text-ink">
+        {what}
+        <ArrowGlyph />
+      </span>
+    </a>
   );
 }
 
@@ -253,6 +289,8 @@ function HandoffEconomics() {
 
 function Archetypes() {
   const [sel, setSel] = useState(archetypes[0].id);
+  const [, setTrack] = useTrack();
+  const [, setOption] = useStoredChoice(TRACK_A_OPTION_KEY, "pde", ["pde", "meta"]);
   const a = archetypes.find((x) => x.id === sel)!;
   const isLg = useMediaQuery("(min-width: 1024px)");
   const { listProps, tabProps, panelProps } = useTabList({
@@ -263,7 +301,7 @@ function Archetypes() {
     orientation: isLg ? "horizontal" : "vertical",
   });
   return (
-    <div className="wrap pb-24 sm:pb-36">
+    <div id="archetypes" className="wrap scroll-mt-16 pb-24 sm:pb-36">
       <header className="mb-14 pt-10 sm:mb-20">
         <FolderTab index="01.b">
           <p className="label text-ink">Three emerging archetypes</p>
@@ -309,6 +347,22 @@ function Archetypes() {
           <span>{a.name}</span>
           <span className="hidden sm:inline">{a.short}</span>
         </p>
+        <div className="flex flex-col gap-5 border-b-2 border-dashed border-edge bg-accent-soft px-5 py-6 sm:px-8 lg:flex-row lg:items-center lg:justify-between">
+          <p className="max-w-[60ch] font-display text-[clamp(1.375rem,2vw,1.75rem)] leading-[1.15] tracking-tight text-ink">
+            <span className="text-accent-ink">This fits you if</span> {a.fitsIf}
+          </p>
+          <a
+            href={`#roadmap/a/${a.plan}`}
+            onClick={() => {
+              setTrack("a");
+              setOption(a.plan);
+            }}
+            className="btn group shrink-0"
+          >
+            <Roll>See the plan for this role</Roll>
+            <ArrowGlyph />
+          </a>
+        </div>
         <div className="grid-12 stagger gap-y-10 px-5 py-8 sm:px-8 sm:py-10">
         <div className="col-span-4 lg:col-span-5" style={{ "--i": 0 } as CSSProperties}>
           <Eyebrow>Core deliverable & scope</Eyebrow>

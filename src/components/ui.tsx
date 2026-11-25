@@ -573,6 +573,94 @@ export function usePersistentSet(key: string) {
   return { set, toggle, reset };
 }
 
+/* ───────── Reader's track: shared, persisted, deep-linkable ─────────
+   One stored choice per key, kept in localStorage and broadcast so every
+   component reading it stays in sync. Deep links like #roadmap/b,
+   #roadmap/a/meta or #readiness/b write the choice, then scroll there. */
+
+const STORE_EVENT = "de-guide:store";
+export type Track = "a" | "b";
+export const TRACK_KEY = "de-guide:track";
+export const TRACK_A_OPTION_KEY = "de-guide:track-a-option";
+
+function readStored<T extends string>(key: string, fallback: T, allowed: readonly T[]): T {
+  try {
+    const v = localStorage.getItem(key) as T | null;
+    return v && allowed.includes(v) ? v : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function writeStored(key: string, value: string) {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    /* storage unavailable: the choice lives for this page view only */
+  }
+  window.dispatchEvent(new CustomEvent(STORE_EVENT, { detail: { key, value } }));
+}
+
+/** A persisted single choice (track, option…) that stays in sync across components. */
+export function useStoredChoice<T extends string>(key: string, fallback: T, allowed: readonly T[]) {
+  const [value, setValue] = useState<T>(() => readStored(key, fallback, allowed));
+  useEffect(() => {
+    const on = (e: Event) => {
+      const d = (e as CustomEvent<{ key: string; value: string }>).detail;
+      if (d?.key === key && allowed.includes(d.value as T)) setValue(d.value as T);
+    };
+    window.addEventListener(STORE_EVENT, on);
+    return () => window.removeEventListener(STORE_EVENT, on);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key]);
+  const set = (v: T) => {
+    setValue(v);
+    writeStored(key, v);
+  };
+  return [value, set] as const;
+}
+
+export function useTrack() {
+  return useStoredChoice<Track>(TRACK_KEY, "a", ["a", "b"]);
+}
+
+/** Reads deep links (#roadmap/b, #roadmap/a/meta, #readiness/a), stores the choice and scrolls to the section.
+ *  Mount once, at the app root. */
+export function useDeepLinks() {
+  useEffect(() => {
+    const apply = () => {
+      const m = location.hash.match(/^#(roadmap|readiness)\/(a|b)(?:\/(pde|meta))?$/);
+      if (!m) return;
+      const [, section, track, option] = m;
+      writeStored(TRACK_KEY, track);
+      if (option) writeStored(TRACK_A_OPTION_KEY, option);
+      // Let React render the chosen track first, then scroll to its section.
+      window.setTimeout(() => document.getElementById(section)?.scrollIntoView({ block: "start" }), 60);
+    };
+    // Re-clicking a link to the hash already in the address bar fires no hashchange: handle it here.
+    const onClick = (e: MouseEvent) => {
+      const link = (e.target as Element | null)?.closest?.("a[href^='#']");
+      if (link && link.getAttribute("href") === location.hash) apply();
+    };
+    apply();
+    window.addEventListener("hashchange", apply);
+    document.addEventListener("click", onClick);
+    return () => {
+      window.removeEventListener("hashchange", apply);
+      document.removeEventListener("click", onClick);
+    };
+  }, []);
+}
+
+/** Point the address bar at the current choice without adding history entries or jumping. */
+export function replaceHash(hash: string) {
+  try {
+    history.replaceState(null, "", hash);
+  } catch {
+    /* ignore */
+  }
+}
+
 /** Segmented meter: one cell per item, filled cells in accent. */
 export function Meter({ value, max, label }: { value: number; max: number; label: string }) {
   return (

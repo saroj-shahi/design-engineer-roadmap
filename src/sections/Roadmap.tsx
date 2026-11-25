@@ -5,17 +5,14 @@ import {
   beginnerContext,
   beginnerStack,
   comparison,
-  hybridPortfolio,
   icGrowth,
-  juniorChecklist,
   launchStages,
   leverageHabits,
   sixMonthPlan,
   trackAOptions,
 } from "../data/research";
-import { CheckRow, Eyebrow, Meter, Section, SectionHeader, SubHead, Tag, usePersistentSet, useTabList } from "../components/ui";
+import { CheckRow, Eyebrow, Meter, Section, SectionHeader, SubHead, Tag, TRACK_A_OPTION_KEY, replaceHash, usePersistentSet, useStoredChoice, useTabList, useTrack, type Track } from "../components/ui";
 
-type Track = "a" | "b";
 
 /** The six months fall into three two-month phases; notes are the months' own AI policies. */
 const phases = [
@@ -25,7 +22,11 @@ const phases = [
 ].map((p) => ({ ...p, note: p.months.map((m) => aiPolicyLabel[sixMonthPlan[m - 1].aiPolicy]).join(" → ") }));
 
 export function Roadmap() {
-  const [track, setTrack] = useState<Track>("a");
+  const [track, setTrackStored] = useTrack();
+  const setTrack = (t: Track) => {
+    setTrackStored(t);
+    replaceHash(`#roadmap/${t}`);
+  };
   const tracks = [
     { id: "a" as const, glyph: "stairs" as const, kicker: "Track A", title: "I'm a practising product designer", sub: "Evolve into a hybrid role" },
     { id: "b" as const, glyph: "launch" as const, kicker: "Track B", title: "I'm starting out", sub: "Launch as a code-literate builder" },
@@ -90,10 +91,9 @@ export function Roadmap() {
 /* ───────────── Track A ───────────── */
 
 function TrackA() {
-  const [choice, setChoice] = useState(trackAOptions[0].id);
+  const [choice, setChoice] = useStoredChoice(TRACK_A_OPTION_KEY, "pde", ["pde", "meta"]);
   const [month, setMonth] = useState(1);
   const habits = usePersistentSet("de-guide:habits");
-  const portfolio = usePersistentSet("de-guide:hybrid-portfolio");
   const m = sixMonthPlan[month - 1];
   const interview = comparison.find((r) => r.dimension === "Interview focus")!;
   const months = useTabList({
@@ -118,7 +118,7 @@ function TrackA() {
                   key={o.id}
                   className={`card card-lift group relative cursor-pointer p-6 sm:p-8 ${on ? "card-on" : ""}`}
                 >
-                  <input type="radio" name="trackA" value={o.id} checked={on} onChange={() => setChoice(o.id)} className="sr-only" />
+                  <input type="radio" name="trackA" value={o.id} checked={on} onChange={() => setChoice(o.id as "pde" | "meta")} className="sr-only" />
                   <span className="flex items-start gap-4">
                     <span aria-hidden className={`mt-2 grid size-4 shrink-0 place-items-center border transition-colors duration-500 ${on ? "border-accent" : "border-line-strong group-hover:border-ink"}`}>
                       <span className={`size-2 bg-accent transition-transform duration-500 ease-silk ${on ? "scale-100" : "scale-0"}`} />
@@ -234,12 +234,7 @@ function TrackA() {
         </div>
         <div className="lg:col-span-6 lg:col-start-7">
           <SubHead n="A.4" title="Hybrid portfolio & interviews" />
-          <Meter value={portfolio.set.size} max={hybridPortfolio.length} label="Portfolio components" />
-          <ul className="card mt-6 px-5 sm:px-6 [&>li:last-child]:border-b-0">
-            {hybridPortfolio.map((h, i) => (
-              <CheckRow key={h.id} index={i + 1} checked={portfolio.set.has(h.id)} onToggle={() => portfolio.toggle(h.id)} title={h.title} detail={h.detail} />
-            ))}
-          </ul>
+          <ChecklistLink href="#readiness/a" title="Your portfolio checklist" detail="Live demo, public repo, writeup, AI workflow proof and more. One list, tracked in chapter 06." />
           <div className="mt-10 border-2 border-edge bg-inverse p-6 text-on-inverse shadow-[var(--sh-accent)] sm:p-8">
             <p className="label mb-4 text-inverse-accent">Expect in interviews</p>
             <p className="font-display text-[1.625rem] leading-[1.15] tracking-tight">{interview.hybrid}</p>
@@ -248,6 +243,21 @@ function TrackA() {
         </div>
       </div>
     </div>
+  );
+}
+
+function ChecklistLink({ href, title, detail }: { href: string; title: string; detail: string }) {
+  return (
+    <a href={href} className="card card-lift group mt-6 flex items-start gap-5 p-5 sm:p-6">
+      <Glyph name="check" className="!size-12 shrink-0 text-ink" />
+      <span className="min-w-0 flex-1">
+        <span className="flex items-center justify-between gap-3 text-[1.0625rem] font-medium tracking-tight text-ink">
+          {title}
+          <ArrowGlyph />
+        </span>
+        <span className="mt-1.5 block text-sm leading-relaxed text-ink-2">{detail}</span>
+      </span>
+    </a>
   );
 }
 
@@ -265,7 +275,6 @@ function StepButton({ disabled, onClick, children, dir }: { disabled: boolean; o
 
 function TrackB() {
   const [stage, setStage] = useState(1);
-  const junior = usePersistentSet("de-guide:junior-checklist");
   const s = launchStages[stage - 1];
   const stages = useTabList({
     ids: launchStages.map((x) => String(x.n)),
@@ -276,26 +285,6 @@ function TrackB() {
 
   return (
     <div className="space-y-28">
-      <div>
-        <dl className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-4">
-          {beginnerContext.map((c, i) => (
-            <div
-              key={c.label}
-              data-reveal
-              style={{ "--i": i } as CSSProperties}
-              className="card card-lift flex flex-col p-4 sm:p-6"
-            >
-              <dt className="order-2 mt-3 text-sm text-ink-2">{c.label}</dt>
-              <dd className="numeral order-1 text-[clamp(3rem,6vw,5.5rem)]">{c.value}</dd>
-            </div>
-          ))}
-        </dl>
-        <p className="mt-6 max-w-[62ch] text-sm leading-relaxed text-ink-3">
-          AI now handles basic interface assembly, so static-only UI portfolios rarely clear screening. Position yourself as a
-          code-literate product builder.
-        </p>
-      </div>
-
       {/* 4-stage plan */}
       <div>
         <SubHead n="B.1" title="A four-stage launch plan" />
@@ -324,9 +313,30 @@ function TrackB() {
         </div>
       </div>
 
+      <div>
+        <SubHead n="B.2" title="The market you're entering" note="Crowded, not closed. Seed-stage startups have the highest design hiring rate (25%), and a portfolio with something that runs puts you ahead of most of the 300–800 applicants per role." />
+        <dl className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-4">
+          {beginnerContext.map((c, i) => (
+            <div
+              key={c.label}
+              data-reveal
+              style={{ "--i": i } as CSSProperties}
+              className="card card-lift flex flex-col p-4 sm:p-6"
+            >
+              <dt className="order-2 mt-3 text-sm text-ink-2">{c.label}</dt>
+              <dd className="numeral order-1 text-[clamp(3rem,6vw,5.5rem)]">{c.value}</dd>
+            </div>
+          ))}
+        </dl>
+        <p className="mt-6 max-w-[62ch] text-sm leading-relaxed text-ink-3">
+          AI now handles basic interface assembly, so static-only UI portfolios rarely clear screening. Position yourself as a
+          code-literate product builder.
+        </p>
+      </div>
+
       {/* Stack */}
       <div>
-        <SubHead n="B.2" title="One focused stack, in order" note="Resist tool sprawl. Learn the fundamentals before AI screen generation." />
+        <SubHead n="B.3" title="One focused stack, in order" note="Resist tool sprawl. Learn the fundamentals before AI screen generation." />
         <ol className="grid gap-4 md:grid-cols-3">
           {beginnerStack.map((p, i) => (
             <li key={p.phase} className="card card-lift p-5 sm:p-6">
@@ -345,16 +355,11 @@ function TrackB() {
 
       <div className="grid gap-y-24 lg:grid-cols-12 lg:gap-x-6">
         <div className="lg:col-span-6">
-          <SubHead n="B.3" title="Junior portfolio screening" />
-          <Meter value={junior.set.size} max={juniorChecklist.length} label="Screening criteria met" />
-          <ul className="card mt-6 px-5 sm:px-6 [&>li:last-child]:border-b-0">
-            {juniorChecklist.map((h, i) => (
-              <CheckRow key={h.id} index={i + 1} checked={junior.set.has(h.id)} onToggle={() => junior.toggle(h.id)} title={h.title} detail={h.detail} />
-            ))}
-          </ul>
+          <SubHead n="B.4" title="Junior portfolio screening" />
+          <ChecklistLink href="#readiness/b" title="Your screening checklist" detail="Clear scope, changed thinking, a live build, zero-friction access. Tick it off in chapter 06." />
         </div>
         <div className="lg:col-span-5 lg:col-start-8">
-          <SubHead n="B.4" title="Year one: IC1 → IC2" />
+          <SubHead n="B.5" title="Year one: IC1 → IC2" />
           <ol className="space-y-4">
             {icGrowth.map((g, i) => (
               <li key={g.name} className="card card-lift grid grid-cols-[3rem_1fr] gap-x-3 p-5" data-reveal style={{ "--i": i } as CSSProperties}>

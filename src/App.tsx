@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Nav } from "./components/Nav";
-import { useRevealObserver } from "./components/ui";
+import { useDeepLinks, useRevealObserver } from "./components/ui";
 import { Hero } from "./sections/Hero";
 import { Comparison } from "./sections/Comparison";
 import { SkillsExplorer } from "./sections/SkillsExplorer";
@@ -25,6 +25,7 @@ function GridOverlay({ on }: { on: boolean }) {
 
 export default function App() {
   useRevealObserver();
+  useDeepLinks();
   const [grid, setGrid] = useState(false);
 
   // Alt+G highlights the 12-column structure the page is set on. A modifier keeps it from
