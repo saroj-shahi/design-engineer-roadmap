@@ -211,6 +211,16 @@ body {
   line-height: 1;
   letter-spacing: -0.014em;
 }
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(3.75rem, 6.2vw, 7.25rem);
+  font-stretch: 62%;
+  font-weight: 600;
+  line-height: 0.86;
+  letter-spacing: -0.025em;
+  word-spacing: 0.06em;
+}
+@media (max-width: 1023px) { .hero-title { font-size: clamp(3.5rem, 15vw, 7rem); } }
 .numeral {
   font-stretch: 62%;
   font-weight: 600;
@@ -586,6 +596,168 @@ em, .italic { font-style: italic; }
 
   .glyph-browser .g-hero { transform-origin: 0% 50%; }
   :is(.group:hover, .group:focus-visible) .glyph-browser .g-hero { animation: glyph-measure 600ms var(--ease) both; }
+}
+
+/* ───────── Hero stage (HeroStage.tsx) ─────────
+   Every position is in cqw of the stage, so one scene recomposes
+   from a 4:5 phone canvas to a 7:5 desktop canvas. State lives on
+   [data-phase]; cards move with `translate`/`scale`, parallax with
+   `transform`, so the two never fight. */
+.hs-wrap { container-type: inline-size; }
+.hs-canvas {
+  position: relative;
+  aspect-ratio: 7 / 5;
+  border: 2px solid var(--edge);
+  background-color: var(--card);
+  overflow: hidden;
+  --W: 31; --Hc: 18; --Ha: 22;
+  --dx: 3; --dy: 5; --ex: 66; --ey: 31; --bx: 34.5; --by: 4;
+  --ay: 42; --a1: 3; --a2: 34.5; --a3: 66;
+  --tx: 50; --ty: 27;
+  --fs-title: 2.9cqw; --fs-sub: 1.55cqw; --fs-label: 1.2cqw; --g: 5.2cqw; --pad: 1.6cqw;
+}
+.hs-lines { position: absolute; inset: 0; width: 100%; height: 100%; }
+.hs-lines-narrow { display: none; }
+@container (max-width: 559px) {
+  .hs-canvas {
+    aspect-ratio: 25 / 24;
+    --W: 45; --Hc: 30; --Ha: 40;
+    --dx: 3; --dy: 4; --ex: 52; --ey: 52; --bx: 27.5; --by: 4;
+    --ay: 50; --a1: 2; --a2: 34.5; --a3: 67;
+    --tx: 25.5; --ty: 47;
+    --fs-title: 5cqw; --fs-sub: 3.1cqw; --fs-label: 2.5cqw; --g: 8cqw; --pad: 3cqw;
+  }
+  .hs-lines-wide { display: none; }
+  .hs-lines-narrow { display: block; }
+  .hs-arch { --W: 31; }
+  .hs-arch .hs-title { font-size: max(12px, 4cqw); }
+}
+
+.hs-card {
+  position: absolute;
+  left: calc(var(--x) * 1cqw);
+  top: calc(var(--y) * 1cqw);
+  width: calc(var(--W) * 1cqw);
+  height: calc(var(--Hc) * 1cqw);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.hs-card .card-head { font-size: max(9px, var(--fs-label)); padding: calc(var(--pad) * 0.5) var(--pad); white-space: nowrap; }
+.hs-body { display: flex; flex: 1; flex-direction: column; gap: calc(var(--pad) * 0.5); padding: var(--pad); min-height: 0; }
+.hs-body-row { flex-direction: row; align-items: center; gap: var(--pad); }
+.hs-glyph { width: var(--g) !important; height: var(--g) !important; flex-shrink: 0; }
+.hs-title {
+  font-family: var(--font-display);
+  font-stretch: 70%;
+  font-weight: 600;
+  font-size: max(14px, var(--fs-title));
+  line-height: 0.95;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+.hs-sub { margin-top: 0.35em; font-size: max(11px, var(--fs-sub)); line-height: 1.25; color: var(--ink-2); }
+
+.hs-designer { --x: var(--dx); --y: var(--dy); }
+.hs-engineer { --x: var(--ex); --y: var(--ey); }
+.hs-builder { --x: var(--bx); --y: var(--by); }
+.hs-arch { --y: var(--ay); height: calc(var(--Ha) * 1cqw); }
+.hs-a1 { --x: var(--a1); }
+.hs-a2 { --x: var(--a2); }
+.hs-a3 { --x: var(--a3); }
+
+/* Handoff tag */
+.hs-tag {
+  position: absolute;
+  left: calc(var(--tx) * 1cqw);
+  top: calc(var(--ty) * 1cqw);
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+.hs-tag-box {
+  position: relative;
+  padding: 0.35rem 0.7rem 0.3rem;
+  background: var(--card);
+  border: 2px solid var(--accent);
+  color: var(--accent-ink);
+  font-size: max(10px, var(--fs-label));
+}
+.hs-tag-sub { font-size: max(9px, calc(var(--fs-label) * 0.9)); color: var(--ink-3); background: var(--card); padding: 0 0.3rem; }
+.hs-strike {
+  position: absolute;
+  left: -6%;
+  right: -6%;
+  top: 50%;
+  height: 3px;
+  margin-top: -1.5px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+/* ── Phase: before ── */
+.hs-canvas[data-phase="before"] .hs-builder { scale: 0.88; opacity: 0; }
+.hs-canvas[data-phase="before"] .hs-arch {
+  translate: calc((var(--bx) - var(--x)) * 1cqw) calc((var(--by) - var(--y)) * 1cqw);
+  scale: 0.7;
+  opacity: 0;
+}
+.hs-canvas[data-phase="before"] .hs-tree { stroke-dashoffset: 1; opacity: 0; }
+
+/* ── Phase: now ── */
+.hs-canvas[data-phase="after"] .hs-designer,
+.hs-canvas[data-phase="after"] .hs-engineer {
+  translate: calc((var(--bx) - var(--x)) * 1cqw) calc((var(--by) - var(--y)) * 1cqw);
+  scale: 0.94;
+  opacity: 0;
+}
+.hs-canvas[data-phase="after"] .hs-handoff { opacity: 0; }
+.hs-canvas[data-phase="after"] .hs-tag { opacity: 0; translate: 0 4cqw; }
+.hs-canvas[data-phase="after"] .hs-strike { transform: scaleX(1); }
+.hs-canvas[data-phase="after"] .hs-tree { stroke-dashoffset: 0; }
+
+/* Choreography: handoff struck → cards merge → builder lands → paths branch */
+.hs-card, .hs-tag, .hs-handoff, .hs-tree { transition: opacity 400ms var(--ease); }
+@media (prefers-reduced-motion: no-preference) {
+  .hs-card {
+    transform: translate(calc(var(--px, 0) * var(--depth, 3) * 1px), calc(var(--py, 0) * var(--depth, 3) * 1px));
+    transition:
+      translate 900ms var(--spring),
+      scale 900ms var(--spring),
+      opacity 450ms var(--ease),
+      transform 600ms var(--ease);
+  }
+  .hs-strike { transition: transform 450ms var(--ease); }
+  .hs-tag { transition: opacity 400ms var(--ease) 500ms, translate 600ms var(--ease) 500ms; }
+  .hs-handoff { transition: opacity 400ms var(--ease) 500ms; }
+  .hs-tree { transition: stroke-dashoffset 700ms var(--ease), opacity 300ms var(--ease); }
+
+  /* The two old cards stay solid while they slide together, then hand over to the builder */
+  .hs-canvas[data-phase="after"] .hs-designer,
+  .hs-canvas[data-phase="after"] .hs-engineer {
+    transition:
+      translate 750ms var(--ease-in-out) 550ms,
+      scale 750ms var(--ease-in-out) 550ms,
+      opacity 220ms var(--ease) 1250ms,
+      transform 600ms var(--ease);
+  }
+  .hs-canvas[data-phase="after"] .hs-builder {
+    transition:
+      opacity 200ms var(--ease) 1220ms,
+      scale 700ms var(--spring) 1220ms,
+      transform 600ms var(--ease);
+  }
+  .hs-canvas[data-phase="after"] .hs-tree { transition-delay: 1650ms; }
+  .hs-canvas[data-phase="after"] .hs-arch { transition-delay: calc(1750ms + var(--i) * 110ms); }
+
+  .hs-canvas[data-phase="before"] .hs-designer,
+  .hs-canvas[data-phase="before"] .hs-engineer { transition-delay: 350ms; }
+  .hs-canvas[data-phase="before"] .hs-tag { transition-delay: 600ms; }
+  .hs-canvas[data-phase="before"] .hs-handoff { transition-delay: 600ms; }
+  .hs-canvas[data-phase="before"] .hs-strike { transition-delay: 0ms; transform: scaleX(0); }
 }
 
 /* Plate I (HandoffPlate): depth parallax, breathing code layer, live caret */

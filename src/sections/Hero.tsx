@@ -12,6 +12,7 @@ import {
 import { ArchetypeVenn } from "../components/ArchetypeVenn";
 import { HandoffFlow } from "../components/HandoffFlow";
 import { HandoffPlate } from "../components/HandoffPlate";
+import { HeroStage } from "../components/HeroStage";
 import { ArchetypeGlyph, ArrowGlyph } from "../components/icons";
 import { BasisBadge, CountUp, Disclosure, Eyebrow, FolderTab, Lines, Magnetic, Roll, Tag, useMediaQuery, useTabList } from "../components/ui";
 
@@ -29,62 +30,50 @@ export function Hero() {
           <p className="hidden text-right lg:col-span-3 lg:block">Six chapters</p>
         </div>
 
-        <Lines
-          as="h1"
-          id="shift-title"
-          delay={150}
-          className="display-xxl mt-14 text-ink sm:mt-24"
-          lines={[
-            "The handoff",
-            <span className="block pl-[12%] lg:pl-[25%]">collapsed.</span>,
-            <em className="text-accent">Builders</em>,
-            <span className="block pl-[12%] lg:pl-[41.66%]">took its place.</span>,
-          ]}
-        />
-
-        <div className="grid-12 mt-16 gap-y-12 sm:mt-24">
-          {/* Colophon ledger */}
-          <div className="card label col-span-4 self-end text-ink-3 lg:col-span-3" data-reveal style={{ "--d": "600ms" } as CSSProperties}>
-            <p className="card-head">
-              <span>Colophon</span>
-              <span>Ed. 2026</span>
-            </p>
-            <dl className="px-4 py-2">
-            {[
-              ["Chapters", "06"],
-              ["Named patterns", String(patternCount).padStart(2, "0")],
-              ["Sources", String(sources.length).padStart(2, "0")],
-              ["Revised", "2026.11"],
-            ].map(([k, v]) => (
-              <div key={k} className="flex justify-between border-t border-line py-2 first:border-t-0">
-                <dt>{k}</dt>
-                <dd className="tabular text-ink">{v}</dd>
-              </div>
-            ))}
-            </dl>
+        <div className="grid-12 mt-10 gap-y-10 sm:mt-14 lg:items-end">
+          <div className="col-span-4 lg:col-span-5 lg:row-start-1">
+            <Lines
+              as="h1"
+              id="shift-title"
+              delay={150}
+              className="hero-title text-ink"
+              lines={["The handoff", "is gone.", <em className="text-accent">Builders</em>, "took its place."]}
+            />
           </div>
 
-          <div className="col-span-4 lg:col-span-6 lg:col-start-7">
-            <p className="lede !max-w-[40ch] !text-ink" data-reveal style={{ "--d": "500ms" } as CSSProperties}>
-              AI made interface code cheap to write. Handing a design to an engineer stayed slow and expensive. That gap is
-              splitting the Product Designer into hybrid roles: people who own the diff, encode the system, or direct the agent.
+          <div className="col-span-4 lg:col-span-7 lg:col-start-6 lg:row-span-2 lg:row-start-1 lg:self-center" data-reveal style={{ "--d": "350ms" } as CSSProperties}>
+            <HeroStage />
+          </div>
+
+          <div className="col-span-4 lg:col-span-5 lg:row-start-2">
+            <p className="lede !max-w-[38ch] !text-ink" data-reveal style={{ "--d": "500ms" } as CSSProperties}>
+              AI made interface code cheap to write, so the people who design now ship it too. This guide shows the three roles that
+              came out of that shift, and a six-month path into one.
             </p>
-            <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-5" data-reveal style={{ "--d": "650ms" } as CSSProperties}>
+            <div className="mt-9 flex flex-wrap items-center gap-x-8 gap-y-5" data-reveal style={{ "--d": "650ms" } as CSSProperties}>
               <Magnetic>
                 <a href="#roadmap" className="btn group">
-                  <Roll>Pick your roadmap</Roll>
+                  <Roll>Find your path</Roll>
                   <ArrowGlyph />
                 </a>
               </Magnetic>
               <a href="#readiness" className="hit link-ul-static text-[0.9375rem] font-medium text-ink">
-                Or check your portfolio first
+                Check your portfolio
               </a>
             </div>
+            <p className="label mt-9 flex flex-wrap gap-x-4 gap-y-1 text-ink-3" data-reveal style={{ "--d": "750ms" } as CSSProperties}>
+              <span>06 chapters</span>
+              <span aria-hidden>·</span>
+              <span>{patternCount} named patterns</span>
+              <span aria-hidden>·</span>
+              <span>{sources.length} sources</span>
+              <span aria-hidden>·</span>
+              <span>Rev. 2026.11</span>
+            </p>
           </div>
         </div>
       </div>
 
-      {/* Figures band */}
       {/* Figures: one index card per statistic */}
       <div className="wrap mt-24 sm:mt-32">
         <dl className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
