@@ -26,6 +26,7 @@ See **[AGENTS.md](AGENTS.md)** for full cross-agent instructions and **[DESIGN.m
 ## Content rules
 
 - `src/data/research.ts` is the single source of truth, drawn from "The 2026 Product Design Evolution" research brief. **Never invent figures, stats, or sources.** Every number must trace to that brief; change data there, not in JSX.
+- **Glossary exception:** `glossary` entries may also draw on well-established outside standards and common design knowledge (e.g., WCAG contrast ratios and levels, Hick's and Fitts's laws, IC levels). Keep them accurate to the original source, and hedge where practice varies (e.g., "varies by company"). This exception covers definitions only. Market stats, metrics and claims elsewhere on the site still need the brief.
 - Each `Metric` carries a `basis` (`survey | analytics | projection | case`); keep it honest and render it with `BasisBadge`.
 - Copy is plain and direct, and must not slight designers or developers: frame the role as a bridge, not one side catching up to the other.
 - Track A serves **both** working designers upskilling in their current role and those preparing for a new hybrid role — never assume every reader is job-hunting.
