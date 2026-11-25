@@ -14,7 +14,7 @@ A static, five-page field guide for designers moving into design engineering ("D
 - `src/pages/*`: one file per page (`Home`, `Roles`, `Plan`, `Ready`, `Library`). Pages are thin; they compose sections.
 - `src/sections/*`: the real content blocks (`Hero`, `Roadmap`, `Readiness`, `Comparison`, `SkillsExplorer`, `ToolingPipeline`, `Footer`).
 - `src/components/ui.tsx`: shared primitives and hooks: `Section`, `SectionHeader`, `Tabs`/`TabPanel`/`useTabList`, `Disclosure`, `CheckRow`, `Tag`, `BasisBadge`, the router, theme, and persisted state. Check here before writing a new primitive.
-- `src/components/*`: larger illustrations/widgets (`HeroStage`, `ArchetypeVenn`, `HandoffFlow`, `HandoffPlate`, `RoadmapMap`, `Nav`, `icons`).
+- `src/components/*`: larger illustrations/widgets (`HeroStage`, `MarketShiftChart`, `ArchetypeVenn`, `HandoffFlow`, `HandoffPlate`, `AdoptionDumbbell`, `AiAutonomyRamp`, `ProtocolArchitecture`, `RoadmapMap`, `Nav`, `icons`).
 - `src/data/research.ts`: all content data and types.
 - `src/index.css`: design tokens, Tailwind `@theme` mapping, and global component classes.
 

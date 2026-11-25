@@ -1,6 +1,5 @@
 import { type CSSProperties } from "react";
 import {
-  adoptionShift,
   archetypes,
   handoffCases,
   heroMetrics,
@@ -8,42 +7,46 @@ import {
   orgFlattening,
   titleReality,
 } from "../data/research";
+import { AdoptionDumbbell } from "../components/AdoptionDumbbell";
 import { ArchetypeVenn } from "../components/ArchetypeVenn";
 import { HandoffFlow } from "../components/HandoffFlow";
 import { HandoffPlate } from "../components/HandoffPlate";
 import { HeroStage } from "../components/HeroStage";
+import { MarketShiftChart } from "../components/MarketShiftChart";
 import { ArchetypeGlyph, ArrowGlyph } from "../components/icons";
 import { BasisBadge, CountUp, Disclosure, Eyebrow, Lines, Roll, Tag, navigate, pageHref, useMediaQuery, useTabList } from "../components/ui";
 
 export function Hero() {
   return (
     <section id="shift" aria-labelledby="shift-title" className="relative">
-      <div id="top" className="wrap pt-5 sm:pt-8">
-        <div className="grid-12 mt-6 gap-y-10 sm:mt-10 lg:items-end">
-          <div className="@container col-span-4 lg:col-span-5 lg:row-start-1">
-            <h1 id="shift-title" className="hero-title text-ink">
-              <span className="block">The handoff</span>
-              <span className="block">is shrinking.</span>
-              <span className="block"><em className="text-accent-ink">Design and code</em></span>
-              <span className="block">now meet earlier.</span>
-            </h1>
+      <div id="top" className="wrap pt-8 sm:pt-12 lg:pt-14">
+        <div className="grid-12 gap-y-10 lg:items-stretch">
+          <div className="col-span-4 flex flex-col justify-between gap-8 lg:col-span-5">
+            <div className="@container">
+              <h1 id="shift-title" className="hero-title text-ink">
+                <span className="block">The handoff</span>
+                <span className="block">is shrinking.</span>
+                <span className="block"><em className="text-accent-ink">Design and code</em></span>
+                <span className="block">now meet earlier.</span>
+              </h1>
+              <p className="lede mt-6 !max-w-[40ch] !text-ink sm:mt-7">
+                AI tools make it faster to turn a design into working code, so more designers now build alongside developers. This guide
+                shows three roles growing out of that shift, and a six-month path into one.
+              </p>
+            </div>
+
+            <div>
+              <nav aria-label="Start here" className="grid gap-4 sm:grid-cols-2">
+                <EntryCard href="#/roles" who="I'm a designer" what="Find the role that fits you" />
+                <EntryCard href="#/plan/b" who="I'm starting out" what="Start the beginner track" />
+              </nav>
+              <a href="#/ready" className="hit link-ul-static mt-5 inline-block text-[0.9375rem] font-medium text-ink">
+                Or check if your portfolio is ready
+              </a>
+            </div>
           </div>
 
-          <div className="col-span-4 lg:col-span-5 lg:row-start-2">
-            <p className="lede !max-w-[38ch] !text-ink">
-              AI tools make it faster to turn a design into working code, so more designers now build alongside developers. This guide
-              shows three roles growing out of that shift, and a six-month path into one.
-            </p>
-            <nav aria-label="Start here" className="mt-8 grid gap-4 sm:grid-cols-2">
-              <EntryCard href="#/roles" who="I'm a designer" what="Find the role that fits you" />
-              <EntryCard href="#/plan/b" who="I'm starting out" what="Start the beginner track" />
-            </nav>
-            <a href="#/ready" className="hit link-ul-static mt-6 inline-block text-[0.9375rem] font-medium text-ink">
-              Or check if your portfolio is ready
-            </a>
-          </div>
-
-          <div className="col-span-4 lg:col-span-7 lg:col-start-6 lg:row-span-2 lg:row-start-1 lg:self-center">
+          <div className="col-span-4 flex flex-col lg:col-span-7">
             <HeroStage />
           </div>
         </div>
@@ -94,6 +97,8 @@ export function Hero() {
             </div>
           ))}
         </dl>
+
+        <MarketShiftChart />
       </div>
 
     </section>
@@ -103,11 +108,11 @@ export function Hero() {
 /** One of the two "start here" doors in the hero: a big, labelled tap target. */
 function EntryCard({ href, who, what }: { href: string; who: string; what: string }) {
   return (
-    <a href={href} className="card card-lift group flex flex-col">
+    <a href={href} className="card card-lift group flex h-full flex-col">
       <span className="card-head label">{who}</span>
-      <span className="flex items-center justify-between gap-3 px-4 py-4 font-display text-[1.375rem] font-medium leading-[1.1] tracking-tight text-ink sm:px-5 sm:py-5">
-        {what}
-        <ArrowGlyph />
+      <span className="flex flex-1 items-center justify-between gap-3 px-4 py-4 font-display text-[1.25rem] font-medium leading-[1.12] tracking-tight text-ink sm:px-5 sm:py-5">
+        <span className="text-balance">{what}</span>
+        <ArrowGlyph className="shrink-0" />
       </span>
     </a>
   );
@@ -179,35 +184,7 @@ export function HandoffEconomics() {
           </div>
 
           {/* Adoption */}
-          <div className="card">
-            <div className="card-head label">
-              <h4>AI adoption: divergence, then convergence</h4>
-              <span className="hidden sm:block">% of respondents</span>
-            </div>
-            <div className="grid gap-12 px-5 py-7 sm:grid-cols-2 sm:gap-8 sm:px-7">
-              {[adoptionShift.before, adoptionShift.after].map((g, gi) => (
-                <figure key={g.label}>
-                  <figcaption className="label mb-6 flex items-center gap-2 text-ink-3">
-                    <span aria-hidden className={`tick ${gi === 0 ? "text-ink-3" : "text-accent"}`} />
-                    {g.label}
-                  </figcaption>
-                  <ul className="space-y-6">
-                    {g.rows.map((r, ri) => (
-                      <li key={r.who} data-reveal="bar" style={{ "--i": ri } as CSSProperties}>
-                        <div className="flex items-baseline justify-between gap-4">
-                          <span className="text-sm leading-snug text-ink-2">{r.who}</span>
-                          <span className="numeral text-3xl text-ink">{r.value}</span>
-                        </div>
-                        <div className="bar-track mt-2" aria-hidden>
-                          <span className={`bar-fill ${gi === 1 ? "!bg-accent" : ""}`} style={{ width: `${r.value}%` }} />
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </figure>
-              ))}
-            </div>
-          </div>
+          <AdoptionDumbbell />
 
           {/* Org flattening */}
           <div data-reveal className="card">

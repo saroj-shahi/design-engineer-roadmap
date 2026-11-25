@@ -182,6 +182,26 @@ const [dePosts, pdPosts] = usJobPostsMetric.value.split(" vs. ");
 
 export const titleReality = `Design Engineer is still a small, senior title: about ${dePosts} US job posts against ${pdPosts} for Product Designer, and ${seniorDeShareMetric.value} of European listings ask for senior level. For most designers, the first step is hybrid work in the job they already have, not a new title.`;
 
+/** Structured hiring-shift series derived directly from `marketMetrics`, sorted high to low. */
+export interface HiringShiftRow {
+  label: string;
+  value: number;
+  display: string;
+  source: string;
+  focal?: boolean;
+}
+
+export const hiringShiftSeries: HiringShiftRow[] = [
+  { label: "Software eng., startups", value: 7, display: "+7%", source: "SignalFire vs. 2019" },
+  { label: "Web & interface design (2025–35)", value: 6, display: "+6%", source: "US BLS projection" },
+  { label: "Software eng., big tech", value: -11, display: "−11%", source: "SignalFire vs. 2019" },
+  { label: "Design, early-stage startups", value: -22, display: "−22%", source: "SignalFire vs. 2019" },
+  { label: "Front-end share of eng. hiring", value: -25, display: "−25%", source: "SignalFire vs. 2022" },
+  { label: "Marketing, big tech", value: -36, display: "−36%", source: "SignalFire vs. 2019" },
+  { label: "Product manager, big tech", value: -39, display: "−39%", source: "SignalFire vs. 2019" },
+  { label: "Design, big tech", value: -48, display: "−48%", source: "SignalFire vs. 2019", focal: true },
+];
+
 export const orgFlattening = [
   { value: "12", label: "Engineers per engineering manager at big tech", delta: "+14% vs. 2019" },
   { value: "15", label: "Engineers per engineering manager at startups", delta: "+34% vs. 2019" },

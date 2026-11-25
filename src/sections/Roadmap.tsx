@@ -1,5 +1,6 @@
 import { type CSSProperties } from "react";
 import { ArrowBackGlyph, ArrowGlyph, ExternalGlyph, Glyph } from "../components/icons";
+import { AiAutonomyRamp } from "../components/AiAutonomyRamp";
 import { RoadmapMap } from "../components/RoadmapMap";
 import {
   aiPolicyLabel,
@@ -256,6 +257,8 @@ function TrackA({ plan: route }: { plan: PlanA }) {
       {/* 6-month timeline */}
       <div id="month-detail" className="scroll-mt-36 lg:scroll-mt-32">
         <SubHead n="A.2" title="A six-month technical transition" note="Learn the browser before AI tools. The plan uses React, TypeScript and Tailwind." />
+
+        <AiAutonomyRamp plan={plan} activeMonth={month} onSelect={setMonth} />
 
         <ol aria-label="Phases" className="mb-3 grid grid-cols-6 gap-x-2">
           {phases.map((p) => {

@@ -16,9 +16,10 @@ export function HandoffPlate({ className = "" }: { className?: string }) {
 
   return (
     <figure className={`card handoff-plate ${className}`}>
-      <figcaption className="card-head label">
+      <div className="card-head label">
         <span>Handoff, collapsed</span>
-      </figcaption>
+        <span>Plate 01</span>
+      </div>
       <svg
         ref={ref}
         viewBox="0 0 400 400"
@@ -132,6 +133,9 @@ export function HandoffPlate({ className = "" }: { className?: string }) {
           </g>
         </g>
       </svg>
+      <figcaption className="card-foot bg-card text-xs leading-relaxed text-ink-2">
+        Design frame and production component stacked in one workflow — no redline translation layer between them.
+      </figcaption>
     </figure>
   );
 }

@@ -654,7 +654,6 @@ em, .italic { font-style: italic; }
 .hs-canvas {
   position: relative;
   aspect-ratio: 7 / 5;
-  border: 2px solid var(--edge);
   background-color: var(--card);
   overflow: hidden;
   --W: 31; --Hc: 18; --Ha: 22;

@@ -30,21 +30,42 @@ export function ToolingPipeline() {
       </div>
 
       <TabPanel idPrefix="role" id={roleId} className="mt-12">
-        <div className="card grid-12 gap-y-6 px-5 py-6 sm:px-7">
-          <p className="label col-span-4 text-ink-3 lg:col-span-2">Recommended chain</p>
-          <ol className="col-span-4 flex flex-wrap items-baseline gap-x-3 gap-y-2 lg:col-span-10">
-            {role.chain.map((c, i) => (
-              <li key={c} className="flex items-baseline gap-3">
-                <span className="font-display text-[clamp(1.75rem,3vw,2.75rem)] leading-none tracking-tight text-ink">{c}</span>
-                {i < role.chain.length - 1 && (
-                  <span aria-hidden className="font-mono text-sm text-accent">
-                    →
-                  </span>
-                )}
+        <div className="card">
+          <div className="card-head label">
+            <span>Recommended pipeline · {role.label}</span>
+            <span>{role.stages.length} of {toolStages.length} stages active</span>
+          </div>
+          <div className="plate-field px-5 py-6 sm:px-7">
+            <ol aria-label={`${role.label} recommended tool chain`} className="flex flex-wrap items-center gap-3">
+              {role.chain.map((c, i) => {
+                const isLast = i === role.chain.length - 1;
+                return (
+                  <li key={c} className="flex items-center gap-3">
+                    <span
+                      className={`inline-flex items-baseline gap-2.5 border-2 px-3.5 py-2 shadow-[var(--sh-1)] ${
+                        isLast ? "border-edge bg-accent text-[var(--on-accent)]" : "border-edge bg-card text-ink"
+                      }`}
+                    >
+                      <span className={`label tabular ${isLast ? "text-[var(--on-accent)]" : "text-ink-3"}`}>
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <span className="font-display text-[clamp(1.375rem,2.2vw,2rem)] leading-none tracking-tight">{c}</span>
+                    </span>
+                    {!isLast && (
+                      <span aria-hidden className="font-mono text-base text-ink-3">
+                        →
+                      </span>
+                    )}
+                  </li>
+                );
+              })}
+              <li className="ml-auto hidden items-center gap-2 border border-dashed border-line-strong bg-card/80 px-3 py-2 text-xs text-ink-3 lg:inline-flex">
+                <span className="label">Stage 04</span>
+                <span>App builders excluded</span>
               </li>
-            ))}
-          </ol>
-          <p className="col-span-4 max-w-[60ch] text-sm leading-relaxed text-ink-2 lg:col-span-6 lg:col-start-3">{role.summary}</p>
+            </ol>
+          </div>
+          <p className="card-foot bg-card text-sm leading-relaxed text-ink-2">{role.summary}</p>
         </div>
 
         <ol className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

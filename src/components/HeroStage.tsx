@@ -70,16 +70,20 @@ export function HeroStage() {
   };
 
   return (
-    <figure className="hs-wrap" aria-labelledby="hero-stage-caption">
-      <div className="mb-4 flex items-center justify-end gap-4">
-        <div role="group" aria-label="Show the way work moved" className="inline-flex border-2 border-edge bg-card shadow-[var(--sh-1)]">
+    <figure className="card flex h-full flex-col shadow-[var(--sh-2)]" aria-labelledby="hero-stage-caption">
+      <div className="flex items-center justify-between gap-4 border-b-2 border-edge bg-card px-4 py-2 sm:px-5">
+        <span className="label flex items-center gap-2 text-ink-3">
+          <span aria-hidden className="tick text-accent" />
+          <span>How work moved</span>
+        </span>
+        <div role="group" aria-label="Show the way work moved" className="inline-flex border-2 border-edge bg-card">
           {(["before", "after"] as const).map((p) => (
             <button
               key={p}
               type="button"
               aria-pressed={phase === p}
               onClick={() => pick(p)}
-              className={`label h-11 border-edge px-3 transition-colors duration-300 first:border-r-2 sm:px-4 ${
+              className={`label h-11 border-edge px-3.5 transition-colors duration-300 first:border-r-2 sm:h-9 sm:px-4 ${
                 phase === p ? (p === "after" ? "bg-accent text-[var(--on-accent)]" : "bg-edge text-card") : "text-ink-3 hover:bg-sunken hover:text-ink"
               }`}
             >
@@ -89,7 +93,8 @@ export function HeroStage() {
         </div>
       </div>
 
-      <div ref={canvas} className="hs-canvas plate-field" data-phase={phase} onPointerMove={onPointerMove} onPointerLeave={onPointerLeave} aria-hidden>
+      <div className="hs-wrap flex-1">
+        <div ref={canvas} className="hs-canvas plate-field" data-phase={phase} onPointerMove={onPointerMove} onPointerLeave={onPointerLeave} aria-hidden>
         {/* Connectors: the handoff (before) and the branching tree (now). Two drawings, one per layout. */}
         {(["wide", "narrow"] as const).map((v) => (
           <svg key={v} className={`hs-lines hs-lines-${v}`} viewBox={v === "wide" ? "0 0 100 71.43" : "0 0 100 96"} preserveAspectRatio="none">
@@ -148,9 +153,10 @@ export function HeroStage() {
             </div>
           </div>
         ))}
+        </div>
       </div>
 
-      <figcaption id="hero-stage-caption" aria-live={userPicked ? "polite" : undefined} className="mt-5 max-w-[60ch] text-[0.9375rem] leading-relaxed text-ink-2">
+      <figcaption id="hero-stage-caption" aria-live={userPicked ? "polite" : undefined} className="card-foot bg-card px-4 py-3.5 text-[0.9375rem] leading-relaxed text-ink-2 sm:px-5 sm:py-4">
         {captions[phase]}
       </figcaption>
     </figure>

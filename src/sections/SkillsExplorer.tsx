@@ -11,6 +11,7 @@ import {
   type Skill,
 } from "../data/research";
 import { Glyph, type GlyphName } from "../components/icons";
+import { ProtocolArchitecture } from "../components/ProtocolArchitecture";
 import { Disclosure, Lines, Section, SectionHeader, TabPanel, Tabs, Tag, useTabList } from "../components/ui";
 
 const patternTotal = patternCategories.reduce((n, c) => n + c.patterns.length, 0);
@@ -150,6 +151,7 @@ function SkillLedger({ skills, large = false }: { skills: Skill[]; large?: boole
 
 function AxPanel() {
   const [layer, setLayer] = useState(agentLayers[0].id);
+  const [protoId, setProtoId] = useState(protocols[0].id);
   const L = agentLayers.find((l) => l.id === layer)!;
   const layerIndex = agentLayers.findIndex((l) => l.id === layer);
 
@@ -242,11 +244,20 @@ function AxPanel() {
       </div>
 
       {/* Protocols */}
-      <div className="grid-12 gap-y-10">
-        <div className="col-span-4 lg:col-span-4">
-          <Lines as="h3" className="display-m" lines={["Ground the interface", "in how agents", <em>actually talk.</em>]} />
+      <div>
+        <div className="grid-12 mb-8 gap-y-4">
+          <div className="col-span-4 lg:col-span-5">
+            <Lines as="h3" className="display-m" lines={["Ground the interface in how agents", <em>actually talk.</em>]} />
+          </div>
+          <p className="col-span-4 self-end text-sm leading-relaxed text-ink-3 lg:col-span-6 lg:col-start-7">
+            Four open protocols split the job: two connect the agent to the screen (AG-UI, A2UI) and two connect it to tools and peer
+            agents (MCP, A2A). Pick any bridge in the diagram or open the rows below.
+          </p>
         </div>
-        <div className="card col-span-4 px-5 sm:px-6 lg:col-span-7 lg:col-start-6 [&>div:last-child]:border-b-0">
+
+        <ProtocolArchitecture activeId={protoId} onSelect={setProtoId} />
+
+        <div className="card px-5 sm:px-6 [&>div:last-child]:border-b-0">
           {protocols.map((p, i) => (
             <Disclosure
               key={p.id}
@@ -254,7 +265,7 @@ function AxPanel() {
               defaultOpen={i === 0}
               summary={
                 <span className="flex items-baseline gap-4">
-                  <code className="font-mono text-base text-ink">{p.name}</code>
+                  <code className={`font-mono text-base ${protoId === p.id ? "text-accent-ink" : "text-ink"}`}>{p.name}</code>
                   <span className="label text-ink-3">{p.owner}</span>
                 </span>
               }
