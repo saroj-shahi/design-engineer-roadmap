@@ -129,7 +129,7 @@ function SkillLedger({ skills, large = false }: { skills: Skill[]; large?: boole
       {skills.map((s, i) => (
         <li
           key={s.name}
-          className="card card-lift grid-12 group gap-y-3 px-5 py-7 sm:px-7 sm:py-9 lg:sticky lg:top-[calc(2rem+var(--i)*14px)]"
+          className="card card-lift grid-12 group gap-y-3 px-5 py-7 sm:px-7 sm:py-9 lg:sticky lg:top-[calc(5.5rem+var(--i)*14px)]"
           style={{ "--i": i } as CSSProperties}
         >
           <span className="label col-span-1 pt-2 text-ink-3 tabular">{String(i + 1).padStart(2, "0")}</span>
@@ -166,8 +166,8 @@ function AxPanel() {
         <div className="col-span-4 lg:col-span-7">
           <Eyebrow>The discipline shift</Eyebrow>
           <p className="display-l">
-            <span className="block text-ink-3 line-through decoration-[0.04em]">{axShift.from}</span>
-            <span className="sr-only">shifts to</span>
+            <span className="block text-ink-3">{axShift.from}</span>
+            <span className="sr-only">grows to include</span>
             <span className="mt-2 flex items-baseline gap-4">
               <span aria-hidden className="font-mono text-[0.4em] text-accent">↳</span>
               <em>{axShift.to}</em>

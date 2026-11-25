@@ -37,7 +37,7 @@ export function Hero() {
               id="shift-title"
               delay={150}
               className="hero-title text-ink"
-              lines={["The handoff", "is gone.", <em className="text-accent">Builders</em>, "took its place."]}
+              lines={["The handoff", "is shrinking.", <em className="text-accent">Design and code</em>, "now meet earlier."]}
             />
           </div>
 
@@ -46,8 +46,8 @@ export function Hero() {
               For working product designers, and people just starting out
             </p>
             <p className="lede mt-4 !max-w-[38ch] !text-ink" data-reveal style={{ "--d": "500ms" } as CSSProperties}>
-              AI made interface code cheap to write, so the people who design now ship it too. This guide shows the three roles that
-              came out of that shift, and a six-month path into one.
+              AI tools make it faster to turn a design into working code, so more designers now build alongside developers. This guide
+              shows three roles growing out of that shift, and a six-month path into one.
             </p>
             <nav aria-label="Start here" className="mt-8 grid gap-4 sm:grid-cols-2" data-reveal style={{ "--d": "650ms" } as CSSProperties}>
               <EntryCard href="#/roles" who="I'm a designer" what="Find which of the three roles fits you" />
@@ -110,9 +110,9 @@ export function Hero() {
           <div className="px-5 pb-7 sm:px-7 lg:col-span-8 lg:pl-0 lg:pt-1">
             <p className="font-display text-[clamp(1.75rem,3vw,2.75rem)] leading-[1.05] tracking-tight text-ink">No. It's moving.</p>
             <p className="mt-4 max-w-[58ch] leading-relaxed text-ink-2">
-              Big-tech hiring for classic design roles is down sharply. But design jobs overall are still projected to grow, and half
-              of designers already ship AI-generated code. Demand is shifting to people who can design <em>and</em> build. The rest of
-              this guide shows how to become one.
+              Big-tech hiring for some design roles is down. But design jobs overall are still projected to grow, and half of designers
+              already ship some AI-generated code. Your design skills still matter most; what's growing is demand for designers who can
+              also work in code with developers. The rest of this guide shows how.
             </p>
             <a href="#/roles" className="hit link-ul-static mt-5 inline-flex items-center gap-2 text-[0.9375rem] font-medium text-ink group">
               Find the role that fits you <ArrowGlyph />
@@ -147,8 +147,9 @@ export function HandoffEconomics() {
             <Eyebrow className="text-accent-ink">Why this is happening</Eyebrow>
             <Lines as="h2" className="display-l text-ink" lines={["Handoffs are", "the bottleneck."]} />
             <p className="mt-8 max-w-[42ch] leading-relaxed text-ink-2" data-reveal>
-              Passing a design to an engineer is slow, and detail gets lost on the way. In Figma's 2025 research, almost everyone
-              named handoff as a main bottleneck. Only 1 designer in 5 sees a first build that matches their design.
+              Moving a design from Figma into code takes time, and details can get lost between tools. In Figma's 2025 research,
+              almost every designer and developer named handoff as a main bottleneck. Only 1 designer in 5 sees a first build that
+              matches the design. That is a process problem, not a people problem.
             </p>
             <div data-reveal className="mt-10 max-w-[440px]">
               <HandoffPlate />
@@ -239,7 +240,7 @@ export function HandoffEconomics() {
             <h3 className="card-head label">Org-chart flattening</h3>
             <div className="px-5 pb-6 pt-5 sm:px-7">
               <p className="max-w-[52ch] text-sm text-ink-2">
-                Coordination roles compress into senior “Super ICs” and unified “Product Builder” roles.
+                Teams are getting flatter: more people per manager, and more senior hands-on roles that span design and code.
               </p>
             <dl className="mt-6 grid grid-cols-3 border-t border-line">
               {orgFlattening.map((o, i) => (

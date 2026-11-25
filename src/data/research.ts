@@ -248,18 +248,18 @@ export const archetypes: Archetype[] = [
 export const comparison: CompareRow[] = [
   {
     dimension: "Primary artifacts",
-    traditional: "Research decks, personas, empathy maps, static wireframes and Figma prototypes that don't run.",
+    traditional: "Research findings, personas, journey maps, wireframes and interactive Figma prototypes.",
     hybrid: "Live web apps, public GitHub repos, token systems and working production code.",
   },
   {
     dimension: "Core skill assessment",
-    traditional: "Visual polish, UX research methods and skill with static design tools like Figma.",
+    traditional: "Visual craft, UX research methods and fluency in design tools like Figma.",
     hybrid: "Code quality (HTML, CSS, JS, React), component structure, accessibility (ARIA), design tokens and AI tools.",
   },
   {
     dimension: "Iteration velocity",
-    traditional: "You wait for engineers to turn static designs into software.",
-    hybrid: "You work alone, from visual idea to working code in the browser.",
+    traditional: "Engineers build the design in code. Speed depends on how smooth the handoff is.",
+    hybrid: "You take an idea from visual design to working code, with engineers reviewing.",
   },
   {
     dimension: "Interview focus",
@@ -341,9 +341,9 @@ export const engineeringSkills: Skill[] = [
 
 export const axShift = {
   from: "Designing screens",
-  to: "Designing how AI behaves",
+  to: "Also designing how AI behaves",
   summary:
-    "The work moves from static screens to rules for trust, how much the AI can do alone, and when it must ask a person.",
+    "Screens still matter. The work grows to include rules for trust, how much the AI can do alone, and when it must ask a person.",
 };
 
 export const agentMaturity = [

@@ -20,7 +20,7 @@ export function Comparison() {
         glyph="compare"
         plate="Two roles"
         title={["What changes", <>when you <em>build it too.</em></>]}
-        lede="The same job, judged two ways: a traditional UX designer next to a designer who ships code."
+        lede="Two valid ways to do design work, side by side, and how hiring teams judge each one."
       />
 
       <div className="mb-10 flex flex-wrap items-center justify-between gap-4">
@@ -59,19 +59,23 @@ export function Comparison() {
               key={row.dimension}
               className="stagger col-span-4 lg:col-span-7 lg:col-start-6"
             >
-              <div className="card card-flat" style={{ "--i": 0 } as CSSProperties}>
-                <p className="card-head label !bg-sunken !text-ink-3">
-                  <span>Before · Traditional UX Designer</span>
-                </p>
-                <p className="max-w-[48ch] px-5 py-6 text-lg leading-relaxed text-ink-3 sm:px-7">{row.traditional}</p>
+              {/* Two valid paths given equal weight: same card, same type size */}
+              <div className="grid gap-6 sm:grid-cols-2">
+                {[
+                  { who: "Design-first UX designer", text: row.traditional },
+                  { who: "Design engineer (design + code)", text: row.hybrid },
+                ].map((c, i) => (
+                  <div key={c.who} className="card flex flex-col" style={{ "--i": i } as CSSProperties}>
+                    <p className="card-head label">
+                      <span>{c.who}</span>
+                    </p>
+                    <p className="px-5 py-6 font-display text-[clamp(1.375rem,2vw,1.75rem)] leading-[1.15] tracking-tight text-ink sm:px-6">{c.text}</p>
+                  </div>
+                ))}
               </div>
-              <div className="card card-accent mt-8" style={{ "--i": 1 } as CSSProperties}>
-                <p className="card-head label !bg-accent !text-[var(--on-accent)]">
-                  <span>After · Hybrid UX / Design Engineer</span>
-                  <span className="tabular">{String(dim + 1).padStart(2, "0")}</span>
-                </p>
-                <p className="px-5 py-7 font-display text-[clamp(1.75rem,2.8vw,2.75rem)] leading-[1.08] tracking-tight text-ink sm:px-7">{row.hybrid}</p>
-              </div>
+              <p className="label mt-5 text-ink-3" style={{ "--i": 2 } as CSSProperties}>
+                {String(dim + 1).padStart(2, "0")} / {String(comparison.length).padStart(2, "0")} · {row.dimension}
+              </p>
             </div>
           </div>
         </TabPanel>
@@ -79,12 +83,12 @@ export function Comparison() {
         <TabPanel idPrefix="cmpview" id="table">
           <div className="card overflow-x-auto px-5 sm:px-7">
             <table className="w-full min-w-[720px] text-left">
-              <caption className="sr-only">Traditional UX Designer vs. Hybrid UX / Design Engineer</caption>
+              <caption className="sr-only">Design-first UX designer and design engineer, compared</caption>
               <thead>
                 <tr className="label border-b-2 border-edge text-ink-3">
                   <th scope="col" className="w-[22%] py-3 pr-6 font-normal">Dimension</th>
-                  <th scope="col" className="py-3 pr-6 font-normal">Traditional UX Designer</th>
-                  <th scope="col" className="py-3 font-normal text-accent-ink">Hybrid UX / Design Engineer</th>
+                  <th scope="col" className="py-3 pr-6 font-normal">Design-first UX designer</th>
+                  <th scope="col" className="py-3 font-normal">Design engineer (design + code)</th>
                 </tr>
               </thead>
               <tbody>
@@ -94,8 +98,8 @@ export function Comparison() {
                       <span className="label mr-3 text-ink-3">{String(i + 1).padStart(2, "0")}</span>
                       <span className="font-display text-2xl leading-tight tracking-tight text-ink">{r.dimension}</span>
                     </th>
-                    <td className="py-6 pr-6 text-sm leading-relaxed text-ink-3">{r.traditional}</td>
-                    <td className="py-6 leading-relaxed text-ink">{r.hybrid}</td>
+                    <td className="py-6 pr-6 leading-relaxed text-ink-2">{r.traditional}</td>
+                    <td className="py-6 leading-relaxed text-ink-2">{r.hybrid}</td>
                   </tr>
                 ))}
               </tbody>

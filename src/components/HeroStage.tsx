@@ -6,10 +6,11 @@ const tagline = (id: string) => archetypes.find((a) => a.id === id)?.short ?? ""
 
 /* ─────────────────────────────────────────────────────────────
    Hero stage: the whole thesis in one move.
-   Before — a designer draws it, an engineer rebuilds it, and a
-   handoff sits between them. Now — the two cards slide into one
-   builder, the handoff is struck out, and the builder branches
-   into the three new roles.
+   Before — a designer makes it in Figma, an engineer builds it from a
+   spec, and a handoff sits between them. Now — the two cards meet in
+   one shared codebase, the handoff is struck out, and three design
+   roles branch from it. Neither role is cast as the problem: the
+   handoff is.
    Positions live in CSS (container-query units) so the same scene
    recomposes for phone and desktop; see .hs-* in index.css.
    ───────────────────────────────────────────────────────────── */
@@ -19,14 +20,15 @@ type Phase = "before" | "after";
 const captions: Record<Phase, ReactNode> = {
   before: (
     <>
-      <strong className="font-medium text-ink">Before:</strong> a designer draws the screen, then hands it to an engineer to rebuild in
-      code. Detail gets lost in that handoff. Only 1 in 5 first builds match the design.
+      <strong className="font-medium text-ink">Before:</strong> a designer makes the screen in Figma, then an engineer builds it in code
+      from a spec. Even with great people on both sides, intent gets lost between tools: only 1 in 5 first builds match the design.
     </>
   ),
   after: (
     <>
-      <strong className="font-medium text-ink">Now:</strong> one builder designs in code and ships the pull request. The old role is
-      splitting into three paths: Design Engineer, Meta-Designer and AX Designer.
+      <strong className="font-medium text-ink">Now:</strong> designers and engineers work in the same codebase. Designers shape the UI in
+      code and engineers review and own the system. Three design roles are growing from this: Design Engineer, Meta-Designer and
+      AX Designer.
     </>
   ),
 };
@@ -131,19 +133,19 @@ export function HeroStage() {
             Handoff
             <span className="hs-strike" />
           </span>
-          <span className="hs-tag-sub label">spec · redlines · rework</span>
+          <span className="hs-tag-sub label">spec · redlines · back-and-forth</span>
         </div>
 
-        <StageCard className="hs-designer" depth={3} head="Step 1 · Designer" glyph="frame" title="Draws it" sub="Mockups in Figma" />
+        <StageCard className="hs-designer" depth={3} head="Step 1 · Designer" glyph="frame" title="Designs it" sub="Screens in Figma" />
         <StageCard
           className="hs-engineer"
           depth={5}
           head="Step 2 · Engineer"
           glyph="terminal"
-          title="Rebuilds it"
-          sub={<span className="text-accent-ink">1 in 5 match the design</span>}
+          title="Builds it"
+          sub="In code, from a spec"
         />
-        <StageCard className="hs-builder card-accent" depth={4} head="Now · One builder" glyph="shift" on title="Builds it" sub="Designs in code, ships the PR" accent />
+        <StageCard className="hs-builder card-accent" depth={4} head="Now · One codebase" glyph="shift" on title="Built together" sub="Designers in code, engineers reviewing" accent />
 
         {[
           { id: "de", n: "01", title: "Design Engineer", sub: tagline("de") },

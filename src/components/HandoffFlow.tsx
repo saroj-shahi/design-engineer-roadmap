@@ -10,15 +10,15 @@ interface Step {
 const before: Step[] = [
   { who: "Designer", name: "Design in Figma", glyph: "frame" },
   { who: "Designer", name: "Spec & redlines", glyph: "ruler" },
-  { who: "Engineer", name: "Rebuild in code", glyph: "terminal" },
+  { who: "Engineer", name: "Build in code", glyph: "terminal" },
   { who: "Both", name: "QA & review", glyph: "check" },
 ];
 
 const after: Step[] = [
-  { who: "Builder", name: "Explore in the browser", glyph: "browser" },
-  { who: "Builder", name: "Build the component", glyph: "blocks" },
-  { who: "Builder", name: "Review the PR", glyph: "branch" },
-  { who: "Builder", name: "Ship", glyph: "launch" },
+  { who: "Designer", name: "Explore in the browser", glyph: "browser" },
+  { who: "Designer + engineer", name: "Build the component", glyph: "blocks" },
+  { who: "Engineer", name: "Review the code", glyph: "branch" },
+  { who: "Team", name: "Ship", glyph: "launch" },
 ];
 
 /** Before / after process diagram for the site's thesis: the handoff, and what replaces it. */
@@ -35,13 +35,13 @@ export function HandoffFlow() {
         title="The handoff"
         steps={before}
         handoffAfter={1}
-        loop="Rework loop: only 1 in 5 first builds match the design"
+        loop="Extra rounds: only 1 in 5 first builds match the design"
       />
-      <Row tag="After" title="The builder" steps={after} owner="One builder owns every step" loop="Iterate inside the diff" solidLast />
+      <Row tag="After" title="One codebase" steps={after} owner="Designer and engineer share every step" loop="Iterate together in the code" solidLast />
 
       <figcaption id="handoff-flow-cap" className="mt-6 max-w-[60ch] text-sm leading-relaxed text-ink-3">
-        Before: two people, a spec in the middle, and rework when the build drifts from the design. After: one person carries
-        intent from exploration to a merged pull request.
+        Before: two specialists linked by a spec, with extra rounds when details don't survive the move between tools. After: both
+        work in the same code, so less is lost and decisions happen together.
       </figcaption>
     </figure>
   );

@@ -239,7 +239,7 @@ function TrackA() {
           <div className="mt-10 border-2 border-edge bg-inverse p-6 text-on-inverse shadow-[var(--sh-accent)] sm:p-8">
             <p className="label mb-4 text-inverse-accent">Expect in interviews</p>
             <p className="font-display text-[1.625rem] leading-[1.15] tracking-tight">{interview.hybrid}</p>
-            <p className="mt-4 text-sm leading-relaxed text-inverse-muted">Instead of: {interview.traditional}</p>
+            <p className="mt-4 text-sm leading-relaxed text-inverse-muted">Alongside the usual: {interview.traditional}</p>
           </div>
         </div>
       </div>
@@ -330,8 +330,8 @@ function TrackB() {
           ))}
         </dl>
         <p className="mt-6 max-w-[62ch] text-sm leading-relaxed text-ink-3">
-          AI now handles basic interface assembly, so static-only UI portfolios rarely clear screening. Position yourself as a
-          code-literate product builder.
+          AI tools now help with basic layout work, so portfolios that show something running stand out in screening. Strong design
+          thinking still comes first; a little code makes it visible.
         </p>
       </div>
 
