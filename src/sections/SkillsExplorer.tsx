@@ -124,11 +124,11 @@ function SkillLedger({ skills, large = false }: { skills: Skill[]; large?: boole
       {skills.map((s, i) => (
         <li
           key={s.name}
-          className="card grid-12 group gap-y-3 px-5 py-7 sm:px-7 sm:py-9 lg:sticky lg:top-[calc(5.5rem+var(--i)*14px)]"
+          className="card grid-12 group gap-y-3 px-5 py-7 sm:px-7 sm:py-9 lg:sticky lg:top-[calc(7.5rem+var(--i)*14px)]"
           style={{ "--i": i } as CSSProperties}
         >
           <h3
-            className={`col-span-4 tracking-tight text-ink transition-transform duration-700 ease-silk group-hover:translate-x-2 lg:col-span-5 ${
+            className={`col-span-4 tracking-tight text-ink transition-transform duration-700 ease-silk motion-safe:group-hover:translate-x-2 lg:col-span-5 ${
               large ? "display-m" : "font-display text-[1.75rem] leading-[1.05]"
             }`}
           >
@@ -217,7 +217,7 @@ function AxPanel() {
           {/* Specimen of an agent console, showing where each surface lives */}
           <div className="card">
             <div className="card-head label !justify-start">
-              <span className="tick text-accent" aria-hidden />
+              <span className="tick text-card" aria-hidden />
               <span>agent://{L.id}</span>
               <span className="ml-auto tabular">
                 layer {String(layerIndex + 1).padStart(2, "0")} / {String(agentLayers.length).padStart(2, "0")}
@@ -250,6 +250,7 @@ function AxPanel() {
           {protocols.map((p, i) => (
             <Disclosure
               key={p.id}
+              headingLevel="h4"
               defaultOpen={i === 0}
               summary={
                 <span className="flex items-baseline gap-4">

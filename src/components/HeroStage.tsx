@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState, type CSSProperties, type PointerEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { Glyph, ArchetypeGlyph, type GlyphName } from "./icons";
+import { prefersReducedMotion, usePointerParallax } from "./ui";
 import { archetypes } from "../data/research";
 
 const tagline = (id: string) => archetypes.find((a) => a.id === id)?.short ?? "";
@@ -33,13 +34,15 @@ const captions: Record<Phase, ReactNode> = {
 };
 
 export function HeroStage() {
-  const [phase, setPhase] = useState<Phase>("before");
+  const [phase, setPhase] = useState<Phase>(() => (prefersReducedMotion() ? "after" : "before"));
+  const [userPicked, setUserPicked] = useState(false);
   const touched = useRef(false);
-  const canvas = useRef<HTMLDivElement>(null);
+  const { ref: canvas, onPointerMove, onPointerLeave } = usePointerParallax<HTMLDivElement>();
 
   // Play the shift once, ~1.6s after the stage is mostly on screen, so readers see "before" first.
-  // Any click on the toggle takes over.
+  // Skipped under prefers-reduced-motion; any click on the toggle takes over.
   useEffect(() => {
+    if (prefersReducedMotion()) return;
     const el = canvas.current;
     if (!el) return;
     let t = 0;
@@ -58,23 +61,12 @@ export function HeroStage() {
       io.disconnect();
       window.clearTimeout(t);
     };
-  }, []);
+  }, [canvas]);
 
   const pick = (p: Phase) => {
     touched.current = true;
+    setUserPicked(true);
     setPhase(p);
-  };
-
-  const onMove = (e: PointerEvent<HTMLDivElement>) => {
-    const el = canvas.current;
-    if (!el || e.pointerType === "touch") return;
-    const r = el.getBoundingClientRect();
-    el.style.setProperty("--px", (((e.clientX - r.left) / r.width) * 2 - 1).toFixed(3));
-    el.style.setProperty("--py", (((e.clientY - r.top) / r.height) * 2 - 1).toFixed(3));
-  };
-  const onLeave = () => {
-    canvas.current?.style.setProperty("--px", "0");
-    canvas.current?.style.setProperty("--py", "0");
   };
 
   return (
@@ -87,7 +79,7 @@ export function HeroStage() {
               type="button"
               aria-pressed={phase === p}
               onClick={() => pick(p)}
-              className={`label h-10 border-edge px-3 transition-colors duration-300 first:border-r-2 sm:px-4 ${
+              className={`label h-11 border-edge px-3 transition-colors duration-300 first:border-r-2 sm:px-4 ${
                 phase === p ? (p === "after" ? "bg-accent text-[var(--on-accent)]" : "bg-edge text-card") : "text-ink-3 hover:bg-sunken hover:text-ink"
               }`}
             >
@@ -97,10 +89,10 @@ export function HeroStage() {
         </div>
       </div>
 
-      <div ref={canvas} className="hs-canvas plate-field" data-phase={phase} onPointerMove={onMove} onPointerLeave={onLeave} aria-hidden>
+      <div ref={canvas} className="hs-canvas plate-field" data-phase={phase} onPointerMove={onPointerMove} onPointerLeave={onPointerLeave} aria-hidden>
         {/* Connectors: the handoff (before) and the branching tree (now). Two drawings, one per layout. */}
         {(["wide", "narrow"] as const).map((v) => (
-          <svg key={v} className={`hs-lines hs-lines-${v}`} viewBox={v === "wide" ? "0 0 100 71.43" : "0 0 100 125"} preserveAspectRatio="none">
+          <svg key={v} className={`hs-lines hs-lines-${v}`} viewBox={v === "wide" ? "0 0 100 71.43" : "0 0 100 96"} preserveAspectRatio="none">
             <path
               className="hs-handoff"
               d={v === "wide" ? "M34 14H50V40H66" : "M25.5 34V67H52"}
@@ -158,7 +150,7 @@ export function HeroStage() {
         ))}
       </div>
 
-      <figcaption id="hero-stage-caption" aria-live="polite" className="mt-5 max-w-[60ch] text-[0.9375rem] leading-relaxed text-ink-2">
+      <figcaption id="hero-stage-caption" aria-live={userPicked ? "polite" : undefined} className="mt-5 max-w-[60ch] text-[0.9375rem] leading-relaxed text-ink-2">
         {captions[phase]}
       </figcaption>
     </figure>

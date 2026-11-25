@@ -14,6 +14,7 @@ const shelves = [
 type Shelf = (typeof shelves)[number]["id"];
 
 const slugify = (t: string) => t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+const sortedGlossary = [...glossary].sort((a, b) => a.term.localeCompare(b.term));
 
 /** Reference material, one shelf at a time. The shelf lives in the URL (#/library/skills). */
 export function Library({ shelf: raw, term }: { shelf?: string; term?: string }) {
@@ -32,7 +33,7 @@ export function Library({ shelf: raw, term }: { shelf?: string; term?: string })
         <p className="lede mt-8" data-reveal>
           You don't need any of this to start. Open a shelf when a question comes up.
         </p>
-        <nav aria-label="Library shelves" className="mt-10 inline-flex max-w-full overflow-x-auto no-scrollbar border-2 border-edge bg-card shadow-[var(--sh-1)]">
+        <nav aria-label="Library shelves" className="mt-10 grid max-w-full grid-cols-2 border-2 border-edge bg-card shadow-[var(--sh-1)] sm:inline-flex">
           {shelves.map((s) => {
             const selected = s.id === shelf;
             return (
@@ -40,7 +41,7 @@ export function Library({ shelf: raw, term }: { shelf?: string; term?: string })
                 key={s.id}
                 href={pageHref("library", s.id)}
                 aria-current={selected ? "page" : undefined}
-                className={`label flex h-11 shrink-0 items-center border-r-2 border-edge px-4 transition-colors duration-300 ease-silk last:border-r-0 ${
+                className={`label flex min-h-11 shrink-0 items-center justify-center border-edge px-4 text-center transition-colors duration-300 ease-silk max-sm:odd:border-r-2 max-sm:[&:nth-child(-n+2)]:border-b-2 sm:border-r-2 sm:last:border-r-0 ${
                   selected ? "bg-edge text-card" : "text-ink-3 hover:bg-sunken hover:text-ink"
                 }`}
               >
@@ -68,9 +69,10 @@ export function Library({ shelf: raw, term }: { shelf?: string; term?: string })
 
 function Glossary({ term }: { term?: string }) {
   const [q, setQ] = useState("");
-  const all = [...glossary].sort((a, b) => a.term.localeCompare(b.term));
   const needle = q.trim().toLowerCase();
-  const terms = needle ? all.filter((g) => g.term.toLowerCase().includes(needle) || g.meaning.toLowerCase().includes(needle)) : all;
+  const terms = needle
+    ? sortedGlossary.filter((g) => g.term.toLowerCase().includes(needle) || g.meaning.toLowerCase().includes(needle))
+    : sortedGlossary;
 
   useEffect(() => {
     if (term) jumpTo(`term-${term}`);

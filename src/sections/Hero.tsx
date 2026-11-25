@@ -21,30 +21,29 @@ export function Hero() {
       <div id="top" className="wrap pt-5 sm:pt-8">
         <div className="grid-12 mt-6 gap-y-10 sm:mt-10 lg:items-end">
           <div className="@container col-span-4 lg:col-span-5 lg:row-start-1">
-            <Lines
-              as="h1"
-              id="shift-title"
-              delay={150}
-              className="hero-title text-ink"
-              lines={["The handoff", "is shrinking.", <em className="text-accent">Design and code</em>, "now meet earlier."]}
-            />
+            <h1 id="shift-title" className="hero-title text-ink">
+              <span className="block">The handoff</span>
+              <span className="block">is shrinking.</span>
+              <span className="block"><em className="text-accent-ink">Design and code</em></span>
+              <span className="block">now meet earlier.</span>
+            </h1>
           </div>
 
           <div className="col-span-4 lg:col-span-5 lg:row-start-2">
-            <p className="lede !max-w-[38ch] !text-ink" data-reveal style={{ "--d": "500ms" } as CSSProperties}>
+            <p className="lede !max-w-[38ch] !text-ink">
               AI tools make it faster to turn a design into working code, so more designers now build alongside developers. This guide
               shows three roles growing out of that shift, and a six-month path into one.
             </p>
-            <nav aria-label="Start here" className="mt-8 grid gap-4 sm:grid-cols-2" data-reveal style={{ "--d": "650ms" } as CSSProperties}>
+            <nav aria-label="Start here" className="mt-8 grid gap-4 sm:grid-cols-2">
               <EntryCard href="#/roles" who="I'm a designer" what="Find the role that fits you" />
               <EntryCard href="#/plan/b" who="I'm starting out" what="Start the beginner track" />
             </nav>
-            <a href="#/ready" className="hit link-ul-static mt-6 inline-block text-[0.9375rem] font-medium text-ink" data-reveal style={{ "--d": "700ms" } as CSSProperties}>
+            <a href="#/ready" className="hit link-ul-static mt-6 inline-block text-[0.9375rem] font-medium text-ink">
               Or check if your portfolio is ready
             </a>
           </div>
 
-          <div className="col-span-4 lg:col-span-7 lg:col-start-6 lg:row-span-2 lg:row-start-1 lg:self-center" data-reveal style={{ "--d": "350ms" } as CSSProperties}>
+          <div className="col-span-4 lg:col-span-7 lg:col-start-6 lg:row-span-2 lg:row-start-1 lg:self-center">
             <HeroStage />
           </div>
         </div>
@@ -116,7 +115,7 @@ function EntryCard({ href, who, what }: { href: string; who: string; what: strin
 
 export function HandoffEconomics() {
   return (
-    <div className="wrap py-24 sm:py-36">
+    <div className="wrap pb-24 sm:pb-36">
       <div className="grid-12 gap-y-16">
         <div className="col-span-4 lg:col-span-4">
           <div className="lg:sticky lg:top-24">
@@ -153,7 +152,7 @@ export function HandoffEconomics() {
                 </p>
                 <div className="px-5 pb-7 pt-5 sm:px-7">
                 <div className="flex items-baseline justify-between gap-4">
-                  <h3 className="display-m">{c.org}</h3>
+                  <h4 className="display-m">{c.org}</h4>
                   <BasisBadge basis="case" />
                 </div>
                 <p className="mt-2 text-sm text-ink-3">{c.what}</p>
@@ -182,7 +181,7 @@ export function HandoffEconomics() {
           {/* Adoption */}
           <div className="card">
             <div className="card-head label">
-              <h3>AI adoption: divergence, then convergence</h3>
+              <h4>AI adoption: divergence, then convergence</h4>
               <span className="hidden sm:block">% of respondents</span>
             </div>
             <div className="grid gap-12 px-5 py-7 sm:grid-cols-2 sm:gap-8 sm:px-7">
@@ -212,14 +211,14 @@ export function HandoffEconomics() {
 
           {/* Org flattening */}
           <div data-reveal className="card">
-            <h3 className="card-head label">Org-chart flattening</h3>
+            <h4 className="card-head label">Org-chart flattening</h4>
             <div className="px-5 pb-6 pt-5 sm:px-7">
               <p className="max-w-[52ch] text-sm text-ink-2">
                 Teams are getting flatter: more people per manager, and more senior hands-on roles that span design and code.
               </p>
             <dl className="mt-6 grid grid-cols-3 border-t border-line">
               {orgFlattening.map((o, i) => (
-                <div key={o.label} className={`flex flex-col pt-5 ${i > 0 ? "border-l border-line pl-3 sm:pl-5" : "pr-3"}`}>
+                <div key={o.label} className={`flex flex-col pt-5 px-3 sm:px-5 first:pl-0 last:pr-0 ${i > 0 ? "border-l border-line" : ""}`}>
                   <dt className="order-2 mt-3 text-xs leading-snug text-ink-2 sm:text-sm">{o.label}</dt>
                   <dd className="numeral order-1 text-[clamp(2.5rem,4.5vw,4rem)]">{o.value}</dd>
                   <dd className="label order-3 mt-3 text-accent-ink">{o.delta}</dd>
@@ -230,7 +229,7 @@ export function HandoffEconomics() {
           </div>
 
           <div className="card px-5 sm:px-7 [&>div]:border-b-0">
-            <Disclosure summary="Every market figure, with scope and source">
+            <Disclosure headingLevel="h4" summary="Every market figure, with scope and source">
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[560px] text-left text-sm">
                   <caption className="sr-only">Industry metrics 2025–2026</caption>
@@ -381,7 +380,7 @@ export function Archetypes({ role }: { role?: string }) {
 
       {/* The overlap map, for readers who want it */}
       <div className="mt-12 border-t-2 border-edge [&>div]:border-b-0">
-        <Disclosure summary="How the three roles overlap">
+        <Disclosure headingLevel="h2" summary="How the three roles overlap">
           <ArchetypeVenn selected={sel} />
         </Disclosure>
       </div>

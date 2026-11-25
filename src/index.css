@@ -10,11 +10,11 @@
   --sunken: #e9e7e0;
   --ink: #111111;
   --ink-2: #3d3c38;
-  --ink-3: #6a6862;
+  --ink-3: #605e58;
   --line: rgba(17, 17, 17, 0.14);
-  --line-strong: rgba(17, 17, 17, 0.32);
+  --line-strong: rgba(17, 17, 17, 0.5);
   --accent: #ff3b00;
-  --accent-ink: #c22d00;
+  --accent-ink: #b82a00;
   --accent-soft: #ffe3d8;
   --on-accent: #111111;
   --grid-line: rgba(17, 17, 17, 0.045);
@@ -55,7 +55,7 @@
     --ink-2: #bab8b0;
     --ink-3: #85837c;
     --line: rgba(255, 255, 255, 0.12);
-    --line-strong: rgba(255, 255, 255, 0.28);
+    --line-strong: rgba(255, 255, 255, 0.38);
     --accent: #ff4a12;
     --accent-ink: #ff7a4d;
     --accent-soft: #2a130a;
@@ -83,7 +83,7 @@
   --ink-2: #bab8b0;
   --ink-3: #85837c;
   --line: rgba(255, 255, 255, 0.12);
-  --line-strong: rgba(255, 255, 255, 0.28);
+  --line-strong: rgba(255, 255, 255, 0.38);
   --accent: #ff4a12;
   --accent-ink: #ff7a4d;
   --accent-soft: #2a130a;
@@ -100,6 +100,29 @@
   --dot: rgba(255, 255, 255, 0.07);
 }
 :root[data-theme="light"] { color-scheme: light; }
+
+/* Metric-matched fallbacks keep Archivo/Martian Mono swap from shifting hero lines */
+@font-face {
+  font-family: "Archivo Fallback";
+  src: local("Arial"), local("Helvetica Neue"), local("Liberation Sans");
+  size-adjust: 101%;
+  ascent-override: 93%;
+  descent-override: 24%;
+}
+@font-face {
+  font-family: "Archivo Display Fallback";
+  src: local("Arial Narrow"), local("Helvetica Neue Condensed Bold"), local("Arial");
+  size-adjust: 68%;
+  ascent-override: 136%;
+  descent-override: 32%;
+}
+@font-face {
+  font-family: "Martian Mono Fallback";
+  src: local("Menlo"), local("Consolas"), local("Liberation Mono");
+  size-adjust: 106%;
+  ascent-override: 94%;
+  descent-override: 26%;
+}
 
 @theme inline {
   --color-paper: var(--paper);
@@ -121,18 +144,19 @@
   --color-inverse-muted: var(--inverse-muted);
   --color-inverse-line: var(--inverse-line);
   --color-inverse-accent: var(--inverse-accent);
-  --font-sans: "Archivo", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Archivo", "Arial Narrow", ui-sans-serif, sans-serif;
-  --font-mono: "Martian Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-sans: "Archivo", "Archivo Fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Archivo", "Archivo Display Fallback", "Arial Narrow", ui-sans-serif, sans-serif;
+  --font-mono: "Martian Mono", "Martian Mono Fallback", ui-monospace, SFMono-Regular, Menlo, monospace;
   --ease-silk: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ───────── Base ───────── */
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 80px;
+  scroll-padding-top: 152px;
   -webkit-text-size-adjust: 100%;
 }
+@media (min-width: 1024px) { html { scroll-padding-top: 128px; } }
 body {
   background-color: var(--desk);
   background-image: radial-gradient(var(--dot) 1px, transparent 1.25px);
@@ -147,10 +171,11 @@ body {
   overflow-x: clip;
 }
 ::selection { background: var(--accent); color: var(--on-accent); }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--accent-ink); outline-offset: 3px; }
+.bg-inverse :focus-visible { outline-color: var(--inverse-accent); }
 
 .tabular { font-variant-numeric: tabular-nums; }
-.prose-measure { max-width: 62ch; }
+.prose-measure { max-width: 62ch; text-wrap: pretty; }
 .no-scrollbar { scrollbar-width: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 
@@ -223,6 +248,7 @@ body {
   font-weight: 600;
   line-height: 0.9;
   letter-spacing: -0.022em;
+  text-wrap: balance;
 }
 .display-l {
   font-size: clamp(2.25rem, 4.4vw, 4.5rem);
@@ -230,6 +256,7 @@ body {
   font-weight: 600;
   line-height: 0.95;
   letter-spacing: -0.018em;
+  text-wrap: balance;
 }
 .display-m {
   font-size: clamp(1.75rem, 2.6vw, 2.75rem);
@@ -237,6 +264,7 @@ body {
   font-weight: 550;
   line-height: 1;
   letter-spacing: -0.014em;
+  text-wrap: balance;
 }
 .hero-title {
   font-family: var(--font-display);
@@ -277,6 +305,7 @@ body {
   letter-spacing: -0.01em;
   color: var(--ink-2);
   max-width: 44ch;
+  text-wrap: pretty;
 }
 em, .italic { font-style: italic; }
 
@@ -392,7 +421,9 @@ em, .italic { font-style: italic; }
 .btn:hover::before, .btn:focus-visible::before { transform: none; }
 .btn:hover, .btn:focus-visible { color: var(--on-accent); }
 .btn .arrow { transition: transform 650ms var(--ease); }
-.btn:hover .arrow, .btn:focus-visible .arrow { transform: translateX(4px); }
+@media (prefers-reduced-motion: no-preference) {
+  .btn:hover .arrow, .btn:focus-visible .arrow { transform: translateX(4px); }
+}
 
 .btn-ghost {
   background: transparent;
@@ -450,7 +481,7 @@ em, .italic { font-style: italic; }
 .card-on > .card-head,
 .card-lift:hover > .card-tab,
 .card-on > .card-tab { background: var(--accent); color: var(--on-accent); }
-.card-lift:focus-visible, .card-lift:has(> input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 4px; }
+.card-lift:focus-visible, .card-lift:has(> input:focus-visible) { outline: 2px solid var(--accent-ink); outline-offset: 4px; }
 .card-empty {
   position: relative;
   border: 2px dashed var(--line-strong);
@@ -488,7 +519,8 @@ em, .italic { font-style: italic; }
   transition: border-color 400ms var(--ease);
 }
 .input-line::placeholder { color: var(--ink-3); }
-.input-line:focus { outline: none; border-color: var(--accent); }
+.input-line:focus { border-bottom-color: var(--accent-ink); }
+.input-line:focus-visible { outline: 2px solid var(--accent-ink); outline-offset: 4px; }
 
 /* ───────── Glyphs (components/icons.tsx) ─────────
    Rest poses are static; every movement below is a sub-path
@@ -596,9 +628,6 @@ em, .italic { font-style: italic; }
   .glyph-blocks .g-top { transition-duration: 520ms; }
   :is(.group:hover, .group:focus-visible) .glyph-blocks .g-top { transform: translateY(2.5px); }
 
-  .glyph-spark .g-star { transform-origin: 50% 50%; transition-duration: 700ms; }
-  :is(.group:hover, .group:focus-visible) .glyph-spark .g-star { transform: rotate(90deg); }
-
   :is(.group:hover, .group:focus-visible) .glyph-eye .g-pupil { transform: translateX(2.5px); }
 
   :is(.group:hover, .group:focus-visible) .glyph-terminal .g-cursor { animation: glyph-blink 0.9s steps(1, end) infinite; }
@@ -618,7 +647,7 @@ em, .italic { font-style: italic; }
 
 /* ───────── Hero stage (HeroStage.tsx) ─────────
    Every position is in cqw of the stage, so one scene recomposes
-   from a 4:5 phone canvas to a 7:5 desktop canvas. State lives on
+   from a 25:24 phone canvas to a 7:5 desktop canvas. State lives on
    [data-phase]; cards move with `translate`/`scale`, parallax with
    `transform`, so the two never fight. */
 .hs-wrap { container-type: inline-size; }
@@ -717,29 +746,32 @@ em, .italic { font-style: italic; }
 }
 
 /* ── Phase: before ── */
-.hs-canvas[data-phase="before"] .hs-builder { scale: 0.88; opacity: 0; }
-.hs-canvas[data-phase="before"] .hs-arch {
-  translate: calc((var(--bx) - var(--x)) * 1cqw) calc((var(--by) - var(--y)) * 1cqw);
-  scale: 0.7;
-  opacity: 0;
-}
+.hs-canvas[data-phase="before"] .hs-builder { opacity: 0; }
+.hs-canvas[data-phase="before"] .hs-arch { opacity: 0; }
 .hs-canvas[data-phase="before"] .hs-tree { stroke-dashoffset: 1; opacity: 0; }
 
 /* ── Phase: now ── */
 .hs-canvas[data-phase="after"] .hs-designer,
-.hs-canvas[data-phase="after"] .hs-engineer {
-  translate: calc((var(--bx) - var(--x)) * 1cqw) calc((var(--by) - var(--y)) * 1cqw);
-  scale: 0.94;
-  opacity: 0;
-}
+.hs-canvas[data-phase="after"] .hs-engineer { opacity: 0; }
 .hs-canvas[data-phase="after"] .hs-handoff { opacity: 0; }
-.hs-canvas[data-phase="after"] .hs-tag { opacity: 0; translate: 0 4cqw; }
+.hs-canvas[data-phase="after"] .hs-tag { opacity: 0; }
 .hs-canvas[data-phase="after"] .hs-strike { transform: scaleX(1); }
 .hs-canvas[data-phase="after"] .hs-tree { stroke-dashoffset: 0; }
 
 /* Choreography: handoff struck → cards merge → builder lands → paths branch */
 .hs-card, .hs-tag, .hs-handoff, .hs-tree { transition: opacity 400ms var(--ease); }
 @media (prefers-reduced-motion: no-preference) {
+  .hs-canvas[data-phase="before"] .hs-builder { scale: 0.88; }
+  .hs-canvas[data-phase="before"] .hs-arch {
+    translate: calc((var(--bx) - var(--x)) * 1cqw) calc((var(--by) - var(--y)) * 1cqw);
+    scale: 0.7;
+  }
+  .hs-canvas[data-phase="after"] .hs-designer,
+  .hs-canvas[data-phase="after"] .hs-engineer {
+    translate: calc((var(--bx) - var(--x)) * 1cqw) calc((var(--by) - var(--y)) * 1cqw);
+    scale: 0.94;
+  }
+  .hs-canvas[data-phase="after"] .hs-tag { translate: 0 4cqw; }
   .hs-card {
     transform: translate(calc(var(--px, 0) * var(--depth, 3) * 1px), calc(var(--py, 0) * var(--depth, 3) * 1px));
     transition:
@@ -887,6 +919,14 @@ em, .italic { font-style: italic; }
   .rm-leaf { white-space: normal; padding: 0 0 0 1rem; font-size: 0.8125rem; }
   .rm-leaf::before { content: ""; position: absolute; left: 0; top: 0.6rem; width: 0.5rem; height: 2px; background: var(--line-strong); }
   .rm-left::before, .rm-left::after, .rm-left .rm-leaf::after, .rm-right::after { display: none; }
+}
+
+@media print {
+  .mask-line > span, [data-reveal], [data-reveal="bar"] .bar-fill, [data-reveal="rule"] {
+    transform: none !important;
+    opacity: 1 !important;
+    transition: none !important;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

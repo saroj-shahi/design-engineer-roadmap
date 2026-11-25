@@ -1,4 +1,5 @@
-import { useRef, type CSSProperties, type PointerEvent } from "react";
+import { type CSSProperties } from "react";
+import { usePointerParallax } from "./ui";
 
 /* ─────────────────────────────────────────────────────────────
    Plate I — "Handoff, collapsed."
@@ -11,19 +12,7 @@ import { useRef, type CSSProperties, type PointerEvent } from "react";
 const mono = { fontFamily: "var(--font-mono)", fontStretch: "87.5%" } as const;
 
 export function HandoffPlate({ className = "" }: { className?: string }) {
-  const ref = useRef<SVGSVGElement>(null);
-
-  const onMove = (e: PointerEvent<SVGSVGElement>) => {
-    const el = ref.current;
-    if (!el || e.pointerType === "touch") return;
-    const r = el.getBoundingClientRect();
-    el.style.setProperty("--px", (((e.clientX - r.left) / r.width) * 2 - 1).toFixed(3));
-    el.style.setProperty("--py", (((e.clientY - r.top) / r.height) * 2 - 1).toFixed(3));
-  };
-  const onLeave = () => {
-    ref.current?.style.setProperty("--px", "0");
-    ref.current?.style.setProperty("--py", "0");
-  };
+  const { ref, onPointerMove, onPointerLeave } = usePointerParallax<SVGSVGElement>();
 
   return (
     <figure className={`card handoff-plate ${className}`}>
@@ -36,8 +25,8 @@ export function HandoffPlate({ className = "" }: { className?: string }) {
         className="plate-field block h-auto w-full"
         role="img"
         aria-labelledby="handoff-plate-title"
-        onPointerMove={onMove}
-        onPointerLeave={onLeave}
+        onPointerMove={onPointerMove}
+        onPointerLeave={onPointerLeave}
       >
         <title id="handoff-plate-title">
           A design frame and the code component that builds it, stacked together. The handoff between them is crossed out.
@@ -95,7 +84,7 @@ export function HandoffPlate({ className = "" }: { className?: string }) {
               <rect x="130" y="190" width="240" height="26" fill="var(--edge)" />
               <rect x="142" y="200" width="6" height="6" fill="var(--card)" />
               <rect x="153" y="200" width="6" height="6" fill="var(--card)" />
-              <rect x="164" y="200" width="6" height="6" fill="var(--accent)" />
+              <rect x="164" y="200" width="6" height="6" fill="none" stroke="var(--card)" strokeWidth="1.5" />
               <text x="184" y="207" fontSize="10" fill="var(--card)" style={mono}>
                 Button.tsx
               </text>
