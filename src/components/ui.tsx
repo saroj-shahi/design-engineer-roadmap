@@ -738,17 +738,18 @@ export function readStoredTrack(): Track | null {
    of view inside a place (track, month, stage, role) calls navigate(…, { replace: true }).
    Old single-page anchors still resolve through `legacy`. */
 
-export type Page = "home" | "roles" | "plan" | "ready" | "library" | "sources";
+export type Page = "home" | "jobs" | "roles" | "plan" | "ready" | "library" | "sources";
 /** `nav: false` keeps a page out of the top nav (it is linked from the footer and search instead). */
 export const pages: { id: Page; label: string; title: string; nav?: boolean }[] = [
   { id: "home", label: "Start", title: "Start here" },
+  { id: "jobs", label: "Jobs", title: "Is my job going away" },
   { id: "roles", label: "Roles", title: "Which role fits you" },
   { id: "plan", label: "Plan", title: "Your six-month plan" },
   { id: "ready", label: "Checklist", title: "Readiness checklist" },
   { id: "library", label: "Library", title: "Reference library" },
   { id: "sources", label: "Sources", title: "Sources and method", nav: false },
 ];
-/** The five pages in the top nav, in reading order. */
+/** The six pages in the top nav, in reading order. */
 export const navPages = pages.filter((p) => p.nav !== false);
 export const pageHref = (id: Page, ...parts: string[]) => (id === "home" ? "#/" : `#/${[id, ...parts].join("/")}`);
 

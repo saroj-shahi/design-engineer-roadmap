@@ -707,7 +707,17 @@ function TrackB({ stage }: { stage: number }) {
       </div>
 
       <div id="plan-market">
-        <SubHead n="B.2" title="The market you're entering" note="Seed-stage startups (young companies on their first funding round) have the highest design hiring rate (25%). With 300–800 applicants per role, a portfolio with something that runs is one way to stand out." />
+        <SubHead n="B.2" title="The market you're entering" note={
+            <>
+              Seed-stage startups (young companies on their first funding round) have the highest design hiring rate (25%). With 300–800
+              applicants per role, a portfolio with something that runs is one way to stand out.{" "}
+              <a href={pageHref("jobs")} className="font-medium text-ink underline decoration-line-strong underline-offset-4 hover:decoration-current">
+                See the full jobs outlook
+              </a>
+              .
+            </>
+          }
+        />
         <dl className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
           {beginnerContext.map((c, i) => {
             const icon: GlyphName = (["trendDown", "trendDown", "stack", "survey"] as const)[i] ?? "survey";

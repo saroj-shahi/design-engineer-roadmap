@@ -15,7 +15,7 @@ export function ToolingPipeline() {
       <SectionHeader
         id="tooling"
         title={["The right tool", <em>for each step.</em>]}
-        lede="Pick your role to see the tools for each step of the work. Choose one set and stick with it. Too many tools slow you down."
+        lede="Pick your level to see the tools for each step of the work. Choose one set and stick with it. Too many tools slow you down."
       />
 
       <div className="grid grid-cols-4 gap-x-4 lg:grid-cols-12 lg:gap-x-6 gap-y-6">
@@ -23,8 +23,8 @@ export function ToolingPipeline() {
           <RoleMatrix value={roleId} onChange={setRoleId} />
         </div>
         <p className="col-span-4 self-end text-sm leading-relaxed text-ink-3 lg:col-span-3 lg:col-start-10">
-          Each row is a role; each column a pipeline stage. A filled cell means the role's recommended stack works in that stage,
-          and the figure is how many of that stage's tools it uses. Stage 04, app builders, sits outside every recommended stack.
+          Each row is a level; each column a step of the work. A filled cell means that level's recommended stack works in that step,
+          and the figure is how many of that step's tools it uses. Step 04, app builders, sits outside every recommended stack.
           Pick a row to see its chain.
         </p>
       </div>
@@ -64,7 +64,7 @@ export function ToolingPipeline() {
                 );
               })}
               <li className="ml-auto hidden items-center gap-2 border border-dashed border-line-strong bg-card/80 px-3 py-2 text-xs text-ink-3 lg:inline-flex">
-                <span className="font-mono text-label font-normal">Stage 04</span>
+                <span className="font-mono text-label font-normal">Step 04</span>
                 <span>App builders excluded</span>
               </li>
             </ol>
@@ -79,7 +79,7 @@ export function ToolingPipeline() {
             return (
               <li
                 key={s.id}
-                aria-label={`Stage ${s.id}: ${s.name}${on ? ", in your stack" : ""}`}
+                aria-label={`Step ${s.id}: ${s.name}${on ? ", in your stack" : ""}`}
                 className={`animate-panel-in motion-reduce:animate-fade-in group relative flex flex-col p-5 ${on ? "relative rounded-card border border-edge bg-card shadow-1" : "relative rounded-card border border-dashed border-line-strong bg-transparent shadow-none"}`}
                 style={{ animationDelay: `${i * 70}ms` } as CSSProperties}
               >
@@ -123,7 +123,7 @@ function RoleMatrix({ value, onChange }: { value: string; onChange: (id: string)
   return (
     <div>
       <div aria-hidden className={`${cols} border-b-2 border-edge pb-3`}>
-        <span className="font-mono text-label font-normal self-end text-ink-3">Role</span>
+        <span className="font-mono text-label font-normal self-end text-ink-3">Level</span>
         {toolStages.map((s) => (
           <span key={s.id} className="flex min-w-0 flex-col">
             <span className="font-mono text-label font-normal text-ink">0{s.id}</span>
@@ -131,7 +131,7 @@ function RoleMatrix({ value, onChange }: { value: string; onChange: (id: string)
           </span>
         ))}
       </div>
-      <div {...listProps} aria-label="Your role" className="flex flex-col">
+      <div {...listProps} aria-label="Your level" className="flex flex-col">
         {roleStacks.map((r, i) => {
           const on = r.id === value;
           return (
@@ -161,7 +161,7 @@ function RoleMatrix({ value, onChange }: { value: string; onChange: (id: string)
                 );
               })}
               <span className="sr-only">
-                , works in stages {r.stages.join(", ")}
+                , works in steps {r.stages.join(", ")}
               </span>
             </button>
           );

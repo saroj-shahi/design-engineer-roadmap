@@ -1,6 +1,6 @@
 # Design Engineer Field Guide
 
-A static, five-page field guide (plus a Sources page linked from the footer) for designers upskilling into code or moving into **Design Engineer**, **Meta-Designer**, and **AX Designer** roles (**Design Engineer Field Guide · 2026**). React 18 + TypeScript + Vite 5 + Tailwind v4. No backend, no router library. End-to-end tests run on Playwright.
+A static, six-page field guide (plus a Sources page linked from the footer) for designers upskilling into code or moving into **Design Engineer**, **Meta-Designer**, and **AX Designer** roles (**Design Engineer Field Guide · 2026**). React 18 + TypeScript + Vite 5 + Tailwind v4. No backend, no router library. End-to-end tests run on Playwright.
 
 See **[AGENTS.md](AGENTS.md)** for full cross-agent instructions and **[DESIGN.md](DESIGN.md)** for the complete Plum Dusk design system, color tokens, typography rules, and Visual QA checklist.
 
@@ -16,7 +16,7 @@ See **[AGENTS.md](AGENTS.md)** for full cross-agent instructions and **[DESIGN.m
 
 - `index.html`, `public/site.webmanifest`, `public/favicon.svg`, `public/404.html`: SEO metadata, Open Graph, Twitter/X, JSON-LD `@graph` (`WebSite` + `LearningResource`), dark Design × Code SVG favicon.
 - `src/App.tsx`: shell. Picks the page from the hash route, syncs `document.title` (`Page | Design Engineer Field Guide`) and `<meta name="description">`, skip link, error boundary, `Alt+G` grid overlay.
-- `src/pages/*`: thin page composers (`Home`, `Roles`, `Plan`, `Ready`, `Library`, `Sources`). `Sources` sets `nav: false` in `pages`, so it is reached from the footer and search, not the top nav.
+- `src/pages/*`: thin page composers (`Home`, `Jobs`, `Roles`, `Plan`, `Ready`, `Library`, `Sources`). `Sources` sets `nav: false` in `pages`, so it is reached from the footer and search, not the top nav.
 - `src/sections/*`: content blocks (`Hero`, `Roadmap`, `RoadmapTopics`, `Readiness`, `Comparison`, `SkillsExplorer`, `ToolingPipeline`, `Footer`).
 - `src/components/ui.tsx`: shared primitives and hooks (`Section`, `SectionHeader`, `SubHead`, `Tabs`/`TabPanel`/`useTabList`, `Disclosure`, `CheckRow`, `TopicCheckbox`, `Tag`, `BasisBadge`, `ContextBar`, `Meter`, `NextPage`, hash router, persisted state). Check here before writing a new primitive.
 - `src/components/icons.tsx` & `src/components/BrandLogo.tsx`: 24×24 Swiss geometric glyphs (including metric/basis icons and `user`/`users` role icons) and 25 monochrome `currentColor` app/brand marks.

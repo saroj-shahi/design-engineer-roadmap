@@ -11,7 +11,6 @@ import { AdoptionDumbbell } from "../components/AdoptionDumbbell";
 import { ArchetypeVenn } from "../components/ArchetypeVenn";
 import { HandoffFlow } from "../components/HandoffFlow";
 import { HeroStage } from "../components/HeroStage";
-import { MarketShiftChart } from "../components/MarketShiftChart";
 import { ArchetypeGlyph, ArrowGlyph, Glyph, type GlyphName } from "../components/icons";
 
 const heroMetricGlyphs: GlyphName[] = ["trendDown", "shareBar", "survey", "forecast"];
@@ -35,7 +34,7 @@ export function HeroIntro({ children }: { children?: ReactNode }) {
         </h1>
         <p className="mt-5 max-w-[54ch] text-lede text-pretty text-ink-2">
           AI tools make it faster to turn a design into working code, so more designers now build alongside developers. Whether you're
-          upskilling in your current role or aiming for a new one, this guide maps three paths and a six-month plan.
+          upskilling in your current role or aiming for a new one, this guide maps three roles and a step-by-step plan.
         </p>
         {children}
       </div>
@@ -50,7 +49,7 @@ export function HeroIntro({ children }: { children?: ReactNode }) {
 export function ChoosePathButton() {
   return (
     <button type="button" onClick={() => jumpTo("start-here")} className="relative isolate inline-flex h-12 items-center gap-3 overflow-hidden rounded-full bg-accent pl-[1.375rem] pr-5 text-[0.9375rem] font-semibold tracking-[-0.005em] text-on-accent transition-[translate,box-shadow,color] duration-[260ms] ease-spring before:absolute before:inset-0 before:-z-10 before:translate-y-[101%] before:bg-ink before:transition-transform before:duration-[550ms] before:ease-silk before:content-[''] hover:shadow-accent hover:before:translate-y-0 focus-visible:shadow-accent focus-visible:before:translate-y-0 active:translate-y-px motion-reduce:active:translate-y-0 group">
-          <span>Choose your path</span>
+          <span>Find your starting point</span>
           <span aria-hidden className="font-mono text-sm transition-transform duration-300 motion-safe:group-hover:translate-y-0.5">↓</span>
         </button>
   );
@@ -84,12 +83,10 @@ export function StartHere() {
   );
 }
 
-/** Chapter: the short answer, one card per statistic, then the market chart. */
-export function JobsAnswer() {
+/** The short answer to "Is my job going away?". On Start it links on to the Jobs page and the roles. */
+export function JobsShortAnswer({ more = false }: { more?: boolean }) {
   return (
-    <>
-      {/* The question an anxious reader brings, answered before the hard numbers */}
-      <div data-reveal className="relative rounded-card border border-edge bg-card shadow-1 border-[color-mix(in_srgb,var(--accent)_45%,var(--edge))]! shadow-accent! grid gap-y-6 lg:grid-cols-12">
+    <div data-reveal className="relative rounded-card border border-edge bg-card shadow-1 border-[color-mix(in_srgb,var(--accent)_45%,var(--edge))]! shadow-accent! grid gap-y-6 lg:grid-cols-12">
         <p className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal lg:col-span-12">
           <span>The short answer</span>
         </p>
@@ -106,13 +103,25 @@ export function JobsAnswer() {
             also work in code with developers. The rest of this guide shows how.
           </p>
           <p className="mt-4 max-w-[58ch] text-sm leading-relaxed text-ink-3">{titleReality}</p>
-          <a href="#/roles" className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] mt-5 inline-flex items-center gap-2 text-[0.9375rem] font-medium text-ink group group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">
-            See the three roles <ArrowGlyph />
-          </a>
+          {more && (
+            <span className="mt-5 flex flex-wrap gap-x-8 gap-y-3">
+              <a href={pageHref("jobs")} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] inline-flex items-center gap-2 text-[0.9375rem] font-medium text-ink group group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">
+                See the full jobs outlook <ArrowGlyph />
+              </a>
+              <a href={pageHref("roles")} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] inline-flex items-center gap-2 text-[0.9375rem] font-medium text-ink group group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">
+                See the three roles <ArrowGlyph />
+              </a>
+            </span>
+          )}
         </div>
       </div>
+  );
+}
 
-      <dl className="mt-8 grid grid-cols-2 gap-4 sm:mt-10 sm:gap-6 lg:grid-cols-4">
+/** One card per headline statistic. */
+export function JobsFigures() {
+  return (
+      <dl className="grid grid-cols-2 gap-4 sm:mt-10 sm:gap-6 lg:grid-cols-4">
         {heroMetrics.map((m, i) => (
           <div
             key={m.label}
@@ -134,9 +143,6 @@ export function JobsAnswer() {
           </div>
         ))}
       </dl>
-
-      <MarketShiftChart />
-    </>
   );
 }
 
@@ -204,14 +210,10 @@ export function HandoffProblem() {
   );
 }
 
-/** The data behind the shift. Shown on Roles after the roles themselves. */
-export function Evidence() {
+/** How teams are changing: AI adoption by designers and developers, and flatter org charts. */
+export function TeamShift() {
   return (
-    <div className="mx-auto w-full max-w-[1440px] px-(--gutter) pb-24 sm:pb-36">
-      {/* Evidence: everything open, as a bento grid — chart + org counts, the two cases, then every figure */}
-      <section aria-labelledby="evidence-title" className="mt-24 sm:mt-32">
-        <SubHead id="evidence-title" title="See the evidence" note="The case studies and survey data behind the handoff problem and the three roles." />
-        <div className="grid grid-flow-dense gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-12 [&>*]:min-w-0">
+    <div className="grid grid-flow-dense gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-12 [&>*]:min-w-0">
           <AdoptionDumbbell className="md:col-span-2 lg:col-span-8" />
 
           {/* Org flattening */}
@@ -232,7 +234,17 @@ export function Evidence() {
               </dl>
             </div>
           </div>
+    </div>
+  );
+}
 
+/** Two teams that moved designers into code, before and after. Shown on Roles after the roles. */
+export function CaseStudies() {
+  return (
+    <div className="mx-auto w-full max-w-[1440px] px-(--gutter) pb-24 sm:pb-36">
+      <section aria-labelledby="cases-title">
+        <SubHead id="cases-title" title={<>Teams that <em>closed the gap</em></>} note="Two single-company case studies: what changed when designers started working in code. They are examples, not market benchmarks." />
+        <div className="grid gap-4 sm:gap-5 lg:grid-cols-12 [&>*]:min-w-0">
           {handoffCases.map((c, i) => (
             <article
               key={c.org}
@@ -270,9 +282,17 @@ export function Evidence() {
               </div>
             </article>
           ))}
+        </div>
+      </section>
+    </div>
+  );
+}
 
-          <div data-reveal className="relative min-w-0 rounded-card border border-edge bg-card shadow-1 md:col-span-2 lg:col-span-12">
-            <h3 className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal">Every market figure, with scope and source</h3>
+/** Every market figure in one table, with scope and source. */
+export function MarketTable() {
+  return (
+          <div data-reveal className="relative min-w-0 rounded-card border border-edge bg-card shadow-1">
+            <h3 className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal">Industry figures, 2025–2026</h3>
             <div className="px-5 pb-4 sm:px-6">
               <div tabIndex={0} role="region" aria-label="Every market figure (scrolls sideways)" className="overflow-x-auto rounded-chip focus-visible:outline-offset-[-2px]">
                 <table className="w-full min-w-[560px] text-left text-sm">
@@ -299,9 +319,6 @@ export function Evidence() {
               </div>
             </div>
           </div>
-        </div>
-      </section>
-    </div>
   );
 }
 

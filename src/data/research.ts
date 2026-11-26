@@ -1294,7 +1294,7 @@ export const readinessItems: ChecklistItem[] = [
   { id: "ai", title: "Proof of an AI-assisted workflow", detail: "Show you guided Cursor or Claude Code to ship real features." },
   { id: "access", title: "Easy to open", detail: "No broken links, setup hoops or clutter — anyone you share it with can try it right away." },
   { id: "scope", title: "Honest about your role", detail: "Say clearly what you designed, built and reviewed — and label practice projects as such." },
-  { id: "deployed", title: "A live project you built and launched", detail: "Components with every state and layouts that fit any screen, live on Vercel or similar. Month 4 of the plan." },
+  { id: "deployed", title: "A live project you built and launched", detail: "Components with every state and layouts that fit any screen, live on Vercel or similar. Months 3–4 of the plan." },
   { id: "merged", title: "A merged pull request in a real codebase", detail: "Even a small UI fix in your team's code or an open-source project counts. Month 5 of the plan." },
 ];
 

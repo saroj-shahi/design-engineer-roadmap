@@ -4,7 +4,7 @@ Instructions for AI coding agents working in the **Design Engineer Field Guide**
 
 ## Project overview
 
-A static, five-page interactive field guide (**Design Engineer Field Guide · 2026**) built with **React 18 + TypeScript + Vite 5 + Tailwind CSS v4**. No backend, no external router library, no test runner.
+A static, six-page interactive field guide (**Design Engineer Field Guide · 2026**) built with **React 18 + TypeScript + Vite 5 + Tailwind CSS v4**. No backend, no external router library, no test runner.
 
 - **Audience:** Serves **both** working product designers upskilling inside their current role and designers aiming for a new hybrid role (`Track A`), plus beginners/career-switchers breaking into their first role (`Track B`). Never drift back to job-search-only framing on Home, Roles, Track A, or Checklist.
 - **Design system:** Read [DESIGN.md](DESIGN.md) before changing layout, colors, typography, cards, icons, or CSS.
@@ -26,7 +26,7 @@ Always run `npm run typecheck` (or `npm run build`) after edits.
 
 - `index.html`, `public/site.webmanifest`, `public/favicon.svg`, `public/404.html`: SEO metadata, Open Graph, Twitter/X Card, JSON-LD `@graph` (`WebSite` + `LearningResource`), theme-aware SVG favicon, and pre-paint theme init (`public/theme-init.js`).
 - `src/App.tsx`: App shell, hash route dispatch, dynamic `document.title` and `<meta name="description">`, skip link, error boundary, `Alt+G` 12-column grid overlay.
-- `src/pages/*`: Thin page composers — `Home`, `Roles`, `Plan`, `Ready`, `Library`.
+- `src/pages/*`: Thin page composers — `Home`, `Jobs`, `Roles`, `Plan`, `Ready`, `Library`, `Sources`.
 - `src/sections/*`: Content blocks — `Hero` (includes `Archetypes` and `HandoffEconomics`), `Roadmap` (Track A & Track B), `Readiness`, `Comparison`, `SkillsExplorer`, `ToolingPipeline`, `RoadmapTopics`, `Footer`.
 - `src/components/ui.tsx`: Shared primitives (`Section`, `SectionHeader`, `SubHead`, `Tabs`, `TabPanel`, `useTabList`, `Disclosure`, `CheckRow`, `TopicCheckbox`, `Tag`, `BasisBadge`, `ContextBar`, `Meter`, `NextPage`), hash router (`useRoute`, `pageHref`, `navigate`, `planFromParts`), theme hook, and safe `localStorage` helpers (`usePersistentSet`). **Check here before writing a new primitive.**
 - `src/components/icons.tsx`: 24×24 Swiss geometric glyphs (`Glyph`, `ArchetypeGlyph`, `BasisGlyph`, `ArrowGlyph`, `ArrowBackGlyph`, `ExternalGlyph`), including metric icons (`trendDown`, `shareBar`, `survey`, `forecast`, `caseStudy`, `stack`) and persona/role icons (`user`, `users`).

@@ -4,6 +4,7 @@ import { navPages, pageHref, pages, planFromParts, useRevealObserver, useRoute, 
 import { Home } from "./pages/Home";
 import { Footer } from "./sections/Footer";
 
+const Jobs = lazy(() => import("./pages/Jobs").then((m) => ({ default: m.Jobs })));
 const Roles = lazy(() => import("./pages/Roles").then((m) => ({ default: m.Roles })));
 const Plan = lazy(() => import("./pages/Plan").then((m) => ({ default: m.Plan })));
 const Ready = lazy(() => import("./pages/Ready").then((m) => ({ default: m.Ready })));
@@ -136,6 +137,7 @@ export default function App() {
             ) : (
               <Suspense fallback={<div className="mx-auto w-full max-w-[1440px] px-(--gutter) py-24 font-mono text-label font-normal text-ink-3">Loading…</div>}>
                 {route.page === "home" && <Home />}
+                {route.page === "jobs" && <Jobs />}
                 {route.page === "roles" && <Roles role={route.parts[0]} />}
                 {route.page === "plan" && <Plan parts={route.parts} />}
                 {route.page === "ready" && <Ready parts={route.parts} />}
@@ -204,6 +206,8 @@ function titleFor(route: Route) {
 function descriptionFor(route: Route) {
   if (route.notFound) return "That page does not exist in the Design Engineer Field Guide.";
   switch (route.page) {
+    case "jobs":
+      return "Is design work going away? The 2026 hiring data for designers, engineers and PMs, how teams are changing, and every market figure with its source.";
     case "roles":
       return "Compare Design Engineer, Meta-Designer, and Agentic Experience (AX) Designer roles, deliverables, skill signals, and handoff economics.";
     case "plan":

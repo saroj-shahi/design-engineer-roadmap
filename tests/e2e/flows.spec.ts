@@ -96,10 +96,13 @@ test.describe("search", () => {
 });
 
 test.describe("start page", () => {
-  test("question chips jump to their chapter", async ({ page }) => {
+  test("question chips jump to their chapter or open their page", async ({ page }) => {
     await fresh(page, "/#/");
-    await page.getByRole("button", { name: "Is my job going away?" }).click();
-    await expect(page.locator("#jobs")).toBeInViewport();
+    await page.getByRole("button", { name: "Where do I start?" }).click();
+    await expect(page.locator("#start-here")).toBeInViewport();
+    await page.getByRole("list", { name: "Common questions" }).getByRole("link", { name: "Is my job going away?" }).click();
+    await expect(page).toHaveURL(/#\/jobs$/);
+    await expect(page.locator("main h1")).toContainText("Is my job");
   });
 
   test("chapter rail follows the reader on desktop", async ({ page }, info) => {
@@ -137,11 +140,16 @@ test.describe("roles", () => {
     await expect(page).toHaveURL(/#\/roles\/meta/);
   });
 
-  test("overlap map and evidence are open, not hidden", async ({ page }) => {
+  test("overlap map and case studies are open, not hidden", async ({ page }) => {
     await fresh(page, "/#/roles/de");
     await expect(page.getByRole("heading", { name: /How the three roles overlap/ })).toBeVisible();
-    await expect(page.getByRole("heading", { name: "See the evidence" })).toBeVisible();
-    await expect(page.getByText("Every market figure, with scope and source")).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Teams that closed the gap/ })).toBeVisible();
+  });
+
+  test("the jobs page keeps every market figure in the open", async ({ page }) => {
+    await fresh(page, "/#/jobs");
+    await expect(page.getByRole("heading", { name: "Every market figure, with scope and source" })).toBeVisible();
+    await expect(page.getByRole("region", { name: "Every market figure (scrolls sideways)" })).toBeVisible();
   });
 });
 

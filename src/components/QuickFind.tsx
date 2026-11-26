@@ -16,9 +16,9 @@ const slugify = (t: string) => t.toLowerCase().replace(/[^a-z0-9]+/g, "-").repla
 
 /** The questions the Start page answers, in the reader's words. Shared with the Start page's chips. */
 export const startQuestions: { label: string; href: string; jump?: string }[] = [
-  { label: "Is my job going away?", href: pageHref("home"), jump: "jobs" },
+  { label: "Is my job going away?", href: pageHref("jobs") },
   { label: "Where do I start?", href: pageHref("home"), jump: "start-here" },
-  { label: "Which direction fits me?", href: pageHref("roles") },
+  { label: "Which role fits me?", href: pageHref("roles") },
   { label: "What do I do next?", href: pageHref("plan") },
   { label: "How do I know I'm ready?", href: pageHref("ready") },
   { label: "I want the detail", href: pageHref("library") },

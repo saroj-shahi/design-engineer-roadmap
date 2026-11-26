@@ -7,6 +7,7 @@ const BASE = import.meta.env.BASE_URL || "/";
 
 const pageGlyph: Record<Page, GlyphName> = {
   home: "shift",
+  jobs: "forecast",
   roles: "eye",
   plan: "route",
   ready: "check",
@@ -69,7 +70,7 @@ export function Nav({ page }: { page: Page | null }) {
 
         <nav
           aria-label="Pages"
-          className="col-span-2 row-start-2 -mx-[var(--gutter)] flex h-12 items-center justify-between gap-1 overflow-x-auto border-t border-line px-[var(--gutter)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:col-span-1 lg:col-start-2 lg:row-start-1 lg:mx-0 lg:h-auto lg:justify-center lg:border-t-0 lg:px-0"
+          className="col-span-2 row-start-2 -mx-[var(--gutter)] flex h-12 items-center justify-between gap-0.5 sm:gap-1 overflow-x-auto border-t border-line px-[var(--gutter)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:col-span-1 lg:col-start-2 lg:row-start-1 lg:mx-0 lg:h-auto lg:justify-center lg:border-t-0 lg:px-0"
         >
           {navPages.map((p) => {
             const on = page === p.id;
@@ -78,7 +79,7 @@ export function Nav({ page }: { page: Page | null }) {
                 key={p.id}
                 href={`${rootPrefix}${pageHref(p.id)}`}
                 aria-current={on ? "page" : undefined}
-                className={`nav-link group relative flex h-10 shrink-0 items-center gap-2 rounded-full focus-visible:outline-offset-[-2px] px-2.5 text-[13px] transition-colors duration-300 sm:px-4 sm:text-sm ${
+                className={`nav-link group relative flex h-10 shrink-0 items-center gap-2 rounded-full focus-visible:outline-offset-[-2px] px-2 text-[13px] transition-colors duration-300 sm:px-4 sm:text-sm ${
                   on ? "bg-accent-soft text-accent-ink" : "text-ink-2 hover:bg-sunken hover:text-ink"
                 }`}
               >
