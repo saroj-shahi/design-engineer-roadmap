@@ -25,7 +25,7 @@ Never hard-code hex/rgb values in JSX or CSS outside the `:root` block in `src/i
 | Accent | `--accent`, `--accent-ink` | `#ff93b5`, `#ffa9c4` | `--accent` for fills/bars; `--accent-ink` for small text |
 | Accent tint | `--accent-soft` | `#33202d` | Active nav pill, selected bands |
 | Text on accent | `--on-accent` | `#140f19` | Ink on rose fills |
-| Raised bands | `--inverse-bg`, `--inverse-fg` | `#2a2133`, `#efe8f4` | Card head bands (`bg-inverse text-on-inverse`), active tabs, footer |
+| Raised bands | `--inverse-bg`, `--inverse-fg` | `#2a2133`, `#efe8f4` | Card head bands (`bg-inverse text-on-inverse`), active tabs |
 | Radii | `--radius`, `--radius-s`, `--radius-xs` | `20px`, `12px`, `8px` | Cards, controls, small chips |
 
 - Use `bg-inverse text-on-inverse` for card heads, active segmented/shelf tabs and SVG title bars. Never use `bg-edge text-card` for text.
