@@ -20,7 +20,7 @@ See **[AGENTS.md](AGENTS.md)** for full cross-agent instructions and **[DESIGN.m
 - `src/sections/*`: content blocks (`Hero`, `Roadmap`, `RoadmapTopics`, `Readiness`, `Comparison`, `SkillsExplorer`, `ToolingPipeline`, `Footer`).
 - `src/components/ui.tsx`: shared primitives and hooks (`Section`, `SectionHeader`, `SubHead`, `Tabs`/`TabPanel`/`useTabList`, `Disclosure`, `CheckRow`, `TopicCheckbox`, `Tag`, `BasisBadge`, `ContextBar`, `Meter`, `NextPage`, hash router, persisted state). Check here before writing a new primitive.
 - `src/components/icons.tsx` & `src/components/BrandLogo.tsx`: 24×24 Swiss geometric glyphs (including metric/basis icons and `user`/`users` role icons) and 25 monochrome `currentColor` app/brand marks.
-- `src/components/*`: interactive diagrams & widgets (`Nav` with `BrandMark`, `QuickFind` (⌘K search), `HeroStage`, `MarketShiftChart`, `ArchetypeVenn`, `HandoffFlow`, `AdoptionDumbbell`, `AiAutonomyRamp`, `ProtocolArchitecture`, `PlanRoadmapBase`, `RoadmapMap`).
+- `src/components/*`: interactive diagrams & widgets (`Nav` with `BrandMark`, `QuickFind` (⌘K search), `HeroStage`, `MarketShiftChart`, `ArchetypeVenn`, `HandoffFlow`, `AdoptionDumbbell`, `ProtocolArchitecture`, `PlanRoadmapBase`, `RoadmapMap`).
 - `src/data/research.ts`: single source of truth for all research brief figures, roles, plans, checklists, tooling, and glossary.
 - `src/data/roadmaps.ts`: structured `roadmap.sh` curricula (8 tracks + companion skill tracks).
 - `src/index.css`: design tokens, Tailwind `@theme` tokens and scales (components are styled with utilities in JSX; no custom component classes), typography wrapping (`balance`/`pretty`), and animations.

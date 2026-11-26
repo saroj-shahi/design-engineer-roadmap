@@ -1,6 +1,5 @@
 import { type CSSProperties } from "react";
 import { ArrowBackGlyph, ArrowGlyph, ExternalGlyph, Glyph, type GlyphName } from "../components/icons";
-import { AiAutonomyRamp } from "../components/AiAutonomyRamp";
 import { BrandLogosFor } from "../components/BrandLogo";
 import { PlanRoadmapBase, type BaseRoadmapItem } from "../components/PlanRoadmapBase";
 import { RoadmapMap } from "../components/RoadmapMap";
@@ -98,18 +97,18 @@ export function Roadmap({ plan }: { plan: PlanRoute | null }) {
       ? [
           { id: "plan-map", label: "Map" },
           { id: "month-detail", label: "This month" },
-          { id: "plan-base", label: "Skill base" },
           { id: "plan-habits", label: "Habits" },
           { id: "plan-portfolio", label: "Show work" },
+          { id: "plan-base", label: "Skill base" },
         ]
       : [
           { id: "plan-map", label: "Map" },
           { id: "stage-detail", label: "This stage" },
-          { id: "plan-base", label: "Skill base" },
           { id: "plan-market", label: "Market" },
           { id: "plan-stack", label: "Stack" },
           { id: "plan-portfolio", label: "Portfolio" },
           { id: "plan-first-year", label: "First year" },
+          { id: "plan-base", label: "Skill base" },
         ];
 
   return (
@@ -339,9 +338,7 @@ function TrackA({ plan: route }: { plan: PlanA }) {
 
       {/* 6-month timeline */}
       <div id="month-detail" className="scroll-mt-36 lg:scroll-mt-32">
-        <SubHead n="A.2" title="Month by month" note="The same six months in detail. Each month lets you use a little more AI: learn the browser before AI tools. Apply each month in your current job or in side projects — the plan uses React, TypeScript and Tailwind." />
-
-        <AiAutonomyRamp plan={plan} activeMonth={month} onSelect={setMonth} />
+        <SubHead n="A.2" title="Month by month" note="The same six months in detail. The bar on each month shows how much AI you use: none in month one, more each month after. Apply each month in your current job or in side projects — the plan uses React, TypeScript and Tailwind." />
 
         <ol aria-label="Phases" className="mb-3 grid grid-cols-6 gap-x-2">
           {phases.map((p) => {
@@ -371,6 +368,11 @@ function TrackA({ plan: route }: { plan: PlanA }) {
                   {String(x.month).padStart(2, "0")}
                 </span>
                 <span className={`font-mono text-label font-normal mt-2 hidden sm:block ${on ? "text-accent-ink" : "text-ink-3"}`}>{aiPolicyLabel[x.aiPolicy]}</span>
+                <span aria-hidden className="mt-3 flex gap-0.5 sm:gap-1">
+                  {plan.slice(1).map((_, k) => (
+                    <span key={k} className={`h-1 flex-1 rounded-full transition-colors duration-500 ${k < i ? (on ? "bg-accent" : "bg-ink-3") : "bg-line"}`} />
+                  ))}
+                </span>
                 <span className="sr-only">Month {x.month}</span>
               </button>
             );
@@ -411,19 +413,6 @@ function TrackA({ plan: route }: { plan: PlanA }) {
         />
       </div>
 
-      {/* Full interactive roadmap base checklists */}
-      <PlanRoadmapBase
-        id="plan-base"
-        n="A.base"
-        title="The roadmap base behind this plan"
-        note={
-          choice === "pde"
-            ? "UX Design and Product Design are your foundation. Open any stage to audit what you know and track Design Systems, Frontend and Claude Code topics."
-            : "UX Design and Product Design are your foundation. Open any stage to audit what you know and track Design Systems, Prompt & Context and AI Agents topics."
-        }
-        items={trackABaseRoadmaps[choice]}
-      />
-
       {/* Leverage + proof of work */}
       <div className="grid gap-y-24 lg:grid-cols-12 lg:gap-x-6">
         <div id="plan-habits" className="lg:col-span-5">
@@ -445,6 +434,19 @@ function TrackA({ plan: route }: { plan: PlanA }) {
           </div>
         </div>
       </div>
+
+      {/* Full interactive roadmap base checklists */}
+      <PlanRoadmapBase
+        id="plan-base"
+        n="A.base"
+        title="Every topic behind this plan"
+        note={
+          choice === "pde"
+            ? "UX Design and Product Design are your foundation. Open any stage to audit what you know and track Design Systems, Frontend and Claude Code topics."
+            : "UX Design and Product Design are your foundation. Open any stage to audit what you know and track Design Systems, Prompt & Context and AI Agents topics."
+        }
+        items={trackABaseRoadmaps[choice]}
+      />
     </div>
   );
 }
@@ -704,15 +706,6 @@ function TrackB({ stage }: { stage: number }) {
         <StepNav n={stage} total={STAGES} unit="stage" onStep={setStage} doneHref={pageHref("ready", "b")} />
       </div>
 
-      {/* Full interactive roadmap base checklists */}
-      <PlanRoadmapBase
-        id="plan-base"
-        n="B.base"
-        title="The roadmap base behind this plan"
-        note="Build your base in UX Design and Product Design first, then layer Frontend, AI Product Builder and Design Systems. Expand any stage to tick off topics as you learn."
-        items={trackBBaseRoadmaps}
-      />
-
       <div id="plan-market">
         <SubHead n="B.2" title="The market you're entering" note="Seed-stage startups (young companies on their first funding round) have the highest design hiring rate (25%). With 300–800 applicants per role, a portfolio with something that runs is one way to stand out." />
         <dl className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
@@ -776,6 +769,15 @@ function TrackB({ stage }: { stage: number }) {
           </ol>
         </div>
       </div>
+
+      {/* Full interactive roadmap base checklists */}
+      <PlanRoadmapBase
+        id="plan-base"
+        n="B.base"
+        title="Every topic behind this plan"
+        note="Build your base in UX Design and Product Design first, then layer Frontend, AI Product Builder and Design Systems. Expand any stage to tick off topics as you learn."
+        items={trackBBaseRoadmaps}
+      />
     </div>
   );
 }

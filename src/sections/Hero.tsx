@@ -1,4 +1,4 @@
-import { type CSSProperties, type ReactNode } from "react";
+import { useEffect, type CSSProperties, type ReactNode } from "react";
 import {
   archetypes,
   handoffCases,
@@ -186,23 +186,31 @@ function EntryCard({
   );
 }
 
-export function HandoffEconomics() {
+/** Why the roles exist: the handoff problem. Shown on Roles before the role picker. */
+export function HandoffProblem() {
   return (
-    <div className="mx-auto w-full max-w-[1440px] px-(--gutter) pb-24 sm:pb-36">
+    <section aria-labelledby="handoff-title">
       <SubHead
-        title="Handoffs are the bottleneck."
+        id="handoff-title"
+        title="Why: handoffs are the bottleneck."
         note="All three roles grow from the same problem. Moving a design from Figma into code takes time, and details can get lost between tools. In Figma's 2025 research, nearly all designers and developers said the handoff could be improved. Only 1 designer in 5 sees a first build that matches the design. The fix belongs in the process."
       />
       <div className="grid grid-cols-4 gap-x-4 lg:grid-cols-12 lg:gap-x-6 gap-y-16">
         <div className="col-span-4 space-y-24 sm:space-y-32 lg:col-span-12">
           <HandoffFlow />
-
         </div>
       </div>
+    </section>
+  );
+}
 
+/** The data behind the shift. Shown on Roles after the roles themselves. */
+export function Evidence() {
+  return (
+    <div className="mx-auto w-full max-w-[1440px] px-(--gutter) pb-24 sm:pb-36">
       {/* Evidence: everything open, as a bento grid — chart + org counts, the two cases, then every figure */}
       <section aria-labelledby="evidence-title" className="mt-24 sm:mt-32">
-        <SubHead id="evidence-title" title="See the evidence" note="Case studies and survey data behind the shift." />
+        <SubHead id="evidence-title" title="See the evidence" note="The case studies and survey data behind the handoff problem and the three roles." />
         <div className="grid grid-flow-dense gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-12 [&>*]:min-w-0">
           <AdoptionDumbbell className="md:col-span-2 lg:col-span-8" />
 
@@ -299,7 +307,7 @@ export function HandoffEconomics() {
 
 const shortRoleName: Record<string, string> = { de: "Design Engineer", meta: "Meta-Designer", ax: "AX Designer" };
 
-export function Archetypes({ role }: { role?: string }) {
+export function Archetypes({ role, intro }: { role?: string; intro?: ReactNode }) {
   const sel = archetypes.find((x) => x.id === role)?.id ?? archetypes[0].id;
   const a = archetypes.find((x) => x.id === sel)!;
   const sharesPlanWith = archetypes.filter((x) => x.plan === a.plan && x.id !== a.id).map((x) => shortRoleName[x.id] ?? x.name);
@@ -311,18 +319,31 @@ export function Archetypes({ role }: { role?: string }) {
     idPrefix: "arch",
     orientation: isLg ? "vertical" : "horizontal",
   });
+  // A link to one role (#/roles/meta) lands on the picker, below the intro. Runs once, on arrival only.
+  useEffect(() => {
+    if (!role || !intro) return;
+    const id = requestAnimationFrame(() => {
+      if (window.scrollY > 0) return;
+      const el = document.getElementById("roles-pick");
+      if (el) window.scrollTo({ top: el.getBoundingClientRect().top - (window.innerWidth >= 1024 ? 96 : 120), behavior: "instant" as ScrollBehavior });
+    });
+    return () => cancelAnimationFrame(id);
+  }, []);
   return (
     <div id="archetypes" className="mx-auto w-full max-w-[1440px] px-(--gutter) pb-24 pt-8 sm:pb-36 sm:pt-12">
       <PageHeader
         id="roles-title"
         title={["Which role", <>fits <em>you?</em></>]}
-        lede="Three directions are growing where design and code meet. You don't need a new title to work this way — pick the one that fits your team or where you want to grow."
+        lede="Three directions are growing where design and code meet. First, the problem they solve. Then pick the one that fits your team or where you want to grow — you don't need a new title to work this way."
       />
+
+      {intro && <div className="mb-24 sm:mb-36">{intro}</div>}
+
+      <SubHead id="roles-pick" title={<>Three roles that <em>close the gap</em></>} note="Pick one to see what it involves, the titles it goes by and where it's in demand." />
 
       {/* One surface: the role list on the left stays in view while the chosen role's detail reads on the right. */}
       <div className="grid gap-6 lg:grid-cols-[minmax(0,19rem)_minmax(0,1fr)] lg:items-start lg:gap-8">
         <div className="sticky top-[104px] z-20 -mx-[var(--gutter)] bg-[color-mix(in_srgb,var(--desk)_88%,transparent)] px-[var(--gutter)] py-2 backdrop-blur-md lg:top-24 lg:mx-0 lg:bg-transparent lg:p-0 lg:backdrop-blur-none">
-          <p className="font-mono text-label font-normal mb-3 hidden text-ink-3 lg:block">Choose a role</p>
           <div
             {...listProps}
             aria-label="Role archetypes"
