@@ -60,7 +60,7 @@ export function AiAutonomyRamp({
                 <span className="flex h-24 items-end sm:h-32">
                   {cfg.height === 0 ? (
                     <span
-                      className={`grid h-8 w-full place-items-center border-2 border-dashed font-mono text-[10px] uppercase tracking-wider transition-colors duration-300 ${
+                      className={`grid h-8 w-full place-items-center rounded-[var(--radius-xs)] border border-dashed font-mono text-[10px] tracking-wide transition-colors duration-300 ${
                         on ? "border-accent bg-accent/15 text-accent-ink" : "border-line-strong bg-card text-ink-3 group-hover:border-ink"
                       }`}
                     >
@@ -70,7 +70,7 @@ export function AiAutonomyRamp({
                   ) : (
                     <span
                       style={{ height: `${cfg.height}%` }}
-                      className={`relative flex w-full flex-col justify-between overflow-hidden border-2 p-1 transition-colors duration-300 sm:p-2 ${
+                      className={`relative flex w-full flex-col justify-between overflow-hidden rounded-[var(--radius-xs)] border p-1 transition-colors duration-300 sm:p-2 ${
                         on
                           ? "border-edge bg-accent text-[var(--on-accent)] shadow-[var(--sh-1)]"
                           : "border-ink-3 bg-card text-ink group-hover:border-ink group-hover:bg-sunken"
@@ -79,7 +79,7 @@ export function AiAutonomyRamp({
                       <span className={`hidden font-mono text-[10px] leading-tight sm:block ${on ? "text-[var(--on-accent)]" : "text-ink-3"}`}>
                         {cfg.tag}
                       </span>
-                      <span className={`hidden font-mono text-[10px] uppercase leading-tight tracking-wide md:block ${on ? "text-[var(--on-accent)]" : "text-ink-2"}`}>
+                      <span className={`hidden font-mono text-[10px] leading-tight tracking-wide md:block ${on ? "text-[var(--on-accent)]" : "text-ink-2"}`}>
                         {m.title}
                       </span>
                     </span>

@@ -72,19 +72,19 @@ export function HeroStage() {
 
   return (
     <figure className="card flex h-full flex-col shadow-[var(--sh-2)]" aria-labelledby="hero-stage-caption">
-      <div className="flex items-center justify-between gap-4 border-b-2 border-edge bg-card px-4 py-2 sm:px-5">
+      <div className="flex items-center justify-between gap-4 border-b border-line bg-card px-4 py-2 sm:px-5">
         <span className="label flex items-center gap-2 text-ink-3">
           <span aria-hidden className="tick text-accent" />
           <span>How work moved</span>
         </span>
-        <div role="group" aria-label="Show the way work moved" className="inline-flex border-2 border-edge bg-card">
+        <div role="group" aria-label="Show the way work moved" className="inline-flex gap-1 rounded-full border border-edge bg-card p-1">
           {(["before", "after"] as const).map((p) => (
             <button
               key={p}
               type="button"
               aria-pressed={phase === p}
               onClick={() => pick(p)}
-              className={`label h-11 border-edge px-3.5 transition-colors duration-300 first:border-r-2 sm:h-9 sm:px-4 ${
+              className={`label h-11 border-edge px-3.5 transition-colors duration-300 rounded-full sm:h-9 sm:px-4 ${
                 phase === p ? (p === "after" ? "bg-accent text-[var(--on-accent)]" : "bg-inverse text-on-inverse") : "text-ink-3 hover:bg-sunken hover:text-ink"
               }`}
             >

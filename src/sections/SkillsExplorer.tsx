@@ -189,12 +189,12 @@ function AxPanel() {
         </div>
         <figure className="col-span-4 self-end lg:col-span-4 lg:col-start-9">
           <figcaption className="label mb-4 text-ink-3">Enterprise agent maturity</figcaption>
-          <div className="flex h-24 border-2 border-edge shadow-[var(--sh-1)]" role="img" aria-label="21% no adoption, 68% piloting, 11% in production">
+          <div className="flex h-24 overflow-hidden rounded-[var(--radius-s)] border border-edge" role="img" aria-label="21% no adoption, 68% piloting, 11% in production">
             {agentMaturity.map((m) => (
               <div
                 key={m.level}
                 className={`flex items-end p-2 ${m.level === 3 ? "bg-accent text-[var(--on-accent)]" : m.level === 2 ? "bg-ink text-paper" : "text-ink"} ${
-                  m.level > 1 ? "border-l-2 border-edge" : ""
+                  m.level > 1 ? "border-l border-edge" : ""
                 }`}
                 style={{ width: `${m.value}%` }}
               >

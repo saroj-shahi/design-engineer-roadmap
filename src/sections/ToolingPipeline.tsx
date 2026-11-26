@@ -46,7 +46,7 @@ export function ToolingPipeline() {
                 return (
                   <li key={c} className="flex items-center gap-3">
                     <span
-                      className={`inline-flex items-center gap-2.5 border-2 px-3.5 py-2 shadow-[var(--sh-1)] ${
+                      className={`inline-flex items-center gap-2.5 rounded-full border px-3.5 py-2 ${
                         isLast ? "border-edge bg-accent text-[var(--on-accent)]" : "border-edge bg-card text-ink"
                       }`}
                     >

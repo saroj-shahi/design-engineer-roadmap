@@ -26,5 +26,5 @@ npm run preview    # Preview the built dist/ bundle locally
 ## Documentation for contributors & agents
 
 - **[AGENTS.md](AGENTS.md)** — Canonical architecture map, content rules, routing/storage conventions, and verification workflow for coding agents.
-- **[DESIGN.md](DESIGN.md)** — Swiss print design system tokens, light/dark contrast contract, typography & orphan rules, iconography, brand marks, and accessibility standards.
+- **[DESIGN.md](DESIGN.md)** — Plum Dusk dark design system tokens, contrast contract, typography & orphan rules, iconography, brand marks, and accessibility standards.
 - **[CLAUDE.md](CLAUDE.md)** — Quick reference and persona review agent configuration (`.claude/agents/`).

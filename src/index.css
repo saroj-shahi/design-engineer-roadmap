@@ -2,127 +2,53 @@
 
 /* ─────────────────────────────────────────────────────────────
    Field Guide / 2026 — design tokens
-   Swiss print on bone stock. One accent, hairline rules, no radii.
+   Plum Dusk: one dark theme. Aubergine ground, one rose accent,
+   soft radii, quiet hairlines, no hard shadows.
    ───────────────────────────────────────────────────────────── */
 :root {
-  --paper: #f4f3ef;
-  --surface: #f9f8f5;
-  --sunken: #e9e7e0;
-  --ink: #111111;
-  --ink-2: #3d3c38;
-  --ink-3: #605e58;
-  --line: rgba(17, 17, 17, 0.14);
-  --line-strong: rgba(17, 17, 17, 0.5);
-  --accent: #ff3b00;
-  --accent-ink: #b82a00;
-  --accent-soft: #ffe3d8;
-  --on-accent: #111111;
-  --grid-line: rgba(17, 17, 17, 0.045);
-  --grain-opacity: 0.05;
-  /* Inverted surfaces (footer, interview card, selected track) */
-  --inverse-bg: var(--ink);
-  --inverse-fg: var(--paper);
-  --inverse-muted: #a3a19a;
-  --inverse-line: rgba(244, 243, 239, 0.2);
-  --inverse-accent: var(--accent);
+  color-scheme: dark;
+  --paper: #181220;
+  --surface: #1a1421;
+  --sunken: #251d2d;
+  --ink: #efe8f4;
+  --ink-2: #cfc5d8;
+  --ink-3: #a99db4;
+  --line: rgba(239, 232, 244, 0.1);
+  --line-strong: rgba(239, 232, 244, 0.28);
+  --accent: #ff93b5;
+  --accent-ink: #ffa9c4;
+  --accent-soft: #33202d;
+  --on-accent: #140f19;
+  --grid-line: rgba(239, 232, 244, 0.02);
+  --grain-opacity: 0.035;
+  /* Raised bands (card heads, active tabs, footer) */
+  --inverse-bg: #2a2133;
+  --inverse-fg: #efe8f4;
+  --inverse-muted: #b3a7be;
+  --inverse-line: rgba(239, 232, 244, 0.14);
+  --inverse-accent: #ff93b5;
 
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
   --dur: 900ms;
   --gutter: 16px;
 
-  /* Workbench: cards on a desk, hard unblurred shadows */
-  --desk: #e2dfd6;
-  --card: #f7f6f2;
-  --edge: #111111;
-  --hard: #111111;
-  --dot: rgba(17, 17, 17, 0.14);
-  --sh-1: 4px 4px 0 var(--hard);
-  --sh-2: 8px 8px 0 var(--hard);
-  --sh-accent: 4px 4px 0 var(--accent);
+  /* Surfaces: soft cards floating on the dusk ground */
+  --desk: #140f19;
+  --card: #1c1623;
+  --edge: #3a2f45;
+  --hard: rgba(0, 0, 0, 0.45);
+  --dot: rgba(239, 232, 244, 0.05);
+  --radius: 20px;
+  --radius-s: 12px;
+  --radius-xs: 8px;
+  --sh-1: 0 1px 0 rgba(239, 232, 244, 0.03) inset, 0 10px 30px -18px rgba(0, 0, 0, 0.7);
+  --sh-2: 0 1px 0 rgba(239, 232, 244, 0.05) inset, 0 22px 44px -20px rgba(0, 0, 0, 0.85);
+  --sh-accent: 0 0 0 1px rgba(255, 147, 181, 0.28), 0 18px 40px -22px rgba(255, 147, 181, 0.35);
   --spring: cubic-bezier(0.34, 1.32, 0.64, 1);
 }
 @media (min-width: 640px) { :root { --gutter: 24px; } }
 @media (min-width: 1024px) { :root { --gutter: 40px; } }
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    color-scheme: dark;
-    --paper: #0a0a0a;
-    --surface: #111110;
-    --sunken: #1a1a18;
-    --ink: #edebe5;
-    --ink-2: #bab8b0;
-    --ink-3: #85837c;
-    --line: rgba(255, 255, 255, 0.12);
-    --line-strong: rgba(255, 255, 255, 0.38);
-    --accent: #ff4a12;
-    --accent-ink: #ff7a4d;
-    --accent-soft: #2a130a;
-    --on-accent: #0a0a0a;
-    --grid-line: rgba(255, 255, 255, 0.035);
-    --grain-opacity: 0.07;
-    --inverse-muted: #55534d;
-    --inverse-line: rgba(10, 10, 10, 0.2);
-    --inverse-accent: #b82a00;
-    --desk: #060606;
-    --card: #131312;
-    --edge: #8f8c84;
-    --hard: #3d3b37;
-    --dot: rgba(255, 255, 255, 0.07);
-  }
-}
-
-/* Explicit choice from the theme toggle (set before first paint in index.html) */
-:root[data-theme="dark"] {
-  color-scheme: dark;
-  --paper: #0a0a0a;
-  --surface: #111110;
-  --sunken: #1a1a18;
-  --ink: #edebe5;
-  --ink-2: #bab8b0;
-  --ink-3: #85837c;
-  --line: rgba(255, 255, 255, 0.12);
-  --line-strong: rgba(255, 255, 255, 0.38);
-  --accent: #ff4a12;
-  --accent-ink: #ff7a4d;
-  --accent-soft: #2a130a;
-  --on-accent: #0a0a0a;
-  --grid-line: rgba(255, 255, 255, 0.035);
-  --grain-opacity: 0.07;
-  --inverse-muted: #55534d;
-  --inverse-line: rgba(10, 10, 10, 0.2);
-  --inverse-accent: #b82a00;
-  --desk: #060606;
-  --card: #131312;
-  --edge: #8f8c84;
-  --hard: #3d3b37;
-  --dot: rgba(255, 255, 255, 0.07);
-}
-:root[data-theme="light"] { color-scheme: light; }
-
-/* Metric-matched fallbacks keep Archivo/Martian Mono swap from shifting hero lines */
-@font-face {
-  font-family: "Archivo Fallback";
-  src: local("Arial"), local("Helvetica Neue"), local("Liberation Sans");
-  size-adjust: 101%;
-  ascent-override: 93%;
-  descent-override: 24%;
-}
-@font-face {
-  font-family: "Archivo Display Fallback";
-  src: local("Arial Narrow"), local("Helvetica Neue Condensed Bold"), local("Arial");
-  size-adjust: 68%;
-  ascent-override: 136%;
-  descent-override: 32%;
-}
-@font-face {
-  font-family: "Martian Mono Fallback";
-  src: local("Menlo"), local("Consolas"), local("Liberation Mono");
-  size-adjust: 106%;
-  ascent-override: 94%;
-  descent-override: 26%;
-}
 
 @theme inline {
   --color-paper: var(--paper);
@@ -144,9 +70,9 @@
   --color-inverse-muted: var(--inverse-muted);
   --color-inverse-line: var(--inverse-line);
   --color-inverse-accent: var(--inverse-accent);
-  --font-sans: "Archivo", "Archivo Fallback", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Archivo", "Archivo Display Fallback", "Arial Narrow", ui-sans-serif, sans-serif;
-  --font-mono: "Martian Mono", "Martian Mono Fallback", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Bricolage Grotesque", "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "DM Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --ease-silk: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -159,8 +85,8 @@ html {
 @media (min-width: 1024px) { html { scroll-padding-top: 128px; } }
 body {
   background-color: var(--desk);
-  background-image: radial-gradient(var(--dot) 1px, transparent 1.25px);
-  background-size: 16px 16px;
+  background-image: radial-gradient(120% 60% at 50% -10%, rgba(255, 147, 181, 0.07), transparent 60%);
+  background-repeat: no-repeat;
   color: var(--ink);
   font-family: var(--font-sans);
   font-optical-sizing: auto;
@@ -171,8 +97,10 @@ body {
   overflow-x: clip;
 }
 ::selection { background: var(--accent); color: var(--on-accent); }
-:focus-visible { outline: 2px solid var(--accent-ink); outline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--accent-ink); outline-offset: 3px; border-radius: 4px; }
 .bg-inverse :focus-visible { outline-color: var(--inverse-accent); }
+/* Headings focused by the router (tabindex=-1) announce the page; they need no ring. */
+h1[tabindex="-1"]:focus-visible { outline: none; }
 
 .tabular { font-variant-numeric: tabular-nums; }
 .prose-measure { max-width: 62ch; text-wrap: pretty; }
@@ -224,8 +152,8 @@ body {
 }
 
 /* ───────── Type scale ─────────
-   One grotesk family across the width axis: condensed Archivo carries the display voice,
-   normal-width Archivo carries reading, Martian Mono carries labels and data. */
+   Bricolage Grotesque carries the display voice, DM Sans carries reading,
+   DM Mono carries labels and data. */
 .display-xxl,
 .display-xl,
 .display-l,
@@ -233,61 +161,52 @@ body {
 .numeral {
   font-family: var(--font-display);
   font-kerning: normal;
-  word-spacing: 0.06em;
+  font-optical-sizing: auto;
 }
 .display-xxl {
-  font-size: clamp(3.5rem, 11.2vw, 11.5rem);
-  font-stretch: 62%;
+  font-size: clamp(3rem, 8vw, 8rem);
   font-weight: 600;
-  line-height: 0.86;
-  letter-spacing: -0.025em;
+  line-height: 0.95;
+  letter-spacing: -0.045em;
 }
 .display-xl {
-  font-size: clamp(3rem, 7.6vw, 8.5rem);
-  font-stretch: 62%;
+  font-size: clamp(2.5rem, 5.6vw, 5.75rem);
   font-weight: 600;
-  line-height: 0.9;
-  letter-spacing: -0.022em;
+  line-height: 0.98;
+  letter-spacing: -0.04em;
   text-wrap: balance;
 }
 .display-l {
-  font-size: clamp(2.25rem, 4.4vw, 4.5rem);
-  font-stretch: 70%;
+  font-size: clamp(2rem, 3.4vw, 3.5rem);
   font-weight: 600;
-  line-height: 0.95;
-  letter-spacing: -0.018em;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
   text-wrap: balance;
 }
 .display-m {
-  font-size: clamp(1.75rem, 2.6vw, 2.75rem);
-  font-stretch: 80%;
-  font-weight: 550;
-  line-height: 1;
-  letter-spacing: -0.014em;
+  font-size: clamp(1.375rem, 1.9vw, 2rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
   text-wrap: balance;
 }
 .hero-title {
   font-family: var(--font-display);
-  /* Sized to its column (an @container), not the viewport: the longest line is ~5.1em, so 18cqi keeps four lines at any width. */
-  font-size: clamp(3.75rem, 18cqi, 7.25rem);
-  font-stretch: 62%;
+  font-size: clamp(2.75rem, 6.4vw, 5.5rem);
   font-weight: 600;
-  line-height: 0.86;
-  letter-spacing: -0.025em;
-  word-spacing: 0.06em;
+  line-height: 0.98;
+  letter-spacing: -0.045em;
 }
-@media (max-width: 1023px) { .hero-title { font-size: clamp(3.5rem, 15vw, 7rem); } }
 .numeral {
-  font-stretch: 62%;
   font-weight: 600;
-  line-height: 0.85;
-  letter-spacing: -0.02em;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
   font-variant-numeric: tabular-nums lining-nums;
 }
 /* Mid-size display (quotes, list titles) set via the font-display utility */
 .font-display {
-  font-stretch: 80%;
-  font-weight: 550;
+  font-weight: 600;
+  letter-spacing: -0.02em;
   text-wrap: pretty;
 }
 h1, h2, h3, h4, h5, h6 {
@@ -298,14 +217,11 @@ p, dd {
 }
 .label {
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  font-stretch: 87.5%;
-  line-height: 1.3;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+  line-height: 1.35;
+  letter-spacing: 0.01em;
   font-weight: 400;
 }
-.font-mono, code, kbd { font-stretch: 87.5%; }
 @layer components {
 .lede {
   font-size: clamp(1.125rem, 1.35vw, 1.375rem);
@@ -398,35 +314,34 @@ em, .italic { font-style: italic; }
 .group:focus-visible .roll > span { transform: translateY(-100%); }
 
 @layer components {
-/* Primary button: square, ink, accent wipe from below */
+/* Primary button: rose pill, light wipe from below */
 .btn {
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 0.875rem;
-  height: 3.25rem;
+  gap: 0.75rem;
+  height: 3rem;
   padding: 0 1.25rem 0 1.375rem;
-  background: var(--ink);
-  color: var(--paper);
+  background: var(--accent);
+  color: var(--on-accent);
   font-size: 0.9375rem;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: -0.005em;
+  border-radius: 999px;
   overflow: hidden;
   isolation: isolate;
-  border: 2px solid var(--edge);
-  box-shadow: var(--sh-1);
-  transition: translate 260ms var(--spring), box-shadow 260ms var(--spring), color 500ms var(--ease);
+  transition: translate 260ms var(--spring), box-shadow 260ms var(--ease), color 400ms var(--ease);
 }
-.btn:hover, .btn:focus-visible { translate: -2px -2px; box-shadow: var(--sh-2); }
-.btn:active { translate: 4px 4px; box-shadow: 0 0 0 var(--hard); }
+.btn:hover, .btn:focus-visible { box-shadow: var(--sh-accent); }
+.btn:active { translate: 0 1px; }
 .btn::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: var(--accent);
+  background: var(--ink);
   transform: translateY(101%);
-  transition: transform 650ms var(--ease);
+  transition: transform 550ms var(--ease);
 }
 .btn:hover::before, .btn:focus-visible::before { transform: none; }
 .btn:hover, .btn:focus-visible { color: var(--on-accent); }
@@ -440,61 +355,68 @@ em, .italic { font-style: italic; }
   color: var(--ink);
   box-shadow: inset 0 0 0 1px var(--line-strong);
 }
-.btn-ghost::before { background: var(--ink); }
-.btn-ghost:hover, .btn-ghost:focus-visible { color: var(--paper); }
+.btn-ghost::before { background: var(--sunken); }
+.btn-ghost:hover, .btn-ghost:focus-visible { color: var(--ink); box-shadow: inset 0 0 0 1px var(--accent); }
 
-/* ───────── Workbench cards ─────────
+/* ───────── Cards ─────────
    Movement uses the independent `translate` property so it composes
    with reveal/stagger transforms instead of fighting them. */
 .card {
   position: relative;
   background: var(--card);
-  border: 2px solid var(--edge);
+  border: 1px solid var(--edge);
+  border-radius: var(--radius);
   box-shadow: var(--sh-1);
 }
+.card > :first-child { border-top-left-radius: calc(var(--radius) - 1px); border-top-right-radius: calc(var(--radius) - 1px); }
+.card > :last-child { border-bottom-left-radius: calc(var(--radius) - 1px); border-bottom-right-radius: calc(var(--radius) - 1px); }
 .card-flat { box-shadow: none; }
-.card-accent { box-shadow: var(--sh-accent); }
+.card-accent { border-color: color-mix(in srgb, var(--accent) 45%, var(--edge)); box-shadow: var(--sh-accent); }
 .card-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  padding: 0.5rem 1rem;
+  padding: 0.625rem 1.125rem;
   background: var(--inverse-bg);
   color: var(--inverse-fg);
+  border-bottom: 1px solid var(--line);
   transition: background-color 250ms var(--ease), color 250ms var(--ease);
 }
-.card-foot { border-top: 2px dashed var(--edge); padding: 0.75rem 1rem; text-wrap: balance; }
+.card-foot { border-top: 1px solid var(--line); padding: 0.75rem 1.125rem; text-wrap: balance; }
 .card-tab {
   position: absolute;
-  left: -2px;
-  top: -2px;
+  left: 14px;
+  top: -1px;
   translate: 0 -100%;
   padding: 0.3rem 0.75rem 0.25rem;
+  border-radius: var(--radius-xs) var(--radius-xs) 0 0;
   background: var(--inverse-bg);
   color: var(--inverse-fg);
   transition: background-color 250ms var(--ease), color 250ms var(--ease);
 }
-.card-lift { transition: translate 260ms var(--spring), box-shadow 260ms var(--spring), opacity 400ms var(--ease); }
+.card-lift { transition: translate 260ms var(--spring), box-shadow 260ms var(--ease), border-color 260ms var(--ease), opacity 400ms var(--ease); }
 [data-reveal].card-lift {
   transition:
     opacity var(--dur) var(--ease) calc(var(--i, 0) * 60ms + var(--d, 0ms)),
     transform var(--dur) var(--ease) calc(var(--i, 0) * 60ms + var(--d, 0ms)),
     translate 260ms var(--spring),
-    box-shadow 260ms var(--spring);
+    box-shadow 260ms var(--ease),
+    border-color 260ms var(--ease);
 }
-.card-lift:hover { translate: -2px -2px; box-shadow: var(--sh-2); }
-.card-lift:active,
+.card-lift:hover { translate: 0 -3px; box-shadow: var(--sh-2); border-color: var(--line-strong); }
+.card-lift:active { translate: 0 0; }
 .card-on,
-.card-on:hover { translate: 4px 4px; box-shadow: 0 0 0 var(--hard); }
+.card-on:hover { translate: 0 0; border-color: var(--accent); box-shadow: var(--sh-accent); }
 .card-lift:hover > .card-head,
 .card-on > .card-head,
 .card-lift:hover > .card-tab,
-.card-on > .card-tab { background: var(--accent); color: var(--on-accent); }
+.card-on > .card-tab { background: var(--accent-soft); color: var(--accent-ink); }
 .card-lift:focus-visible, .card-lift:has(> input:focus-visible) { outline: 2px solid var(--accent-ink); outline-offset: 4px; }
 .card-empty {
   position: relative;
-  border: 2px dashed var(--line-strong);
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius);
   background: transparent;
   box-shadow: none;
 }
@@ -502,8 +424,9 @@ em, .italic { font-style: italic; }
 .card-dim:hover { opacity: 1; }
 .sideways { writing-mode: vertical-rl; transform: rotate(180deg); }
 
-/* Top nav: on the orange current page, the glyph's accent parts flip to paper so they stay visible */
-.nav-link[aria-current] .glyph { --accent: var(--card); }
+
+/* ⌘K search dialog (QuickFind.tsx) */
+.find-dialog::backdrop { background: rgba(12, 8, 16, 0.72); backdrop-filter: blur(6px); }
 
 /* Main brand mark (Nav.tsx): frame and code bracket breathe apart slightly on hover */
 @media (prefers-reduced-motion: no-preference) {
@@ -517,19 +440,20 @@ em, .italic { font-style: italic; }
 }
 
 /* Index square marker */
-.tick { display: inline-block; width: 7px; height: 7px; background: currentColor; flex-shrink: 0; }
+.tick { display: inline-block; width: 7px; height: 7px; border-radius: 99px; background: currentColor; flex-shrink: 0; }
 
 /* Invisible 44px tap area around small text controls */
 .hit { position: relative; }
 .hit::after { content: ""; position: absolute; inset: -15px -8px; }
 
 /* Thin data bar */
-.bar-track { height: 3px; background: var(--line); position: relative; }
-.bar-fill { position: absolute; inset: 0 auto 0 0; background: var(--ink); }
+.bar-track { height: 6px; border-radius: 99px; background: var(--line); position: relative; overflow: hidden; }
+.bar-fill { position: absolute; inset: 0 auto 0 0; border-radius: 99px; background: var(--ink); }
 
 /* Form controls */
 .input-line {
   width: 100%;
+  border-radius: 0;
   background: transparent;
   border: 0;
   border-bottom: 1px solid var(--line-strong);
@@ -751,7 +675,8 @@ em, .italic { font-style: italic; }
   position: relative;
   padding: 0.35rem 0.7rem 0.3rem;
   background: var(--card);
-  border: 2px solid var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 999px;
   color: var(--accent-ink);
   font-size: max(10px, var(--fs-label));
 }
@@ -882,8 +807,8 @@ em, .italic { font-style: italic; }
 .rm-node { grid-area: node; z-index: 1; padding: 1rem 1.25rem; text-align: center; }
 .rm-node-on { border-color: var(--accent); }
 .rm-node-on .label { color: var(--accent-ink); }
-.rm-node-base { background: var(--inverse-bg); color: var(--inverse-fg); border-color: var(--edge); box-shadow: var(--sh-accent); }
-.rm-node-base:hover { box-shadow: 6px 6px 0 var(--accent); }
+.rm-node-base { background: var(--inverse-bg); color: var(--inverse-fg); border-color: var(--accent); box-shadow: var(--sh-accent); }
+.rm-node-base:hover { box-shadow: 0 0 0 2px var(--accent); }
 .rm-branch { position: relative; display: flex; flex-direction: column; gap: 0.5rem; list-style: none; }
 .rm-left { grid-area: left; align-items: flex-end; padding-right: 3rem; }
 .rm-right { grid-area: right; align-items: flex-start; padding-left: 3rem; }
@@ -900,7 +825,8 @@ em, .italic { font-style: italic; }
 .rm-out {
   max-width: 22rem;
   padding: 0.6rem 0.9rem;
-  border: 2px dashed var(--accent);
+  border: 1px dashed var(--accent);
+  border-radius: var(--radius-s);
   background: var(--card);
   color: var(--ink);
   font-size: 0.9375rem;
@@ -920,11 +846,11 @@ em, .italic { font-style: italic; }
   margin-top: -1px;
   background: repeating-linear-gradient(to right, var(--accent) 0 6px, transparent 6px 10px);
 }
-.rm-key { display: inline-block; width: 1.1rem; height: 0.8rem; background: var(--card); }
-.rm-key-base { background: var(--inverse-bg); border: 2px solid var(--edge); box-shadow: 2px 2px 0 var(--accent); }
-.rm-key-node { border: 2px solid var(--edge); box-shadow: 2px 2px 0 var(--hard); }
+.rm-key { display: inline-block; width: 1.1rem; height: 0.8rem; border-radius: 4px; background: var(--card); }
+.rm-key-base { background: var(--inverse-bg); border: 1px solid var(--accent); }
+.rm-key-node { border: 1px solid var(--edge); }
 .rm-key-leaf { height: 2px; background: var(--line-strong); }
-.rm-key-out { border: 2px dashed var(--accent); }
+.rm-key-out { border: 1px dashed var(--accent); }
 
 /* Narrow: spine on the left, branches stacked under each step */
 @media (max-width: 1023px) {

@@ -1,4 +1,4 @@
-import { type CSSProperties } from "react";
+import { type CSSProperties, type ReactNode } from "react";
 import {
   archetypes,
   handoffCases,
@@ -18,135 +18,129 @@ import { ArchetypeGlyph, ArrowGlyph, Glyph, type GlyphName } from "../components
 const heroMetricGlyphs: GlyphName[] = ["trendDown", "shareBar", "survey", "forecast"];
 import { BasisBadge, CountUp, Disclosure, Eyebrow, Lines, Roll, Tag, jumpTo, navigate, pageHref, useMediaQuery, useTabList } from "../components/ui";
 
-export function Hero() {
+/** Opening of the Start page: the headline, then a search field and the questions the guide answers. */
+export function HeroIntro({ children }: { children?: ReactNode }) {
   return (
-    <section id="shift" aria-labelledby="shift-title" className="relative">
-      <div id="top" className="wrap pt-8 sm:pt-12 lg:pt-14">
-        <div className="grid-12 gap-y-10 lg:items-center">
-          <div className="col-span-4 flex flex-col gap-7 lg:col-span-5">
-            <div className="@container">
-              <h1 id="shift-title" className="hero-title text-ink">
-                <span className="block">The handoff</span>
-                <span className="block">is shrinking.</span>
-                <span className="block"><em className="text-accent-ink">Design and code</em></span>
-                <span className="block">now meet earlier.</span>
-              </h1>
-              <p className="lede mt-6 max-w-[40ch] text-ink sm:mt-7">
-                AI tools make it faster to turn a design into working code, so more designers now build alongside developers. Whether you're
-                upskilling in your current role or aiming for a new one, this guide maps three paths and a six-month plan.
-              </p>
-            </div>
+    <div className="mx-auto max-w-[60rem] text-center">
+      <p className="label text-ink-3">Design Engineer Field Guide · 2026</p>
+      <h1 id="shift-title" className="hero-title mt-5 text-balance text-ink">
+        The handoff is shrinking. <em className="text-accent-ink">Design and code</em> now meet earlier.
+      </h1>
+      <p className="lede mx-auto mt-6 max-w-[56ch] text-ink-2 sm:mt-7">
+        AI tools make it faster to turn a design into working code, so more designers now build alongside developers. Whether you're
+        upskilling in your current role or aiming for a new one, this guide maps three paths and a six-month plan.
+      </p>
+      {children}
+    </div>
+  );
+}
 
-            <div>
-              <button
-                type="button"
-                onClick={() => jumpTo("start-here")}
-                className="btn group"
-              >
-                <span>Choose your path</span>
-                <span aria-hidden className="font-mono text-sm transition-transform duration-300 motion-safe:group-hover:translate-y-0.5">↓</span>
-              </button>
-            </div>
-          </div>
+/** Chapter: the shift, drawn. */
+export function ShiftStage() {
+  return (
+    <div className="flex flex-col gap-8">
+      <HeroStage />
+      <div>
+        <button type="button" onClick={() => jumpTo("start-here")} className="btn group">
+          <span>Choose your path</span>
+          <span aria-hidden className="font-mono text-sm transition-transform duration-300 motion-safe:group-hover:translate-y-0.5">↓</span>
+        </button>
+      </div>
+    </div>
+  );
+}
 
-          <div className="col-span-4 lg:col-span-7">
-            <HeroStage />
-          </div>
-        </div>
+/** Chapter: the two starting doors. */
+export function StartHere() {
+  return (
+    <>
+      <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+        <h2 className="display-l text-ink">
+          Where are you <em>starting from?</em>
+        </h2>
+        <a href="#/ready" className="hit group link-ul-static inline-flex items-center gap-2 text-[0.9375rem] font-medium text-ink">
+          <span>Or open the readiness checklist</span>
+          <ArrowGlyph />
+        </a>
       </div>
 
-      {/* Dedicated starting-point section below the hero */}
-      <div id="start-here" className="wrap mt-16 scroll-mt-32 sm:mt-24">
-        <div className="border-t-2 border-edge pt-8 sm:pt-10">
-          <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <p className="label text-accent-ink">Start here</p>
-              <h2 className="display-l mt-2 text-ink">
-                Where are you <em>starting from?</em>
-              </h2>
-            </div>
-            <a href="#/ready" className="hit group link-ul-static inline-flex items-center gap-2 text-[0.9375rem] font-medium text-ink">
-              <span>Or open the readiness checklist</span>
-              <ArrowGlyph />
-            </a>
-          </div>
+      <nav aria-label="Start here" className="grid gap-6 md:grid-cols-2">
+        <EntryCard
+          href="#/roles"
+          who="I'm a working designer"
+          meta="Track A · 6 months"
+          what="Upskill in your role, or grow into a hybrid one"
+          detail="Compare Design Engineer, Meta-Designer and AX Designer, then follow a six-month plan from browser basics to real pull requests — at your current company or your next one."
+          tools={["Figma", "React", "TypeScript", "Tailwind CSS", "Cursor", "Claude Code"]}
+          cta="Explore the three roles"
+        />
+        <EntryCard
+          href="#/plan/b"
+          who="I'm starting out"
+          meta="Track B · 4 stages"
+          what="Start the beginner track"
+          detail="Build your UX and Product Design base first, prototype in real code, ship for real users and aim at teams hiring juniors."
+          tools={["Figma", "Claude Design", "HTML5", "React", "Tailwind CSS", "Cursor"]}
+          cta="Open the beginner plan"
+        />
+      </nav>
+    </>
+  );
+}
 
-          <nav aria-label="Start here" className="grid gap-6 md:grid-cols-2">
-            <EntryCard
-              href="#/roles"
-              who="I'm a working designer"
-              meta="Track A · 6 months"
-              what="Upskill in your role, or grow into a hybrid one"
-              detail="Compare Design Engineer, Meta-Designer and AX Designer, then follow a six-month plan from browser basics to real pull requests — at your current company or your next one."
-              tools={["Figma", "React", "TypeScript", "Tailwind CSS", "Cursor", "Claude Code"]}
-              cta="Explore the three roles"
-            />
-            <EntryCard
-              href="#/plan/b"
-              who="I'm starting out"
-              meta="Track B · 4 stages"
-              what="Start the beginner track"
-              detail="Build your UX and Product Design base first, prototype in real code, ship for real users and aim at teams hiring juniors."
-              tools={["Figma", "Claude Design", "HTML5", "React", "Tailwind CSS", "Cursor"]}
-              cta="Open the beginner plan"
-            />
-          </nav>
+/** Chapter: the short answer, one card per statistic, then the market chart. */
+export function JobsAnswer() {
+  return (
+    <>
+      {/* The question an anxious reader brings, answered before the hard numbers */}
+      <div data-reveal className="card card-accent grid gap-y-6 lg:grid-cols-12">
+        <h2 className="card-head label lg:col-span-12">
+          <span>Is my job going away?</span>
+        </h2>
+        <div className="px-5 sm:px-7 lg:col-span-4 lg:pb-7">
+          <p className="numeral text-[clamp(4rem,8vw,7rem)] text-accent">+6%</p>
+          <p className="mt-3 max-w-[30ch] text-sm leading-snug text-ink-2">US web & interface design jobs, 2025 → 2035</p>
+          <p className="label mt-2 text-ink-3">US BLS projection</p>
         </div>
-      </div>
-
-      {/* The short answer, then one index card per statistic */}
-      <div className="wrap mt-20 sm:mt-28">
-        {/* The question an anxious reader brings, answered before the hard numbers */}
-        <div data-reveal className="card card-accent grid gap-y-6 lg:grid-cols-12">
-          <p className="card-head label lg:col-span-12">
-            <span>Is my job going away?</span>
+        <div className="px-5 pb-7 sm:px-7 lg:col-span-8 lg:pl-0 lg:pt-1">
+          <p className="font-display text-[clamp(1.75rem,3vw,2.75rem)] leading-[1.05] tracking-tight text-ink">No, but it's changing.</p>
+          <p className="mt-4 max-w-[58ch] leading-relaxed text-ink-2">
+            Big-tech hiring for some design roles is down. But design jobs overall are still projected to grow, and half of designers
+            already ship some AI-generated code. Your design skills still matter most; what's growing is demand for designers who can
+            also work in code with developers. The rest of this guide shows how.
           </p>
-          <div className="px-5 sm:px-7 lg:col-span-4 lg:pb-7">
-            <p className="numeral text-[clamp(4rem,8vw,7rem)] text-accent">+6%</p>
-            <p className="mt-3 max-w-[30ch] text-sm leading-snug text-ink-2">US web & interface design jobs, 2025 → 2035</p>
-            <p className="label mt-2 text-ink-3">US BLS projection</p>
-          </div>
-          <div className="px-5 pb-7 sm:px-7 lg:col-span-8 lg:pl-0 lg:pt-1">
-            <p className="font-display text-[clamp(1.75rem,3vw,2.75rem)] leading-[1.05] tracking-tight text-ink">No, but it's changing.</p>
-            <p className="mt-4 max-w-[58ch] leading-relaxed text-ink-2">
-              Big-tech hiring for some design roles is down. But design jobs overall are still projected to grow, and half of designers
-              already ship some AI-generated code. Your design skills still matter most; what's growing is demand for designers who can
-              also work in code with developers. The rest of this guide shows how.
-            </p>
-            <p className="mt-4 max-w-[58ch] text-sm leading-relaxed text-ink-3">{titleReality}</p>
-            <a href="#/roles" className="hit link-ul-static mt-5 inline-flex items-center gap-2 text-[0.9375rem] font-medium text-ink group">
-              See the three roles <ArrowGlyph />
-            </a>
-          </div>
+          <p className="mt-4 max-w-[58ch] text-sm leading-relaxed text-ink-3">{titleReality}</p>
+          <a href="#/roles" className="hit link-ul-static mt-5 inline-flex items-center gap-2 text-[0.9375rem] font-medium text-ink group">
+            See the three roles <ArrowGlyph />
+          </a>
         </div>
-
-        <dl className="mt-8 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4 sm:mt-10">
-          {heroMetrics.map((m, i) => (
-            <div
-              key={m.label}
-              data-reveal
-              style={{ "--i": i } as CSSProperties}
-              className="card group flex min-h-[17rem] flex-col sm:min-h-[21rem]"
-            >
-              <dt className="order-4 mt-4 flex-1 max-w-[26ch] px-4 text-sm leading-snug text-pretty text-ink-2 sm:px-5">{m.label}</dt>
-              <dd className="card-head label order-1">
-                <BasisBadge basis={m.basis} onBand />
-              </dd>
-              <dd aria-hidden="true" className="order-2 flex items-center justify-between px-4 pt-5 sm:px-5 sm:pt-6">
-                <Glyph name={heroMetricGlyphs[i] ?? "survey"} className="glyph-xl size-11 text-ink sm:size-12" />
-              </dd>
-              <dd className={`numeral order-3 mt-auto px-4 pt-6 text-[clamp(3rem,6vw,6.25rem)] sm:px-5 ${i === 0 ? "text-accent" : "text-ink"}`}>
-                <CountUp value={m.value} />
-              </dd>
-              <dd className="card-foot label order-5 mt-5 flex min-h-[3.5rem] items-center text-ink-3 sm:px-5">{m.source}</dd>
-            </div>
-          ))}
-        </dl>
-
-        <MarketShiftChart />
       </div>
 
-    </section>
+      <dl className="mt-8 grid grid-cols-2 gap-4 sm:mt-10 sm:gap-6 lg:grid-cols-4">
+        {heroMetrics.map((m, i) => (
+          <div
+            key={m.label}
+            data-reveal
+            style={{ "--i": i } as CSSProperties}
+            className="card group flex min-h-[17rem] flex-col sm:min-h-[21rem]"
+          >
+            <dt className="order-4 mt-4 flex-1 max-w-[26ch] px-4 text-sm leading-snug text-pretty text-ink-2 sm:px-5">{m.label}</dt>
+            <dd className="card-head label order-1 rounded-t-[calc(var(--radius)-1px)]">
+              <BasisBadge basis={m.basis} onBand />
+            </dd>
+            <dd aria-hidden="true" className="order-2 flex items-center justify-between px-4 pt-5 sm:px-5 sm:pt-6">
+              <Glyph name={heroMetricGlyphs[i] ?? "survey"} className="glyph-xl size-11 text-ink sm:size-12" />
+            </dd>
+            <dd className={`numeral order-3 mt-auto px-4 pt-6 text-[clamp(3rem,5vw,5rem)] sm:px-5 ${i === 0 ? "text-accent" : "text-ink"}`}>
+              <CountUp value={m.value} />
+            </dd>
+            <dd className="card-foot label order-5 mt-5 flex min-h-[3.5rem] items-center text-ink-3 sm:px-5">{m.source}</dd>
+          </div>
+        ))}
+      </dl>
+
+      <MarketShiftChart />
+    </>
   );
 }
 
@@ -373,7 +367,7 @@ export function Archetypes({ role }: { role?: string }) {
           </span>
           <span className="hidden sm:inline">{a.short}</span>
         </p>
-        <div className="flex flex-col gap-5 border-b-2 border-dashed border-edge bg-accent-soft px-5 py-6 sm:px-8 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-col gap-5 border-b border-line bg-accent-soft px-5 py-6 sm:px-8 lg:flex-row lg:items-center lg:justify-between">
           <p className="max-w-[60ch] font-display text-[clamp(1.375rem,2vw,1.75rem)] leading-[1.15] tracking-tight text-ink">
             <span className="text-accent-ink">This fits you if</span> {a.fitsIf}
           </p>

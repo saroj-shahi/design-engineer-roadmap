@@ -439,7 +439,7 @@ function TrackA({ plan: route }: { plan: PlanA }) {
         <div id="plan-portfolio" className="lg:col-span-6 lg:col-start-7">
           <SubHead n="A.4" title="Show your work — at work or on the market" />
           <ChecklistLink href={pageHref("ready", "a")} title="Your readiness checklist" detail="Live demo, clean repo, short write-up, merged PR and proof you build with AI. Useful for team demos, promotion cases or job applications." />
-          <div className="mt-10 border-2 border-edge bg-inverse p-6 text-on-inverse shadow-[var(--sh-accent)] sm:p-8">
+          <div className="mt-10 rounded-[var(--radius)] border border-accent/40 bg-inverse p-6 text-on-inverse shadow-[var(--sh-accent)] sm:p-8">
             <p className="label mb-4 text-inverse-accent">If you do interview</p>
             <p className="font-display text-[1.625rem] leading-[1.15] tracking-tight">{interviewFocus.hybrid}</p>
             <p className="mt-4 text-sm leading-relaxed text-inverse-muted">Alongside the usual: {interviewFocus.traditional}</p>

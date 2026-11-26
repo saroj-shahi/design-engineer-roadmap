@@ -447,7 +447,7 @@ export function RoadmapTopics({ slug }: { slug?: string }) {
                   {/* Spine node badge */}
                   <span
                     aria-hidden
-                    className={`label absolute left-0 top-5 grid size-10 place-items-center border-2 border-edge tabular sm:size-12 ${
+                    className={`label absolute left-0 top-5 grid size-10 place-items-center rounded-full border border-edge tabular sm:size-12 ${
                       stageComplete
                         ? "bg-accent text-[var(--on-accent)]"
                         : "bg-card text-ink"

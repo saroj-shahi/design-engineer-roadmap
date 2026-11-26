@@ -30,11 +30,11 @@ Always run `npm run typecheck` (or `npm run build`) after edits.
 - `src/components/ui.tsx`: Shared primitives (`Section`, `SectionHeader`, `SubHead`, `Tabs`, `TabPanel`, `useTabList`, `Disclosure`, `CheckRow`, `TopicCheckbox`, `Tag`, `BasisBadge`, `ContextBar`, `Meter`, `NextPage`), hash router (`useRoute`, `pageHref`, `navigate`, `planFromParts`), theme hook, and safe `localStorage` helpers (`usePersistentSet`). **Check here before writing a new primitive.**
 - `src/components/icons.tsx`: 24×24 Swiss geometric glyphs (`Glyph`, `ArchetypeGlyph`, `BasisGlyph`, `ArrowGlyph`, `ArrowBackGlyph`, `ExternalGlyph`), including metric icons (`trendDown`, `shareBar`, `survey`, `forecast`, `caseStudy`, `stack`) and persona/role icons (`user`, `users`).
 - `src/components/BrandLogo.tsx`: 25 monochrome `currentColor` app/brand marks (`BrandLogo`, `BrandLogosFor`, `detectBrands`) automatically wired into `Tag`, `ToolingPipeline`, resource links, protocol owners, and `roadmap.sh` links.
-- `src/components/Nav.tsx`: Sticky header, `BrandMark` (Design × Code emblem + wordmark lockup), responsive 5-page nav, scroll progress bar, light/dark toggle.
+- `src/components/Nav.tsx`: Sticky header, `BrandMark` (Design × Code emblem + wordmark lockup), responsive 5-page nav, ⌘K search (`QuickFind.tsx`), scroll progress bar.
 - `src/components/*`: Data visualizations and interactive modules (`HeroStage`, `MarketShiftChart`, `ArchetypeVenn`, `HandoffFlow`, `HandoffPlate`, `AdoptionDumbbell`, `AiAutonomyRamp`, `ProtocolArchitecture`, `PlanRoadmapBase`, `RoadmapMap`).
 - `src/data/research.ts`: Single source of truth for all statistics, roles, plans, checklists, skills, tooling, protocols, sources, and glossary.
 - `src/data/roadmaps.ts`: Structured `roadmap.sh` curricula (8 core syllabi + companion skill tracks) shared between `PlanRoadmapBase` and `Library → Roadmaps`.
-- `src/index.css`: Design tokens (light + both dark-mode blocks), `@theme` mapping, `@layer components` primitives, typography wrapping rules, and reduced-motion-safe animations.
+- `src/index.css`: Design tokens (one dark Plum Dusk set), `@theme` mapping, `@layer components` primitives, typography wrapping rules, and reduced-motion-safe animations.
 
 ## Non-negotiable content rules
 
@@ -55,8 +55,8 @@ Always run `npm run typecheck` (or `npm run build`) after edits.
 
 Before finishing any UI or content change:
 1. Run `npm run typecheck` and `npm run build` with zero errors.
-2. Check rendered views at desktop (`~1280px`) and mobile (`~375px`) in **both light and dark themes**.
-3. Confirm zero horizontal overflow, zero console/network errors, high-contrast headers/tabs in dark mode, clean keyboard focus order, and no orphan-word regressions.
+2. Check rendered views at desktop (`~1280px`) and mobile (`~375px`) (the site has one dark theme).
+3. Confirm zero horizontal overflow, zero console/network errors, high-contrast headers/tabs, clean keyboard focus order, and no orphan-word regressions.
 
 ## Git rules
 

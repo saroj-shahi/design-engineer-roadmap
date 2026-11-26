@@ -38,7 +38,7 @@ export function Library({ shelf: raw, term }: { shelf?: string; term?: string })
         <p className="lede mt-8" data-reveal>
           You don't need any of this to start. Open a shelf when a question comes up.
         </p>
-        <nav aria-label="Library shelves" className="mt-10 grid max-w-full grid-cols-2 border-2 border-edge bg-card shadow-[var(--sh-1)] sm:inline-flex">
+        <nav aria-label="Library shelves" className="mt-10 grid max-w-full grid-cols-2 gap-1 rounded-[var(--radius-s)] border border-edge bg-card p-1 sm:inline-flex">
           {shelves.map((s) => {
             const selected = s.id === shelf;
             return (
@@ -46,7 +46,7 @@ export function Library({ shelf: raw, term }: { shelf?: string; term?: string })
                 key={s.id}
                 href={pageHref("library", s.id)}
                 aria-current={selected ? "page" : undefined}
-                className={`label flex min-h-11 shrink-0 items-center justify-center border-edge px-4 text-center transition-colors duration-300 ease-silk max-sm:border-b-2 max-sm:odd:border-r-2 max-sm:last:col-span-2 max-sm:last:border-b-0 max-sm:last:border-r-0 sm:border-r-2 sm:last:border-r-0 ${
+                className={`label flex min-h-11 shrink-0 items-center justify-center border-edge px-4 text-center transition-colors duration-300 ease-silk rounded-[var(--radius-xs)] max-sm:last:col-span-2 ${
                   selected ? "bg-inverse text-on-inverse" : "text-ink-3 hover:bg-sunken hover:text-ink"
                 }`}
               >

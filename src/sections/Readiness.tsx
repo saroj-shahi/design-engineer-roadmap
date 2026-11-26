@@ -99,11 +99,11 @@ export function Readiness({ track }: { track: Track | null }) {
         <div className="mb-10">
           <p className="mb-4 text-ink-2">Pick your track to see your checklist.</p>
           <div className="flex flex-wrap gap-3">
-            <button type="button" onClick={() => pick("a")} className="hit label inline-flex h-11 items-center gap-2 border-2 border-edge bg-card px-4 text-ink shadow-[var(--sh-1)] hover:bg-sunken">
+            <button type="button" onClick={() => pick("a")} className="hit label inline-flex h-11 items-center gap-2 rounded-full border border-edge bg-card px-4 text-ink hover:bg-sunken">
               <Glyph name="user" className="!size-4" />
               <span>I'm a working designer</span>
             </button>
-            <button type="button" onClick={() => pick("b")} className="hit label inline-flex h-11 items-center gap-2 border-2 border-edge bg-card px-4 text-ink shadow-[var(--sh-1)] hover:bg-sunken">
+            <button type="button" onClick={() => pick("b")} className="hit label inline-flex h-11 items-center gap-2 rounded-full border border-edge bg-card px-4 text-ink hover:bg-sunken">
               <Glyph name="user" className="!size-4" />
               <span>I'm starting out</span>
             </button>

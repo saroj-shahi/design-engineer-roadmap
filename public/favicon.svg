@@ -1,20 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
   <style>
-    .bg { fill: #f7f6f2; }
-    .ink { stroke: #111111; }
-    .node { fill: #f7f6f2; stroke: #111111; }
-    .accent-stroke { stroke: #ff3b00; }
-    .accent-fill { fill: #ff3b00; fill-opacity: 0.2; }
-    @media (prefers-color-scheme: dark) {
-      .bg { fill: #131312; }
-      .ink { stroke: #edebe5; }
-      .node { fill: #131312; stroke: #edebe5; }
-      .accent-stroke { stroke: #ff4a12; }
-      .accent-fill { fill: #ff4a12; fill-opacity: 0.26; }
-    }
+    .bg { fill: #1c1623; }
+    .ink { stroke: #efe8f4; }
+    .node { fill: #1c1623; stroke: #efe8f4; }
+    .accent-stroke { stroke: #ff93b5; }
+    .accent-fill { fill: #ff93b5; fill-opacity: 0.26; }
   </style>
-  <rect class="bg" width="32" height="32" />
-  <rect class="ink" x="1.5" y="1.5" width="29" height="29" stroke-width="1.5" stroke-opacity="0.22" />
+  <rect class="bg" width="32" height="32" rx="7" />
+  <rect class="ink" x="1.5" y="1.5" width="29" height="29" rx="6" stroke-width="1.5" stroke-opacity="0.22" />
   <!-- Design frame + vector corner handles -->
   <rect class="ink" x="6" y="7" width="13" height="18" stroke-width="2" />
   <rect class="node" x="4.25" y="5.25" width="3.5" height="3.5" stroke-width="1.5" />

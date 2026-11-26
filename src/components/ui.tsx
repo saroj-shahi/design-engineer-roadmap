@@ -255,7 +255,7 @@ export function Eyebrow({ children, className = "" }: { children: ReactNode; cla
 /** Subsection heading: sits on a heavy rule, one step below the page title and above card titles. */
 export function SubHead({ n, title, note }: { n: string; title: string; note?: string }) {
   return (
-    <div className="mb-10 grid-12 gap-y-3 border-t-2 border-edge pt-6 sm:mb-14 sm:pt-8" data-n={n}>
+    <div className="mb-10 grid-12 gap-y-3 border-t border-line pt-6 sm:mb-14 sm:pt-8" data-n={n}>
       <div className="col-span-4 lg:col-span-12">
         <Lines as="h2" lines={[title]} className="display-l text-ink" />
         {note && (
@@ -277,7 +277,7 @@ export function Tag({ children, tone = "neutral" }: { children: ReactNode; tone?
     solid: "border-ink bg-ink text-paper",
   };
   return (
-    <span className={`inline-flex max-w-full items-center gap-1.5 border px-1.5 py-[3px] font-mono text-[11px] leading-4 tracking-tight ${tones[tone]}`}>
+    <span className={`inline-flex max-w-full items-center gap-1.5 rounded-full border px-2.5 py-[3px] font-mono text-[11px] leading-4 tracking-tight ${tones[tone]}`}>
       {typeof children === "string" && <BrandLogosFor text={children} max={2} className="size-3.5" />}
       <span>{children}</span>
     </span>
@@ -379,7 +379,7 @@ export function Tabs({
 
   const wrap = {
     underline: "flex gap-8 overflow-x-auto no-scrollbar border-b border-line",
-    segmented: "inline-flex max-w-full overflow-x-auto no-scrollbar border-2 border-edge bg-card shadow-[var(--sh-1)]",
+    segmented: "inline-flex max-w-full gap-1 overflow-x-auto no-scrollbar rounded-[var(--radius-s)] border border-edge bg-card p-1",
     list: orientation === "vertical" ? "flex flex-col border-t border-line" : "grid grid-flow-col auto-cols-[minmax(13rem,1fr)] overflow-x-auto no-scrollbar border-t border-line",
   }[variant];
 
@@ -391,7 +391,7 @@ export function Tabs({
           underline: `group relative -mb-px shrink-0 pb-3 pt-1 label transition-colors duration-500 ${
             selected ? "text-ink" : "text-ink-3 hover:text-ink"
           }`,
-          segmented: `shrink-0 h-11 px-4 label transition-colors duration-300 ease-silk border-r-2 border-edge last:border-r-0 ${
+          segmented: `shrink-0 h-10 rounded-[var(--radius-xs)] px-4 label transition-colors duration-300 ease-silk ${
             selected ? "bg-inverse text-on-inverse" : "text-ink-3 hover:text-ink hover:bg-sunken"
           }`,
           list:
@@ -1045,68 +1045,6 @@ export function ContextBar({
   );
 }
 
-/* ───────── Theme ─────────
-   "light" | "dark" chosen by the reader, saved under de-guide:theme.
-   With no saved choice the page follows the system setting. index.html
-   applies the saved choice before first paint so there is no flash. */
-
-export type Theme = "light" | "dark";
-const THEME_KEY = "de-guide:theme";
-const systemTheme = (): Theme =>
-  typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-
-const THEME_COLORS: Record<Theme, string> = { light: "#f7f6f2", dark: "#131312" };
-
-function syncThemeColorMeta(theme: Theme) {
-  let meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]:not([media])');
-  if (!meta) {
-    meta = document.createElement("meta");
-    meta.name = "theme-color";
-    document.head.appendChild(meta);
-  }
-  meta.content = THEME_COLORS[theme];
-}
-
-export function useTheme() {
-  const [theme, setTheme] = useState<Theme>(() => {
-    const set = document.documentElement.dataset.theme;
-    return set === "light" || set === "dark" ? set : systemTheme();
-  });
-
-  // Follow the system while the reader hasn't chosen (keyed off DOM data-theme, so blocked storage stays in sync).
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
-    const on = () => {
-      const explicit = document.documentElement.dataset.theme;
-      if (explicit !== "light" && explicit !== "dark") {
-        const next = systemTheme();
-        setTheme(next);
-        syncThemeColorMeta(next);
-      }
-    };
-    const onPick = (e: Event) => setTheme((e as CustomEvent<Theme>).detail);
-    mq.addEventListener("change", on);
-    window.addEventListener("de-guide:theme", onPick);
-    return () => {
-      mq.removeEventListener("change", on);
-      window.removeEventListener("de-guide:theme", onPick);
-    };
-  }, []);
-
-  const toggle = () => {
-    const next: Theme = theme === "dark" ? "light" : "dark";
-    document.documentElement.dataset.theme = next;
-    syncThemeColorMeta(next);
-    try {
-      localStorage.setItem(THEME_KEY, next);
-    } catch {
-      /* storage unavailable: applies for this page view */
-    }
-    window.dispatchEvent(new CustomEvent<Theme>("de-guide:theme", { detail: next }));
-  };
-  return { theme, toggle };
-}
-
 /** Segmented meter: one cell per item, filled cells in accent. */
 export function Meter({ value, max, label }: { value: number; max: number; label: string }) {
   return (
@@ -1119,7 +1057,7 @@ export function Meter({ value, max, label }: { value: number; max: number; label
       </div>
       <div className="mt-3 flex gap-1" role="progressbar" aria-label={label} aria-valuenow={value} aria-valuemin={0} aria-valuemax={max}>
         {Array.from({ length: max }, (_, i) => (
-          <span key={i} className="relative h-1.5 flex-1 bg-line">
+          <span key={i} className="relative h-1.5 flex-1 overflow-hidden rounded-full bg-line">
             <span
               className={`absolute inset-0 origin-left bg-accent transition-transform duration-700 ease-silk ${i < value ? "scale-x-100" : "scale-x-0"}`}
               style={{ transitionDelay: `${i * 40}ms` }}
