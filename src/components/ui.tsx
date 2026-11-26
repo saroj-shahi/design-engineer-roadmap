@@ -109,7 +109,7 @@ export function Lines({
   return (
     <Tag id={id} className={className} data-reveal="lines" style={{ "--d": `${delay}ms` } as CSSProperties}>
       {lines.map((l, i) => (
-        <span key={i} className="-mb-[0.1em] block overflow-hidden pb-[0.1em]" style={{ "--i": i } as CSSProperties}>
+        <span key={i} className="-mx-[0.08em] -mb-[0.2em] block overflow-hidden px-[0.08em] pb-[0.2em]" style={{ "--i": i } as CSSProperties}>
           <span className="block translate-y-[105%] transition-transform duration-[1100ms] ease-silk [transition-delay:calc(var(--i,0)*80ms+var(--d,0ms))] in-[.is-in]:translate-y-0 motion-reduce:translate-y-0 print:translate-y-0">{l}</span>
         </span>
       ))}

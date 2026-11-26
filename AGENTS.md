@@ -17,6 +17,7 @@ npm run dev        # Vite dev server (http://localhost:5173/)
 npm run typecheck  # tsc -b (strict; noUnusedLocals & noUnusedParameters are on)
 npm run build      # tsc -b && vite build -> dist/
 npm run preview    # Preview production build locally
+npm run test:e2e   # Playwright: routes, a11y (axe), layout and flows at desktop + phone
 ```
 
 Always run `npm run typecheck` (or `npm run build`) after edits.
@@ -54,7 +55,7 @@ Always run `npm run typecheck` (or `npm run build`) after edits.
 ## Verification checklist
 
 Before finishing any UI or content change:
-1. Run `npm run typecheck` and `npm run build` with zero errors.
+1. Run `npm run typecheck`, `npm run build` and `npm run test:e2e` with zero errors or failures.
 2. Check rendered views at desktop (`~1280px`) and mobile (`~375px`) (the site has one dark theme).
 3. Confirm zero horizontal overflow, zero console/network errors, high-contrast headers/tabs, clean keyboard focus order, and no orphan-word regressions.
 

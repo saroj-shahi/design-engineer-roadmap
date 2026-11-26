@@ -59,6 +59,7 @@
   --color-accent: var(--accent);
   --color-accent-ink: var(--accent-ink);
   --color-accent-soft: var(--accent-soft);
+  --color-on-accent: var(--on-accent);
   --color-inverse: var(--inverse-bg);
   --color-on-inverse: var(--inverse-fg);
   --color-inverse-muted: var(--inverse-muted);

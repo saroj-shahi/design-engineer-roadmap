@@ -1,6 +1,6 @@
 # Design Engineer Field Guide
 
-A static, five-page field guide for designers upskilling into code or moving into **Design Engineer**, **Meta-Designer**, and **AX Designer** roles (**Design Engineer Field Guide · 2026**). React 18 + TypeScript + Vite 5 + Tailwind v4. No backend, no router library, no tests.
+A static, five-page field guide for designers upskilling into code or moving into **Design Engineer**, **Meta-Designer**, and **AX Designer** roles (**Design Engineer Field Guide · 2026**). React 18 + TypeScript + Vite 5 + Tailwind v4. No backend, no router library. End-to-end tests run on Playwright.
 
 See **[AGENTS.md](AGENTS.md)** for full cross-agent instructions and **[DESIGN.md](DESIGN.md)** for the complete Plum Dusk design system, color tokens, typography rules, and Visual QA checklist.
 
@@ -9,6 +9,7 @@ See **[AGENTS.md](AGENTS.md)** for full cross-agent instructions and **[DESIGN.m
 - `npm run dev`: dev server. For previews use the `dev` config in `.claude/launch.json` (port 5173, strict).
 - `npm run typecheck`: `tsc -b`. Run after every change; `noUnusedLocals`/`noUnusedParameters` are on, so dead imports fail.
 - `npm run build`: typecheck + production build to `dist/`.
+- `npm run test:e2e`: Playwright suite in `tests/e2e/` against the production build, at desktop (1280×800) and phone (Pixel 7). Covers every route (title, one h1, no console errors, no sideways scroll, no cropped text or square corners in rounded cards), a WCAG 2.2 A/AA axe scan per route, pointer and focus visibility, and the main flows (nav, search, roles, checklist, plan, glossary). First run: `npx playwright install chromium`.
 
 ## Layout
 
@@ -54,7 +55,7 @@ See **[AGENTS.md](AGENTS.md)** for full cross-agent instructions and **[DESIGN.m
 
 ## Verifying changes
 
-Run `npm run typecheck` and `npm run build`, then check the preview at desktop (`~1280px`) and mobile (`~375px`).
+Run `npm run typecheck`, `npm run build` and `npm run test:e2e`, then check the preview at desktop (`~1280px`) and mobile (`~375px`).
 
 ## Git
 
