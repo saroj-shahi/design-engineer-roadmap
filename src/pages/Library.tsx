@@ -5,7 +5,7 @@ import { ToolingPipeline } from "../sections/ToolingPipeline";
 import { glossary, glossaryTopicLabel, type GlossaryTopic } from "../data/research";
 import { externalRoadmaps } from "../data/roadmaps";
 import { useEffect, useState } from "react";
-import { ContextBar, Lines, NextPage, SubHead, jumpTo, lastPlanHref, navigate, pageHref } from "../components/ui";
+import { ContextBar, NextPage, PageHeader, SubHead, jumpTo, lastPlanHref, navigate, pageHref } from "../components/ui";
 
 const shelves = [
   { id: "compare", label: "Compare roles" },
@@ -33,11 +33,12 @@ export function Library({ shelf: raw, term }: { shelf?: string; term?: string })
   ];
   return (
     <div className="pt-8 sm:pt-12">
-      <header className="mx-auto w-full max-w-[1440px] px-(--gutter) pb-12 pt-10 sm:pb-16">
-        <Lines as="h1" id="library-title" className="font-display font-semibold tracking-[-0.02em] text-pretty text-display-xl text-ink" lines={["Go deeper,", <em>when you want to.</em>]} />
-        <p className="max-w-[44ch] text-lede text-pretty text-ink-2 mt-8" data-reveal>
-          You don't need any of this to start. Open a shelf when a question comes up.
-        </p>
+      <div className="mx-auto w-full max-w-[1440px] px-(--gutter)">
+      <PageHeader
+        id="library-title"
+        title={["Go deeper,", <em>when you want to.</em>]}
+        lede="You don't need any of this to start. Open a shelf when a question comes up."
+      >
         <nav aria-label="Library shelves" className="mt-10 grid max-w-full grid-cols-2 gap-1 rounded-ctl border border-edge bg-card p-1 sm:inline-flex">
           {shelves.map((s) => {
             const selected = s.id === shelf;
@@ -55,7 +56,8 @@ export function Library({ shelf: raw, term }: { shelf?: string; term?: string })
             );
           })}
         </nav>
-      </header>
+      </PageHeader>
+      </div>
 
       {/* The sticky bar needs a tall parent; shelf sections keep their own .wrap, so neutralise the nested gutters. */}
       <div className="mx-auto w-full max-w-[1440px] px-(--gutter) [&_.wrap]:!max-w-none [&_.wrap]:!px-0">

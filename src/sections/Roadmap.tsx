@@ -117,7 +117,6 @@ export function Roadmap({ plan }: { plan: PlanRoute | null }) {
       <SectionHeader
         id="roadmap"
         level="h1"
-        glyph="route"
         title={["Your plan,", <em>step by step.</em>]}
         lede={`Pick where you are today. The plan changes to match. ${saveNote}`}
       />

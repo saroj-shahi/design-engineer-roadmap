@@ -15,7 +15,7 @@ import { MarketShiftChart } from "../components/MarketShiftChart";
 import { ArchetypeGlyph, ArrowGlyph, Glyph, type GlyphName } from "../components/icons";
 
 const heroMetricGlyphs: GlyphName[] = ["trendDown", "shareBar", "survey", "forecast"];
-import { BasisBadge, CountUp, Eyebrow, Lines, Roll, SubHead, Tag, jumpTo, navigate, pageHref, useMediaQuery, useTabList } from "../components/ui";
+import { BasisBadge, CountUp, Eyebrow, PageHeader, Roll, SubHead, Tag, jumpTo, navigate, pageHref, useMediaQuery, useTabList } from "../components/ui";
 
 /** Opening of the Start page: the headline, then a search field and the questions the guide answers. */
 export function HeroIntro({ children }: { children?: ReactNode }) {
@@ -305,15 +305,11 @@ export function Archetypes({ role }: { role?: string }) {
   });
   return (
     <div id="archetypes" className="mx-auto w-full max-w-[1440px] px-(--gutter) pb-24 pt-8 sm:pb-36 sm:pt-12">
-      <header className="mb-10 pt-10 sm:mb-14">
-        <div className="grid grid-cols-4 gap-x-4 lg:grid-cols-12 lg:gap-x-6 gap-y-8">
-          <Lines as="h1" id="roles-title" className="font-display text-display-xl text-balance col-span-4 lg:col-span-7" lines={["Which role", <>fits <em>you?</em></>]} />
-          <p data-reveal className="max-w-[44ch] text-lede text-pretty text-ink-2 col-span-4 self-end lg:col-span-4 lg:col-start-9">
-            Three directions are growing where design and code meet. You don't need a new title to work this way — pick the one that fits
-            your team or where you want to grow.
-          </p>
-        </div>
-      </header>
+      <PageHeader
+        id="roles-title"
+        title={["Which role", <>fits <em>you?</em></>]}
+        lede="Three directions are growing where design and code meet. You don't need a new title to work this way — pick the one that fits your team or where you want to grow."
+      />
 
       {/* One surface: the role list on the left stays in view while the chosen role's detail reads on the right. */}
       <div className="grid gap-6 lg:grid-cols-[minmax(0,19rem)_minmax(0,1fr)] lg:items-start lg:gap-8">

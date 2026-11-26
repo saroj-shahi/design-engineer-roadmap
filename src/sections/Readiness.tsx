@@ -71,7 +71,6 @@ export function Readiness({ track }: { track: Track | null }) {
       <SectionHeader
         id="readiness"
         level="h1"
-        glyph="check"
         title={["Are you ready", <em>to ship in code?</em>]}
         lede={`Tick what's true today. ${saveNote}`}
       />

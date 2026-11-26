@@ -220,29 +220,43 @@ export function SectionHeader({
   glyph?: GlyphName;
   level?: "h1" | "h2";
 }) {
+  // Page titles share one layout on every page: title on the left, lede aligned to its baseline on the right.
+  if (level === "h1") return <PageHeader id={`${id}-title`} title={title} lede={lede} />;
   return (
-    <header className={level === "h1" ? "mb-16 pt-10 sm:mb-24" : "mb-14 border-t border-line pt-8 sm:mb-20 sm:pt-10"}>
-      <div className="grid grid-cols-4 gap-x-4 lg:grid-cols-12 lg:gap-x-6 gap-y-10">
+    <header className="mb-14 border-t border-line pt-8 sm:mb-20 sm:pt-10">
+      <div className="grid grid-cols-4 gap-x-4 gap-y-10 lg:grid-cols-12 lg:gap-x-6">
         <Lines
-          as={level}
+          as="h2"
           id={`${id}-title`}
           lines={title}
-          className={`${level === "h1" ? "font-display text-display-xl text-balance" : "font-display text-display-l text-balance"} col-span-4 text-ink ${glyph ? "lg:col-span-8" : "lg:col-span-11"}`}
+          className={`col-span-4 font-display text-display-l text-balance text-ink ${glyph ? "lg:col-span-8" : "lg:col-span-11"}`}
         />
-        {glyph && (
-          <Plate
-            glyph={glyph}
-            className={`self-end max-lg:hidden ${level === "h1" ? "lg:col-span-3 lg:col-start-10" : "lg:col-span-2 lg:col-start-11"}`}
-          />
-        )}
+        {glyph && <Plate glyph={glyph} className="self-end max-lg:hidden lg:col-span-2 lg:col-start-11" />}
       </div>
       {lede && (
-        <div className="grid grid-cols-4 gap-x-4 lg:grid-cols-12 lg:gap-x-6 mt-8 sm:mt-12">
-          <p data-reveal className="max-w-[44ch] text-lede text-pretty text-ink-2 col-span-4 lg:col-span-5 lg:col-start-7">
+        <div className="mt-8 grid grid-cols-4 gap-x-4 sm:mt-12 lg:grid-cols-12 lg:gap-x-6">
+          <p data-reveal className="col-span-4 max-w-[44ch] text-lede text-pretty text-ink-2 lg:col-span-5 lg:col-start-7">
             {lede}
           </p>
         </div>
       )}
+    </header>
+  );
+}
+
+/** The one page-title layout (Roles, Plan, Checklist, Library): display title left, lede on the right at its baseline. */
+export function PageHeader({ id, title, lede, children }: { id: string; title: ReactNode[]; lede?: ReactNode; children?: ReactNode }) {
+  return (
+    <header className="mb-10 pt-10 sm:mb-14">
+      <div className="grid grid-cols-4 gap-x-4 gap-y-8 lg:grid-cols-12 lg:gap-x-6">
+        <Lines as="h1" id={id} lines={title} className="col-span-4 font-display text-display-xl text-balance text-ink lg:col-span-7" />
+        {lede && (
+          <p data-reveal className="col-span-4 max-w-[44ch] self-end text-lede text-pretty text-ink-2 lg:col-span-4 lg:col-start-9">
+            {lede}
+          </p>
+        )}
+      </div>
+      {children}
     </header>
   );
 }
