@@ -191,7 +191,7 @@ export function HandoffEconomics() {
     <div className="mx-auto w-full max-w-[1440px] px-(--gutter) pb-24 sm:pb-36">
       <SubHead
         title="Handoffs are the bottleneck."
-        note="Moving a design from Figma into code takes time, and details can get lost between tools. In Figma's 2025 research, nearly all designers and developers said the handoff could be improved. Only 1 designer in 5 sees a first build that matches the design. The fix belongs in the process."
+        note="All three roles grow from the same problem. Moving a design from Figma into code takes time, and details can get lost between tools. In Figma's 2025 research, nearly all designers and developers said the handoff could be improved. Only 1 designer in 5 sees a first build that matches the design. The fix belongs in the process."
       />
       <div className="grid grid-cols-4 gap-x-4 lg:grid-cols-12 lg:gap-x-6 gap-y-16">
         <div className="col-span-4 space-y-24 sm:space-y-32 lg:col-span-12">
@@ -202,7 +202,7 @@ export function HandoffEconomics() {
 
       {/* Evidence: everything open, as a bento grid — chart + org counts, the two cases, then every figure */}
       <section aria-labelledby="evidence-title" className="mt-24 sm:mt-32">
-        <SubHead id="evidence-title" title="See the evidence" note="Case studies and survey data." />
+        <SubHead id="evidence-title" title="See the evidence" note="Case studies and survey data behind the shift." />
         <div className="grid grid-flow-dense gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-12 [&>*]:min-w-0">
           <AdoptionDumbbell className="md:col-span-2 lg:col-span-8" />
 
@@ -302,6 +302,7 @@ const shortRoleName: Record<string, string> = { de: "Design Engineer", meta: "Me
 export function Archetypes({ role }: { role?: string }) {
   const sel = archetypes.find((x) => x.id === role)?.id ?? archetypes[0].id;
   const a = archetypes.find((x) => x.id === sel)!;
+  const sharesPlanWith = archetypes.filter((x) => x.plan === a.plan && x.id !== a.id).map((x) => shortRoleName[x.id] ?? x.name);
   const isLg = useMediaQuery("(min-width: 1024px)");
   const { listProps, tabProps, panelProps } = useTabList({
     ids: archetypes.map((x) => x.id),
@@ -379,6 +380,9 @@ export function Archetypes({ role }: { role?: string }) {
                 Starting out? See the beginner plan <ArrowGlyph />
               </a>
             </div>
+            {sharesPlanWith.length > 0 && (
+              <p className="text-sm text-ink-3">Shares a six-month plan with the {sharesPlanWith.join(" and ")} role.</p>
+            )}
           </div>
 
           <div className="[&>*]:animate-panel-in [&>*]:[animation-delay:calc(var(--i,0)*60ms)] motion-reduce:[&>*]:animate-fade-in px-5 py-7 sm:px-8 sm:py-9" style={{ "--i": 0 } as CSSProperties}>

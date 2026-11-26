@@ -621,13 +621,13 @@ export const roleStacks: RoleStack[] = [
 export const trackAOptions = [
   {
     id: "pde",
-    name: "Product Design Engineer",
+    name: "Design Engineer",
     for: "Visual craft, small interaction details, component systems and owning the code.",
     stack: ["React", "TypeScript", "Tailwind CSS", "Git", "AI code editors (Cursor, Claude Code)"],
   },
   {
     id: "meta",
-    name: "Meta-Designer / AX Designer",
+    name: "Meta-Designer or AX Designer",
     for: "Systems thinking, research, business strategy and designing complex workflows.",
     stack: [
       "Design systems AI tools can read (tokens + Figma MCP)",
@@ -888,7 +888,7 @@ export const sixMonthPlan: Month[] = [
   },
 ];
 
-/** The Meta-Designer / AX option shares months 1–3, then turns to systems AI can read and agent trust flows. */
+/** The Meta-Designer or AX option shares months 1–3, then turns to systems AI can read and agent trust flows. */
 const metaMonths: Month[] = [
   {
     month: 4,
@@ -1362,21 +1362,21 @@ export const skillMap: SkillRegion[] = [
     id: "de",
     sets: ["de"],
     name: "Design Engineer",
-    detail: "Code track",
+    detail: "Code focus",
     skills: ["Real-world React & TypeScript", "Git & pull requests", "Modern CSS & Tailwind", "AI code editors: Cursor, v0, Codex"],
   },
   {
     id: "meta",
     sets: ["meta"],
     name: "Meta-Designer",
-    detail: "Systems track",
+    detail: "Systems focus",
     skills: ["Design token structure", "System rules for consistency and accessibility", "Connecting Figma to AI (Figma MCP)", "Turning business rules into design rules"],
   },
   {
     id: "ax",
     sets: ["ax"],
     name: "AX Designer",
-    detail: "AI agent track",
+    detail: "AI agent focus",
     skills: ["Designing for trust and transparency", "Controls for how much AI acts alone", "Recovering from AI mistakes", "Agent protocols: MCP, AG-UI, A2A, A2UI"],
   },
   { id: "de-meta", sets: ["de", "meta"], name: "Code meets system", detail: "Connecting design tokens to real components." },

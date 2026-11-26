@@ -4,13 +4,13 @@ import { Hint } from "./ui";
 /* 6-step AI autonomy ramp synced with Track A's active month.
    Visualizes the guide's core rule: zero AI code generation in Month 1, ramping step by step
    to supervised production PRs by Months 5-6. */
-const LEVEL: Record<Month["aiPolicy"], { height: number; tag: string }> = {
-  none: { height: 0, tag: "0% AI" },
-  read: { height: 20, tag: "Read only" },
-  assist: { height: 42, tag: "Assisted" },
-  oversee: { height: 64, tag: "Directed" },
-  production: { height: 84, tag: "Production" },
-  position: { height: 100, tag: "Live demo" },
+const LEVEL: Record<Month["aiPolicy"], number> = {
+  none: 0,
+  read: 20,
+  assist: 42,
+  oversee: 64,
+  production: 84,
+  position: 100,
 };
 
 export function AiAutonomyRamp({
@@ -48,7 +48,7 @@ export function AiAutonomyRamp({
         <div role="group" aria-label="AI autonomy by month" className="grid grid-cols-6 items-end gap-1.5 sm:gap-3">
           {plan.map((m) => {
             const on = m.month === activeMonth;
-            const cfg = LEVEL[m.aiPolicy];
+            const height = LEVEL[m.aiPolicy];
             return (
               <button
                 key={m.month}
@@ -59,18 +59,18 @@ export function AiAutonomyRamp({
                 className="group flex min-w-0 flex-col items-stretch text-left focus-visible:outline-offset-4"
               >
                 <span className="flex h-24 items-end sm:h-32">
-                  {cfg.height === 0 ? (
+                  {height === 0 ? (
                     <span
                       className={`grid h-8 w-full place-items-center rounded-chip border border-dashed font-mono text-[10px] tracking-wide transition-colors duration-300 ${
                         on ? "border-accent bg-accent/15 text-accent-ink" : "border-line-strong bg-card text-ink-3 group-hover:border-ink"
                       }`}
                     >
-                      <span className="hidden sm:inline">Manual</span>
-                      <span className="sm:hidden">0%</span>
+                      <span className="hidden sm:inline">{aiPolicyLabel[m.aiPolicy]}</span>
+                      <span className="sm:hidden">Off</span>
                     </span>
                   ) : (
                     <span
-                      style={{ height: `${cfg.height}%` }}
+                      style={{ height: `${height}%` }}
                       className={`relative flex min-h-fit w-full flex-col justify-between rounded-chip border p-1 transition-colors duration-300 sm:p-2 ${
                         on
                           ? "border-edge bg-accent text-on-accent shadow-1"
@@ -78,7 +78,7 @@ export function AiAutonomyRamp({
                       }`}
                     >
                       <span className={`hidden font-mono text-[10px] leading-tight sm:block ${on ? "text-on-accent" : "text-ink-3"}`}>
-                        {cfg.tag}
+                        {aiPolicyLabel[m.aiPolicy]}
                       </span>
                       <span className={`hidden font-mono text-[10px] leading-tight tracking-wide md:block ${on ? "text-on-accent" : "text-ink-2"}`}>
                         {m.title}
@@ -92,7 +92,6 @@ export function AiAutonomyRamp({
                   }`}
                 >
                   <span>M0{m.month}</span>
-                  <span className="hidden text-[10px] md:inline">{cfg.height}%</span>
                 </span>
               </button>
             );

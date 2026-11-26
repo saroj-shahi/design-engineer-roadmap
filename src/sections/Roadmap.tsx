@@ -118,7 +118,7 @@ export function Roadmap({ plan }: { plan: PlanRoute | null }) {
         id="roadmap"
         level="h1"
         title={["Your plan,", <em>step by step.</em>]}
-        lede={`Pick where you are today. The plan changes to match. ${saveNote}`}
+        lede={`Pick where you are today. If you already work as a designer, pick a role next. The plan changes to match. ${saveNote}`}
       />
 
       <div {...listProps} aria-label="Career track" className="grid gap-6 sm:grid-cols-2">
@@ -248,9 +248,9 @@ function TrackA({ plan: route }: { plan: PlanA }) {
     <div className="space-y-24 sm:space-y-36">
       {/* Track chooser */}
       <div>
-        <SubHead n="A.1" title="Choose your track" />
+        <SubHead n="A.1" title="Choose your role" note="These match the roles on the Roles page. Meta-Designers and AX Designers share one plan." />
         <fieldset className="min-w-0">
-          <legend className="sr-only">Evolution track</legend>
+          <legend className="sr-only">Role</legend>
           <div className="grid gap-6 md:grid-cols-2">
             {trackAOptions.map((o) => {
               const on = choice === o.id;
@@ -286,13 +286,13 @@ function TrackA({ plan: route }: { plan: PlanA }) {
         <p className="mt-6 max-w-[62ch] text-sm leading-relaxed text-ink-3" aria-live="polite">
           {choice === "pde"
             ? "Six months, from browser basics to merged pull requests in a real product."
-            : "Months 1–3 are the same for both options: enough front-end to review AI code. Months 4–6 switch to design systems AI tools can read, and to trust flows for AI agents."}
+            : "Months 1–3 match the Design Engineer plan: enough front-end to review AI code. Months 4–6 turn to design systems AI tools can read, and to trust flows for AI agents."}
         </p>
       </div>
 
       {/* Map of the whole plan, starting from the shared UX & Product Design base */}
       <div id="plan-map">
-        <SubHead n="A.map" title="Your plan at a glance" note="Built on your UX & Product Design base, then six months one step at a time. Pick the base or any month to open its details." />
+        <SubHead n="A.map" title="Your plan at a glance" note="Your UX & Product Design base comes first, then six months, one step at a time. Pick the base or any month to open its details." />
         <RoadmapMap
           label="Six-month plan"
           leftLabel="Learn"
@@ -322,7 +322,7 @@ function TrackA({ plan: route }: { plan: PlanA }) {
                 "Visual craft, layout & WCAG",
                 "Usability & A/B impact testing",
               ],
-              right: "Design base you build code & AI on",
+              right: "The design base for code and AI work",
             },
             ...plan.map((x) => ({
               id: String(x.month),
@@ -339,7 +339,7 @@ function TrackA({ plan: route }: { plan: PlanA }) {
 
       {/* 6-month timeline */}
       <div id="month-detail" className="scroll-mt-36 lg:scroll-mt-32">
-        <SubHead n="A.2" title="A six-month skill ramp" note="Learn the browser before AI tools. Apply each month in your current job or in side projects — the plan uses React, TypeScript and Tailwind." />
+        <SubHead n="A.2" title="Month by month" note="The same six months in detail. Each month lets you use a little more AI: learn the browser before AI tools. Apply each month in your current job or in side projects — the plan uses React, TypeScript and Tailwind." />
 
         <AiAutonomyRamp plan={plan} activeMonth={month} onSelect={setMonth} />
 
@@ -625,7 +625,7 @@ function TrackB({ stage }: { stage: number }) {
     <div className="space-y-24 sm:space-y-36">
       {/* Map of the whole plan, starting from the shared UX & Product Design base */}
       <div id="plan-map">
-        <SubHead n="B.map" title="Your plan at a glance" note="Start from the UX & Product Design base, then move through four stages in order. Pick the base or any stage to open its details." />
+        <SubHead n="B.map" title="Your plan at a glance" note="Start from the UX & Product Design base that all three roles share, then move through four stages in order. Pick the base or any stage to open its details." />
         <RoadmapMap
           label="Four-stage launch plan"
           leftLabel="Focus"

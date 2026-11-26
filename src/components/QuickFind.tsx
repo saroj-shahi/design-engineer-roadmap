@@ -33,7 +33,7 @@ function useDestinations(): Destination[] {
     for (const m of planFor("pde"))
       list.push({ label: `Month ${m.month}: ${m.title}`, group: "Plan · Design Engineer", hint: m.build, href: `#/plan/a/pde/m${m.month}` });
     for (const m of planFor("meta").filter((m) => m.month >= 4))
-      list.push({ label: `Month ${m.month}: ${m.title}`, group: "Plan · Meta-Designer / AX", hint: m.build, href: `#/plan/a/meta/m${m.month}` });
+      list.push({ label: `Month ${m.month}: ${m.title}`, group: "Plan · Meta-Designer or AX", hint: m.build, href: `#/plan/a/meta/m${m.month}` });
     list.push({ label: "Beginner track (Track B)", group: "Plan", hint: "4 stages", href: "#/plan/b" });
     for (const [id, label] of [
       ["compare", "Compare roles"],
