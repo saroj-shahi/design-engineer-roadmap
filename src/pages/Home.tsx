@@ -1,5 +1,6 @@
 import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
-import { HeroIntro, JobsAnswer, ShiftStage, StartHere } from "../sections/Hero";
+import { ChoosePathButton, HeroIntro, JobsAnswer, StartHere } from "../sections/Hero";
+import { sources, worksCited } from "../data/research";
 import { FindBox, startQuestions } from "../components/QuickFind";
 import { ArrowGlyph, Glyph, type GlyphName } from "../components/icons";
 import { SubHead, jumpTo, pageHref, type Page } from "../components/ui";
@@ -14,7 +15,6 @@ const inside: { to: Page; glyph: GlyphName; question: string; answer: string }[]
 
 /** The Start page reads as a short story; the rail marks the chapter in view. */
 const chapters = [
-  { id: "shift", label: "The shift" },
   { id: "start-here", label: "Where you start" },
   { id: "jobs", label: "Jobs" },
   { id: "inside", label: "What's inside" },
@@ -66,34 +66,48 @@ export function Home() {
   const current = useChapterInView(chapters.map((c) => c.id));
   return (
     <>
-      <section aria-labelledby="shift-title" className="mx-auto w-full max-w-[1440px] px-(--gutter) pb-16 pt-14 sm:pb-24 sm:pt-20">
-        <HeroIntro>
-          <div className="mx-auto mt-10 max-w-[40rem]">
-            <FindBox large />
-          </div>
-          <ul aria-label="Common questions" className="mt-5 flex flex-wrap justify-center gap-2">
-            {startQuestions.map((q) => (
-              <li key={q.label}>
-                {q.jump ? (
-                  <button
-                    type="button"
-                    onClick={() => jumpTo(q.jump!)}
-                    className="inline-flex min-h-10 items-center rounded-full border border-edge px-4 text-sm text-ink-2 transition-colors hover:border-accent hover:text-ink"
-                  >
-                    {q.label}
-                  </button>
-                ) : (
-                  <a
-                    href={q.href}
-                    className="inline-flex min-h-10 items-center rounded-full border border-edge px-4 text-sm text-ink-2 transition-colors hover:border-accent hover:text-ink"
-                  >
-                    {q.label}
-                  </a>
-                )}
-              </li>
-            ))}
-          </ul>
-        </HeroIntro>
+      <section aria-labelledby="shift-title" className="relative isolate overflow-x-clip">
+        {/* Faint drafting grid behind the hero, fading out toward the content */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(var(--line)_1px,transparent_1px),linear-gradient(90deg,var(--line)_1px,transparent_1px)] bg-size-[56px_56px] [mask-image:radial-gradient(70%_70%_at_50%_30%,black,transparent)] opacity-60"
+        />
+        <div className="mx-auto w-full max-w-[1440px] px-(--gutter) pb-16 pt-10 sm:pb-24 sm:pt-12">
+          <HeroIntro>
+            <div className="mt-7 max-w-[38rem]">
+              <FindBox large />
+            </div>
+            <ul aria-label="Common questions" className="mt-3 flex max-w-[40rem] flex-wrap gap-2">
+              {startQuestions.map((q) => (
+                <li key={q.label}>
+                  {q.jump ? (
+                    <button
+                      type="button"
+                      onClick={() => jumpTo(q.jump!)}
+                      className="inline-flex min-h-10 items-center rounded-full border border-edge bg-card/40 px-4 text-sm text-ink-2 transition-colors hover:border-accent hover:text-ink"
+                    >
+                      {q.label}
+                    </button>
+                  ) : (
+                    <a
+                      href={q.href}
+                      className="inline-flex min-h-10 items-center rounded-full border border-edge bg-card/40 px-4 text-sm text-ink-2 transition-colors hover:border-accent hover:text-ink"
+                    >
+                      {q.label}
+                    </a>
+                  )}
+                </li>
+              ))}
+            </ul>
+            <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-4">
+              <ChoosePathButton />
+              <a href={pageHref("sources")} className="group inline-flex items-center gap-2 text-sm text-ink-3 transition-colors hover:text-ink">
+                Built from {sources.length} sources and {worksCited.length} articles
+                <ArrowGlyph />
+              </a>
+            </div>
+          </HeroIntro>
+        </div>
       </section>
 
       <div className="mx-auto w-full max-w-[1440px] px-(--gutter) flex gap-14 pb-24 sm:pb-32">
@@ -120,13 +134,9 @@ export function Home() {
         </nav>
 
         <div className="flex min-w-0 flex-1 flex-col gap-24 sm:gap-32">
-          <Chapter id="shift" n={1} label="The shift" title="How work moved">
-            <ShiftStage />
-          </Chapter>
-
           <Chapter
             id="start-here"
-            n={2}
+            n={1}
             label="Where you start"
             title={<>Where are you <em>starting from?</em></>}
             action={
@@ -139,13 +149,13 @@ export function Home() {
             <StartHere />
           </Chapter>
 
-          <Chapter id="jobs" n={3} label="Jobs" title="Is my job going away?">
+          <Chapter id="jobs" n={2} label="Jobs" title="Is my job going away?">
             <JobsAnswer />
           </Chapter>
 
           <Chapter
             id="inside"
-            n={4}
+            n={3}
             label="What's inside"
             title={<>Four questions, one page <em>for each.</em></>}
             note="Read in any order. Each page answers one question, and the detail stays tucked away until you ask for it."

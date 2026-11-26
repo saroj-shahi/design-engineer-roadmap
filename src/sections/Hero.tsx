@@ -17,35 +17,42 @@ import { ArchetypeGlyph, ArrowGlyph, Glyph, type GlyphName } from "../components
 const heroMetricGlyphs: GlyphName[] = ["trendDown", "shareBar", "survey", "forecast"];
 import { BasisBadge, CountUp, Eyebrow, PageHeader, Roll, SubHead, Tag, jumpTo, navigate, pageHref, useMediaQuery, useTabList } from "../components/ui";
 
-/** Opening of the Start page: the headline, then a search field and the questions the guide answers. */
+/** Opening of the Start page: a split hero. Words, search and the reader's questions on the left;
+ *  the before/now stage (how work moved) on the right, so the idea is shown as well as told. */
 export function HeroIntro({ children }: { children?: ReactNode }) {
   return (
-    <div className="mx-auto max-w-[60rem] text-center">
-      <p className="font-mono text-label font-normal text-ink-3">Design Engineer Field Guide · 2026</p>
-      <h1 id="shift-title" className="font-display text-hero mt-5 text-balance text-ink">
-        The handoff is shrinking. <em className="text-accent-ink">Design and code</em> now meet earlier.
-      </h1>
-      <p className="text-lede text-pretty mx-auto mt-6 max-w-[56ch] text-ink-2 sm:mt-7">
-        AI tools make it faster to turn a design into working code, so more designers now build alongside developers. Whether you're
-        upskilling in your current role or aiming for a new one, this guide maps three paths and a six-month plan.
-      </p>
-      {children}
+    <div className="grid items-center gap-x-12 gap-y-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)]">
+      <div className="min-w-0">
+        <p className="inline-flex items-center gap-2 rounded-full border border-edge bg-card/60 py-1.5 pl-2.5 pr-3.5 font-mono text-label text-ink-2">
+          <span aria-hidden className="relative flex size-2">
+            <span className="absolute inset-0 rounded-full bg-accent opacity-60 motion-safe:animate-ping" />
+            <span className="relative size-2 rounded-full bg-accent" />
+          </span>
+          Design Engineer Field Guide · 2026
+        </p>
+        <h1 id="shift-title" className="mt-5 font-display text-hero text-balance text-ink lg:text-[clamp(2.75rem,4.6vw,4.25rem)]">
+          The handoff is shrinking. <em className="text-accent">Design and code</em> now meet earlier.
+        </h1>
+        <p className="mt-5 max-w-[54ch] text-lede text-pretty text-ink-2">
+          AI tools make it faster to turn a design into working code, so more designers now build alongside developers. Whether you're
+          upskilling in your current role or aiming for a new one, this guide maps three paths and a six-month plan.
+        </p>
+        {children}
+      </div>
+      <div className="min-w-0">
+        <HeroStage />
+      </div>
     </div>
   );
 }
 
-/** Chapter: the shift, drawn. */
-export function ShiftStage() {
+/** Primary call to action under the hero: scroll to the two starting doors. */
+export function ChoosePathButton() {
   return (
-    <div className="flex flex-col gap-8">
-      <HeroStage />
-      <div>
-        <button type="button" onClick={() => jumpTo("start-here")} className="relative isolate inline-flex h-12 items-center gap-3 overflow-hidden rounded-full bg-accent pl-[1.375rem] pr-5 text-[0.9375rem] font-semibold tracking-[-0.005em] text-on-accent transition-[translate,box-shadow,color] duration-[260ms] ease-spring before:absolute before:inset-0 before:-z-10 before:translate-y-[101%] before:bg-ink before:transition-transform before:duration-[550ms] before:ease-silk before:content-[''] hover:shadow-accent hover:before:translate-y-0 focus-visible:shadow-accent focus-visible:before:translate-y-0 active:translate-y-px motion-reduce:active:translate-y-0 group">
+    <button type="button" onClick={() => jumpTo("start-here")} className="relative isolate inline-flex h-12 items-center gap-3 overflow-hidden rounded-full bg-accent pl-[1.375rem] pr-5 text-[0.9375rem] font-semibold tracking-[-0.005em] text-on-accent transition-[translate,box-shadow,color] duration-[260ms] ease-spring before:absolute before:inset-0 before:-z-10 before:translate-y-[101%] before:bg-ink before:transition-transform before:duration-[550ms] before:ease-silk before:content-[''] hover:shadow-accent hover:before:translate-y-0 focus-visible:shadow-accent focus-visible:before:translate-y-0 active:translate-y-px motion-reduce:active:translate-y-0 group">
           <span>Choose your path</span>
           <span aria-hidden className="font-mono text-sm transition-transform duration-300 motion-safe:group-hover:translate-y-0.5">↓</span>
         </button>
-      </div>
-    </div>
   );
 }
 

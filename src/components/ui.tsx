@@ -310,7 +310,8 @@ export function Hint({
   className?: string;
 }) {
   return (
-    <span className={`inline-flex items-center gap-1.5 font-mono text-label font-normal text-current opacity-80 ${className}`}>
+    // A caller that hides the hint at some sizes (e.g. "hidden sm:inline-flex") owns the display value.
+    <span className={`${/(^|\s)hidden(\s|$)/.test(className) ? "" : "inline-flex"} items-center gap-1.5 font-mono text-label font-normal text-current opacity-80 ${className}`}>
       <svg aria-hidden="true" focusable="false" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" className="size-3.5 shrink-0">
         <path d="M5.5 2.5v7.2l1.9-1.6 1.4 3.4 1.5-.6-1.4-3.3h2.6L5.5 2.5Z" strokeLinejoin="round" />
       </svg>
