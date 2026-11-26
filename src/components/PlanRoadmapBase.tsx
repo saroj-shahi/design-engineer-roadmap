@@ -215,7 +215,7 @@ export function PlanRoadmapBase({
             <div className="flex flex-wrap items-center gap-4">
               <a
                 href={pageHref("library", "roadmaps", roadmap.slug)}
-                className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-ink"
+                className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]"
               >
                 Full page view →
               </a>
@@ -226,7 +226,7 @@ export function PlanRoadmapBase({
                 className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] group font-mono text-label font-normal inline-flex items-center gap-1.5 text-ink-3 hover:text-ink"
               >
                 <BrandLogo brand="roadmapsh" className="size-3.5" />
-                <span className="bg-[linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[0%_1px] bg-position-[100%_100%] pb-0.5 transition-[background-size,color] duration-[600ms] ease-silk hover:bg-size-[100%_1px] hover:bg-position-[0%_100%] focus-visible:bg-size-[100%_1px] focus-visible:bg-position-[0%_100%] data-[on=true]:bg-size-[100%_1px] data-[on=true]:bg-position-[0%_100%]">roadmap.sh</span>
+                <span className="bg-[linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[0%_1px] bg-position-[100%_100%] pb-0.5 transition-[background-size,color] duration-[600ms] ease-silk hover:bg-size-[100%_1px] hover:bg-position-[0%_100%] focus-visible:bg-size-[100%_1px] focus-visible:bg-position-[0%_100%] data-[on=true]:bg-size-[100%_1px] data-[on=true]:bg-position-[0%_100%] group-hover:bg-size-[100%_1px] group-hover:bg-position-[0%_100%] group-focus-visible:bg-size-[100%_1px] group-focus-visible:bg-position-[0%_100%]">roadmap.sh</span>
                 <ExternalGlyph className="!size-3" />
                 <span className="sr-only"> (opens in new tab)</span>
               </a>
@@ -277,7 +277,7 @@ export function PlanRoadmapBase({
                 <button
                   type="button"
                   onClick={() => setQuery("")}
-                  className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-ink"
+                  className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]"
                 >
                   Clear filter
                 </button>
@@ -285,7 +285,7 @@ export function PlanRoadmapBase({
                 <button
                   type="button"
                   onClick={toggleAll}
-                  className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-ink-3 hover:text-ink"
+                  className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-ink-3 hover:text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]"
                 >
                   {allExpanded ? "Collapse all" : "Expand all"}
                 </button>

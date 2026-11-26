@@ -134,8 +134,32 @@ body {
   overflow-x: clip;
 }
 ::selection { background: var(--accent); color: var(--on-accent); }
-:focus-visible { outline: 2px solid var(--accent-ink); outline-offset: 3px; border-radius: 4px; }
-.bg-inverse :focus-visible { outline-color: var(--inverse-accent); }
+/* Interaction baseline. In the base layer so a component's own utilities (outline-none, cursor-*) still win.
+   - Anything you can activate shows a pointer; disabled controls say so.
+   - One focus ring everywhere: 2px rose, offset 3px. Outlines follow each element's own radius. */
+@layer base {
+  a[href],
+  button:not(:disabled),
+  summary,
+  select,
+  label:has(> input[type="checkbox"]),
+  [role="button"],
+  [role="tab"],
+  [role="option"] {
+    cursor: pointer;
+  }
+  button:disabled,
+  [aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+  :focus-visible {
+    outline: 2px solid var(--accent-ink);
+    outline-offset: 3px;
+  }
+  .bg-inverse :focus-visible {
+    outline-color: var(--inverse-accent);
+  }
+}
 /* Headings focused by the router (tabindex=-1) announce the page; they need no ring. */
 h1[tabindex="-1"]:focus-visible { outline: none; }
 

@@ -99,7 +99,7 @@ export function JobsAnswer() {
             also work in code with developers. The rest of this guide shows how.
           </p>
           <p className="mt-4 max-w-[58ch] text-sm leading-relaxed text-ink-3">{titleReality}</p>
-          <a href="#/roles" className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] mt-5 inline-flex items-center gap-2 text-[0.9375rem] font-medium text-ink group">
+          <a href="#/roles" className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] mt-5 inline-flex items-center gap-2 text-[0.9375rem] font-medium text-ink group group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">
             See the three roles <ArrowGlyph />
           </a>
         </div>
@@ -368,7 +368,7 @@ export function Archetypes({ role }: { role?: string }) {
                 <Roll>See the plan for this role</Roll>
                 <ArrowGlyph />
               </a>
-              <a href="#/plan/b/s1" className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] inline-flex items-center gap-2 text-sm text-ink-2 hover:text-ink">
+              <a href="#/plan/b/s1" className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] inline-flex items-center gap-2 text-sm text-ink-2 hover:text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">
                 Starting out? See the beginner plan <ArrowGlyph />
               </a>
             </div>

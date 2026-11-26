@@ -1,7 +1,7 @@
 import { useState, type CSSProperties } from "react";
 import { comparison } from "../data/research";
 import { Glyph } from "../components/icons";
-import { Section, SectionHeader, TabPanel, Tabs, useMediaQuery } from "../components/ui";
+import { Hint, Section, SectionHeader, TabPanel, Tabs, useMediaQuery } from "../components/ui";
 
 type View = "focus" | "table";
 
@@ -32,7 +32,7 @@ export function Comparison() {
             { id: "table", label: "Full matrix" },
           ]}
         />
-        {view === "focus" && <p className="font-mono text-label font-normal hidden text-ink-3 sm:block">← → to step through dimensions</p>}
+        {view === "focus" && <Hint keys={["←", "→"]} touch="Tap a dimension" className="hidden text-ink-3 sm:inline-flex">Pick a dimension, or step with</Hint>}
       </div>
 
       {view === "focus" ? (

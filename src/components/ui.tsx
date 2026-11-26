@@ -265,7 +265,7 @@ export function PageHeader({ id, title, lede, children }: { id: string; title: R
 export function Plate({ glyph, className = "" }: { glyph: GlyphName; className?: string }) {
   return (
     <figure aria-hidden data-reveal className={`relative rounded-card border border-edge bg-card shadow-1 group ${className}`} style={{ "--d": "200ms" } as CSSProperties}>
-      <div className="plate-field grid aspect-square place-items-center">
+      <div className="plate-field grid aspect-square place-items-center rounded-[calc(var(--radius-card)-1px)]">
         <Glyph name={glyph} className="glyph-xl !size-[62%] text-ink" />
       </div>
     </figure>
@@ -310,6 +310,42 @@ export function SubHead({
       </div>
       {action && <div className="shrink-0">{action}</div>}
     </div>
+  );
+}
+
+/* ───────── Interaction hint ─────────
+   One small, consistent cue for anything you can explore: a pointer mark plus a short instruction.
+   Mouse and trackpad readers see `children`; touch readers see `touch` (defaults to `children`).
+   `keys` adds keyboard shortcuts as <kbd> chips, shown only where there is a fine pointer. */
+
+export function Hint({
+  children,
+  touch,
+  keys,
+  className = "",
+}: {
+  children: ReactNode;
+  touch?: ReactNode;
+  keys?: string[];
+  className?: string;
+}) {
+  return (
+    <span className={`inline-flex items-center gap-1.5 font-mono text-label font-normal text-current opacity-80 ${className}`}>
+      <svg aria-hidden="true" focusable="false" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" className="size-3.5 shrink-0">
+        <path d="M5.5 2.5v7.2l1.9-1.6 1.4 3.4 1.5-.6-1.4-3.3h2.6L5.5 2.5Z" strokeLinejoin="round" />
+      </svg>
+      <span className="pointer-coarse:hidden">{children}</span>
+      <span className="hidden pointer-coarse:inline">{touch ?? children}</span>
+      {keys && (
+        <span className="ml-1 inline-flex gap-1 pointer-coarse:hidden">
+          {keys.map((k) => (
+            <kbd key={k} className="rounded-[4px] border border-current/30 px-1 py-px font-mono text-[10px] leading-none">
+              {k}
+            </kbd>
+          ))}
+        </span>
+      )}
+    </span>
   );
 }
 
@@ -433,10 +469,10 @@ export function Tabs({
       {items.map((t, idx) => {
         const selected = t.id === value;
         const base = {
-          underline: `group relative -mb-px shrink-0 pb-3 pt-1 font-mono text-label font-normal transition-colors duration-500 ${
+          underline: `group relative -mb-px shrink-0 pb-3 pt-1 focus-visible:outline-offset-[-2px] font-mono text-label font-normal transition-colors duration-500 ${
             selected ? "text-ink" : "text-ink-3 hover:text-ink"
           }`,
-          segmented: `shrink-0 h-10 rounded-chip px-4 font-mono text-label font-normal transition-colors duration-300 ease-silk ${
+          segmented: `shrink-0 h-10 rounded-chip px-4 focus-visible:outline-offset-[-2px] font-mono text-label font-normal transition-colors duration-300 ease-silk ${
             selected ? "bg-inverse text-on-inverse" : "text-ink-3 hover:text-ink hover:bg-sunken"
           }`,
           list:
@@ -444,7 +480,7 @@ export function Tabs({
               ? `group relative flex items-baseline gap-4 border-b border-line py-4 text-left transition-colors duration-500 ${
                   selected ? "text-ink" : "text-ink-3 hover:text-ink"
                 }`
-              : `group relative border-r border-line py-5 pr-6 text-left transition-colors duration-500 last:border-r-0 [&:not(:first-child)]:pl-5 ${
+              : `group relative border-r border-line py-5 pr-6 text-left focus-visible:outline-offset-[-2px] transition-colors duration-500 last:border-r-0 [&:not(:first-child)]:pl-5 ${
                   selected ? "text-ink" : "text-ink-3 hover:text-ink"
                 }`,
         }[variant];
@@ -522,7 +558,7 @@ export function Disclosure({
           onClick={() => setOpen((o) => !o)}
           className="group flex w-full items-center gap-4 py-5 text-left"
         >
-          <span className="flex-1 text-base font-medium text-ink">{summary}</span>
+          <span className="flex-1 text-base font-medium text-ink transition-colors duration-300 group-hover:text-accent-ink">{summary}</span>
           {meta && <span className="hidden sm:block">{meta}</span>}
           <span aria-hidden className="relative block size-3 shrink-0 text-ink-3 transition-colors duration-500 group-hover:text-accent">
             <span className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-current" />
@@ -555,7 +591,7 @@ export function CheckRow({
   const id = useId();
   return (
     <li className="border-b border-line">
-      <label htmlFor={id} className="group grid cursor-pointer grid-cols-[2.25rem_1fr_auto] items-start gap-x-3 py-5">
+      <label htmlFor={id} className="group -mx-3 grid cursor-pointer grid-cols-[2.25rem_1fr_auto] items-start gap-x-3 rounded-ctl px-3 py-5 transition-colors duration-300 hover:bg-sunken/60">
         <input id={id} type="checkbox" checked={checked} onChange={onToggle} className="peer sr-only" />
         <span className="font-mono text-label font-normal pt-1 text-ink-3 tabular-nums">{index !== undefined ? String(index).padStart(2, "0") : ""}</span>
         <span>
@@ -568,7 +604,7 @@ export function CheckRow({
         </span>
         <span
           aria-hidden
-          className={`relative mt-0.5 grid size-5 place-items-center border transition-colors duration-500 ease-silk peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent ${
+          className={`relative mt-0.5 grid size-5 place-items-center rounded-[6px] border transition-colors duration-500 ease-silk peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent ${
             checked ? "border-accent bg-accent" : "border-line-strong group-hover:border-ink"
           }`}
         >
@@ -598,7 +634,7 @@ export function TopicCheckbox({
       <input type="checkbox" checked={checked} onChange={onToggle} className="peer sr-only" />
       <span
         aria-hidden
-        className={`mt-0.5 grid size-4 shrink-0 place-items-center border transition-colors duration-300 ease-silk peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent ${
+        className={`mt-0.5 grid size-4 shrink-0 place-items-center rounded-[5px] border transition-colors duration-300 ease-silk peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent ${
           checked ? "border-accent bg-accent" : "border-line-strong group-hover:border-ink"
         }`}
       >
@@ -1050,7 +1086,7 @@ export function ContextBar({
 }) {
   return (
     <div className="sticky top-24 z-30 -mx-[var(--gutter)] border-b border-line bg-paper/95 px-[var(--gutter)] backdrop-blur-[2px] lg:top-16">
-      <div className="flex min-h-11 items-center gap-6 overflow-hidden">
+      <div className="flex min-h-11 items-center gap-6">
         <nav aria-label={label} className="min-w-0 flex-1">
           <ol className="font-mono text-label font-normal flex min-w-0 items-center gap-2 text-ink-3">
             {trail.map((t, i) => {
@@ -1059,7 +1095,7 @@ export function ContextBar({
                 <li key={i} className={`flex min-w-0 items-center gap-2 ${last ? "" : "shrink-0 max-sm:[&:not(:first-child)]:hidden"}`}>
                   {i > 0 && <span aria-hidden className={last ? "" : "max-sm:hidden"}>›</span>}
                   {t.href && !last ? (
-                    <a href={t.href} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-ink-2 hover:text-ink">
+                    <a href={t.href} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-ink-2 hover:text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">
                       {t.label}
                     </a>
                   ) : (
@@ -1077,7 +1113,7 @@ export function ContextBar({
             <ul className="font-mono text-label font-normal flex items-center gap-4 text-ink-3">
               {jumps.map((j) => (
                 <li key={j.id}>
-                  <button type="button" onClick={() => jumpTo(j.id)} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[0%_1px] bg-position-[100%_100%] pb-0.5 transition-[background-size,color] duration-[600ms] ease-silk hover:bg-size-[100%_1px] hover:bg-position-[0%_100%] focus-visible:bg-size-[100%_1px] focus-visible:bg-position-[0%_100%] data-[on=true]:bg-size-[100%_1px] data-[on=true]:bg-position-[0%_100%] text-ink-3 hover:text-ink">
+                  <button type="button" onClick={() => jumpTo(j.id)} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[0%_1px] bg-position-[100%_100%] pb-0.5 transition-[background-size,color] duration-[600ms] ease-silk hover:bg-size-[100%_1px] hover:bg-position-[0%_100%] focus-visible:bg-size-[100%_1px] focus-visible:bg-position-[0%_100%] data-[on=true]:bg-size-[100%_1px] data-[on=true]:bg-position-[0%_100%] text-ink-3 hover:text-ink group-hover:bg-size-[100%_1px] group-hover:bg-position-[0%_100%] group-focus-visible:bg-size-[100%_1px] group-focus-visible:bg-position-[0%_100%]">
                     {j.label}
                   </button>
                 </li>

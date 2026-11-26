@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { BrandLogo } from "./BrandLogo";
 import { Glyph, ArchetypeGlyph, type GlyphName } from "./icons";
-import { prefersReducedMotion, usePointerParallax } from "./ui";
+import { Hint, prefersReducedMotion, usePointerParallax } from "./ui";
 import { archetypes } from "../data/research";
 
 const tagline = (id: string) => archetypes.find((a) => a.id === id)?.short ?? "";
@@ -72,11 +72,12 @@ export function HeroStage() {
 
   return (
     <figure className="relative rounded-card border border-edge bg-card flex h-full flex-col shadow-2" aria-labelledby="hero-stage-caption">
-      <div className="flex items-center justify-between gap-4 border-b border-line bg-card px-4 py-2 sm:px-5">
+      <div className="flex items-center justify-between gap-4 rounded-t-[calc(var(--radius-card)-1px)] border-b border-line bg-card px-4 py-2 sm:px-5">
         <span className="font-mono text-label font-normal flex items-center gap-2 text-ink-3">
           <span aria-hidden className="inline-block size-[7px] shrink-0 rounded-full bg-current text-accent" />
           <span>How work moved</span>
         </span>
+        <Hint touch="Tap to compare" className="ml-auto hidden text-ink-3 md:inline-flex">Compare</Hint>
         <div role="group" aria-label="Show the way work moved" className="inline-flex gap-1 rounded-full border border-edge bg-card p-1">
           {(["before", "after"] as const).map((p) => (
             <button

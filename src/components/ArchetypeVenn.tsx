@@ -1,5 +1,6 @@
 import { useId, useState } from "react";
 import { skillMap, type ArchetypeId, type SkillRegion } from "../data/research";
+import { Hint } from "./ui";
 
 /* Geometry in viewBox units (divisible by 4 per diagram-design type-venn).
    Three equal circles with generous outer margin so full role names sit cleanly
@@ -60,7 +61,7 @@ export function ArchetypeVenn({ selected }: { selected: string }) {
       <figure className="relative rounded-card border border-edge bg-card col-span-4 flex flex-col shadow-1 lg:col-span-7">
         <figcaption className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal">
           <span>Skill map · three overlapping roles</span>
-          <span className="hidden sm:inline">Hover or tap a region</span>
+          <Hint touch="Tap a region" className="hidden sm:inline-flex">Hover or click a region</Hint>
         </figcaption>
         <div className="plate-field flex-1 p-3 sm:p-6">
           <svg
@@ -263,7 +264,7 @@ export function ArchetypeVenn({ selected }: { selected: string }) {
                 <li key={r.id} className="border-b border-line">
                   <button
                     {...keyProps(r.id)}
-                    className={`grid w-full grid-cols-[3.5rem_1fr] gap-x-3 px-2 py-4 text-left transition-colors duration-300 ${activeRegion === r.id ? "bg-sunken" : ""}`}
+                    className={`grid w-full grid-cols-[3.5rem_1fr] gap-x-3 px-2 py-4 text-left transition-colors duration-300 ${activeRegion === r.id ? "bg-sunken" : "hover:bg-sunken/60"}`}
                   >
                     <span className={`font-mono text-label font-normal pt-1 ${s === selected ? "text-accent-ink" : "text-ink"}`}>{code[s]}</span>
                     <div>
@@ -283,7 +284,7 @@ export function ArchetypeVenn({ selected }: { selected: string }) {
               <li key={r.id} className="border-b border-line">
                 <button
                   {...keyProps(r.id)}
-                  className={`grid w-full grid-cols-[3.5rem_1fr] gap-x-3 px-2 py-4 text-left transition-colors duration-300 ${on ? "bg-sunken" : ""}`}
+                  className={`grid w-full grid-cols-[3.5rem_1fr] gap-x-3 px-2 py-4 text-left transition-colors duration-300 ${on ? "bg-sunken" : "hover:bg-sunken/60"}`}
                 >
                   <span className="pt-0.5">
                     <span

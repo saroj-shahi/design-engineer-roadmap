@@ -1,4 +1,5 @@
 import { aiPolicyLabel, type Month } from "../data/research";
+import { Hint } from "./ui";
 
 /* 6-step AI autonomy ramp synced with Track A's active month.
    Visualizes the guide's core rule: zero AI code generation in Month 1, ramping step by step
@@ -25,7 +26,7 @@ export function AiAutonomyRamp({
   return (
     <figure className="relative rounded-card border border-edge bg-card shadow-1 mb-6" aria-labelledby="ai-ramp-caption">
       <div className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal">
-        <span>AI guardrail ramp · Months 01–06</span>
+        <span className="flex flex-wrap items-center gap-x-3 gap-y-1">AI guardrail ramp · Months 01–06<Hint touch="Tap a month" className="hidden sm:inline-flex">Click a month</Hint></span>
         <span>Month 0{activeMonth}: {aiPolicyLabel[current.aiPolicy]}</span>
       </div>
 
@@ -70,7 +71,7 @@ export function AiAutonomyRamp({
                   ) : (
                     <span
                       style={{ height: `${cfg.height}%` }}
-                      className={`relative flex w-full flex-col justify-between overflow-hidden rounded-chip border p-1 transition-colors duration-300 sm:p-2 ${
+                      className={`relative flex min-h-fit w-full flex-col justify-between rounded-chip border p-1 transition-colors duration-300 sm:p-2 ${
                         on
                           ? "border-edge bg-accent text-on-accent shadow-1"
                           : "border-ink-3 bg-card text-ink group-hover:border-ink group-hover:bg-sunken"

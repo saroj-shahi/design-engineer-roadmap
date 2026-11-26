@@ -12,7 +12,7 @@ function hostnameOf(url: string) {
 function ExtLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
     <a href={href} target="_blank" rel="noopener noreferrer" className="group inline-block py-2">
-      <span className="bg-[linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[0%_1px] bg-position-[100%_100%] pb-0.5 transition-[background-size,color] duration-[600ms] ease-silk hover:bg-size-[100%_1px] hover:bg-position-[0%_100%] focus-visible:bg-size-[100%_1px] focus-visible:bg-position-[0%_100%] data-[on=true]:bg-size-[100%_1px] data-[on=true]:bg-position-[0%_100%]">{children}</span>
+      <span className="bg-[linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[0%_1px] bg-position-[100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk group-hover:bg-size-[100%_1px] group-hover:bg-position-[0%_100%] group-focus-visible:bg-size-[100%_1px] group-focus-visible:bg-position-[0%_100%]">{children}</span>
       <ExternalGlyph className="ml-1 text-inverse-muted transition-colors duration-300 group-hover:text-inverse-accent" />
       <span className="sr-only"> (opens in new tab)</span>
     </a>
@@ -25,11 +25,11 @@ export function Footer() {
       <div className="mx-auto w-full max-w-[1440px] px-(--gutter) pb-10 pt-10 sm:pt-14">
         {/* Sources stay one click away instead of filling every page */}
         <details className="group/src border-t border-inverse-line">
-          <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-6 [&::-webkit-details-marker]:hidden">
-            <span className="text-base font-medium">Sources and method</span>
+          <summary className="group flex cursor-pointer list-none items-center justify-between gap-4 py-6 [&::-webkit-details-marker]:hidden">
+            <span className="text-base font-medium transition-colors duration-300 group-hover:text-inverse-accent">Sources and method</span>
             <span className="font-mono text-label font-normal text-inverse-muted">
               {sources.length} sources · {worksCited.length} articles
-              <span aria-hidden className="ml-3 inline-block transition-transform duration-300 group-open/src:rotate-45">+</span>
+              <span aria-hidden className="ml-3 inline-block transition-[transform,color] duration-300 group-hover:text-inverse-accent group-open/src:rotate-45">+</span>
             </span>
           </summary>
         <div className="grid grid-cols-4 gap-x-4 lg:grid-cols-12 lg:gap-x-6 gap-y-12 border-t border-inverse-line pt-8">
@@ -74,7 +74,7 @@ export function Footer() {
           <span className="flex items-baseline gap-2">
             Created by
             <a href="https://sarojshahi.com" target="_blank" rel="noopener noreferrer author" className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] group inline-flex items-baseline text-on-inverse">
-              <span className="bg-[linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[0%_1px] bg-position-[100%_100%] pb-0.5 transition-[background-size,color] duration-[600ms] ease-silk hover:bg-size-[100%_1px] hover:bg-position-[0%_100%] focus-visible:bg-size-[100%_1px] focus-visible:bg-position-[0%_100%] data-[on=true]:bg-size-[100%_1px] data-[on=true]:bg-position-[0%_100%]">Saroj Shahi</span>
+              <span className="bg-[linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[0%_1px] bg-position-[100%_100%] pb-0.5 transition-[background-size,color] duration-[600ms] ease-silk hover:bg-size-[100%_1px] hover:bg-position-[0%_100%] focus-visible:bg-size-[100%_1px] focus-visible:bg-position-[0%_100%] data-[on=true]:bg-size-[100%_1px] data-[on=true]:bg-position-[0%_100%] group-hover:bg-size-[100%_1px] group-hover:bg-position-[0%_100%] group-focus-visible:bg-size-[100%_1px] group-focus-visible:bg-position-[0%_100%]">Saroj Shahi</span>
               <ExternalGlyph className="ml-1 text-inverse-muted transition-colors duration-300 group-hover:text-inverse-accent" />
               <span className="sr-only"> (opens in new tab)</span>
             </a>
@@ -83,7 +83,7 @@ export function Footer() {
             Press <kbd className="border border-inverse-line px-1.5 py-0.5 text-on-inverse">Alt</kbd> <kbd className="border border-inverse-line px-1.5 py-0.5 text-on-inverse">G</kbd> to show the grid
           </span>
           <a href="#main" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0 }); document.getElementById("main")?.focus({ preventScroll: true }); }} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] group flex items-center gap-2 text-on-inverse">
-            <span className="bg-[linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[0%_1px] bg-position-[100%_100%] pb-0.5 transition-[background-size,color] duration-[600ms] ease-silk hover:bg-size-[100%_1px] hover:bg-position-[0%_100%] focus-visible:bg-size-[100%_1px] focus-visible:bg-position-[0%_100%] data-[on=true]:bg-size-[100%_1px] data-[on=true]:bg-position-[0%_100%]">Back to top</span>
+            <span className="bg-[linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[0%_1px] bg-position-[100%_100%] pb-0.5 transition-[background-size,color] duration-[600ms] ease-silk hover:bg-size-[100%_1px] hover:bg-position-[0%_100%] focus-visible:bg-size-[100%_1px] focus-visible:bg-position-[0%_100%] data-[on=true]:bg-size-[100%_1px] data-[on=true]:bg-position-[0%_100%] group-hover:bg-size-[100%_1px] group-hover:bg-position-[0%_100%] group-focus-visible:bg-size-[100%_1px] group-focus-visible:bg-position-[0%_100%]">Back to top</span>
             <span aria-hidden className="transition-transform duration-700 ease-silk motion-safe:group-hover:-translate-y-1">↑</span>
           </a>
         </div>

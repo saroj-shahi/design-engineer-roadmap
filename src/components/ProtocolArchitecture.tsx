@@ -1,5 +1,6 @@
 import { useId } from "react";
 import { protocols } from "../data/research";
+import { Hint } from "./ui";
 
 /* Interactive 4-protocol architecture diagram (diagram-design type-architecture).
    Maps the four protocols in src/data/research.ts into one clear topology:
@@ -27,7 +28,7 @@ export function ProtocolArchitecture({
     <figure className="relative rounded-card border border-edge bg-card shadow-1 mb-8" aria-labelledby={`${uid}-cap`}>
       <div className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal">
         <span>Agent protocol topology</span>
-        <span>Select a protocol to inspect</span>
+        <Hint touch="Tap a protocol">Click a protocol to inspect it</Hint>
       </div>
 
       <div className="plate-field overflow-x-auto px-4 py-5 sm:px-6">
@@ -124,7 +125,7 @@ export function ProtocolArchitecture({
                     onSelect(b.id);
                   }
                 }}
-                className="cursor-pointer outline-none"
+                className="cursor-pointer outline-none [&:focus-visible>rect:last-of-type]:stroke-accent-ink [&:focus-visible>rect:last-of-type]:stroke-[3] [&:hover>rect:last-of-type]:stroke-accent [&>rect:last-of-type]:transition-[stroke,fill] [&>rect:last-of-type]:duration-300"
               >
                 <line
                   x1={x1}

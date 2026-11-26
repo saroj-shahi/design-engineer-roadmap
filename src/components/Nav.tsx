@@ -59,7 +59,7 @@ export function Nav({ page }: { page: Page | null }) {
         >
           <BrandMark />
           <span className="flex flex-col leading-none">
-            <span className="font-display font-semibold tracking-[-0.02em] text-pretty text-[1.0625rem] text-ink">Design Engineer</span>
+            <span className="font-display font-semibold tracking-[-0.02em] text-pretty text-[1.0625rem] text-ink transition-colors duration-300 group-hover:text-accent-ink">Design Engineer</span>
             <span className="font-mono text-label font-normal mt-1 text-ink-3">
               Field Guide · <span className="text-accent-ink">2026</span>
             </span>
@@ -77,7 +77,7 @@ export function Nav({ page }: { page: Page | null }) {
                 key={p.id}
                 href={`${rootPrefix}${pageHref(p.id)}`}
                 aria-current={on ? "page" : undefined}
-                className={`nav-link group relative flex h-10 shrink-0 items-center gap-2 rounded-full px-2.5 text-[13px] transition-colors duration-300 sm:px-4 sm:text-sm ${
+                className={`nav-link group relative flex h-10 shrink-0 items-center gap-2 rounded-full focus-visible:outline-offset-[-2px] px-2.5 text-[13px] transition-colors duration-300 sm:px-4 sm:text-sm ${
                   on ? "bg-accent-soft text-accent-ink" : "text-ink-2 hover:bg-sunken hover:text-ink"
                 }`}
               >

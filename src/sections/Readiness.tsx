@@ -171,7 +171,7 @@ function Checklist({ track }: { track: Track }) {
             {undo === "offer" && (
               <>
                 <p className="font-mono text-label font-normal text-ink-2">Checklist cleared.</p>
-                <button type="button" onClick={undoClear} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-ink">
+                <button type="button" onClick={undoClear} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">
                   Undo
                 </button>
               </>
@@ -182,7 +182,7 @@ function Checklist({ track }: { track: Track }) {
             type="button"
             onClick={clear}
             disabled={done === 0}
-            className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] mt-2 text-ink-3 transition-colors hover:text-ink disabled:pointer-events-none disabled:opacity-50"
+            className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] mt-2 text-ink-3 transition-colors hover:text-ink disabled:pointer-events-none disabled:opacity-50 group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]"
           >
             Reset checklist
           </button>

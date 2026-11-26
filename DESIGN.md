@@ -57,6 +57,12 @@ Never hard-code hex/rgb values in JSX or CSS outside the `:root` block in `src/i
   - Sibling cards in a grid must share bottom CTA/footer baselines: use `flex h-full flex-col`, `flex-1` on the expanding description, and `mt-auto` + a minimum height on the footer (e.g., `min-h-[3.5rem] flex items-center` on Home stat cards).
 - **Shared primitives (`src/components/ui.tsx`):** Reuse `SubHead`, `SectionHeader`, `Tag`, `BasisBadge`, `CheckRow`, `TopicCheckbox`, `Tabs`, `Disclosure`, `Meter`, `ContextBar`, and `NextPage` instead of duplicating markup.
 
+## 4b. Interaction states
+
+- **Baseline (`@layer base` in `src/index.css`):** every link, button, summary, tab, option and checkbox label shows a pointer; disabled controls show `not-allowed`. One focus ring everywhere: `2px` `--accent-ink` outline, `3px` offset, following the element's own radius (never override `border-radius` on focus).
+- **Hover recipes:** pills and chips `hover:bg-sunken hover:text-ink`; cards lift (`hover:-translate-y-[3px] hover:shadow-2 hover:border-line-strong`); underline links grow their rule on `hover:` and on the parent's `group-hover:`; list rows wash with `hover:bg-sunken/60`. Selected states use the accent (`border-accent`, `bg-accent-soft`, `aria-pressed`/`aria-selected`).
+- **Hints:** anything explorable that isn't an obvious button carries a `Hint` (`src/components/ui.tsx`): a pointer mark plus a short instruction, with `touch` wording for coarse pointers and optional `keys` shown as `<kbd>` chips. Used on the before/now stage, the role overlap map, the agent protocol map, the AI guardrail ramp and the role comparison.
+
 ## 5. Iconography & brand logos
 
 - **Workbench glyphs (`src/components/icons.tsx`):** Drafted on a `24×24` grid, `strokeLinecap="square"`, `strokeLinejoin="miter"`, `strokeWidth: 1.5` (rendered at `2` normally, `1.25` via `.glyph-xl` when enlarged). Accent marks the moving or focal sub-path.
