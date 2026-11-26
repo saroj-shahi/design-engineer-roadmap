@@ -109,8 +109,8 @@ export function Lines({
   return (
     <Tag id={id} className={className} data-reveal="lines" style={{ "--d": `${delay}ms` } as CSSProperties}>
       {lines.map((l, i) => (
-        <span key={i} className="mask-line" style={{ "--i": i } as CSSProperties}>
-          <span>{l}</span>
+        <span key={i} className="-mb-[0.1em] block overflow-hidden pb-[0.1em]" style={{ "--i": i } as CSSProperties}>
+          <span className="block translate-y-[105%] transition-transform duration-[1100ms] ease-silk [transition-delay:calc(var(--i,0)*80ms+var(--d,0ms))] in-[.is-in]:translate-y-0 motion-reduce:translate-y-0 print:translate-y-0">{l}</span>
         </span>
       ))}
     </Tag>
@@ -189,9 +189,9 @@ export function CountUp({ value, className = "" }: { value: string; className?: 
 /** Label that rolls up to a duplicate on hover. Parent must carry the `group` class. */
 export function Roll({ children }: { children: string }) {
   return (
-    <span className="roll">
-      <span>{children}</span>
-      <span aria-hidden>{children}</span>
+    <span className="relative inline-flex h-[1.2em] overflow-hidden leading-[1.2em]">
+      <span className="block transition-transform duration-[650ms] ease-silk group-hover:-translate-y-full group-focus-visible:-translate-y-full">{children}</span>
+      <span aria-hidden className="absolute left-0 top-full block transition-transform duration-[650ms] ease-silk group-hover:-translate-y-full group-focus-visible:-translate-y-full">{children}</span>
     </span>
   );
 }
@@ -201,7 +201,7 @@ export function Roll({ children }: { children: string }) {
 export function Section({ id, children, className = "" }: { id: string; children: ReactNode; className?: string }) {
   return (
     <section id={id} aria-labelledby={`${id}-title`} className={`relative ${className}`}>
-      <div className="wrap pb-24 sm:pb-36">{children}</div>
+      <div className="mx-auto w-full max-w-[1440px] px-(--gutter) pb-24 sm:pb-36">{children}</div>
     </section>
   );
 }
@@ -221,14 +221,24 @@ export function SectionHeader({
   level?: "h1" | "h2";
 }) {
   return (
-    <header className="mb-16 pt-10 sm:mb-24">
-      <div className="grid-12 gap-y-10">
-        <Lines as={level} id={`${id}-title`} lines={title} className={`display-xl col-span-4 text-ink ${glyph ? "lg:col-span-8" : "lg:col-span-11"}`} />
-        {glyph && <Plate glyph={glyph} className="self-end max-lg:hidden lg:col-span-3 lg:col-start-10" />}
+    <header className={level === "h1" ? "mb-16 pt-10 sm:mb-24" : "mb-14 border-t border-line pt-8 sm:mb-20 sm:pt-10"}>
+      <div className="grid grid-cols-4 gap-x-4 lg:grid-cols-12 lg:gap-x-6 gap-y-10">
+        <Lines
+          as={level}
+          id={`${id}-title`}
+          lines={title}
+          className={`${level === "h1" ? "font-display text-display-xl text-balance" : "font-display text-display-l text-balance"} col-span-4 text-ink ${glyph ? "lg:col-span-8" : "lg:col-span-11"}`}
+        />
+        {glyph && (
+          <Plate
+            glyph={glyph}
+            className={`self-end max-lg:hidden ${level === "h1" ? "lg:col-span-3 lg:col-start-10" : "lg:col-span-2 lg:col-start-11"}`}
+          />
+        )}
       </div>
       {lede && (
-        <div className="grid-12 mt-8 sm:mt-12">
-          <p data-reveal className="lede col-span-4 lg:col-span-5 lg:col-start-7">
+        <div className="grid grid-cols-4 gap-x-4 lg:grid-cols-12 lg:gap-x-6 mt-8 sm:mt-12">
+          <p data-reveal className="max-w-[44ch] text-lede text-pretty text-ink-2 col-span-4 lg:col-span-5 lg:col-start-7">
             {lede}
           </p>
         </div>
@@ -240,7 +250,7 @@ export function SectionHeader({
 /** Specimen plate: one chapter glyph drawn large on a blueprint field. Hover plays its gesture. */
 export function Plate({ glyph, className = "" }: { glyph: GlyphName; className?: string }) {
   return (
-    <figure aria-hidden data-reveal className={`card group ${className}`} style={{ "--d": "200ms" } as CSSProperties}>
+    <figure aria-hidden data-reveal className={`relative rounded-card border border-edge bg-card shadow-1 group ${className}`} style={{ "--d": "200ms" } as CSSProperties}>
       <div className="plate-field grid aspect-square place-items-center">
         <Glyph name={glyph} className="glyph-xl !size-[62%] text-ink" />
       </div>
@@ -249,21 +259,42 @@ export function Plate({ glyph, className = "" }: { glyph: GlyphName; className?:
 }
 
 export function Eyebrow({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <p className={`label mb-4 text-ink-3 ${className}`}>{children}</p>;
+  return <p className={`font-mono text-label font-normal mb-4 text-ink-3 ${className}`}>{children}</p>;
 }
 
-/** Subsection heading: sits on a heavy rule, one step below the page title and above card titles. */
-export function SubHead({ n, title, note }: { n: string; title: string; note?: string }) {
+/** The one section-title style used across every page: a hairline rule, an optional accent eyebrow,
+ *  a display-l heading, an optional note, and an optional action aligned to the right. */
+export function SubHead({
+  title,
+  eyebrow,
+  note,
+  action,
+  id,
+  n,
+  as = "h2",
+  className = "",
+}: {
+  title: ReactNode;
+  eyebrow?: ReactNode;
+  note?: ReactNode;
+  action?: ReactNode;
+  id?: string;
+  n?: string;
+  as?: "h2" | "h3";
+  className?: string;
+}) {
   return (
-    <div className="mb-10 grid-12 gap-y-3 border-t border-line pt-6 sm:mb-14 sm:pt-8" data-n={n}>
-      <div className="col-span-4 lg:col-span-12">
-        <Lines as="h2" lines={[title]} className="display-l text-ink" />
+    <div className={`mb-10 flex flex-wrap items-end justify-between gap-x-8 gap-y-4 border-t border-line pt-6 sm:mb-14 sm:pt-8 ${className}`} data-n={n}>
+      <div className="min-w-0 max-w-[62rem]">
+        {eyebrow && <p className="font-mono text-label font-normal mb-3 text-accent-ink">{eyebrow}</p>}
+        <Lines as={as} id={id} lines={[title]} className="font-display text-display-l text-balance text-ink" />
         {note && (
-          <p data-reveal className="prose-measure mt-4 leading-relaxed text-ink-2">
+          <p data-reveal className="max-w-[62ch] text-pretty mt-4 leading-relaxed text-ink-2">
             {note}
           </p>
         )}
       </div>
+      {action && <div className="shrink-0">{action}</div>}
     </div>
   );
 }
@@ -287,7 +318,7 @@ export function Tag({ children, tone = "neutral" }: { children: ReactNode; tone?
 /** `onBand` takes the text colour of a filled band (e.g. a card head) instead of the muted ink. */
 export function BasisBadge({ basis, onBand = false }: { basis: BasisKind; onBand?: boolean }) {
   return (
-    <span className={`label inline-flex items-center gap-1.5 whitespace-nowrap ${onBand ? "text-current [&_.glyph-accent]:stroke-current" : "text-ink-3"}`}>
+    <span className={`font-mono text-label font-normal inline-flex items-center gap-1.5 whitespace-nowrap ${onBand ? "text-current [&_.glyph-accent]:stroke-current" : "text-ink-3"}`}>
       <BasisGlyph basis={basis} className={`size-3.5 ${onBand ? "[--accent:currentColor]" : ""}`} />
       <span>{basisLabel[basis]}</span>
     </span>
@@ -378,9 +409,9 @@ export function Tabs({
   const { listProps, tabProps } = useTabList({ ids: items.map((t) => t.id), value, onChange, idPrefix, orientation });
 
   const wrap = {
-    underline: "flex gap-8 overflow-x-auto no-scrollbar border-b border-line",
-    segmented: "inline-flex max-w-full gap-1 overflow-x-auto no-scrollbar rounded-[var(--radius-s)] border border-edge bg-card p-1",
-    list: orientation === "vertical" ? "flex flex-col border-t border-line" : "grid grid-flow-col auto-cols-[minmax(13rem,1fr)] overflow-x-auto no-scrollbar border-t border-line",
+    underline: "flex gap-8 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden border-b border-line",
+    segmented: "inline-flex max-w-full gap-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden rounded-ctl border border-edge bg-card p-1",
+    list: orientation === "vertical" ? "flex flex-col border-t border-line" : "grid grid-flow-col auto-cols-[minmax(13rem,1fr)] overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden border-t border-line",
   }[variant];
 
   return (
@@ -388,10 +419,10 @@ export function Tabs({
       {items.map((t, idx) => {
         const selected = t.id === value;
         const base = {
-          underline: `group relative -mb-px shrink-0 pb-3 pt-1 label transition-colors duration-500 ${
+          underline: `group relative -mb-px shrink-0 pb-3 pt-1 font-mono text-label font-normal transition-colors duration-500 ${
             selected ? "text-ink" : "text-ink-3 hover:text-ink"
           }`,
-          segmented: `shrink-0 h-10 rounded-[var(--radius-xs)] px-4 label transition-colors duration-300 ease-silk ${
+          segmented: `shrink-0 h-10 rounded-chip px-4 font-mono text-label font-normal transition-colors duration-300 ease-silk ${
             selected ? "bg-inverse text-on-inverse" : "text-ink-3 hover:text-ink hover:bg-sunken"
           }`,
           list:
@@ -407,15 +438,15 @@ export function Tabs({
           <button key={t.id} {...tabProps(t.id, idx)} className={base}>
             {variant === "list" && orientation === "vertical" ? (
               <>
-                {t.sub && <span className="label w-8 shrink-0 text-ink-3">{t.sub}</span>}
-                <span className={`font-display text-2xl leading-tight tracking-tight transition-transform duration-700 ease-silk ${selected ? "motion-safe:translate-x-2" : "motion-safe:group-hover:translate-x-1"}`}>
+                {t.sub && <span className="font-mono text-label font-normal w-8 shrink-0 text-ink-3">{t.sub}</span>}
+                <span className={`font-display font-semibold tracking-[-0.02em] text-pretty text-2xl leading-tight transition-transform duration-700 ease-silk ${selected ? "motion-safe:translate-x-2" : "motion-safe:group-hover:translate-x-1"}`}>
                   {t.label}
                 </span>
-                <span aria-hidden className={`tick ml-auto self-center text-accent transition-transform duration-500 ease-silk ${selected ? "scale-100" : "scale-0"}`} />
+                <span aria-hidden className={`inline-block size-[7px] shrink-0 rounded-full bg-current ml-auto self-center text-accent transition-transform duration-500 ease-silk ${selected ? "scale-100" : "scale-0"}`} />
               </>
             ) : variant === "list" ? (
               <>
-                {t.sub && <span className={`label block ${selected ? "text-accent-ink" : "text-ink-3"}`}>{t.sub}</span>}
+                {t.sub && <span className={`font-mono text-label font-normal block ${selected ? "text-accent-ink" : "text-ink-3"}`}>{t.sub}</span>}
                 <span className="mt-2 block text-[1.0625rem] font-medium leading-snug tracking-tight">{t.label}</span>
                 <span aria-hidden className={`absolute -top-px left-0 right-0 h-[2px] origin-left bg-accent transition-transform duration-700 ease-silk ${selected ? "scale-x-100" : "scale-x-0"}`} />
               </>
@@ -442,7 +473,7 @@ export function TabPanel({ idPrefix, id, children, className = "" }: { idPrefix:
       id={`${idPrefix}-panel-${id}`}
       aria-labelledby={`${idPrefix}-tab-${id}`}
       tabIndex={0}
-      className={`panel-in focus-visible:outline-offset-8 ${className}`}
+      className={`animate-panel-in motion-reduce:animate-fade-in focus-visible:outline-offset-8 ${className}`}
       key={id}
     >
       {children}
@@ -486,7 +517,7 @@ export function Disclosure({
         </button>
       </Heading>
       <div id={id} hidden={!open} className="pb-6">
-        {open && <div className="panel-in">{children}</div>}
+        {open && <div className="animate-panel-in motion-reduce:animate-fade-in">{children}</div>}
       </div>
     </div>
   );
@@ -512,7 +543,7 @@ export function CheckRow({
     <li className="border-b border-line">
       <label htmlFor={id} className="group grid cursor-pointer grid-cols-[2.25rem_1fr_auto] items-start gap-x-3 py-5">
         <input id={id} type="checkbox" checked={checked} onChange={onToggle} className="peer sr-only" />
-        <span className="label pt-1 text-ink-3 tabular">{index !== undefined ? String(index).padStart(2, "0") : ""}</span>
+        <span className="font-mono text-label font-normal pt-1 text-ink-3 tabular-nums">{index !== undefined ? String(index).padStart(2, "0") : ""}</span>
         <span>
           <span className={`block text-[1.0625rem] font-medium leading-snug tracking-tight transition-colors duration-500 ${checked ? "text-ink-3" : "text-ink"}`}>
             <span className={`bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_1px] bg-[position:0_55%] bg-no-repeat transition-[background-size] duration-700 ease-silk ${checked ? "bg-[length:100%_1px]" : ""}`}>
@@ -527,7 +558,7 @@ export function CheckRow({
             checked ? "border-accent bg-accent" : "border-line-strong group-hover:border-ink"
           }`}
         >
-          <svg viewBox="0 0 12 12" className="size-3 text-[var(--on-accent)]" fill="none" stroke="currentColor" strokeWidth="1.75">
+          <svg viewBox="0 0 12 12" className="size-3 text-on-accent" fill="none" stroke="currentColor" strokeWidth="1.75">
             <path d="M2.5 6.5l2.2 2.2L9.5 3.5" pathLength={1} strokeDasharray={1} strokeDashoffset={checked ? 0 : 1} className="transition-[stroke-dashoffset] duration-500 ease-silk" />
           </svg>
         </span>
@@ -557,7 +588,7 @@ export function TopicCheckbox({
           checked ? "border-accent bg-accent" : "border-line-strong group-hover:border-ink"
         }`}
       >
-        <svg viewBox="0 0 12 12" className="size-2.5 text-[var(--on-accent)]" fill="none" stroke="currentColor" strokeWidth="1.75">
+        <svg viewBox="0 0 12 12" className="size-2.5 text-on-accent" fill="none" stroke="currentColor" strokeWidth="1.75">
           <path
             d="M2.5 6.5l2.2 2.2L9.5 3.5"
             pathLength={1}
@@ -571,7 +602,7 @@ export function TopicCheckbox({
         <span className={`transition-colors duration-300 ${checked ? "text-ink-3 line-through" : "text-ink-2 group-hover:text-ink"}`}>
           {label}
         </span>
-        {meta && <span className="label ml-2 text-ink-3">· {meta}</span>}
+        {meta && <span className="font-mono text-label font-normal ml-2 text-ink-3">· {meta}</span>}
       </span>
     </label>
   );
@@ -1007,14 +1038,14 @@ export function ContextBar({
     <div className="sticky top-24 z-30 -mx-[var(--gutter)] border-b border-line bg-paper/95 px-[var(--gutter)] backdrop-blur-[2px] lg:top-16">
       <div className="flex min-h-11 items-center gap-6 overflow-hidden">
         <nav aria-label={label} className="min-w-0 flex-1">
-          <ol className="label flex min-w-0 items-center gap-2 text-ink-3">
+          <ol className="font-mono text-label font-normal flex min-w-0 items-center gap-2 text-ink-3">
             {trail.map((t, i) => {
               const last = i === trail.length - 1;
               return (
                 <li key={i} className={`flex min-w-0 items-center gap-2 ${last ? "" : "shrink-0 max-sm:[&:not(:first-child)]:hidden"}`}>
                   {i > 0 && <span aria-hidden className={last ? "" : "max-sm:hidden"}>›</span>}
                   {t.href && !last ? (
-                    <a href={t.href} className="hit link-ul-static text-ink-2 hover:text-ink">
+                    <a href={t.href} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-ink-2 hover:text-ink">
                       {t.label}
                     </a>
                   ) : (
@@ -1029,10 +1060,10 @@ export function ContextBar({
         </nav>
         {jumps.length > 0 && (
           <nav aria-label="On this page" className="hidden shrink-0 md:block">
-            <ul className="label flex items-center gap-4 text-ink-3">
+            <ul className="font-mono text-label font-normal flex items-center gap-4 text-ink-3">
               {jumps.map((j) => (
                 <li key={j.id}>
-                  <button type="button" onClick={() => jumpTo(j.id)} className="hit link-ul text-ink-3 hover:text-ink">
+                  <button type="button" onClick={() => jumpTo(j.id)} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[0%_1px] bg-position-[100%_100%] pb-0.5 transition-[background-size,color] duration-[600ms] ease-silk hover:bg-size-[100%_1px] hover:bg-position-[0%_100%] focus-visible:bg-size-[100%_1px] focus-visible:bg-position-[0%_100%] data-[on=true]:bg-size-[100%_1px] data-[on=true]:bg-position-[0%_100%] text-ink-3 hover:text-ink">
                     {j.label}
                   </button>
                 </li>
@@ -1049,9 +1080,9 @@ export function ContextBar({
 export function Meter({ value, max, label }: { value: number; max: number; label: string }) {
   return (
     <div>
-      <div className="label flex items-baseline justify-between text-ink-3">
+      <div className="font-mono text-label font-normal flex items-baseline justify-between text-ink-3">
         <span>{label}</span>
-        <span className="tabular text-ink">
+        <span className="tabular-nums text-ink">
           {String(value).padStart(2, "0")} / {String(max).padStart(2, "0")}
         </span>
       </div>
@@ -1084,14 +1115,14 @@ export function useMediaQuery(query: string) {
 /** End-of-page signpost: the one obvious next step. */
 export function NextPage({ to, href, title, note }: { to: Page; href?: string; title: string; note: string }) {
   return (
-    <div className="wrap pb-24 sm:pb-32">
-      <a href={href ?? pageHref(to)} className="card card-lift group flex flex-col gap-4 p-6 sm:flex-row sm:items-end sm:justify-between sm:p-8">
+    <div className="mx-auto w-full max-w-[1440px] px-(--gutter) pb-24 sm:pb-32">
+      <a href={href ?? pageHref(to)} className="relative rounded-card border border-edge bg-card shadow-1 group/card transition-[translate,box-shadow,border-color,opacity] duration-[260ms] ease-spring hover:-translate-y-[3px] hover:border-line-strong hover:shadow-2 active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink has-[>input:focus-visible]:outline-2 has-[>input:focus-visible]:outline-offset-4 has-[>input:focus-visible]:outline-accent-ink motion-reduce:hover:translate-y-0 group flex flex-col gap-4 p-6 sm:flex-row sm:items-end sm:justify-between sm:p-8">
         <span>
-          <span className="label text-accent-ink">Next</span>
-          <span className="display-m mt-3 block text-ink">{title}</span>
+          <span className="font-mono text-label font-normal text-accent-ink">Next</span>
+          <span className="font-display text-display-m text-balance mt-3 block text-ink">{title}</span>
           <span className="mt-3 block max-w-[52ch] text-ink-2">{note}</span>
         </span>
-        <span className="label flex items-center gap-2 text-ink">
+        <span className="font-mono text-label font-normal flex items-center gap-2 text-ink">
           Continue <ArrowGlyph />
         </span>
       </a>

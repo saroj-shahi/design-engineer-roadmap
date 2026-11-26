@@ -99,11 +99,11 @@ export function Readiness({ track }: { track: Track | null }) {
         <div className="mb-10">
           <p className="mb-4 text-ink-2">Pick your track to see your checklist.</p>
           <div className="flex flex-wrap gap-3">
-            <button type="button" onClick={() => pick("a")} className="hit label inline-flex h-11 items-center gap-2 rounded-full border border-edge bg-card px-4 text-ink hover:bg-sunken">
+            <button type="button" onClick={() => pick("a")} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] font-mono text-label font-normal inline-flex h-11 items-center gap-2 rounded-full border border-edge bg-card px-4 text-ink hover:bg-sunken">
               <Glyph name="user" className="!size-4" />
               <span>I'm a working designer</span>
             </button>
-            <button type="button" onClick={() => pick("b")} className="hit label inline-flex h-11 items-center gap-2 rounded-full border border-edge bg-card px-4 text-ink hover:bg-sunken">
+            <button type="button" onClick={() => pick("b")} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] font-mono text-label font-normal inline-flex h-11 items-center gap-2 rounded-full border border-edge bg-card px-4 text-ink hover:bg-sunken">
               <Glyph name="user" className="!size-4" />
               <span>I'm starting out</span>
             </button>
@@ -140,14 +140,14 @@ function Checklist({ track }: { track: Track }) {
   const level = levelFor(done, total, list, list.items.find((it) => !set.has(it.id)));
 
   return (
-    <div role="tabpanel" id={`ready-panel-${track}`} aria-labelledby={`ready-tab-${track}`} tabIndex={0} className="panel-in grid-12 gap-y-12">
+    <div role="tabpanel" id={`ready-panel-${track}`} aria-labelledby={`ready-tab-${track}`} tabIndex={0} className="animate-panel-in motion-reduce:animate-fade-in grid grid-cols-4 gap-x-4 lg:grid-cols-12 lg:gap-x-6 gap-y-12">
       <div className="col-span-4 lg:col-span-4 lg:sticky lg:top-24 lg:self-start">
-        <div className="card group p-6 sm:p-8">
+        <div className="relative rounded-card border border-edge bg-card shadow-1 group p-6 sm:p-8">
           <div className="flex justify-end">
             <Glyph name="check" on={done === total} className="glyph-xl !size-16 text-ink" />
           </div>
-          <p className="numeral mt-4 flex items-start text-[clamp(7rem,15vw,13rem)] text-ink">
-            <span className="tabular">{pct}</span>
+          <p className="font-display font-semibold leading-[0.9] tracking-[-0.04em] tabular-nums mt-4 flex items-start text-[clamp(7rem,15vw,13rem)] text-ink">
+            <span className="tabular-nums">{pct}</span>
             <span aria-hidden className="mt-[0.12em] text-[0.35em] text-accent">%</span>
             <span className="sr-only">percent ready</span>
           </p>
@@ -161,29 +161,29 @@ function Checklist({ track }: { track: Track }) {
               </span>
             ))}
           </div>
-          <p className="label mt-3 tabular text-ink-3">
+          <p className="font-mono text-label font-normal mt-3 tabular-nums text-ink-3">
             {String(done).padStart(2, "0")} / {String(total).padStart(2, "0")} complete
           </p>
           <div className="mt-10 border-t border-ink pt-5">
-            <p className="label text-accent-ink">{level.label}</p>
-            <p className="mt-2 max-w-[34ch] font-display text-[1.625rem] leading-[1.15] tracking-tight text-ink">{level.note}</p>
+            <p className="font-mono text-label font-normal text-accent-ink">{level.label}</p>
+            <p className="mt-2 max-w-[34ch] font-display font-semibold tracking-[-0.02em] text-pretty text-[1.625rem] leading-[1.15] text-ink">{level.note}</p>
           </div>
           <div aria-live="polite" className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-1">
             {undo === "offer" && (
               <>
-                <p className="label text-ink-2">Checklist cleared.</p>
-                <button type="button" onClick={undoClear} className="hit label link-ul-static text-ink">
+                <p className="font-mono text-label font-normal text-ink-2">Checklist cleared.</p>
+                <button type="button" onClick={undoClear} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-ink">
                   Undo
                 </button>
               </>
             )}
-            {undo === "restored" && <p className="label text-ink-2">Ticks restored.</p>}
+            {undo === "restored" && <p className="font-mono text-label font-normal text-ink-2">Ticks restored.</p>}
           </div>
           <button
             type="button"
             onClick={clear}
             disabled={done === 0}
-            className="hit label link-ul-static mt-2 text-ink-3 transition-colors hover:text-ink disabled:pointer-events-none disabled:opacity-50"
+            className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] mt-2 text-ink-3 transition-colors hover:text-ink disabled:pointer-events-none disabled:opacity-50"
           >
             Reset checklist
           </button>
@@ -192,7 +192,7 @@ function Checklist({ track }: { track: Track }) {
 
       <div className="col-span-4 self-start lg:col-span-7 lg:col-start-6">
         <p className="mb-5 max-w-[52ch] leading-relaxed text-pretty text-ink-2">{list.lede}</p>
-        <ul className="card px-5 sm:px-6 [&>li:last-child]:border-b-0">
+        <ul className="relative rounded-card border border-edge bg-card shadow-1 px-5 sm:px-6 [&>li:last-child]:border-b-0">
           {list.items.map((it, i) => (
             <CheckRow key={it.id} index={i + 1} checked={set.has(it.id)} onToggle={() => toggle(it.id)} title={it.title} detail={it.detail} />
           ))}

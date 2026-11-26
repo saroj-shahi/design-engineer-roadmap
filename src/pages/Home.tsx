@@ -1,8 +1,8 @@
 import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import { HeroIntro, JobsAnswer, ShiftStage, StartHere } from "../sections/Hero";
 import { FindBox, startQuestions } from "../components/QuickFind";
-import { Glyph, type GlyphName } from "../components/icons";
-import { jumpTo, pageHref, type Page } from "../components/ui";
+import { ArrowGlyph, Glyph, type GlyphName } from "../components/icons";
+import { SubHead, jumpTo, pageHref, type Page } from "../components/ui";
 
 /** What's on each page, in the reader's words: one question per page. */
 const inside: { to: Page; glyph: GlyphName; question: string; answer: string }[] = [
@@ -16,7 +16,7 @@ const inside: { to: Page; glyph: GlyphName; question: string; answer: string }[]
 const chapters = [
   { id: "shift", label: "The shift" },
   { id: "start-here", label: "Where you start" },
-  { id: "jobs", label: "Is my job going away?" },
+  { id: "jobs", label: "Jobs" },
   { id: "inside", label: "What's inside" },
 ] as const;
 
@@ -37,12 +37,26 @@ function useChapterInView(ids: readonly string[]) {
   return current;
 }
 
-function Chapter({ id, n, label, children }: { id: string; n: number; label: string; children: ReactNode }) {
+function Chapter({
+  id,
+  n,
+  label,
+  title,
+  note,
+  action,
+  children,
+}: {
+  id: string;
+  n: number;
+  label: string;
+  title: ReactNode;
+  note?: ReactNode;
+  action?: ReactNode;
+  children: ReactNode;
+}) {
   return (
-    <section id={id} aria-label={label} className="scroll-mt-32">
-      <p className="label mb-5 text-accent-ink">
-        {String(n).padStart(2, "0")} · {label}
-      </p>
+    <section id={id} aria-labelledby={`${id}-title`} className="scroll-mt-32">
+      <SubHead id={`${id}-title`} eyebrow={`${String(n).padStart(2, "0")} · ${label}`} title={title} note={note} action={action} />
       {children}
     </section>
   );
@@ -52,7 +66,7 @@ export function Home() {
   const current = useChapterInView(chapters.map((c) => c.id));
   return (
     <>
-      <section aria-labelledby="shift-title" className="wrap pb-16 pt-14 sm:pb-24 sm:pt-20">
+      <section aria-labelledby="shift-title" className="mx-auto w-full max-w-[1440px] px-(--gutter) pb-16 pt-14 sm:pb-24 sm:pt-20">
         <HeroIntro>
           <div className="mx-auto mt-10 max-w-[40rem]">
             <FindBox large />
@@ -82,7 +96,7 @@ export function Home() {
         </HeroIntro>
       </section>
 
-      <div className="wrap flex gap-14 pb-24 sm:pb-32">
+      <div className="mx-auto w-full max-w-[1440px] px-(--gutter) flex gap-14 pb-24 sm:pb-32">
         <nav aria-label="Chapters" className="hidden w-52 shrink-0 lg:block">
           <ol className="sticky top-28 border-l border-line">
             {chapters.map((c, i) => {
@@ -106,33 +120,44 @@ export function Home() {
         </nav>
 
         <div className="flex min-w-0 flex-1 flex-col gap-24 sm:gap-32">
-          <Chapter id="shift" n={1} label="The shift">
+          <Chapter id="shift" n={1} label="The shift" title="How work moved">
             <ShiftStage />
           </Chapter>
 
-          <Chapter id="start-here" n={2} label="Where you start">
+          <Chapter
+            id="start-here"
+            n={2}
+            label="Where you start"
+            title={<>Where are you <em>starting from?</em></>}
+            action={
+              <a href="#/ready" className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] group bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] inline-flex items-center gap-2 text-[0.9375rem] font-medium text-ink">
+                <span>Or open the readiness checklist</span>
+                <ArrowGlyph />
+              </a>
+            }
+          >
             <StartHere />
           </Chapter>
 
-          <Chapter id="jobs" n={3} label="Is my job going away?">
+          <Chapter id="jobs" n={3} label="Jobs" title="Is my job going away?">
             <JobsAnswer />
           </Chapter>
 
-          <Chapter id="inside" n={4} label="What's inside">
-            <h2 id="inside-title" className="display-l text-ink" data-reveal>
-              Four questions, one page <em>for each.</em>
-            </h2>
-            <p className="mt-5 max-w-[52ch] leading-relaxed text-ink-2" data-reveal>
-              Read in any order. Each page answers one question, and the detail stays tucked away until you ask for it.
-            </p>
-            <ul className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+          <Chapter
+            id="inside"
+            n={4}
+            label="What's inside"
+            title={<>Four questions, one page <em>for each.</em></>}
+            note="Read in any order. Each page answers one question, and the detail stays tucked away until you ask for it."
+          >
+            <ul className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
               {inside.map((x, i) => (
                 <li key={x.to} data-reveal style={{ "--i": i } as CSSProperties}>
-                  <a href={pageHref(x.to)} className="card card-lift group flex h-full flex-col p-5 sm:p-6">
+                  <a href={pageHref(x.to)} className="relative rounded-card border border-edge bg-card shadow-1 group/card transition-[translate,box-shadow,border-color,opacity] duration-[260ms] ease-spring hover:-translate-y-[3px] hover:border-line-strong hover:shadow-2 active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink has-[>input:focus-visible]:outline-2 has-[>input:focus-visible]:outline-offset-4 has-[>input:focus-visible]:outline-accent-ink motion-reduce:hover:translate-y-0 group flex h-full flex-col p-5 sm:p-6">
                     <Glyph name={x.glyph} className="size-12 text-ink" />
-                    <span className="display-m mt-8 block text-ink">{x.question}</span>
+                    <span className="font-display text-display-m text-balance mt-8 block text-ink">{x.question}</span>
                     <span className="mt-3 block flex-1 text-sm leading-relaxed text-pretty text-ink-2">{x.answer}</span>
-                    <span className="label mt-6 text-accent-ink">Open →</span>
+                    <span className="font-mono text-label font-normal mt-6 text-accent-ink">Open →</span>
                   </a>
                 </li>
               ))}

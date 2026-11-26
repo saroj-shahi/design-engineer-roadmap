@@ -71,10 +71,10 @@ export function HeroStage() {
   };
 
   return (
-    <figure className="card flex h-full flex-col shadow-[var(--sh-2)]" aria-labelledby="hero-stage-caption">
+    <figure className="relative rounded-card border border-edge bg-card flex h-full flex-col shadow-2" aria-labelledby="hero-stage-caption">
       <div className="flex items-center justify-between gap-4 border-b border-line bg-card px-4 py-2 sm:px-5">
-        <span className="label flex items-center gap-2 text-ink-3">
-          <span aria-hidden className="tick text-accent" />
+        <span className="font-mono text-label font-normal flex items-center gap-2 text-ink-3">
+          <span aria-hidden className="inline-block size-[7px] shrink-0 rounded-full bg-current text-accent" />
           <span>How work moved</span>
         </span>
         <div role="group" aria-label="Show the way work moved" className="inline-flex gap-1 rounded-full border border-edge bg-card p-1">
@@ -84,8 +84,8 @@ export function HeroStage() {
               type="button"
               aria-pressed={phase === p}
               onClick={() => pick(p)}
-              className={`label h-11 border-edge px-3.5 transition-colors duration-300 rounded-full sm:h-9 sm:px-4 ${
-                phase === p ? (p === "after" ? "bg-accent text-[var(--on-accent)]" : "bg-inverse text-on-inverse") : "text-ink-3 hover:bg-sunken hover:text-ink"
+              className={`font-mono text-label font-normal h-11 border-edge px-3.5 transition-colors duration-300 rounded-full sm:h-9 sm:px-4 ${
+                phase === p ? (p === "after" ? "bg-accent text-on-accent" : "bg-inverse text-on-inverse") : "text-ink-3 hover:bg-sunken hover:text-ink"
               }`}
             >
               {p === "before" ? "Before" : "Now"}
@@ -123,11 +123,11 @@ export function HeroStage() {
 
         {/* The handoff tag: struck out, then dropped */}
         <div className="hs-tag">
-          <span className="hs-tag-box label">
+          <span className="hs-tag-box font-mono text-label font-normal">
             Handoff
             <span className="hs-strike" />
           </span>
-          <span className="hs-tag-sub label">spec · redlines · back-and-forth</span>
+          <span className="hs-tag-sub font-mono text-label font-normal">spec · redlines · back-and-forth</span>
         </div>
 
         <StageCard
@@ -152,14 +152,14 @@ export function HeroStage() {
           title="Builds it"
           sub="In code, from a spec"
         />
-        <StageCard className="hs-builder card-accent" depth={4} head="Now · One codebase" glyph="shift" on title="Built together" sub="Designers in code, engineers reviewing" accent />
+        <StageCard className="hs-builder border-[color-mix(in_srgb,var(--accent)_45%,var(--edge))]! shadow-accent!" depth={4} head="Now · One codebase" glyph="shift" on title="Built together" sub="Designers in code, engineers reviewing" accent />
 
         {[
           { id: "de", title: "Design Engineer", sub: tagline("de") },
           { id: "meta", title: "Meta-Designer", sub: tagline("meta") },
           { id: "ax", title: "AX Designer", sub: tagline("ax") },
         ].map((a, i) => (
-          <div key={a.id} className={`hs-card hs-arch hs-a${i + 1} card`} style={{ "--i": i, "--depth": 6 + i } as CSSProperties}>
+          <div key={a.id} className={`hs-card hs-arch hs-a${i + 1} relative rounded-card border border-edge bg-card shadow-1`} style={{ "--i": i, "--depth": 6 + i } as CSSProperties}>
             <div className="hs-body">
               <ArchetypeGlyph id={a.id} on className="hs-glyph text-ink" />
               <p className="hs-title mt-auto">{a.title}</p>
@@ -170,7 +170,7 @@ export function HeroStage() {
         </div>
       </div>
 
-      <figcaption id="hero-stage-caption" aria-live={userPicked ? "polite" : undefined} className="card-foot bg-card px-4 py-3.5 text-[0.9375rem] leading-relaxed text-ink-2 sm:px-5 sm:py-4">
+      <figcaption id="hero-stage-caption" aria-live={userPicked ? "polite" : undefined} className="rounded-b-[calc(var(--radius-card)-1px)] border-t border-line text-balance bg-card px-4 py-3.5 text-[0.9375rem] leading-relaxed text-ink-2 sm:px-5 sm:py-4">
         {captions[phase]}
       </figcaption>
     </figure>
@@ -197,8 +197,8 @@ function StageCard({
   accent?: boolean;
 }) {
   return (
-    <div className={`hs-card card ${className}`} style={{ "--depth": depth } as CSSProperties}>
-      <p className={`card-head label ${accent ? "bg-accent text-[var(--on-accent)]" : ""}`}>{head}</p>
+    <div className={`hs-card relative rounded-card border border-edge bg-card shadow-1 ${className}`} style={{ "--depth": depth } as CSSProperties}>
+      <p className={`hs-head flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal ${accent ? "bg-accent! text-on-accent!" : ""}`}>{head}</p>
       <div className="hs-body hs-body-row">
         <Glyph name={glyph} on={on} className="hs-glyph text-ink" />
         <div className="min-w-0">

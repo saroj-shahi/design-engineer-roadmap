@@ -69,13 +69,13 @@ export function RoadmapMap({
                   e.preventDefault();
                   onPick(s.id);
                 }}
-                className={`rm-node card card-lift block ${
-                  isBase ? "rm-node-base" : on ? "card-on rm-node-on" : ""
+                className={`rm-node relative rounded-card border border-edge bg-card shadow-1 group/card transition-[translate,box-shadow,border-color,opacity] duration-[260ms] ease-spring hover:-translate-y-[3px] hover:border-line-strong hover:shadow-2 active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink has-[>input:focus-visible]:outline-2 has-[>input:focus-visible]:outline-offset-4 has-[>input:focus-visible]:outline-accent-ink motion-reduce:hover:translate-y-0 block ${
+                  isBase ? "rm-node-base" : on ? "is-on translate-y-0! border-accent! shadow-accent! rm-node-on" : ""
                 }`}
               >
-                <span className={`label block ${isBase ? "text-inverse-accent" : "text-ink-3"}`}>{s.kicker}</span>
+                <span className={`font-mono text-label font-normal block ${isBase ? "text-inverse-accent" : "text-ink-3"}`}>{s.kicker}</span>
                 <span
-                  className={`mt-1.5 block font-display text-[1.375rem] font-medium leading-[1.1] tracking-tight ${
+                  className={`mt-1.5 block font-display font-semibold tracking-[-0.02em] text-pretty text-[1.375rem] leading-[1.1] ${
                     isBase ? "text-on-inverse" : "text-ink"
                   }`}
                 >
@@ -88,7 +88,7 @@ export function RoadmapMap({
                 )}
                 {s.base && (
                   <span
-                    className={`label mt-2.5 block border-t pt-2 text-[10px] ${
+                    className={`font-mono text-label font-normal mt-2.5 block border-t pt-2 ${
                       isBase
                         ? "border-inverse-line text-inverse-muted"
                         : "border-line text-ink-3"

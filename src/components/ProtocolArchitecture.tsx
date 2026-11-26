@@ -24,8 +24,8 @@ export function ProtocolArchitecture({
   const active = protocols.find((p) => p.id === activeId) ?? protocols[0];
 
   return (
-    <figure className="card mb-8" aria-labelledby={`${uid}-cap`}>
-      <div className="card-head label">
+    <figure className="relative rounded-card border border-edge bg-card shadow-1 mb-8" aria-labelledby={`${uid}-cap`}>
+      <div className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal">
         <span>Agent protocol topology</span>
         <span>Select a protocol to inspect</span>
       </div>
@@ -173,15 +173,15 @@ export function ProtocolArchitecture({
         </svg>
       </div>
 
-      <figcaption id={`${uid}-cap`} className="card-foot grid gap-4 bg-card text-sm sm:grid-cols-2">
+      <figcaption id={`${uid}-cap`} className="rounded-b-[calc(var(--radius-card)-1px)] border-t border-line px-[1.125rem] py-3 text-balance grid gap-4 bg-card text-sm sm:grid-cols-2">
         <div>
-          <span className="label text-ink-3">
+          <span className="font-mono text-label font-normal text-ink-3">
             {active.name} · {active.owner}
           </span>
           <p className="mt-1 leading-relaxed text-ink-2">{active.role}</p>
         </div>
         <div className="border-l-2 border-accent pl-3.5">
-          <span className="label text-accent-ink">Design impact</span>
+          <span className="font-mono text-label font-normal text-accent-ink">Design impact</span>
           <p className="mt-1 leading-relaxed text-ink">{active.ux}</p>
         </div>
       </figcaption>

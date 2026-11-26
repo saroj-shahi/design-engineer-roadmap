@@ -112,7 +112,7 @@ export function FindBox({ autoFocus = false, onDone, large = false }: { autoFocu
         Search the guide
       </label>
       <div
-        className={`flex items-center gap-3 rounded-[var(--radius-s)] border border-edge bg-card pl-4 pr-2 transition-colors focus-within:border-accent ${
+        className={`flex items-center gap-3 rounded-ctl border border-edge bg-card pl-4 pr-2 transition-colors focus-within:border-accent ${
           large ? "h-14" : "h-12"
         }`}
       >
@@ -145,7 +145,7 @@ export function FindBox({ autoFocus = false, onDone, large = false }: { autoFocu
         id={listId}
         role="listbox"
         aria-label="Results"
-        className={`${open ? "" : "hidden"} absolute inset-x-0 top-[calc(100%+6px)] z-50 max-h-[22rem] overflow-y-auto rounded-[var(--radius-s)] border border-edge bg-card p-1.5 shadow-[var(--sh-2)]`}
+        className={`${open ? "" : "hidden"} absolute inset-x-0 top-[calc(100%+6px)] z-50 max-h-[22rem] overflow-y-auto rounded-ctl border border-edge bg-card p-1.5 shadow-2`}
       >
         {results.map((d, i) => (
           <li
@@ -156,13 +156,13 @@ export function FindBox({ autoFocus = false, onDone, large = false }: { autoFocu
             onMouseDown={(e) => e.preventDefault()}
             onClick={() => pick(d)}
             onMouseEnter={() => setActive(i)}
-            className={`flex cursor-pointer items-baseline justify-between gap-4 rounded-[var(--radius-xs)] px-3 py-2.5 ${i === active ? "bg-sunken" : ""}`}
+            className={`flex cursor-pointer items-baseline justify-between gap-4 rounded-chip px-3 py-2.5 ${i === active ? "bg-sunken" : ""}`}
           >
             <span className="min-w-0">
               <span className="block truncate text-[0.9375rem] text-ink">{d.label}</span>
               {d.hint && <span className="mt-0.5 block truncate text-xs text-ink-3">{d.hint}</span>}
             </span>
-            <span className="label shrink-0 text-ink-3">{d.group}</span>
+            <span className="font-mono text-label font-normal shrink-0 text-ink-3">{d.group}</span>
           </li>
         ))}
       </ul>
@@ -221,9 +221,9 @@ export function FindDialog() {
         className="find-dialog m-0 mx-auto mt-[12vh] w-[min(40rem,calc(100vw-2rem))] overflow-visible bg-transparent p-0 text-ink"
       >
         {open && (
-          <div className="rounded-[var(--radius)] border border-edge bg-paper p-4 shadow-[var(--sh-2)]">
+          <div className="rounded-card border border-edge bg-paper p-4 shadow-2">
             <FindBox autoFocus large onDone={() => setOpen(false)} />
-            <p className="label mt-3 px-1 text-ink-3">↑↓ to move · Enter to open · Esc to close</p>
+            <p className="font-mono text-label font-normal mt-3 px-1 text-ink-3">↑↓ to move · Enter to open · Esc to close</p>
           </div>
         )}
       </dialog>

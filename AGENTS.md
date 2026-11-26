@@ -31,10 +31,10 @@ Always run `npm run typecheck` (or `npm run build`) after edits.
 - `src/components/icons.tsx`: 24×24 Swiss geometric glyphs (`Glyph`, `ArchetypeGlyph`, `BasisGlyph`, `ArrowGlyph`, `ArrowBackGlyph`, `ExternalGlyph`), including metric icons (`trendDown`, `shareBar`, `survey`, `forecast`, `caseStudy`, `stack`) and persona/role icons (`user`, `users`).
 - `src/components/BrandLogo.tsx`: 25 monochrome `currentColor` app/brand marks (`BrandLogo`, `BrandLogosFor`, `detectBrands`) automatically wired into `Tag`, `ToolingPipeline`, resource links, protocol owners, and `roadmap.sh` links.
 - `src/components/Nav.tsx`: Sticky header, `BrandMark` (Design × Code emblem + wordmark lockup), responsive 5-page nav, ⌘K search (`QuickFind.tsx`), scroll progress bar.
-- `src/components/*`: Data visualizations and interactive modules (`HeroStage`, `MarketShiftChart`, `ArchetypeVenn`, `HandoffFlow`, `HandoffPlate`, `AdoptionDumbbell`, `AiAutonomyRamp`, `ProtocolArchitecture`, `PlanRoadmapBase`, `RoadmapMap`).
+- `src/components/*`: Data visualizations and interactive modules (`HeroStage`, `MarketShiftChart`, `ArchetypeVenn`, `HandoffFlow`, `AdoptionDumbbell`, `AiAutonomyRamp`, `ProtocolArchitecture`, `PlanRoadmapBase`, `RoadmapMap`).
 - `src/data/research.ts`: Single source of truth for all statistics, roles, plans, checklists, skills, tooling, protocols, sources, and glossary.
 - `src/data/roadmaps.ts`: Structured `roadmap.sh` curricula (8 core syllabi + companion skill tracks) shared between `PlanRoadmapBase` and `Library → Roadmaps`.
-- `src/index.css`: Design tokens (one dark Plum Dusk set), `@theme` mapping, `@layer components` primitives, typography wrapping rules, and reduced-motion-safe animations.
+- `src/index.css`: Design tokens (one dark Plum Dusk set), `@theme` scales (text, radii, shadows, animations) for Tailwind utilities, typography wrapping rules, and reduced-motion-safe animations.
 
 ## Non-negotiable content rules
 

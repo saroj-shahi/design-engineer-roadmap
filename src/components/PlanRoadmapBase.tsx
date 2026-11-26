@@ -145,8 +145,8 @@ export function PlanRoadmapBase({
             <button
               key={entry.slug}
               {...tabProps(entry.slug, idx)}
-              className={`card card-lift group relative flex h-full min-h-[6.75rem] flex-col overflow-hidden p-4 text-left transition-colors duration-300 max-sm:last:col-span-2 ${
-                on ? "card-on" : ""
+              className={`rounded-card border border-edge bg-card shadow-1 group/card transition-[translate,box-shadow,border-color,opacity] duration-[260ms] ease-spring hover:-translate-y-[3px] hover:border-line-strong hover:shadow-2 active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink has-[>input:focus-visible]:outline-2 has-[>input:focus-visible]:outline-offset-4 has-[>input:focus-visible]:outline-accent-ink motion-reduce:hover:translate-y-0 group relative flex h-full min-h-[6.75rem] flex-col overflow-hidden p-4 text-left transition-colors duration-300 max-sm:last:col-span-2 ${
+                on ? "is-on translate-y-0! border-accent! shadow-accent!" : ""
               }`}
             >
               <span
@@ -157,7 +157,7 @@ export function PlanRoadmapBase({
               />
               <span className="flex items-baseline justify-between gap-2">
                 <span
-                  className={`label ${
+                  className={`font-mono text-label font-normal ${
                     entry.role === "Base"
                       ? "text-accent-ink"
                       : on
@@ -167,12 +167,12 @@ export function PlanRoadmapBase({
                 >
                   {entry.role}
                 </span>
-                <span className="label tabular text-ink-3">
+                <span className="font-mono text-label font-normal tabular-nums text-ink-3">
                   {rDone > 0 ? `${rDone}/${rTotal}` : `${rTotal}`}
                 </span>
               </span>
               <span
-                className={`mt-2 flex items-center gap-1.5 font-display text-[1.25rem] leading-[1.1] tracking-tight transition-colors duration-300 ${
+                className={`mt-2 flex items-center gap-1.5 font-display font-semibold tracking-[-0.02em] text-pretty text-[1.25rem] leading-[1.1] transition-colors duration-300 ${
                   on ? "text-ink" : "text-ink-2 group-hover:text-ink"
                 }`}
               >
@@ -191,13 +191,13 @@ export function PlanRoadmapBase({
       <div
         {...panelProps(roadmap.slug)}
         key={roadmap.slug}
-        className="card panel-in mt-5 focus-visible:outline-offset-8"
+        className="relative rounded-card border border-edge bg-card shadow-1 animate-panel-in motion-reduce:animate-fade-in mt-5 focus-visible:outline-offset-8"
       >
-        <div className="card-head label">
+        <div className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal">
           <span>
             {current.role} · roadmap.sh/{roadmap.slug}
           </span>
-          <span className="tabular">
+          <span className="tabular-nums">
             {done} / {total} topics ({pct}%)
           </span>
         </div>
@@ -206,7 +206,7 @@ export function PlanRoadmapBase({
           <div className="flex flex-wrap items-start justify-between gap-6">
             <div className="min-w-0 max-w-[60ch]">
               <div className="flex flex-wrap items-center gap-2.5">
-                <h3 className="display-m text-ink">{roadmap.title}</h3>
+                <h3 className="font-display text-display-m text-balance text-ink">{roadmap.title}</h3>
                 <Tag tone={current.role === "Base" ? "accent" : "neutral"}>{current.role}</Tag>
               </div>
               <p className="mt-2 text-sm leading-relaxed text-ink-2">{roadmap.tagline}</p>
@@ -215,7 +215,7 @@ export function PlanRoadmapBase({
             <div className="flex flex-wrap items-center gap-4">
               <a
                 href={pageHref("library", "roadmaps", roadmap.slug)}
-                className="hit label link-ul-static text-ink"
+                className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-ink"
               >
                 Full page view →
               </a>
@@ -223,10 +223,10 @@ export function PlanRoadmapBase({
                 href={roadmap.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hit group label inline-flex items-center gap-1.5 text-ink-3 hover:text-ink"
+                className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] group font-mono text-label font-normal inline-flex items-center gap-1.5 text-ink-3 hover:text-ink"
               >
                 <BrandLogo brand="roadmapsh" className="size-3.5" />
-                <span className="link-ul">roadmap.sh</span>
+                <span className="bg-[linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[0%_1px] bg-position-[100%_100%] pb-0.5 transition-[background-size,color] duration-[600ms] ease-silk hover:bg-size-[100%_1px] hover:bg-position-[0%_100%] focus-visible:bg-size-[100%_1px] focus-visible:bg-position-[0%_100%] data-[on=true]:bg-size-[100%_1px] data-[on=true]:bg-position-[0%_100%]">roadmap.sh</span>
                 <ExternalGlyph className="!size-3" />
                 <span className="sr-only"> (opens in new tab)</span>
               </a>
@@ -236,7 +236,7 @@ export function PlanRoadmapBase({
           {/* Progress + filter + expand controls */}
           <div className="mt-5 grid gap-4 border-t border-line pt-5 sm:grid-cols-12 sm:items-end">
             <div className="sm:col-span-5">
-              <label htmlFor={filterId} className="label block text-ink-3">
+              <label htmlFor={filterId} className="font-mono text-label font-normal block text-ink-3">
                 Filter {roadmap.shortTitle} topics
               </label>
               <input
@@ -246,19 +246,19 @@ export function PlanRoadmapBase({
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search stages or topics…"
                 autoComplete="off"
-                className="input-line !py-1.5 !text-sm"
+                className="w-full rounded-none border-0 border-b border-line-strong bg-transparent py-3 text-xl tracking-[-0.01em] text-ink transition-colors duration-[400ms] ease-silk placeholder:text-ink-3 focus:border-accent-ink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink !py-1.5 !text-sm"
               />
             </div>
 
             <div className="sm:col-span-4">
-              <div className="label flex items-baseline justify-between text-ink-3">
+              <div className="font-mono text-label font-normal flex items-baseline justify-between text-ink-3">
                 <span>Progress</span>
-                <span className="tabular text-ink">
+                <span className="tabular-nums text-ink">
                   {done} / {total}
                 </span>
               </div>
               <div
-                className="bar-track mt-2 h-2"
+                className="relative overflow-hidden rounded-full bg-line mt-2 h-2"
                 role="progressbar"
                 aria-label={`${roadmap.title} base topics covered`}
                 aria-valuenow={done}
@@ -266,7 +266,7 @@ export function PlanRoadmapBase({
                 aria-valuemax={total}
               >
                 <div
-                  className="bar-fill !bg-accent transition-[width] duration-500 ease-silk"
+                  className="absolute inset-y-0 left-0 origin-left rounded-full bg-ink transition-transform duration-[1300ms] ease-silk [transition-delay:calc(var(--i,0)*70ms)] [[data-reveal=bar]:not(.is-in)_&]:scale-x-0 motion-reduce:transition-none !bg-accent transition-[width] duration-500"
                   style={{ width: `${pct}%` }}
                 />
               </div>
@@ -277,7 +277,7 @@ export function PlanRoadmapBase({
                 <button
                   type="button"
                   onClick={() => setQuery("")}
-                  className="hit label link-ul-static text-ink"
+                  className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-ink"
                 >
                   Clear filter
                 </button>
@@ -285,7 +285,7 @@ export function PlanRoadmapBase({
                 <button
                   type="button"
                   onClick={toggleAll}
-                  className="hit label link-ul-static text-ink-3 hover:text-ink"
+                  className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-ink-3 hover:text-ink"
                 >
                   {allExpanded ? "Collapse all" : "Expand all"}
                 </button>
@@ -324,16 +324,16 @@ export function PlanRoadmapBase({
                       className="group flex w-full items-start gap-3 px-4 py-3.5 text-left"
                     >
                       <span
-                        className={`label mt-0.5 grid size-6 shrink-0 place-items-center border tabular ${
+                        className={`font-mono text-label font-normal mt-0.5 grid size-6 shrink-0 place-items-center border tabular-nums ${
                           stageComplete
-                            ? "border-accent bg-accent text-[var(--on-accent)]"
+                            ? "border-accent bg-accent text-on-accent"
                             : "border-line-strong text-ink-3 group-hover:border-ink group-hover:text-ink"
                         }`}
                       >
                         {String(i + 1).padStart(2, "0")}
                       </span>
                       <span className="min-w-0 flex-1">
-                        <span className="block font-display text-[1.125rem] leading-snug tracking-tight text-ink">
+                        <span className="block font-display font-semibold tracking-[-0.02em] text-pretty text-[1.125rem] leading-snug text-ink">
                           {m.title}
                         </span>
                         <span className="mt-0.5 block text-xs leading-relaxed text-ink-3">
@@ -342,7 +342,7 @@ export function PlanRoadmapBase({
                       </span>
                       <span className="flex shrink-0 items-center gap-3 pt-1">
                         <span
-                          className={`label tabular ${
+                          className={`font-mono text-label font-normal tabular-nums ${
                             stageComplete ? "text-accent-ink" : "text-ink-3"
                           }`}
                         >
@@ -365,7 +365,7 @@ export function PlanRoadmapBase({
                     <div id={panelId} hidden={!isOpen} className="border-t border-line px-4 py-4">
                       {isOpen && (
                         <div
-                          className={`panel-in grid gap-x-8 gap-y-5 ${
+                          className={`animate-panel-in motion-reduce:animate-fade-in grid gap-x-8 gap-y-5 ${
                             m.branches.length > 1 ? "sm:grid-cols-2" : ""
                           }`}
                         >

@@ -58,7 +58,7 @@ const STAGES = launchStages.length;
 /** Visible third cue for a selected card, beside fill and offset. State itself is announced by the control. */
 function SelectedMark({ children, className = "" }: { children: string; className?: string }) {
   return (
-    <span aria-hidden className={`label shrink-0 ${className}`}>
+    <span aria-hidden className={`font-mono text-label font-normal shrink-0 ${className}`}>
       ✓ {children}
     </span>
   );
@@ -131,8 +131,8 @@ export function Roadmap({ plan }: { plan: PlanRoute | null }) {
               {...tabProps(t.id, i)}
               // With nothing picked, keep the first card reachable by Tab.
               tabIndex={on || (track === null && i === 0) ? 0 : -1}
-              className={`card card-lift group relative isolate flex min-h-[15rem] flex-col overflow-hidden p-5 text-left transition-colors duration-700 ease-silk sm:min-h-[19rem] sm:p-8 ${
-                on ? "card-on text-on-inverse" : "text-ink"
+              className={`rounded-card border border-edge bg-card shadow-1 group/card transition-[translate,box-shadow,border-color,opacity] duration-[260ms] ease-spring hover:-translate-y-[3px] hover:border-line-strong hover:shadow-2 active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink has-[>input:focus-visible]:outline-2 has-[>input:focus-visible]:outline-offset-4 has-[>input:focus-visible]:outline-accent-ink motion-reduce:hover:translate-y-0 group relative isolate flex min-h-[15rem] flex-col overflow-hidden p-5 text-left transition-colors duration-700 ease-silk sm:min-h-[19rem] sm:p-8 ${
+                on ? "is-on translate-y-0! border-accent! shadow-accent! text-on-inverse" : "text-ink"
               }`}
             >
               <span
@@ -140,17 +140,17 @@ export function Roadmap({ plan }: { plan: PlanRoute | null }) {
                 className={`absolute inset-0 -z-10 origin-bottom bg-inverse transition-transform duration-[900ms] ease-silk ${on ? "scale-y-100" : "scale-y-0"}`}
               />
               <span className="flex items-start justify-between gap-4">
-                <span className={`label inline-flex items-center gap-1.5 ${on ? "text-inverse-muted" : "text-ink-3"}`}>
+                <span className={`font-mono text-label font-normal inline-flex items-center gap-1.5 ${on ? "text-inverse-muted" : "text-ink-3"}`}>
                   <Glyph name="user" className={`!size-3.5 ${on ? "[--accent:currentColor]" : ""}`} />
                   <span>{t.kicker}</span>
                 </span>
                 {on && <SelectedMark className="text-inverse-accent">Your track</SelectedMark>}
               </span>
               <span className="mt-auto flex items-end justify-between gap-4">
-                <span className="numeral text-[clamp(4rem,8vw,7rem)]">{t.id.toUpperCase()}</span>
+                <span className="font-display font-semibold leading-[0.9] tracking-[-0.04em] tabular-nums text-[clamp(4rem,8vw,7rem)]">{t.id.toUpperCase()}</span>
                 <Glyph name={t.glyph} on={on} className="glyph-xl !size-20 sm:!size-28" />
               </span>
-              <span className="mt-4 block font-display text-[clamp(1.5rem,2.4vw,2.25rem)] leading-[1.05] tracking-tight">{t.title}</span>
+              <span className="mt-4 block font-display font-semibold tracking-[-0.02em] text-pretty text-[clamp(1.5rem,2.4vw,2.25rem)] leading-[1.05]">{t.title}</span>
               <span className={`mt-2 block text-sm ${on ? "text-inverse-muted" : "text-ink-3"}`}>{t.sub}</span>
             </button>
           );
@@ -162,29 +162,29 @@ export function Roadmap({ plan }: { plan: PlanRoute | null }) {
       <div className="mt-6 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3 border-t border-line pt-5 text-sm text-ink-3">
         <p>
           New to a term like PR, tokens or MCP?{" "}
-          <a href={pageHref("library", "glossary")} className="hit link-ul-static font-medium text-ink">
+          <a href={pageHref("library", "glossary")} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] font-medium text-ink">
             See the glossary
           </a>
         </p>
         <p className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
           <span>Full topic checklists from roadmap.sh:</span>
-          <a href={pageHref("library", "roadmaps", "ux-design")} className="hit link-ul-static font-medium text-ink">
+          <a href={pageHref("library", "roadmaps", "ux-design")} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] font-medium text-ink">
             UX Design
           </a>
           <span aria-hidden>·</span>
-          <a href={pageHref("library", "roadmaps", "product-design")} className="hit link-ul-static font-medium text-ink">
+          <a href={pageHref("library", "roadmaps", "product-design")} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] font-medium text-ink">
             Product Design
           </a>
           <span aria-hidden>·</span>
-          <a href={pageHref("library", "roadmaps", "design-system")} className="hit link-ul-static font-medium text-ink">
+          <a href={pageHref("library", "roadmaps", "design-system")} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] font-medium text-ink">
             Design System
           </a>
           <span aria-hidden>·</span>
-          <a href={pageHref("library", "roadmaps", "frontend")} className="hit link-ul-static font-medium text-ink">
+          <a href={pageHref("library", "roadmaps", "frontend")} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] font-medium text-ink">
             Frontend
           </a>
           <span aria-hidden>·</span>
-          <a href={pageHref("library", "roadmaps")} className="hit link-ul-static font-medium text-accent-ink">
+          <a href={pageHref("library", "roadmaps")} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] font-medium text-accent-ink">
             All 8 roadmaps →
           </a>
         </p>
@@ -195,7 +195,7 @@ export function Roadmap({ plan }: { plan: PlanRoute | null }) {
           {/* Spacer, not a wrapper: the bar must sit directly in the section so it sticks through the whole plan. */}
           <div aria-hidden className="h-16 sm:h-24" />
           <ContextBar trail={trail} jumps={jumps} />
-          <div {...panelProps(plan.track)} key={plan.track} className="panel-in mt-16 focus-visible:outline-offset-8 sm:mt-24">
+          <div {...panelProps(plan.track)} key={plan.track} className="animate-panel-in motion-reduce:animate-fade-in mt-16 focus-visible:outline-offset-8 sm:mt-24">
             {plan.track === "a" ? <TrackA plan={plan} /> : <TrackB stage={plan.stage} />}
           </div>
         </>
@@ -258,14 +258,14 @@ function TrackA({ plan: route }: { plan: PlanA }) {
               return (
                 <label
                   key={o.id}
-                  className={`card card-lift group relative cursor-pointer p-6 sm:p-8 ${on ? "card-on" : ""}`}
+                  className={`rounded-card border border-edge bg-card shadow-1 group/card transition-[translate,box-shadow,border-color,opacity] duration-[260ms] ease-spring hover:-translate-y-[3px] hover:border-line-strong hover:shadow-2 active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink has-[>input:focus-visible]:outline-2 has-[>input:focus-visible]:outline-offset-4 has-[>input:focus-visible]:outline-accent-ink motion-reduce:hover:translate-y-0 group relative cursor-pointer p-6 sm:p-8 ${on ? "is-on translate-y-0! border-accent! shadow-accent!" : ""}`}
                 >
                   <input type="radio" name="trackA" value={o.id} checked={on} onChange={() => go({ ...route, option: o.id as TrackAOption })} className="sr-only" />
                   <span className="flex items-start gap-4">
                     <span aria-hidden className={`mt-2 grid size-4 shrink-0 place-items-center border transition-colors duration-500 ${on ? "border-accent" : "border-line-strong group-hover:border-ink"}`}>
                       <span className={`size-2 bg-accent transition-transform duration-500 ease-silk ${on ? "scale-100" : "scale-0"}`} />
                     </span>
-                    <span className={`display-m min-w-0 flex-1 inline-flex items-start gap-2.5 transition-colors duration-500 ${on ? "text-ink" : "text-ink-3 group-hover:text-ink"}`}>
+                    <span className={`font-display text-display-m text-balance min-w-0 flex-1 inline-flex items-start gap-2.5 transition-colors duration-500 ${on ? "text-ink" : "text-ink-3 group-hover:text-ink"}`}>
                       <Glyph name="user" className="mt-0.5 !size-6 shrink-0" />
                       <span>{o.name}</span>
                     </span>
@@ -350,7 +350,7 @@ function TrackA({ plan: route }: { plan: PlanA }) {
             return (
               <li key={p.name} className="col-span-2">
                 <span aria-hidden className={`block h-2 border-x border-t transition-colors duration-500 ${on ? "border-accent" : "border-line-strong"}`} />
-                <p className={`label mt-2 transition-colors duration-500 ${on ? "text-accent-ink" : "text-ink-3"}`}>
+                <p className={`font-mono text-label font-normal mt-2 transition-colors duration-500 ${on ? "text-accent-ink" : "text-ink-3"}`}>
                   {p.name} <span className="sr-only">: months {p.months.join(" and ")}</span>
                 </p>
                 <p className={`mt-1 text-xs leading-snug transition-colors duration-500 ${on ? "text-ink" : "text-ink-3"}`}>{p.note}</p>
@@ -365,13 +365,13 @@ function TrackA({ plan: route }: { plan: PlanA }) {
               <button
                 key={x.month}
                 {...months.tabProps(String(x.month), i)}
-                className={`card card-lift group relative overflow-hidden px-2 pb-4 pt-4 text-left sm:px-4 ${on ? "card-on" : ""}`}
+                className={`rounded-card border border-edge bg-card shadow-1 group/card transition-[translate,box-shadow,border-color,opacity] duration-[260ms] ease-spring hover:-translate-y-[3px] hover:border-line-strong hover:shadow-2 active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink has-[>input:focus-visible]:outline-2 has-[>input:focus-visible]:outline-offset-4 has-[>input:focus-visible]:outline-accent-ink motion-reduce:hover:translate-y-0 group relative overflow-hidden px-2 pb-4 pt-4 text-left sm:px-4 ${on ? "is-on translate-y-0! border-accent! shadow-accent!" : ""}`}
               >
                 <span aria-hidden className={`absolute left-0 right-0 top-0 h-[4px] origin-left bg-accent transition-transform duration-700 ease-silk ${on ? "scale-x-100" : "scale-x-0"}`} />
-                <span className={`numeral block text-[clamp(2rem,4.5vw,4rem)] transition-colors duration-500 ${on ? "text-ink" : "text-ink-3 group-hover:text-ink"}`}>
+                <span className={`font-display font-semibold leading-[0.9] tracking-[-0.04em] tabular-nums block text-[clamp(2rem,4.5vw,4rem)] transition-colors duration-500 ${on ? "text-ink" : "text-ink-3 group-hover:text-ink"}`}>
                   {String(x.month).padStart(2, "0")}
                 </span>
-                <span className={`label mt-2 hidden sm:block ${on ? "text-accent-ink" : "text-ink-3"}`}>{aiPolicyLabel[x.aiPolicy]}</span>
+                <span className={`font-mono text-label font-normal mt-2 hidden sm:block ${on ? "text-accent-ink" : "text-ink-3"}`}>{aiPolicyLabel[x.aiPolicy]}</span>
                 <span className="sr-only">Month {x.month}</span>
               </button>
             );
@@ -381,16 +381,16 @@ function TrackA({ plan: route }: { plan: PlanA }) {
         <div
           {...months.panelProps(String(month))}
           key={month}
-          className="card mt-6"
+          className="relative rounded-card border border-edge bg-card shadow-1 mt-6"
         >
-          <p className="card-head label">
+          <p className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal">
             <span>Month {String(m.month).padStart(2, "0")}</span>
             <span>{aiPolicyLabel[m.aiPolicy]}</span>
           </p>
-          <div className="stagger grid gap-y-10 px-5 py-8 sm:px-7 md:grid-cols-12 md:gap-x-6">
+          <div className="[&>*]:animate-panel-in [&>*]:[animation-delay:calc(var(--i,0)*60ms)] motion-reduce:[&>*]:animate-fade-in grid gap-y-10 px-5 py-8 sm:px-7 md:grid-cols-12 md:gap-x-6">
           <div className="md:col-span-4" style={{ "--i": 0 } as CSSProperties}>
             <Eyebrow>Learning focus</Eyebrow>
-            <p className="font-display text-[1.625rem] leading-[1.15] tracking-tight text-ink">{m.focus}</p>
+            <p className="font-display font-semibold tracking-[-0.02em] text-pretty text-[1.625rem] leading-[1.15] text-ink">{m.focus}</p>
           </div>
           <div className="md:col-span-4" style={{ "--i": 1 } as CSSProperties}>
             <Eyebrow>Practical deliverable</Eyebrow>
@@ -430,7 +430,7 @@ function TrackA({ plan: route }: { plan: PlanA }) {
         <div id="plan-habits" className="lg:col-span-5">
           <SubHead n="A.3" title="Using it in your current job" note="Most designers build hybrid scope right where they already work, before any title changes." />
           <Meter value={habitsDone} max={leverageHabits.length} label="Habits in place" />
-          <ul className="card mt-6 px-5 sm:px-6 [&>li:last-child]:border-b-0">
+          <ul className="relative rounded-card border border-edge bg-card shadow-1 mt-6 px-5 sm:px-6 [&>li:last-child]:border-b-0">
             {leverageHabits.map((h, i) => (
               <CheckRow key={h.id} index={i + 1} checked={habits.set.has(h.id)} onToggle={() => habits.toggle(h.id)} title={h.title} detail={h.detail} />
             ))}
@@ -439,9 +439,9 @@ function TrackA({ plan: route }: { plan: PlanA }) {
         <div id="plan-portfolio" className="lg:col-span-6 lg:col-start-7">
           <SubHead n="A.4" title="Show your work — at work or on the market" />
           <ChecklistLink href={pageHref("ready", "a")} title="Your readiness checklist" detail="Live demo, clean repo, short write-up, merged PR and proof you build with AI. Useful for team demos, promotion cases or job applications." />
-          <div className="mt-10 rounded-[var(--radius)] border border-accent/40 bg-inverse p-6 text-on-inverse shadow-[var(--sh-accent)] sm:p-8">
-            <p className="label mb-4 text-inverse-accent">If you do interview</p>
-            <p className="font-display text-[1.625rem] leading-[1.15] tracking-tight">{interviewFocus.hybrid}</p>
+          <div className="mt-10 rounded-card border border-accent/40 bg-inverse p-6 text-on-inverse shadow-accent sm:p-8">
+            <p className="font-mono text-label font-normal mb-4 text-inverse-accent">If you do interview</p>
+            <p className="font-display font-semibold tracking-[-0.02em] text-pretty text-[1.625rem] leading-[1.15]">{interviewFocus.hybrid}</p>
             <p className="mt-4 text-sm leading-relaxed text-inverse-muted">Alongside the usual: {interviewFocus.traditional}</p>
           </div>
         </div>
@@ -457,7 +457,7 @@ function StepNav({ n, total, unit, onStep, doneHref }: { n: number; total: numbe
       <StepButton disabled={n === 1} reason={`You're on the first ${unit}`} onClick={() => onStep(Math.max(1, n - 1))} dir="back">
         Previous
       </StepButton>
-      <span className="label tabular text-ink-3">
+      <span className="font-mono text-label font-normal tabular-nums text-ink-3">
         {String(n).padStart(2, "0")} / {String(total).padStart(2, "0")}
       </span>
       {n < total ? (
@@ -465,8 +465,8 @@ function StepNav({ n, total, unit, onStep, doneHref }: { n: number; total: numbe
           Next
         </StepButton>
       ) : (
-        <a href={doneHref} className="hit group label flex items-center gap-1.5 text-ink">
-          <span className="link-ul-static">Open the checklist</span>
+        <a href={doneHref} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] group font-mono text-label font-normal flex items-center gap-1.5 text-ink">
+          <span className="bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%]">Open the checklist</span>
           <ArrowGlyph />
         </a>
       )}
@@ -477,7 +477,7 @@ function StepNav({ n, total, unit, onStep, doneHref }: { n: number; total: numbe
 
 function ChecklistLink({ href, title, detail }: { href: string; title: string; detail: string }) {
   return (
-    <a href={href} className="card card-lift group mt-6 flex items-start gap-5 p-5 sm:p-6">
+    <a href={href} className="relative rounded-card border border-edge bg-card shadow-1 group/card transition-[translate,box-shadow,border-color,opacity] duration-[260ms] ease-spring hover:-translate-y-[3px] hover:border-line-strong hover:shadow-2 active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink has-[>input:focus-visible]:outline-2 has-[>input:focus-visible]:outline-offset-4 has-[>input:focus-visible]:outline-accent-ink motion-reduce:hover:translate-y-0 group mt-6 flex items-start gap-5 p-5 sm:p-6">
       <Glyph name="check" className="!size-12 shrink-0 text-ink" />
       <span className="min-w-0 flex-1">
         <span className="flex items-center justify-between gap-3 text-[1.0625rem] font-medium tracking-tight text-ink">
@@ -525,7 +525,7 @@ function StartAndDone({
         <div className="border-t border-line pt-5 md:col-span-12">
           <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
             <Eyebrow className="!mb-0">Key topics to cover · from roadmap.sh</Eyebrow>
-            <span className="label tabular text-ink-3">
+            <span className="font-mono text-label font-normal tabular-nums text-ink-3">
               {doneTopics} / {totalTopics} ticked
             </span>
           </div>
@@ -534,12 +534,12 @@ function StartAndDone({
               <div key={`${g.slug}-${g.area}`} className="border border-line bg-surface/60 p-4">
                 <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-line pb-3">
                   <div>
-                    <span className="label block text-accent-ink">{g.source} roadmap</span>
+                    <span className="font-mono text-label font-normal block text-accent-ink">{g.source} roadmap</span>
                     <span className="mt-0.5 block text-sm font-medium text-ink">{g.area}</span>
                   </div>
                   <a
                     href={pageHref("library", "roadmaps", g.slug)}
-                    className="hit label link-ul-static shrink-0 text-ink-3 hover:text-ink"
+                    className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] shrink-0 text-ink-3 hover:text-ink"
                   >
                     Full checklist →
                   </a>
@@ -567,11 +567,11 @@ function StartAndDone({
               <li key={r.url} className="flex items-center justify-between gap-3 border-b border-line">
                 <a href={r.url} target="_blank" rel="noopener noreferrer" className="group inline-flex min-h-11 min-w-0 flex-1 items-center gap-2 py-2.5 text-ink">
                   <BrandLogosFor text={`${r.label} ${r.url}`} max={1} className="size-4 text-ink-2 transition-colors duration-300 group-hover:text-accent-ink" />
-                  <span className="link-ul">{r.label}</span>
+                  <span className="bg-[linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[0%_1px] bg-position-[100%_100%] pb-0.5 transition-[background-size,color] duration-[600ms] ease-silk hover:bg-size-[100%_1px] hover:bg-position-[0%_100%] focus-visible:bg-size-[100%_1px] focus-visible:bg-position-[0%_100%] data-[on=true]:bg-size-[100%_1px] data-[on=true]:bg-position-[0%_100%]">{r.label}</span>
                   <ExternalGlyph className="shrink-0 text-ink-3 transition-colors duration-300 group-hover:text-accent-ink" />
                   <span className="sr-only"> (opens in new tab)</span>
                 </a>
-                <span className={`label shrink-0 ${r.cost === "free" ? "text-ink-3" : "text-accent-ink"}`}>{r.cost === "free" ? "Free" : "Paid"}</span>
+                <span className={`font-mono text-label font-normal shrink-0 ${r.cost === "free" ? "text-ink-3" : "text-accent-ink"}`}>{r.cost === "free" ? "Free" : "Paid"}</span>
               </li>
             ))}
           </ul>
@@ -601,10 +601,10 @@ function StepButton({
       onClick={onClick}
       disabled={disabled}
       title={disabled ? reason : undefined}
-      className="hit group label flex items-center gap-1.5 text-ink transition-opacity disabled:cursor-not-allowed disabled:opacity-50"
+      className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] group font-mono text-label font-normal flex items-center gap-1.5 text-ink transition-opacity disabled:cursor-not-allowed disabled:opacity-50"
     >
       {dir === "back" && <ArrowBackGlyph />}
-      <span className="link-ul-static">{children}</span>
+      <span className="bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%]">{children}</span>
       {dir === "next" && <ArrowGlyph />}
     </button>
   );
@@ -680,21 +680,21 @@ function TrackB({ stage }: { stage: number }) {
               <button
                 key={x.n}
                 {...stages.tabProps(String(x.n), i)}
-                className={`card card-lift group relative flex h-full w-full flex-col overflow-hidden p-5 text-left ${on ? "card-on" : ""}`}
+                className={`rounded-card border border-edge bg-card shadow-1 group/card transition-[translate,box-shadow,border-color,opacity] duration-[260ms] ease-spring hover:-translate-y-[3px] hover:border-line-strong hover:shadow-2 active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink has-[>input:focus-visible]:outline-2 has-[>input:focus-visible]:outline-offset-4 has-[>input:focus-visible]:outline-accent-ink motion-reduce:hover:translate-y-0 group relative flex h-full w-full flex-col overflow-hidden p-5 text-left ${on ? "is-on translate-y-0! border-accent! shadow-accent!" : ""}`}
               >
                   <span aria-hidden className={`absolute left-0 right-0 top-0 h-[4px] origin-left bg-accent transition-transform duration-700 ease-silk ${on ? "scale-x-100" : "scale-x-0"}`} />
                   <span className="flex items-start justify-between gap-3">
-                    <span className={`label ${on ? "text-accent-ink" : "text-ink-3"}`}>Stage 0{x.n}</span>
+                    <span className={`font-mono text-label font-normal ${on ? "text-accent-ink" : "text-ink-3"}`}>Stage 0{x.n}</span>
                     {on && <SelectedMark className="text-accent-ink">Selected</SelectedMark>}
                   </span>
-                  <span className={`mt-3 font-display text-2xl leading-tight tracking-tight transition-colors duration-500 ${on ? "text-ink" : "text-ink-3 group-hover:text-ink"}`}>{x.name}</span>
+                  <span className={`mt-3 font-display font-semibold tracking-[-0.02em] text-pretty text-2xl leading-tight transition-colors duration-500 ${on ? "text-ink" : "text-ink-3 group-hover:text-ink"}`}>{x.name}</span>
                   <span className="mt-4 text-xs text-ink-3">{x.output}</span>
               </button>
             );
           })}
         </div>
-        <div {...stages.panelProps(String(stage))} key={stage} className="card panel-in grid-12 mt-6 px-5 py-8 sm:px-7">
-          <p className="label col-span-4 text-ink-3 lg:col-span-3">
+        <div {...stages.panelProps(String(stage))} key={stage} className="relative rounded-card border border-edge bg-card shadow-1 animate-panel-in motion-reduce:animate-fade-in grid grid-cols-4 gap-x-4 lg:grid-cols-12 lg:gap-x-6 mt-6 px-5 py-8 sm:px-7">
+          <p className="font-mono text-label font-normal col-span-4 text-ink-3 lg:col-span-3">
             Stage 0{s.n} — {s.name}
           </p>
           <p className="col-span-4 mt-3 max-w-[60ch] text-lg leading-relaxed text-ink lg:col-span-8 lg:col-start-5 lg:mt-0">{s.detail}</p>
@@ -724,14 +724,14 @@ function TrackB({ stage }: { stage: number }) {
                 key={c.label}
                 data-reveal
                 style={{ "--i": i } as CSSProperties}
-                className="card group flex flex-col p-4 sm:p-6"
+                className="relative rounded-card border border-edge bg-card shadow-1 group flex flex-col p-4 sm:p-6"
               >
                 <dd aria-hidden="true" className="order-1 mb-5">
                   <Glyph name={icon} className="glyph-xl !size-10 text-ink" />
                 </dd>
                 <dt className="order-3 mt-3 text-sm text-ink-2">{c.label}</dt>
-                <dd className="numeral order-2 whitespace-nowrap text-[clamp(2.25rem,4.5vw,4.5rem)]">{c.value}</dd>
-                <dd className="label order-4 mt-auto pt-4 text-ink-3">{c.source}</dd>
+                <dd className="font-display font-semibold leading-[0.9] tracking-[-0.04em] tabular-nums order-2 whitespace-nowrap text-[clamp(2.25rem,4.5vw,4.5rem)]">{c.value}</dd>
+                <dd className="font-mono text-label font-normal order-4 mt-auto pt-4 text-ink-3">{c.source}</dd>
               </div>
             );
           })}
@@ -743,8 +743,8 @@ function TrackB({ stage }: { stage: number }) {
         <SubHead n="B.3" title="One focused stack, in order" />
         <ol className="grid gap-4 md:grid-cols-3">
           {beginnerStack.map((p, i) => (
-            <li key={p.phase} className="card p-5 sm:p-6">
-              <span className="label text-ink-3">
+            <li key={p.phase} className="relative rounded-card border border-edge bg-card shadow-1 p-5 sm:p-6">
+              <span className="font-mono text-label font-normal text-ink-3">
                 0{i + 1} — {p.phase}
               </span>
               <div className="mt-4 flex flex-wrap gap-1.5">
@@ -766,8 +766,8 @@ function TrackB({ stage }: { stage: number }) {
           <SubHead n="B.5" title="Your first year on the job" />
           <ol className="space-y-4">
             {icGrowth.map((g, i) => (
-              <li key={g.name} className="card grid grid-cols-[3rem_1fr] gap-x-3 p-5" data-reveal style={{ "--i": i } as CSSProperties}>
-                <span className="numeral text-4xl text-accent">{i + 1}</span>
+              <li key={g.name} className="relative rounded-card border border-edge bg-card shadow-1 grid grid-cols-[3rem_1fr] gap-x-3 p-5" data-reveal style={{ "--i": i } as CSSProperties}>
+                <span className="font-display font-semibold leading-[0.9] tracking-[-0.04em] tabular-nums text-4xl text-accent">{i + 1}</span>
                 <div>
                   <h3 className="text-[1.0625rem] font-medium tracking-tight text-ink">{g.name}</h3>
                   <p className="mt-1.5 text-sm leading-relaxed text-ink-2">{g.detail}</p>

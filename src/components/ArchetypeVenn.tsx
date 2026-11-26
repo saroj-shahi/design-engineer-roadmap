@@ -56,9 +56,9 @@ export function ArchetypeVenn({ selected }: { selected: string }) {
   const id = (s: string) => `${uid}-${s}`;
 
   return (
-    <div className="grid-12 gap-y-10">
-      <figure className="card col-span-4 flex flex-col shadow-[var(--sh-1)] lg:col-span-7">
-        <figcaption className="card-head label">
+    <div className="grid grid-cols-4 gap-x-4 lg:grid-cols-12 lg:gap-x-6 gap-y-10">
+      <figure className="relative rounded-card border border-edge bg-card col-span-4 flex flex-col shadow-1 lg:col-span-7">
+        <figcaption className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal">
           <span>Skill map · three overlapping roles</span>
           <span className="hidden sm:inline">Hover or tap a region</span>
         </figcaption>
@@ -229,7 +229,7 @@ export function ArchetypeVenn({ selected }: { selected: string }) {
             </g>
           </svg>
         </div>
-        <div className="card-foot flex flex-wrap items-center justify-between gap-3 bg-card text-xs text-ink-2">
+        <div className="rounded-b-[calc(var(--radius-card)-1px)] border-t border-line px-[1.125rem] py-3 text-balance flex flex-wrap items-center justify-between gap-3 bg-card text-xs text-ink-2">
           {(() => {
             const focused = skillMap.find((r) => r.id === activeRegion) ?? skillMap.find((r) => r.id === "core")!;
             const isOverlap = focused.sets.length > 1;
@@ -247,13 +247,13 @@ export function ArchetypeVenn({ selected }: { selected: string }) {
               </span>
             );
           })()}
-          <span className="label text-ink-3">Outline = selected role</span>
+          <span className="font-mono text-label font-normal text-ink-3">Outline = selected role</span>
         </div>
       </figure>
 
       {/* Key: carries all the words, so the diagram stays legible at phone width. */}
       <div className="col-span-4 lg:col-span-5 lg:col-start-8 lg:self-center" onPointerLeave={() => setHot(pinned)}>
-        <p className="label mb-4 text-ink-3">Key</p>
+        <p className="font-mono text-label font-normal mb-4 text-ink-3">Key</p>
         <ul className="border-t border-ink">
           {skillMap
             .filter((r) => r.sets.length === 1)
@@ -265,7 +265,7 @@ export function ArchetypeVenn({ selected }: { selected: string }) {
                     {...keyProps(r.id)}
                     className={`grid w-full grid-cols-[3.5rem_1fr] gap-x-3 px-2 py-4 text-left transition-colors duration-300 ${activeRegion === r.id ? "bg-sunken" : ""}`}
                   >
-                    <span className={`label pt-1 ${s === selected ? "text-accent-ink" : "text-ink"}`}>{code[s]}</span>
+                    <span className={`font-mono text-label font-normal pt-1 ${s === selected ? "text-accent-ink" : "text-ink"}`}>{code[s]}</span>
                     <div>
                       <p className="font-medium tracking-tight text-ink">
                         {r.name} <span className="font-normal text-ink-3">· {r.detail}</span>
@@ -287,8 +287,8 @@ export function ArchetypeVenn({ selected }: { selected: string }) {
                 >
                   <span className="pt-0.5">
                     <span
-                      className={`label inline-grid size-6 place-items-center border ${
-                        on || isCore ? "border-edge bg-accent text-[var(--on-accent)]" : "border-ink bg-card text-ink"
+                      className={`font-mono text-label font-normal inline-grid size-6 place-items-center border ${
+                        on || isCore ? "border-edge bg-accent text-on-accent" : "border-ink bg-card text-ink"
                       }`}
                     >
                       {marker(r)}

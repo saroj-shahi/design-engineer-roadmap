@@ -51,7 +51,7 @@ export function Nav({ page }: { page: Page | null }) {
 
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-[color-mix(in_srgb,var(--desk)_82%,transparent)] backdrop-blur-md">
-      <div className="wrap grid grid-cols-[1fr_auto] grid-rows-[3.5rem_3rem] items-center gap-x-4 sm:gap-x-6 lg:h-16 lg:grid-cols-[1fr_auto_1fr] lg:grid-rows-1">
+      <div className="mx-auto w-full max-w-[1440px] px-(--gutter) grid grid-cols-[1fr_auto] grid-rows-[3.5rem_3rem] items-center gap-x-4 sm:gap-x-6 lg:h-16 lg:grid-cols-[1fr_auto_1fr] lg:grid-rows-1">
         <a
           href={`${rootPrefix}${pageHref("home")}`}
           aria-label="Design Engineer Field Guide — Home"
@@ -59,8 +59,8 @@ export function Nav({ page }: { page: Page | null }) {
         >
           <BrandMark />
           <span className="flex flex-col leading-none">
-            <span className="font-display text-[1.0625rem] font-semibold tracking-tight text-ink">Design Engineer</span>
-            <span className="label mt-1 text-[11px] text-ink-3">
+            <span className="font-display font-semibold tracking-[-0.02em] text-pretty text-[1.0625rem] text-ink">Design Engineer</span>
+            <span className="font-mono text-label font-normal mt-1 text-ink-3">
               Field Guide · <span className="text-accent-ink">2026</span>
             </span>
           </span>
@@ -68,7 +68,7 @@ export function Nav({ page }: { page: Page | null }) {
 
         <nav
           aria-label="Pages"
-          className="col-span-2 row-start-2 -mx-[var(--gutter)] flex h-12 items-center justify-between gap-1 overflow-x-auto border-t border-line px-[var(--gutter)] no-scrollbar lg:col-span-1 lg:col-start-2 lg:row-start-1 lg:mx-0 lg:h-auto lg:justify-center lg:border-t-0 lg:px-0"
+          className="col-span-2 row-start-2 -mx-[var(--gutter)] flex h-12 items-center justify-between gap-1 overflow-x-auto border-t border-line px-[var(--gutter)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:col-span-1 lg:col-start-2 lg:row-start-1 lg:mx-0 lg:h-auto lg:justify-center lg:border-t-0 lg:px-0"
         >
           {pages.map((p) => {
             const on = page === p.id;

@@ -23,8 +23,8 @@ const PLOT_B = TOP + hiringShiftSeries.length * ROW_H + 6;
 export function MarketShiftChart() {
   const uid = useId().replace(/:/g, "");
   return (
-    <figure className="card mt-8 sm:mt-10" data-reveal>
-      <div className="card-head label">
+    <figure className="relative rounded-card border border-edge bg-card shadow-1 mt-8 sm:mt-10" data-reveal>
+      <div className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal">
         <span>Hiring shift across tech roles</span>
         <BasisBadge basis="analytics" onBand />
       </div>
@@ -41,7 +41,7 @@ export function MarketShiftChart() {
                 <div className="flex items-baseline justify-between gap-2 text-xs">
                   <span className={focal ? "font-semibold text-ink" : "text-ink-2"}>{row.label}</span>
                   <span
-                    className={`font-mono tabular ${
+                    className={`font-mono tabular-nums ${
                       focal ? "font-semibold text-accent-ink" : positive ? "font-semibold text-ink" : "text-ink-2"
                     }`}
                   >
@@ -217,7 +217,7 @@ export function MarketShiftChart() {
         </svg>
       </div>
 
-      <figcaption className="card-foot flex flex-wrap items-center justify-between gap-3 bg-card text-xs text-ink-2">
+      <figcaption className="rounded-b-[calc(var(--radius-card)-1px)] border-t border-line px-[1.125rem] py-3 text-balance flex flex-wrap items-center justify-between gap-3 bg-card text-xs text-ink-2">
         <span className="flex flex-wrap items-center gap-x-5 gap-y-1.5">
           <span className="inline-flex items-center gap-2">
             <span aria-hidden className="inline-block h-3 w-4 border-2 border-accent bg-accent/20" />
@@ -228,7 +228,7 @@ export function MarketShiftChart() {
             <span>Net growth</span>
           </span>
         </span>
-        <span className="label text-ink-3">Sorted high → low · SignalFire 2026 &amp; US BLS</span>
+        <span className="font-mono text-label font-normal text-ink-3">Sorted high → low · SignalFire 2026 &amp; US BLS</span>
       </figcaption>
     </figure>
   );

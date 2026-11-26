@@ -19,8 +19,8 @@ export function ToolingPipeline() {
         lede="Pick your role to see the tools for each step of the work. Choose one set and stick with it. Too many tools slow you down."
       />
 
-      <div className="grid-12 gap-y-6">
-        <div className="card col-span-4 p-4 sm:p-5 lg:col-span-8">
+      <div className="grid grid-cols-4 gap-x-4 lg:grid-cols-12 lg:gap-x-6 gap-y-6">
+        <div className="relative rounded-card border border-edge bg-card shadow-1 col-span-4 p-4 sm:p-5 lg:col-span-8">
           <RoleMatrix value={roleId} onChange={setRoleId} />
         </div>
         <p className="col-span-4 self-end text-sm leading-relaxed text-ink-3 lg:col-span-3 lg:col-start-10">
@@ -31,8 +31,8 @@ export function ToolingPipeline() {
       </div>
 
       <TabPanel idPrefix="role" id={roleId} className="mt-12">
-        <div className="card">
-          <div className="card-head label">
+        <div className="relative rounded-card border border-edge bg-card shadow-1">
+          <div className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal">
             <span className="inline-flex items-center gap-1.5">
               <Glyph name="user" className="!size-3.5 [--accent:currentColor]" />
               <span>Recommended pipeline · {role.label}</span>
@@ -47,14 +47,14 @@ export function ToolingPipeline() {
                   <li key={c} className="flex items-center gap-3">
                     <span
                       className={`inline-flex items-center gap-2.5 rounded-full border px-3.5 py-2 ${
-                        isLast ? "border-edge bg-accent text-[var(--on-accent)]" : "border-edge bg-card text-ink"
+                        isLast ? "border-edge bg-accent text-on-accent" : "border-edge bg-card text-ink"
                       }`}
                     >
-                      <span className={`label tabular ${isLast ? "text-[var(--on-accent)]" : "text-ink-3"}`}>
+                      <span className={`font-mono text-label font-normal tabular-nums ${isLast ? "text-on-accent" : "text-ink-3"}`}>
                         {String(i + 1).padStart(2, "0")}
                       </span>
                       <BrandLogosFor text={c} max={3} className="size-4 sm:size-[1.125rem]" />
-                      <span className="font-display text-[clamp(1.375rem,2.2vw,2rem)] leading-none tracking-tight">{c}</span>
+                      <span className="font-display font-semibold tracking-[-0.02em] text-pretty text-[clamp(1.375rem,2.2vw,2rem)] leading-none">{c}</span>
                     </span>
                     {!isLast && (
                       <span aria-hidden className="font-mono text-base text-ink-3">
@@ -65,12 +65,12 @@ export function ToolingPipeline() {
                 );
               })}
               <li className="ml-auto hidden items-center gap-2 border border-dashed border-line-strong bg-card/80 px-3 py-2 text-xs text-ink-3 lg:inline-flex">
-                <span className="label">Stage 04</span>
+                <span className="font-mono text-label font-normal">Stage 04</span>
                 <span>App builders excluded</span>
               </li>
             </ol>
           </div>
-          <p className="card-foot bg-card text-sm leading-relaxed text-ink-2">{role.summary}</p>
+          <p className="rounded-b-[calc(var(--radius-card)-1px)] border-t border-line px-[1.125rem] py-3 text-balance bg-card text-sm leading-relaxed text-ink-2">{role.summary}</p>
         </div>
 
         <ol className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -81,14 +81,14 @@ export function ToolingPipeline() {
               <li
                 key={s.id}
                 aria-label={`Stage ${s.id}: ${s.name}${on ? ", in your stack" : ""}`}
-                className={`panel-in group relative flex flex-col p-5 ${on ? "card" : "card-empty"}`}
+                className={`animate-panel-in motion-reduce:animate-fade-in group relative flex flex-col p-5 ${on ? "relative rounded-card border border-edge bg-card shadow-1" : "relative rounded-card border border-dashed border-line-strong bg-transparent shadow-none"}`}
                 style={{ animationDelay: `${i * 70}ms` } as CSSProperties}
               >
                 <div className="flex items-start justify-between gap-3">
                   <Glyph name={stageGlyph[s.id]} on={on} className={`!size-14 ${on ? "text-ink" : "text-ink-3"}`} />
-                  <span className={`label ${on ? "text-accent-ink" : "text-ink-3"}`}>{on ? "In stack" : "Outside"}</span>
+                  <span className={`font-mono text-label font-normal ${on ? "text-accent-ink" : "text-ink-3"}`}>{on ? "In stack" : "Outside"}</span>
                 </div>
-                <span className={`numeral mt-5 text-[3.5rem] transition-colors duration-700 ${on ? "text-ink" : "text-ink-3"}`}>0{s.id}</span>
+                <span className={`font-display font-semibold leading-[0.9] tracking-[-0.04em] tabular-nums mt-5 text-[3.5rem] transition-colors duration-700 ${on ? "text-ink" : "text-ink-3"}`}>0{s.id}</span>
                 <h3 className={`mt-4 text-[1.0625rem] font-medium leading-snug tracking-tight transition-colors duration-700 ${on ? "text-ink" : "text-ink-3"}`}>{s.name}</h3>
                 <ul className="mt-4 flex flex-wrap gap-1.5">
                   {s.tools.map((t) => {
@@ -103,7 +103,7 @@ export function ToolingPipeline() {
                 <p className="mt-4 text-xs leading-relaxed text-ink-2">{s.capabilities}</p>
                 <div className="mt-auto pt-6">
                   <div className={`border-t pt-4 transition-colors duration-700 ${on ? "border-ink" : "border-line"}`}>
-                    <span className={`label mb-1.5 block ${on ? "text-accent-ink" : "text-ink-3"}`}>Human guardrail</span>
+                    <span className={`font-mono text-label font-normal mb-1.5 block ${on ? "text-accent-ink" : "text-ink-3"}`}>Human guardrail</span>
                     <p className={`text-xs leading-relaxed ${on ? "text-ink" : "text-ink-3"}`}>{s.guardrail}</p>
                   </div>
                 </div>
@@ -124,10 +124,10 @@ function RoleMatrix({ value, onChange }: { value: string; onChange: (id: string)
   return (
     <div>
       <div aria-hidden className={`${cols} border-b-2 border-edge pb-3`}>
-        <span className="label self-end text-ink-3">Role</span>
+        <span className="font-mono text-label font-normal self-end text-ink-3">Role</span>
         {toolStages.map((s) => (
           <span key={s.id} className="flex min-w-0 flex-col">
-            <span className="label text-ink">0{s.id}</span>
+            <span className="font-mono text-label font-normal text-ink">0{s.id}</span>
             <span className="mt-1 hidden text-xs leading-tight text-ink-3 sm:line-clamp-2">{s.name}</span>
           </span>
         ))}
@@ -142,7 +142,7 @@ function RoleMatrix({ value, onChange }: { value: string; onChange: (id: string)
               className={`group ${cols} items-center border-b border-line py-1.5 text-left transition-colors duration-500 ${on ? "bg-surface" : "hover:bg-sunken"}`}
             >
               <span className={`flex items-center gap-2 pr-2 text-sm leading-tight sm:text-[0.9375rem] ${on ? "font-medium text-ink" : "text-ink-2"}`}>
-                <span aria-hidden className={`tick shrink-0 text-accent transition-transform duration-500 ease-silk ${on ? "scale-100" : "scale-0"}`} />
+                <span aria-hidden className={`inline-block size-[7px] shrink-0 rounded-full bg-current text-accent transition-transform duration-500 ease-silk ${on ? "scale-100" : "scale-0"}`} />
                 <Glyph name="user" className={`!size-3.5 shrink-0 ${on ? "text-ink" : "text-ink-3"}`} />
                 <span>{r.label}</span>
               </span>
@@ -153,8 +153,8 @@ function RoleMatrix({ value, onChange }: { value: string; onChange: (id: string)
                   <span
                     key={s.id}
                     aria-hidden
-                    className={`grid h-10 place-items-center font-mono text-sm tabular transition-colors duration-500 ${
-                      has ? (on ? "bg-accent text-[var(--on-accent)]" : "bg-ink text-paper") : "border border-dashed border-line-strong"
+                    className={`grid h-10 place-items-center font-mono text-sm tabular-nums transition-colors duration-500 ${
+                      has ? (on ? "bg-accent text-on-accent" : "bg-ink text-paper") : "border border-dashed border-line-strong"
                     }`}
                   >
                     {has ? n : ""}

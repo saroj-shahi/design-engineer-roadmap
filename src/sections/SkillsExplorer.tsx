@@ -44,11 +44,11 @@ export function SkillsExplorer() {
             <Footnote>
               These still set you apart when AI makes the first draft. In a Q1 2026 Designer Fund / Foundation Capital survey, 40% of
               teams said PMs or engineers now create UI with AI. Browse full topic syllabi in{" "}
-              <a href={pageHref("library", "roadmaps", "ux-design")} className="hit link-ul-static font-medium text-ink">
+              <a href={pageHref("library", "roadmaps", "ux-design")} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] font-medium text-ink">
                 UX Design
               </a>{" "}
               and{" "}
-              <a href={pageHref("library", "roadmaps", "product-design")} className="hit link-ul-static font-medium text-ink">
+              <a href={pageHref("library", "roadmaps", "product-design")} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] font-medium text-ink">
                 Product Design
               </a>
               .
@@ -61,11 +61,11 @@ export function SkillsExplorer() {
             <Footnote>
               Standardize on React, TypeScript and Tailwind CSS. Learn the browser before the AI: the six-month plan keeps AI code
               generation switched off for all of month one. See full topic checklists in{" "}
-              <a href={pageHref("library", "roadmaps", "frontend")} className="hit link-ul-static font-medium text-ink">
+              <a href={pageHref("library", "roadmaps", "frontend")} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] font-medium text-ink">
                 Frontend
               </a>{" "}
               and{" "}
-              <a href={pageHref("library", "roadmaps", "design-system")} className="hit link-ul-static font-medium text-ink">
+              <a href={pageHref("library", "roadmaps", "design-system")} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] font-medium text-ink">
                 Design System
               </a>
               .
@@ -102,19 +102,19 @@ function LayerStack({ value, onChange }: { value: string; onChange: (id: string)
             {...tabProps(d.id, i)}
             style={{ "--step": i } as CSSProperties}
             className={`group relative grid grid-cols-[4.5rem_1fr] items-baseline gap-x-4 px-4 py-5 text-left sm:grid-cols-[6rem_1fr_auto] sm:px-6 lg:ml-[calc(var(--step)*(100%_+_24px)/12)] ${
-              appendix && !on ? "card-empty mt-4 text-ink-3 hover:text-ink" : `card card-lift ${appendix ? "mt-4" : ""}`
-            } ${on ? "card-on text-ink" : "text-ink-3 hover:text-ink"}`}
+              appendix && !on ? "relative rounded-card border border-dashed border-line-strong bg-transparent shadow-none mt-4 text-ink-3 hover:text-ink" : `relative rounded-card border border-edge bg-card shadow-1 group/card transition-[translate,box-shadow,border-color,opacity] duration-[260ms] ease-spring hover:-translate-y-[3px] hover:border-line-strong hover:shadow-2 active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink has-[>input:focus-visible]:outline-2 has-[>input:focus-visible]:outline-offset-4 has-[>input:focus-visible]:outline-accent-ink motion-reduce:hover:translate-y-0 ${appendix ? "mt-4" : ""}`
+            } ${on ? "is-on translate-y-0! border-accent! shadow-accent! text-ink" : "text-ink-3 hover:text-ink"}`}
           >
             <span aria-hidden className={`absolute inset-y-0 left-0 w-[3px] origin-top bg-accent transition-transform duration-700 ease-silk ${on ? "scale-y-100" : "scale-y-0"}`} />
             <span className="flex flex-col gap-3 self-start">
-              <span className={`label ${on ? "text-accent-ink" : "text-ink-3"}`}>{d.sub}</span>
+              <span className={`font-mono text-label font-normal ${on ? "text-accent-ink" : "text-ink-3"}`}>{d.sub}</span>
               <Glyph name={d.glyph} on={on} className={`!size-12 sm:!size-14 ${on ? "text-ink" : "text-ink-3 group-hover:text-ink"}`} />
             </span>
             <span className="min-w-0">
-              <span className="display-m block">{d.label}</span>
+              <span className="font-display text-display-m text-balance block">{d.label}</span>
               <span className={`mt-2 block text-sm leading-relaxed ${on ? "text-ink-2" : "text-ink-3"}`}>{d.items.join(" / ")}</span>
             </span>
-            <span aria-hidden className={`label hidden self-center sm:block ${on ? "text-ink" : "text-ink-3"}`}>
+            <span aria-hidden className={`font-mono text-label font-normal hidden self-center sm:block ${on ? "text-ink" : "text-ink-3"}`}>
               {on ? "Reading ↓" : appendix ? "Slot" : "Open"}
             </span>
           </button>
@@ -126,7 +126,7 @@ function LayerStack({ value, onChange }: { value: string; onChange: (id: string)
 
 function Footnote({ children }: { children: React.ReactNode }) {
   return (
-    <div className="grid-12 mt-8">
+    <div className="grid grid-cols-4 gap-x-4 lg:grid-cols-12 lg:gap-x-6 mt-8">
       <p className="col-span-4 flex gap-3 text-sm leading-relaxed text-ink-3 lg:col-span-6 lg:col-start-7">
         <span aria-hidden className="font-mono text-accent-ink">*</span>
         <span>{children}</span>
@@ -138,16 +138,16 @@ function Footnote({ children }: { children: React.ReactNode }) {
 /** Skills as an index ledger: number, name, explanation, tags — one hairline row each. */
 function SkillLedger({ skills, large = false }: { skills: Skill[]; large?: boolean }) {
   return (
-    <ol className="stagger space-y-4">
+    <ol className="[&>*]:animate-panel-in [&>*]:[animation-delay:calc(var(--i,0)*60ms)] motion-reduce:[&>*]:animate-fade-in space-y-4">
       {skills.map((s, i) => (
         <li
           key={s.name}
-          className="card grid-12 group gap-y-3 px-5 py-7 sm:px-7 sm:py-9 lg:sticky lg:top-[calc(7.5rem+var(--i)*14px)]"
+          className="relative rounded-card border border-edge bg-card shadow-1 grid grid-cols-4 gap-x-4 lg:grid-cols-12 lg:gap-x-6 group gap-y-3 px-5 py-7 sm:px-7 sm:py-9 lg:sticky lg:top-[calc(7.5rem+var(--i)*14px)]"
           style={{ "--i": i } as CSSProperties}
         >
           <h3
             className={`col-span-4 tracking-tight text-ink transition-transform duration-700 ease-silk motion-safe:group-hover:translate-x-2 lg:col-span-5 ${
-              large ? "display-m" : "font-display text-[1.75rem] leading-[1.05]"
+              large ? "font-display text-display-m text-balance" : "font-display font-semibold tracking-[-0.02em] text-pretty text-[1.75rem] leading-[1.05]"
             }`}
           >
             {s.name}
@@ -175,9 +175,9 @@ function AxPanel() {
   return (
     <div className="space-y-24 sm:space-y-36">
       {/* Shift */}
-      <div className="grid-12 gap-y-12">
+      <div className="grid grid-cols-4 gap-x-4 lg:grid-cols-12 lg:gap-x-6 gap-y-12">
         <div className="col-span-4 lg:col-span-7">
-          <p className="display-l">
+          <p className="font-display text-display-l text-balance">
             <span className="block text-ink-3">{axShift.from}</span>
             <span className="sr-only">grows to include</span>
             <span className="mt-2 flex items-baseline gap-4">
@@ -188,24 +188,24 @@ function AxPanel() {
           <p className="mt-8 max-w-[52ch] leading-relaxed text-ink-2">{axShift.summary}</p>
         </div>
         <figure className="col-span-4 self-end lg:col-span-4 lg:col-start-9">
-          <figcaption className="label mb-4 text-ink-3">Enterprise agent maturity</figcaption>
-          <div className="flex h-24 overflow-hidden rounded-[var(--radius-s)] border border-edge" role="img" aria-label="21% no adoption, 68% piloting, 11% in production">
+          <figcaption className="font-mono text-label font-normal mb-4 text-ink-3">Enterprise agent maturity</figcaption>
+          <div className="flex h-24 overflow-hidden rounded-ctl border border-edge" role="img" aria-label="21% no adoption, 68% piloting, 11% in production">
             {agentMaturity.map((m) => (
               <div
                 key={m.level}
-                className={`flex items-end p-2 ${m.level === 3 ? "bg-accent text-[var(--on-accent)]" : m.level === 2 ? "bg-ink text-paper" : "text-ink"} ${
+                className={`flex items-end p-2 ${m.level === 3 ? "bg-accent text-on-accent" : m.level === 2 ? "bg-ink text-paper" : "text-ink"} ${
                   m.level > 1 ? "border-l border-edge" : ""
                 }`}
                 style={{ width: `${m.value}%` }}
               >
-                <span className="numeral text-2xl">{m.value}</span>
+                <span className="font-display font-semibold leading-[0.9] tracking-[-0.04em] tabular-nums text-2xl">{m.value}</span>
               </div>
             ))}
           </div>
           <dl className="mt-5 text-sm">
             {agentMaturity.map((m) => (
               <div key={m.level} className="flex gap-3 border-b border-line py-2.5">
-                <dt className="label w-28 shrink-0 pt-0.5 text-ink-3">
+                <dt className="font-mono text-label font-normal w-28 shrink-0 pt-0.5 text-ink-3">
                   L{m.level} · {m.label}
                 </dt>
                 <dd className="text-ink-2">{m.detail}</dd>
@@ -216,9 +216,9 @@ function AxPanel() {
       </div>
 
       {/* Capability layer explorer */}
-      <div className="grid-12 gap-y-8">
+      <div className="grid grid-cols-4 gap-x-4 lg:grid-cols-12 lg:gap-x-6 gap-y-8">
         <div className="col-span-4 lg:col-span-4">
-          <h3 className="display-m mb-8 text-ink">Trust and transparency, layer by layer</h3>
+          <h3 className="font-display text-display-m text-balance mb-8 text-ink">Trust and transparency, layer by layer</h3>
           <Tabs
             idPrefix="layer"
             label="Agent capability layer"
@@ -234,19 +234,19 @@ function AxPanel() {
         </div>
         <TabPanel idPrefix="layer" id={layer} className="col-span-4 lg:col-span-7 lg:col-start-6">
           {/* Specimen of an agent console, showing where each surface lives */}
-          <div className="card">
-            <div className="card-head label !justify-start">
-              <span className="tick text-card" aria-hidden />
+          <div className="relative rounded-card border border-edge bg-card shadow-1">
+            <div className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal !justify-start">
+              <span className="inline-block size-[7px] shrink-0 rounded-full bg-current text-card" aria-hidden />
               <span>agent://{L.id}</span>
-              <span className="ml-auto tabular">
+              <span className="ml-auto tabular-nums">
                 layer {String(layerIndex + 1).padStart(2, "0")} / {String(agentLayers.length).padStart(2, "0")}
               </span>
             </div>
-            <ul className="stagger">
+            <ul className="[&>*]:animate-panel-in [&>*]:[animation-delay:calc(var(--i,0)*60ms)] motion-reduce:[&>*]:animate-fade-in">
               {L.surfaces.map((s, i) => (
                 <li key={s} className="flex items-baseline gap-5 border-b border-line px-4 py-5 last:border-b-0" style={{ "--i": i } as CSSProperties}>
-                  <span className="label text-ink-3 tabular">{String(i + 1).padStart(2, "0")}</span>
-                  <span className="font-display text-[1.625rem] leading-tight tracking-tight text-ink">{s}</span>
+                  <span className="font-mono text-label font-normal text-ink-3 tabular-nums">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="font-display font-semibold tracking-[-0.02em] text-pretty text-[1.625rem] leading-tight text-ink">{s}</span>
                 </li>
               ))}
             </ul>
@@ -262,9 +262,9 @@ function AxPanel() {
 
       {/* Protocols */}
       <div>
-        <div className="grid-12 mb-8 gap-y-4">
+        <div className="grid grid-cols-4 gap-x-4 lg:grid-cols-12 lg:gap-x-6 mb-8 gap-y-4">
           <div className="col-span-4 lg:col-span-5">
-            <Lines as="h3" className="display-m" lines={["Ground the interface in how agents", <em>actually talk.</em>]} />
+            <Lines as="h3" className="font-display text-display-m text-balance" lines={["Ground the interface in how agents", <em>actually talk.</em>]} />
           </div>
           <p className="col-span-4 self-end text-sm leading-relaxed text-ink-3 lg:col-span-6 lg:col-start-7">
             Four open protocols split the job: two connect the agent to the screen (AG-UI, A2UI) and two connect it to tools and peer
@@ -274,7 +274,7 @@ function AxPanel() {
 
         <ProtocolArchitecture activeId={protoId} onSelect={setProtoId} />
 
-        <div className="card px-5 sm:px-6 [&>div:last-child]:border-b-0">
+        <div className="relative rounded-card border border-edge bg-card shadow-1 px-5 sm:px-6 [&>div:last-child]:border-b-0">
           {protocols.map((p, i) => (
             <Disclosure
               key={p.id}
@@ -283,7 +283,7 @@ function AxPanel() {
               summary={
                 <span className="flex items-center gap-4">
                   <code className={`font-mono text-base ${protoId === p.id ? "text-accent-ink" : "text-ink"}`}>{p.name}</code>
-                  <span className="label inline-flex items-center gap-1.5 text-ink-3">
+                  <span className="font-mono text-label font-normal inline-flex items-center gap-1.5 text-ink-3">
                     <BrandLogosFor text={p.owner} max={1} className="size-3.5" />
                     <span>{p.owner}</span>
                   </span>
@@ -292,11 +292,11 @@ function AxPanel() {
             >
               <dl className="grid gap-6 sm:grid-cols-2">
                 <div>
-                  <dt className="label text-ink-3">Architectural role</dt>
+                  <dt className="font-mono text-label font-normal text-ink-3">Architectural role</dt>
                   <dd className="mt-2 text-sm leading-relaxed text-ink-2">{p.role}</dd>
                 </div>
                 <div className="border-l border-accent pl-4">
-                  <dt className="label text-accent-ink">What it means for design</dt>
+                  <dt className="font-mono text-label font-normal text-accent-ink">What it means for design</dt>
                   <dd className="mt-2 leading-relaxed text-ink">{p.ux}</dd>
                 </div>
               </dl>
@@ -310,7 +310,7 @@ function AxPanel() {
 
 function SubLabel({ n, text }: { n: string; text: string }) {
   return (
-    <div className="label mb-6 flex gap-6 text-ink-3">
+    <div className="font-mono text-label font-normal mb-6 flex gap-6 text-ink-3">
       <span className="text-accent-ink">[{n}]</span>
       <span className="text-ink">{text}</span>
     </div>
@@ -321,8 +321,8 @@ function PatternLibrary() {
   return (
     <div className="grid gap-6 md:grid-cols-2">
       {patternCategories.map((c) => (
-        <article key={c.id} className="card p-6 sm:p-8">
-          <h3 className="display-m">{c.name}</h3>
+        <article key={c.id} className="relative rounded-card border border-edge bg-card shadow-1 p-6 sm:p-8">
+          <h3 className="font-display text-display-m text-balance">{c.name}</h3>
           <p className="mt-3 max-w-[48ch] text-sm leading-relaxed text-ink-2">{c.objective}</p>
           <ul className="mt-6 border-t border-line">
             {c.patterns.map((p) => (

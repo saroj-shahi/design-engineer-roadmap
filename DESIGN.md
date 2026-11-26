@@ -25,7 +25,7 @@ Never hard-code hex/rgb values in JSX or CSS outside the `:root` block in `src/i
 | Accent | `--accent`, `--accent-ink` | `#ff93b5`, `#ffa9c4` | `--accent` for fills/bars; `--accent-ink` for small text |
 | Accent tint | `--accent-soft` | `#33202d` | Active nav pill, selected bands |
 | Text on accent | `--on-accent` | `#140f19` | Ink on rose fills |
-| Raised bands | `--inverse-bg`, `--inverse-fg` | `#2a2133`, `#efe8f4` | `.card-head`, `.card-tab`, active tabs, footer |
+| Raised bands | `--inverse-bg`, `--inverse-fg` | `#2a2133`, `#efe8f4` | Card head bands (`bg-inverse text-on-inverse`), active tabs, footer |
 | Radii | `--radius`, `--radius-s`, `--radius-xs` | `20px`, `12px`, `8px` | Cards, controls, small chips |
 
 - Use `bg-inverse text-on-inverse` for card heads, active segmented/shelf tabs and SVG title bars. Never use `bg-edge text-card` for text.
@@ -33,27 +33,29 @@ Never hard-code hex/rgb values in JSX or CSS outside the `:root` block in `src/i
 
 ## 3. Typography & orphan/widow hygiene
 
-- **Families:** `Bricolage Grotesque` (display, numerals), `DM Sans` (reading, UI) and `DM Mono` (`.label` metadata, code, tabular numbers), loaded from Google Fonts in `index.html`.
-- **Scale classes (`src/index.css`):**
-  - `.hero-title` — Start page headline (`clamp(2.75rem, 6.4vw, 5.5rem)`, tight `-0.045em` tracking)
-  - `.display-xl`, `.display-l`, `.display-m` — Page, section and card titles (`font-weight: 600`, `text-wrap: balance`)
-  - `.numeral` — Tabular lining numerals (`line-height: 0.9`)
-  - `.font-display` — Mid-size callouts and quotes (`font-weight: 600`, `text-wrap: pretty`)
-  - `.lede` — Intro copy (`max-width: 44ch`, `text-wrap: pretty`)
-  - `.label` — `12px` (`0.75rem`) mixed-case mono, `letter-spacing: 0.01em`
+- **Families:** `Bricolage Grotesque` (display, numerals), `DM Sans` (reading, UI) and `DM Mono` (`font-mono text-label` metadata, code, tabular numbers), loaded from Google Fonts in `index.html`.
+- **Type scale (Tailwind `@theme` text sizes in `src/index.css`; each carries its own line-height, tracking and weight):**
+  - `font-display text-hero` — Start page headline (`clamp(2.75rem, 6.4vw, 5.5rem)`, `-0.045em` tracking)
+  - `font-display text-display-xl` / `text-display-l` / `text-display-m` — page, section and card titles (`600`, add `text-balance`)
+  - `font-display font-semibold leading-[0.9] tracking-[-0.04em] tabular-nums` — big numerals
+  - `text-lede max-w-[44ch] text-pretty text-ink-2` — intro copy
+  - `font-mono text-label` — `12px` mixed-case mono metadata, `0.01em` tracking
 - **Orphan & measure discipline:**
-  - `h1–h6` and `.card-foot` use `text-wrap: balance`.
-  - `p`, `dd`, `.font-display`, `.lede`, and card descriptions use `text-wrap: pretty`.
+  - `h1–h6` use `text-wrap: balance` (base styles); card footers add `text-balance`.
+  - `p` and `dd` use `text-wrap: pretty` (base styles); display callouts and ledes add `text-pretty`.
   - Keep prose blocks between `44ch` and `62ch` (`.prose-measure`).
   - Use non-breaking spaces (`\u00A0`) for tight lockups prone to 1-word hangs (e.g., `starting\u00A0out`, `new\u00A0role`, `Talent\u00A02026`, `→\u00A0140,800`).
 
-## 4. CSS layering & component architecture
+## 4. Tailwind-first styling
 
-- Wrap custom component classes (`.btn`, `.card`, `.card-head`, `.card-foot`, `.lede`, `.input-line`, `.bar-fill`, `.glyph-*`) inside `@layer components` in `src/index.css`. This lets Tailwind v4 utilities override sizing, spacing, and color cleanly **without `!important`**.
-- **Card anatomy:**
-  - `.card` (`1px solid var(--edge)`, `--radius`, `--sh-1`) + optional `.card-lift` (rises `3px` to `--sh-2` on hover; `.card-on` marks the selected card with an accent border and `--sh-accent`).
-  - Sibling cards in a grid must share bottom CTA/footer baselines: use `flex h-full flex-col`, `flex-1` on the expanding description, and `mt-auto` + fixed/minimum height on `.card-foot` (e.g., `min-h-[3.5rem] flex items-center` on Home stat cards).
-- **Shared primitives (`src/components/ui.tsx`):** Reuse `Tag`, `BasisBadge`, `CheckRow`, `TopicCheckbox`, `Tabs`, `Disclosure`, `Meter`, `ContextBar`, and `NextPage` instead of duplicating markup.
+- **Components are styled with Tailwind utilities in JSX.** There are no custom component classes (`.card`, `.btn`, `.label`, `.display-*` were removed). Tokens and scales live in `src/index.css`:
+  - `:root` holds the raw colour tokens; `@theme inline` maps them to colour utilities (`bg-card`, `text-ink-2`, `border-edge`, `bg-inverse`…).
+  - `@theme` defines the scales: text sizes (`text-label`, `text-lede`, `text-hero`, `text-display-*`), radii (`rounded-card` 20px, `rounded-ctl` 12px, `rounded-chip` 8px), shadows (`shadow-1`, `shadow-2`, `shadow-accent`), easing (`ease-silk`, `ease-spring`) and animations (`animate-panel-in`, `animate-fade-in`).
+  - `@utility plate-field` is the one custom utility (the blueprint field behind diagrams).
+- **What stays as plain CSS:** base element styles, the `[data-reveal]` scroll-reveal hooks, the film grain and `Alt+G` grid overlay, the `⌘K` dialog backdrop, glyph micro-gestures (`.glyph-*` / `.g-*`), and the two diagram systems whose choreography needs selectors utilities can't express (`HeroStage` `.hs-*`, `RoadmapMap` `.rm-*`).
+- **Card recipe:** `relative rounded-card border border-edge bg-card shadow-1`. Head band: `flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)]` with `font-mono text-label`. Hover-lift cards add `group/card … hover:-translate-y-[3px] hover:shadow-2`; a selected card adds `is-on border-accent! shadow-accent!` so its head tints via `group-[.is-on]/card:`.
+  - Sibling cards in a grid must share bottom CTA/footer baselines: use `flex h-full flex-col`, `flex-1` on the expanding description, and `mt-auto` + a minimum height on the footer (e.g., `min-h-[3.5rem] flex items-center` on Home stat cards).
+- **Shared primitives (`src/components/ui.tsx`):** Reuse `SubHead`, `SectionHeader`, `Tag`, `BasisBadge`, `CheckRow`, `TopicCheckbox`, `Tabs`, `Disclosure`, `Meter`, `ContextBar`, and `NextPage` instead of duplicating markup.
 
 ## 5. Iconography & brand logos
 
@@ -71,5 +73,5 @@ Never hard-code hex/rgb values in JSX or CSS outside the `:root` block in `src/i
 - **Motion:** Gate all non-essential transforms and keyframe animations inside `@media (prefers-reduced-motion: no-preference)` using `--ease`, `--ease-in-out`, `--spring`, and `--dur`. Under `prefers-reduced-motion: reduce`, keep state changes legible via color/opacity while disabling translation.
 - **Accessibility:**
   - All decorative SVGs (`Glyph`, `BrandLogo`, `BrandMark`, icons paired with text) MUST have `aria-hidden="true"` and `focusable="false"`.
-  - Informative SVG diagrams (`HeroStage`, `MarketShiftChart`, `ArchetypeVenn`, `AdoptionDumbbell`, `HandoffPlate`, `ProtocolArchitecture`) provide `role="img"` + `<title>` / `<figcaption>` and semantic keyboard controls where interactive.
+  - Informative SVG diagrams (`HeroStage`, `MarketShiftChart`, `ArchetypeVenn`, `AdoptionDumbbell`, `ProtocolArchitecture`) provide `role="img"` + `<title>` / `<figcaption>` and semantic keyboard controls where interactive.
   - All interactive targets maintain ≥44px hit area (via `min-h-11` or `.hit`), visible `:focus-visible` outlines, real `<button>`/`<a>` elements, WAI-ARIA tabs via `useTabList`, and modifier-gated shortcuts (WCAG 2.1.4, e.g., `Alt+G`).

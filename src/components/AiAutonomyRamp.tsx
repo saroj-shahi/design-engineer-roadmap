@@ -23,8 +23,8 @@ export function AiAutonomyRamp({
 }) {
   const current = plan[activeMonth - 1];
   return (
-    <figure className="card mb-6" aria-labelledby="ai-ramp-caption">
-      <div className="card-head label">
+    <figure className="relative rounded-card border border-edge bg-card shadow-1 mb-6" aria-labelledby="ai-ramp-caption">
+      <div className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal">
         <span>AI guardrail ramp · Months 01–06</span>
         <span>Month 0{activeMonth}: {aiPolicyLabel[current.aiPolicy]}</span>
       </div>
@@ -37,7 +37,7 @@ export function AiAutonomyRamp({
             return (
               <div key={phase} className="col-span-2">
                 <span className={`block h-1.5 border-x border-t ${on ? "border-accent" : "border-line-strong"}`} />
-                <span className={`label mt-1 block ${on ? "text-accent-ink" : "text-ink-3"}`}>{phase}</span>
+                <span className={`font-mono text-label font-normal mt-1 block ${on ? "text-accent-ink" : "text-ink-3"}`}>{phase}</span>
               </div>
             );
           })}
@@ -60,7 +60,7 @@ export function AiAutonomyRamp({
                 <span className="flex h-24 items-end sm:h-32">
                   {cfg.height === 0 ? (
                     <span
-                      className={`grid h-8 w-full place-items-center rounded-[var(--radius-xs)] border border-dashed font-mono text-[10px] tracking-wide transition-colors duration-300 ${
+                      className={`grid h-8 w-full place-items-center rounded-chip border border-dashed font-mono text-[10px] tracking-wide transition-colors duration-300 ${
                         on ? "border-accent bg-accent/15 text-accent-ink" : "border-line-strong bg-card text-ink-3 group-hover:border-ink"
                       }`}
                     >
@@ -70,23 +70,23 @@ export function AiAutonomyRamp({
                   ) : (
                     <span
                       style={{ height: `${cfg.height}%` }}
-                      className={`relative flex w-full flex-col justify-between overflow-hidden rounded-[var(--radius-xs)] border p-1 transition-colors duration-300 sm:p-2 ${
+                      className={`relative flex w-full flex-col justify-between overflow-hidden rounded-chip border p-1 transition-colors duration-300 sm:p-2 ${
                         on
-                          ? "border-edge bg-accent text-[var(--on-accent)] shadow-[var(--sh-1)]"
+                          ? "border-edge bg-accent text-on-accent shadow-1"
                           : "border-ink-3 bg-card text-ink group-hover:border-ink group-hover:bg-sunken"
                       }`}
                     >
-                      <span className={`hidden font-mono text-[10px] leading-tight sm:block ${on ? "text-[var(--on-accent)]" : "text-ink-3"}`}>
+                      <span className={`hidden font-mono text-[10px] leading-tight sm:block ${on ? "text-on-accent" : "text-ink-3"}`}>
                         {cfg.tag}
                       </span>
-                      <span className={`hidden font-mono text-[10px] leading-tight tracking-wide md:block ${on ? "text-[var(--on-accent)]" : "text-ink-2"}`}>
+                      <span className={`hidden font-mono text-[10px] leading-tight tracking-wide md:block ${on ? "text-on-accent" : "text-ink-2"}`}>
                         {m.title}
                       </span>
                     </span>
                   )}
                 </span>
                 <span
-                  className={`mt-2 flex items-baseline justify-between border-t-2 pt-1.5 font-mono text-[11px] tabular ${
+                  className={`mt-2 flex items-baseline justify-between border-t-2 pt-1.5 font-mono text-[11px] tabular-nums ${
                     on ? "border-accent font-medium text-accent-ink" : "border-edge text-ink-3 group-hover:text-ink"
                   }`}
                 >
@@ -99,7 +99,7 @@ export function AiAutonomyRamp({
         </div>
       </div>
 
-      <figcaption id="ai-ramp-caption" className="card-foot bg-card text-xs leading-relaxed text-ink-2">
+      <figcaption id="ai-ramp-caption" className="rounded-b-[calc(var(--radius-card)-1px)] border-t border-line px-[1.125rem] py-3 text-balance bg-card text-xs leading-relaxed text-ink-2">
         <strong className="font-medium text-ink">Month 0{current.month} guardrail:</strong> {current.guardrail}
       </figcaption>
     </figure>

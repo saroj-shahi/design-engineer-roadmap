@@ -28,12 +28,12 @@ const convergence = adoptionShift.after.rows.map((r, i) => ({
   y: 222 + i * 40,
 }));
 
-export function AdoptionDumbbell() {
+export function AdoptionDumbbell({ className = "" }: { className?: string }) {
   const uid = useId().replace(/:/g, "");
   return (
-    <figure className="card">
-      <div className="card-head label">
-        <h4 className="m-0">AI adoption: divergence, then convergence</h4>
+    <figure className={`relative rounded-card border border-edge bg-card shadow-1 ${className}`}>
+      <div className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal">
+        <h3 className="m-0">AI adoption: divergence, then convergence</h3>
         <span className="hidden sm:block">Shared 0–100% scale</span>
       </div>
 
@@ -197,7 +197,7 @@ export function AdoptionDumbbell() {
         </svg>
       </div>
 
-      <figcaption className="card-foot flex flex-wrap items-center justify-between gap-3 bg-card text-xs text-ink-2">
+      <figcaption className="rounded-b-[calc(var(--radius-card)-1px)] border-t border-line px-[1.125rem] py-3 text-balance flex flex-wrap items-center justify-between gap-3 bg-card text-xs text-ink-2">
         <span className="flex flex-wrap items-center gap-x-5 gap-y-1.5">
           <span className="inline-flex items-center gap-2">
             <svg aria-hidden viewBox="0 0 14 14" className="size-3.5 shrink-0">
@@ -216,7 +216,7 @@ export function AdoptionDumbbell() {
             <span>Q1 2026 focal share</span>
           </span>
         </span>
-        <span className="label text-ink-3">% of respondents</span>
+        <span className="font-mono text-label font-normal text-ink-3">% of respondents</span>
       </figcaption>
     </figure>
   );

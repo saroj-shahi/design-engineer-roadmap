@@ -19,17 +19,17 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boole
   render() {
     if (!this.state.hasError) return this.props.children;
     return (
-      <section aria-labelledby="err-title" className="wrap pb-24 pt-20 sm:pb-36 sm:pt-28">
-        <p className="label text-accent-ink">Something went wrong</p>
-        <h1 id="err-title" className="display-xl mt-4 text-ink">
+      <section aria-labelledby="err-title" className="mx-auto w-full max-w-[1440px] px-(--gutter) pb-24 pt-20 sm:pb-36 sm:pt-28">
+        <p className="font-mono text-label font-normal text-accent-ink">Something went wrong</p>
+        <h1 id="err-title" className="font-display text-display-xl text-balance mt-4 text-ink">
           This page hit an <em>unexpected error.</em>
         </h1>
-        <p className="lede mt-8">Reload the page or return to the start of the guide.</p>
+        <p className="max-w-[44ch] text-lede text-pretty text-ink-2 mt-8">Reload the page or return to the start of the guide.</p>
         <div className="mt-10 flex flex-wrap gap-4">
-          <button type="button" onClick={() => window.location.reload()} className="btn">
+          <button type="button" onClick={() => window.location.reload()} className="relative isolate inline-flex h-12 items-center gap-3 overflow-hidden rounded-full bg-accent pl-[1.375rem] pr-5 text-[0.9375rem] font-semibold tracking-[-0.005em] text-on-accent transition-[translate,box-shadow,color] duration-[260ms] ease-spring before:absolute before:inset-0 before:-z-10 before:translate-y-[101%] before:bg-ink before:transition-transform before:duration-[550ms] before:ease-silk before:content-[''] hover:shadow-accent hover:before:translate-y-0 focus-visible:shadow-accent focus-visible:before:translate-y-0 active:translate-y-px motion-reduce:active:translate-y-0">
             Reload page
           </button>
-          <a href={`${BASE}#/`} className="btn btn-ghost">
+          <a href={`${BASE}#/`} className="relative isolate inline-flex h-12 items-center gap-3 overflow-hidden rounded-full pl-[1.375rem] pr-5 text-[0.9375rem] font-semibold tracking-[-0.005em] text-ink shadow-[inset_0_0_0_1px_var(--line-strong)] transition-[box-shadow,color] duration-[260ms] ease-spring before:absolute before:inset-0 before:-z-10 before:translate-y-[101%] before:bg-sunken before:transition-transform before:duration-[550ms] before:ease-silk before:content-[''] hover:shadow-[inset_0_0_0_1px_var(--accent)] hover:before:translate-y-0 focus-visible:before:translate-y-0">
             Back to start
           </a>
         </div>
@@ -41,8 +41,8 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boole
 function GridOverlay({ on }: { on: boolean }) {
   return (
     <div aria-hidden className="grid-overlay" data-on={on}>
-      <div className="wrap h-full">
-        <div className="grid-12 h-full">
+      <div className="mx-auto w-full max-w-[1440px] px-(--gutter) h-full">
+        <div className="grid grid-cols-4 gap-x-4 lg:grid-cols-12 lg:gap-x-6 h-full">
           {Array.from({ length: 12 }, (_, i) => (
             <span key={i} className={i >= 4 ? "hidden lg:block" : ""} />
           ))}
@@ -120,7 +120,7 @@ export default function App() {
           e.preventDefault();
           document.getElementById("main")?.focus();
         }}
-        className="label sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[70] focus:bg-ink focus:px-3 focus:py-2 focus:text-paper"
+        className="font-mono text-label font-normal sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[70] focus:bg-ink focus:px-3 focus:py-2 focus:text-paper"
       >
         Skip to content
       </a>
@@ -133,7 +133,7 @@ export default function App() {
             {route.notFound ? (
               <NotFound />
             ) : (
-              <Suspense fallback={<div className="wrap py-24 label text-ink-3">Loading…</div>}>
+              <Suspense fallback={<div className="mx-auto w-full max-w-[1440px] px-(--gutter) py-24 font-mono text-label font-normal text-ink-3">Loading…</div>}>
                 {route.page === "home" && <Home />}
                 {route.page === "roles" && <Roles role={route.parts[0]} />}
                 {route.page === "plan" && <Plan parts={route.parts} />}
@@ -218,21 +218,21 @@ function descriptionFor(route: Route) {
 /** Shown for any hash that names no page. Keeps the bad URL so the reader can see what went wrong. */
 function NotFound() {
   return (
-    <section aria-labelledby="nf-title" className="wrap pb-24 pt-20 sm:pb-36 sm:pt-28">
-      <p className="label text-accent-ink">Page not found</p>
-      <h1 id="nf-title" className="display-xl mt-4 text-ink">
+    <section aria-labelledby="nf-title" className="mx-auto w-full max-w-[1440px] px-(--gutter) pb-24 pt-20 sm:pb-36 sm:pt-28">
+      <p className="font-mono text-label font-normal text-accent-ink">Page not found</p>
+      <h1 id="nf-title" className="font-display text-display-xl text-balance mt-4 text-ink">
         That page <em>doesn't exist.</em>
       </h1>
-      <p className="lede mt-8">
+      <p className="max-w-[44ch] text-lede text-pretty text-ink-2 mt-8">
         The link may be mistyped or out of date. Pick one of the guide's five pages instead.
       </p>
       <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         {pages.map((p) => (
           <li key={p.id}>
-            <a href={`${BASE}${pageHref(p.id)}`} className="card card-lift group flex h-full flex-col p-5">
-              <span className="label text-ink-3">{p.label}</span>
+            <a href={`${BASE}${pageHref(p.id)}`} className="relative rounded-card border border-edge bg-card shadow-1 group/card transition-[translate,box-shadow,border-color,opacity] duration-[260ms] ease-spring hover:-translate-y-[3px] hover:border-line-strong hover:shadow-2 active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink has-[>input:focus-visible]:outline-2 has-[>input:focus-visible]:outline-offset-4 has-[>input:focus-visible]:outline-accent-ink motion-reduce:hover:translate-y-0 group flex h-full flex-col p-5">
+              <span className="font-mono text-label font-normal text-ink-3">{p.label}</span>
               <span className="mt-3 block text-[1.0625rem] font-medium leading-snug tracking-tight text-ink">{p.title}</span>
-              <span className="label mt-auto pt-6 text-accent-ink">Open →</span>
+              <span className="font-mono text-label font-normal mt-auto pt-6 text-accent-ink">Open →</span>
             </a>
           </li>
         ))}

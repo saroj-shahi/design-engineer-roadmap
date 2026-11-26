@@ -27,8 +27,8 @@ const after: Step[] = [
  *  (the handoff wall and rework loop in Before); After reads in calm solid ink. */
 export function HandoffFlow() {
   return (
-    <figure aria-labelledby="handoff-flow-cap" className="card shadow-[var(--sh-1)]">
-      <div className="card-head label">
+    <figure aria-labelledby="handoff-flow-cap" className="relative rounded-card border border-edge bg-card shadow-1">
+      <div className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal">
         <h3 className="m-0">Workflow delta · Before vs. After</h3>
         <span className="hidden sm:inline">Handoff removed</span>
       </div>
@@ -54,7 +54,7 @@ export function HandoffFlow() {
         </div>
       </div>
 
-      <figcaption id="handoff-flow-cap" className="card-foot bg-card text-sm leading-relaxed text-ink-2">
+      <figcaption id="handoff-flow-cap" className="rounded-b-[calc(var(--radius-card)-1px)] border-t border-line px-[1.125rem] py-3 text-balance bg-card text-sm leading-relaxed text-ink-2">
         <strong className="font-medium text-ink">Before:</strong> two specialists separated by a spec wall, with extra rework rounds when
         details don't survive the jump between tools. <strong className="font-medium text-ink">After:</strong> both work in the same
         codebase, so decisions happen once in the browser.
@@ -84,7 +84,7 @@ function Row({
 }) {
   return (
     <div data-reveal>
-      <p className="label mb-4 flex items-center gap-3 text-ink-3">
+      <p className="font-mono text-label font-normal mb-4 flex items-center gap-3 text-ink-3">
         <span className={bottleneck ? "text-accent-ink" : "text-ink"}>{tag}</span>
         <span className="text-ink-2">{title}</span>
       </p>
@@ -92,7 +92,7 @@ function Row({
       {owner && (
         <div className="mb-3 hidden sm:block">
           <span aria-hidden className="block h-2 border-x border-t border-ink" />
-          <p className="label mt-1.5 text-ink-2">{owner}</p>
+          <p className="font-mono text-label font-normal mt-1.5 text-ink-2">{owner}</p>
         </div>
       )}
 
@@ -105,11 +105,11 @@ function Row({
             <li
               key={s.name}
               style={{ "--i": i } as CSSProperties}
-              className={`card card-flat group relative flex min-h-[10rem] flex-col p-3 sm:min-h-[11.5rem] sm:p-3.5 ${
+              className={`rounded-card border border-edge bg-card shadow-1 shadow-none! group relative flex min-h-[10rem] flex-col p-3 sm:min-h-[11.5rem] sm:p-3.5 ${
                 solid ? "!bg-inverse text-on-inverse" : "text-ink"
               }`}
             >
-              <span className={`label inline-flex items-center gap-1.5 ${solid ? "text-inverse-muted" : "text-ink-3"}`}>
+              <span className={`font-mono text-label font-normal inline-flex items-center gap-1.5 ${solid ? "text-inverse-muted" : "text-ink-3"}`}>
                 <Glyph
                   name={s.who === "Both" || s.who === "Shared" || s.who === "Team" ? "users" : "user"}
                   className={`!size-3.5 ${solid ? "[--accent:currentColor]" : ""}`}
@@ -119,7 +119,7 @@ function Row({
                 </span>
               </span>
               <Glyph name={s.glyph} className="mt-3.5 !size-9 sm:!size-11" />
-              <span className="mt-auto pt-3 font-display text-[1.25rem] leading-[1.06]">{s.name}</span>
+              <span className="mt-auto pt-3 font-display font-semibold tracking-[-0.02em] text-pretty text-[1.25rem] leading-[1.06]">{s.name}</span>
               <span
                 className={`mt-2 inline-block self-start border px-1.5 py-0.5 font-mono text-[10px] leading-tight ${
                   solid ? "border-inverse-line text-inverse-muted" : "border-line text-ink-3"
@@ -134,7 +134,7 @@ function Row({
                   <span aria-hidden className="absolute -bottom-7 left-0 right-0 h-7 sm:-right-7 sm:bottom-0 sm:left-auto sm:top-0 sm:h-auto sm:w-7">
                     <span className="absolute left-1/2 top-0 h-full border-l-2 border-dashed border-accent max-sm:hidden" />
                     <span className="absolute left-0 right-0 top-1/2 border-t-2 border-dashed border-accent sm:hidden" />
-                    <span className="label absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-1 py-0.5 text-accent-ink sm:rotate-180 sm:[writing-mode:vertical-rl]">
+                    <span className="font-mono text-label font-normal absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-1 py-0.5 text-accent-ink sm:rotate-180 sm:[writing-mode:vertical-rl]">
                       Handoff
                     </span>
                   </span>
@@ -165,7 +165,7 @@ function Row({
           </div>
         )}
       </div>
-      <p className={`label mt-3 flex items-center gap-2 sm:justify-end ${bottleneck ? "text-accent-ink" : "text-ink-3"}`}>
+      <p className={`font-mono text-label font-normal mt-3 flex items-center gap-2 sm:justify-end ${bottleneck ? "text-accent-ink" : "text-ink-3"}`}>
         <span aria-hidden className="font-mono">↺</span> {loop}
       </p>
     </div>
