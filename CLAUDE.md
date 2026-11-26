@@ -10,6 +10,7 @@ See **[AGENTS.md](AGENTS.md)** for full cross-agent instructions and **[DESIGN.m
 - `npm run typecheck`: `tsc -b`. Run after every change; `noUnusedLocals`/`noUnusedParameters` are on, so dead imports fail.
 - `npm run build`: typecheck + production build to `dist/`.
 - `npm run icons`: re-renders `public/og-image.png` (1200×630, from `scripts/og/og-image.html`) and the app icons (`apple-touch-icon.png`, `icon-192/512.png`, `icon-maskable-512.png`, `favicon.ico`) from `public/favicon.svg`. Bump the `?v=` on the `og:image` URLs in `index.html` when the image changes so social caches refresh.
+- `npm run pdfs`: re-renders the printable plan PDFs in `public/plans/` (one per plan, listed in `src/data/planPdfs.ts`) from `src/data/research.ts` via `scripts/pdf/render.mjs`. Run it after changing any plan data so the downloads on the Plan page stay in sync.
 - `npm run test:e2e`: Playwright suite in `tests/e2e/` against the production build, at desktop (1280×800) and phone (Pixel 7). Covers every route (title, one h1, no console errors, no sideways scroll, no cropped text or square corners in rounded cards), a WCAG 2.2 A/AA axe scan per route, pointer and focus visibility, and the main flows (nav, search, roles, checklist, plan, glossary). First run: `npx playwright install chromium`.
 
 ## Layout

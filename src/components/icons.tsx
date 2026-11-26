@@ -50,6 +50,17 @@ export function ExternalGlyph({ className = "" }: GlyphProps) {
   );
 }
 
+/** Saves a file. The arrow drops into the tray on hover of the parent .group. */
+export function DownloadGlyph({ className = "" }: GlyphProps) {
+  return (
+    <svg {...base} className={`glyph transition-transform duration-[260ms] ease-spring group-hover:translate-y-[2px] motion-reduce:group-hover:translate-y-0 ${className}`}>
+      <path d="M12 3.75V15" />
+      <path d="M7 10l5 5 5-5" />
+      <path d="M4.75 15.5v4.75h14.5V15.5" />
+    </svg>
+  );
+}
+
 /* ───────── Archetype marks ─────────
    One mark per hybrid role. Each has a rest pose, a hover gesture
    (via .group:hover) and a selected state (data-on="true"). */

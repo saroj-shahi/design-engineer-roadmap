@@ -10,7 +10,8 @@
     "typecheck": "tsc -b",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "icons": "node scripts/og/render.mjs"
+    "icons": "node scripts/og/render.mjs",
+    "pdfs": "node scripts/pdf/render.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",

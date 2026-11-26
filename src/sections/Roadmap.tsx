@@ -1,5 +1,5 @@
 import { type CSSProperties } from "react";
-import { ArrowBackGlyph, ArrowGlyph, ExternalGlyph, Glyph, type GlyphName } from "../components/icons";
+import { ArrowBackGlyph, ArrowGlyph, DownloadGlyph, ExternalGlyph, Glyph, type GlyphName } from "../components/icons";
 import { BrandLogosFor } from "../components/BrandLogo";
 import { PlanRoadmapBase, type BaseRoadmapItem } from "../components/PlanRoadmapBase";
 import { RoadmapMap } from "../components/RoadmapMap";
@@ -17,6 +17,7 @@ import {
   type PlanTopicGroup,
   type Resource,
 } from "../data/research";
+import { PLAN_PDFS, type PlanPdfId } from "../data/planPdfs";
 import {
   CheckRow,
   ContextBar,
@@ -188,6 +189,8 @@ export function Roadmap({ plan }: { plan: PlanRoute | null }) {
         </p>
       </div>
 
+      <PlanDownloads current={plan ? (plan.track === "a" ? `a-${plan.option}` : "b") : null} />
+
       {plan && (
         <>
           {/* Spacer, not a wrapper: the bar must sit directly in the section so it sticks through the whole plan. */}
@@ -199,6 +202,41 @@ export function Roadmap({ plan }: { plan: PlanRoute | null }) {
         </>
       )}
     </Section>
+  );
+}
+
+/** A printable PDF of each plan, for reading offline or sharing. Files come from `npm run pdfs`. */
+function PlanDownloads({ current }: { current: PlanPdfId | null }) {
+  return (
+    <div className="mt-10 sm:mt-14">
+      <SubHead n="PDF" title="Take a plan with you" note="A printable copy of each plan, with every month or stage, its topics and resources. Your ticks stay here in the browser." />
+      <ul className="grid gap-4 sm:grid-cols-3">
+        {PLAN_PDFS.map((p) => {
+          const on = current === p.id;
+          return (
+            <li key={p.id} className="flex">
+              <a
+                href={`${import.meta.env.BASE_URL}${p.file}`}
+                download
+                type="application/pdf"
+                className={`rounded-card border border-edge bg-card shadow-1 group/card transition-[translate,box-shadow,border-color,opacity] duration-[260ms] ease-spring hover:-translate-y-[3px] hover:border-line-strong hover:shadow-2 active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink motion-reduce:hover:translate-y-0 group flex w-full items-start gap-4 p-5 ${on ? "is-on border-accent! shadow-accent!" : ""}`}
+              >
+                <DownloadGlyph className={`!size-8 shrink-0 ${on ? "text-accent-ink" : "text-ink"}`} />
+                <span className="min-w-0 flex-1">
+                  <span className={`font-mono text-label font-normal block ${on ? "text-accent-ink" : "text-ink-3"}`}>
+                    {on ? "Your plan · PDF" : "PDF · A4"}
+                  </span>
+                  <span className="mt-1.5 block text-[1.0625rem] font-medium tracking-tight text-pretty text-ink">
+                    <span className="sr-only">Download </span>
+                    {p.label}
+                  </span>
+                </span>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
   );
 }
 

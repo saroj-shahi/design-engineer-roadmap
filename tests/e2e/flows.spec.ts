@@ -177,6 +177,20 @@ test.describe("plan", () => {
     await page.getByRole("button", { name: /^Next/ }).first().click();
     await expect(page).toHaveURL(/#\/plan\/a\/pde\/m2/);
   });
+
+  test("each plan downloads as a PDF", async ({ page }) => {
+    await fresh(page, "/#/plan/b/s1");
+    const links = page.locator("a[download]");
+    await expect(links).toHaveCount(3);
+    for (const name of [/Design Engineer/, /Meta-Designer/, /Starting out/]) {
+      const link = page.getByRole("link", { name: new RegExp(`Download .*${name.source}`) });
+      const [download] = await Promise.all([page.waitForEvent("download"), link.click()]);
+      expect(download.suggestedFilename()).toMatch(/\.pdf$/);
+      const res = await page.request.get((await link.getAttribute("href"))!);
+      expect(res.headers()["content-type"]).toContain("application/pdf");
+      expect((await res.body()).subarray(0, 5).toString()).toBe("%PDF-");
+    }
+  });
 });
 
 test.describe("glossary", () => {
