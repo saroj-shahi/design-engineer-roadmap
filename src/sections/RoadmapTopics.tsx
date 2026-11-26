@@ -134,7 +134,6 @@ export function RoadmapTopics({ slug }: { slug?: string }) {
     <Section id="roadmaps">
       <SectionHeader
         id="roadmaps"
-        glyph="route"
         title={["Topic roadmaps,", <em>from roadmap.sh.</em>]}
         lede={`${externalRoadmaps.length} full topic syllabi (${totalTopicsAll} topics) plus ${companionRoadmaps.length} companion skill tracks from roadmap.sh — mapped to the roles in this guide. ${saveNote}`}
       />
@@ -176,7 +175,7 @@ export function RoadmapTopics({ slug }: { slug?: string }) {
                     >
                       <span
                         aria-hidden
-                        className={`absolute inset-x-0 top-0 h-[3px] origin-left bg-accent transition-transform duration-500 ease-silk ${
+                        className={`absolute inset-x-5 -top-px h-[3px] origin-left rounded-full bg-accent transition-transform duration-500 ease-silk ${
                           on ? "scale-x-100" : "scale-x-0"
                         }`}
                       />

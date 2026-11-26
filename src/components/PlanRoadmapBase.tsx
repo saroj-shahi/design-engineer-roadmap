@@ -151,7 +151,7 @@ export function PlanRoadmapBase({
             >
               <span
                 aria-hidden
-                className={`absolute inset-x-0 top-0 h-[3px] origin-left bg-accent transition-transform duration-500 ease-silk ${
+                className={`absolute inset-x-5 -top-px h-[3px] origin-left rounded-full bg-accent transition-transform duration-500 ease-silk ${
                   on ? "scale-x-100" : "scale-x-0"
                 }`}
               />

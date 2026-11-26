@@ -52,7 +52,7 @@ for (const r of routes) {
             const painted = ccs.backgroundColor !== "rgba(0, 0, 0, 0)" || ccs.backgroundImage !== "none";
             if (!painted || c.closest("svg")) continue;
             const cb = c.getBoundingClientRect();
-            if (cb.width < 20 || cb.height < 10) continue;
+            if (cb.width < 2 || cb.height < 2) continue; // thin accent bars count too
             const at = (x: boolean, y: boolean, r: string) => x && y && parseFloat(r) < pr - bw - 3;
             const L = Math.abs(cb.left - pb.left - bw) < 2, R = Math.abs(pb.right - bw - cb.right) < 2;
             const T = Math.abs(cb.top - pb.top - bw) < 2, B = Math.abs(pb.bottom - bw - cb.bottom) < 2;
@@ -85,5 +85,16 @@ test("works with storage blocked", async ({ page }) => {
   for (const path of ["/#/", "/#/plan/a/pde/m1", "/#/ready/a", "/#/library/glossary"]) {
     await page.goto(path);
     await expect(page.locator("main h1")).toBeVisible();
+  }
+});
+
+test("library shelves line up with the page title and breadcrumb", async ({ page }) => {
+  for (const shelf of ["compare", "skills", "tools", "roadmaps/ux-design", "glossary"]) {
+    await page.goto(`/#/library/${shelf}`);
+    const h1 = page.locator("#library-title");
+    const h2 = page.locator("main h2").first();
+    await expect(h2).toBeVisible();
+    const [a, b] = await Promise.all([h1.boundingBox(), h2.boundingBox()]);
+    expect(Math.abs((a?.x ?? 0) - (b?.x ?? 0)), shelf).toBeLessThanOrEqual(1);
   }
 });

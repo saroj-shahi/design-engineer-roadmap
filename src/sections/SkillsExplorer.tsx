@@ -30,7 +30,6 @@ export function SkillsExplorer() {
     <Section id="skills">
       <SectionHeader
         id="skills"
-        glyph="layers"
         title={["What to learn,", <em>layer by layer.</em>]}
         lede="Start with the judgment AI can't replace, add front-end skills, then learn to design products that use AI agents."
       />
@@ -105,7 +104,7 @@ function LayerStack({ value, onChange }: { value: string; onChange: (id: string)
               appendix && !on ? "relative rounded-card border border-dashed border-line-strong bg-transparent shadow-none mt-4 text-ink-3 hover:text-ink" : `relative rounded-card border border-edge bg-card shadow-1 group/card transition-[translate,box-shadow,border-color,opacity] duration-[260ms] ease-spring hover:-translate-y-[3px] hover:border-line-strong hover:shadow-2 active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink has-[>input:focus-visible]:outline-2 has-[>input:focus-visible]:outline-offset-4 has-[>input:focus-visible]:outline-accent-ink motion-reduce:hover:translate-y-0 ${appendix ? "mt-4" : ""}`
             } ${on ? "is-on translate-y-0! border-accent! shadow-accent! text-ink" : "text-ink-3 hover:text-ink"}`}
           >
-            <span aria-hidden className={`absolute inset-y-0 left-0 w-[3px] origin-top bg-accent transition-transform duration-700 ease-silk ${on ? "scale-y-100" : "scale-y-0"}`} />
+            <span aria-hidden className={`absolute -left-px inset-y-5 w-[3px] origin-top rounded-full bg-accent transition-transform duration-700 ease-silk ${on ? "scale-y-100" : "scale-y-0"}`} />
             <span className="flex flex-col gap-3 self-start">
               <span className={`font-mono text-label font-normal ${on ? "text-accent-ink" : "text-ink-3"}`}>{d.sub}</span>
               <Glyph name={d.glyph} on={on} className={`!size-12 sm:!size-14 ${on ? "text-ink" : "text-ink-3 group-hover:text-ink"}`} />

@@ -11,7 +11,7 @@ import {
 } from "react";
 import { basisLabel, type BasisKind } from "../data/research";
 import { BrandLogosFor } from "./BrandLogo";
-import { ArrowGlyph, BasisGlyph, Glyph, type GlyphName } from "./icons";
+import { ArrowGlyph, BasisGlyph } from "./icons";
 
 /* ───────── Motion plumbing ───────── */
 
@@ -201,7 +201,7 @@ export function Roll({ children }: { children: string }) {
 export function Section({ id, children, className = "" }: { id: string; children: ReactNode; className?: string }) {
   return (
     <section id={id} aria-labelledby={`${id}-title`} className={`relative ${className}`}>
-      <div className="mx-auto w-full max-w-[1440px] px-(--gutter) pb-24 sm:pb-36">{children}</div>
+      <div data-wrap className="mx-auto w-full max-w-[1440px] px-(--gutter) pb-24 sm:pb-36">{children}</div>
     </section>
   );
 }
@@ -211,35 +211,26 @@ export function SectionHeader({
   id,
   title,
   lede,
-  glyph,
   level = "h2",
 }: {
   id: string;
   title: ReactNode[];
   lede?: ReactNode;
-  glyph?: GlyphName;
   level?: "h1" | "h2";
 }) {
   // Page titles share one layout on every page: title on the left, lede aligned to its baseline on the right.
   if (level === "h1") return <PageHeader id={`${id}-title`} title={title} lede={lede} />;
+  // Section openers (Library shelves) mirror the page header: title left, lede on the right at its baseline.
   return (
-    <header className="mb-14 border-t border-line pt-8 sm:mb-20 sm:pt-10">
-      <div className="grid grid-cols-4 gap-x-4 gap-y-10 lg:grid-cols-12 lg:gap-x-6">
-        <Lines
-          as="h2"
-          id={`${id}-title`}
-          lines={title}
-          className={`col-span-4 font-display text-display-l text-balance text-ink ${glyph ? "lg:col-span-8" : "lg:col-span-11"}`}
-        />
-        {glyph && <Plate glyph={glyph} className="self-end max-lg:hidden lg:col-span-2 lg:col-start-11" />}
-      </div>
-      {lede && (
-        <div className="mt-8 grid grid-cols-4 gap-x-4 sm:mt-12 lg:grid-cols-12 lg:gap-x-6">
-          <p data-reveal className="col-span-4 max-w-[44ch] text-lede text-pretty text-ink-2 lg:col-span-5 lg:col-start-7">
+    <header className="mb-12 pt-10 sm:mb-16">
+      <div className="grid grid-cols-4 gap-x-4 gap-y-6 lg:grid-cols-12 lg:gap-x-6">
+        <Lines as="h2" id={`${id}-title`} lines={title} className="col-span-4 font-display text-display-l text-balance text-ink lg:col-span-7" />
+        {lede && (
+          <p data-reveal className="col-span-4 max-w-[44ch] self-end text-lede text-pretty text-ink-2 lg:col-span-4 lg:col-start-9">
             {lede}
           </p>
-        </div>
-      )}
+        )}
+      </div>
     </header>
   );
 }
@@ -258,17 +249,6 @@ export function PageHeader({ id, title, lede, children }: { id: string; title: R
       </div>
       {children}
     </header>
-  );
-}
-
-/** Specimen plate: one chapter glyph drawn large on a blueprint field. Hover plays its gesture. */
-export function Plate({ glyph, className = "" }: { glyph: GlyphName; className?: string }) {
-  return (
-    <figure aria-hidden data-reveal className={`relative rounded-card border border-edge bg-card shadow-1 group ${className}`} style={{ "--d": "200ms" } as CSSProperties}>
-      <div className="plate-field grid aspect-square place-items-center rounded-[calc(var(--radius-card)-1px)]">
-        <Glyph name={glyph} className="glyph-xl !size-[62%] text-ink" />
-      </div>
-    </figure>
   );
 }
 

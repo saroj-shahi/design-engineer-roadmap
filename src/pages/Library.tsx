@@ -59,8 +59,8 @@ export function Library({ shelf: raw, term }: { shelf?: string; term?: string })
       </PageHeader>
       </div>
 
-      {/* The sticky bar needs a tall parent; shelf sections keep their own .wrap, so neutralise the nested gutters. */}
-      <div className="mx-auto w-full max-w-[1440px] px-(--gutter) [&_.wrap]:!max-w-none [&_.wrap]:!px-0">
+      {/* The sticky bar needs a tall parent; shelf sections keep their own page container ([data-wrap]), so neutralise the nested gutters. */}
+      <div className="mx-auto w-full max-w-[1440px] px-(--gutter) [&_[data-wrap]]:max-w-none! [&_[data-wrap]]:px-0!">
         <ContextBar trail={trail} />
         <div key={shelf} className="animate-panel-in motion-reduce:animate-fade-in">
           {shelf === "compare" && <Comparison />}

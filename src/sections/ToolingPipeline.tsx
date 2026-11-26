@@ -14,7 +14,6 @@ export function ToolingPipeline() {
     <Section id="tooling">
       <SectionHeader
         id="tooling"
-        glyph="pipeline"
         title={["The right tool", <em>for each step.</em>]}
         lede="Pick your role to see the tools for each step of the work. Choose one set and stick with it. Too many tools slow you down."
       />

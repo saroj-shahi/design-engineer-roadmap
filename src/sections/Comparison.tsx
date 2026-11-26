@@ -15,7 +15,6 @@ export function Comparison() {
     <Section id="compare">
       <SectionHeader
         id="compare"
-        glyph="compare"
         title={["What changes", <>when you <em>build it too.</em></>]}
         lede="Two valid ways to do design work, side by side — how they differ day to day and when teams evaluate them."
       />
