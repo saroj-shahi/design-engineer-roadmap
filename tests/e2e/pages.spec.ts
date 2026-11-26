@@ -13,11 +13,15 @@ for (const r of routes) {
     test("never scrolls sideways", async ({ page }) => {
       await fresh(page, r.path);
       await revealAll(page);
+      // Compare with the device viewport, not innerWidth: on phones a too-wide element widens the
+      // layout viewport itself (the page zooms out), which would hide the overflow from innerWidth.
+      const device = page.viewportSize()!.width;
       const { scrollWidth, innerWidth } = await page.evaluate(() => ({
         scrollWidth: document.documentElement.scrollWidth,
         innerWidth: window.innerWidth,
       }));
-      expect(scrollWidth).toBeLessThanOrEqual(innerWidth);
+      expect(innerWidth, "layout viewport should match the device width").toBe(device);
+      expect(scrollWidth).toBeLessThanOrEqual(device);
     });
 
     test("crops no text and keeps rounded corners clean", async ({ page }) => {
@@ -97,4 +101,21 @@ test("library shelves line up with the page title and breadcrumb", async ({ page
     const [a, b] = await Promise.all([h1.boundingBox(), h2.boundingBox()]);
     expect(Math.abs((a?.x ?? 0) - (b?.x ?? 0)), shelf).toBeLessThanOrEqual(1);
   }
+});
+
+test("social image and app icons are served at the right sizes", async ({ page, request }) => {
+  await page.goto("/#/");
+  const og = await page.locator('meta[property="og:image"]').getAttribute("content");
+  expect(og).toMatch(/\/og-image\.png/);
+  const png = (await (await request.get(new URL(og!).pathname)).body());
+  // PNG header: width and height are big-endian at bytes 16 and 20.
+  expect([png.readUInt32BE(16), png.readUInt32BE(20)]).toEqual([1200, 630]);
+  for (const [file, size] of [["/apple-touch-icon.png", 180], ["/icon-192.png", 192], ["/icon-512.png", 512], ["/icon-maskable-512.png", 512]] as const) {
+    const b = await (await request.get(file)).body();
+    expect([b.readUInt32BE(16), b.readUInt32BE(20)], file).toEqual([size, size]);
+  }
+  const ico = await (await request.get("/favicon.ico")).body();
+  expect(ico.readUInt16LE(4), "favicon.ico frames").toBe(2);
+  const manifest = await (await request.get("/site.webmanifest")).json();
+  expect(manifest.icons.some((i: { purpose?: string }) => i.purpose === "maskable")).toBe(true);
 });

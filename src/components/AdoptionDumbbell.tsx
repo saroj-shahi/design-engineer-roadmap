@@ -37,7 +37,7 @@ export function AdoptionDumbbell({ className = "" }: { className?: string }) {
         <span className="hidden sm:block">Shared 0–100% scale</span>
       </div>
 
-      <div className="plate-field overflow-x-auto px-4 py-5 sm:px-6">
+      <div tabIndex={0} role="region" aria-label="AI adoption chart (scrolls sideways)" className="plate-field overflow-x-auto px-4 py-5 sm:px-6 focus-visible:outline-offset-[-2px]">
         <svg
           viewBox={`0 0 ${W} ${H}`}
           role="img"

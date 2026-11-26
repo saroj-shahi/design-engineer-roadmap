@@ -17,6 +17,7 @@ export const routes = [
   { path: "/#/library/roadmaps", name: "Library · Roadmaps", title: /Roadmaps? \|/ },
   { path: "/#/library/roadmaps/frontend", name: "Library · Frontend roadmap", title: /^Frontend Roadmap/ },
   { path: "/#/library/glossary", name: "Library · Glossary", title: /^Glossary/ },
+  { path: "/#/sources", name: "Sources", title: /^Sources and method/ },
 ] as const;
 
 /** Fails the test on any uncaught page error or console error, so regressions can't hide. */

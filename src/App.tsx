@@ -1,6 +1,6 @@
 import { Component, Suspense, lazy, useEffect, useRef, useState, type ReactNode } from "react";
 import { Nav } from "./components/Nav";
-import { pageHref, pages, planFromParts, useRevealObserver, useRoute, type Route } from "./components/ui";
+import { navPages, pageHref, pages, planFromParts, useRevealObserver, useRoute, type Route } from "./components/ui";
 import { Home } from "./pages/Home";
 import { Footer } from "./sections/Footer";
 
@@ -8,6 +8,7 @@ const Roles = lazy(() => import("./pages/Roles").then((m) => ({ default: m.Roles
 const Plan = lazy(() => import("./pages/Plan").then((m) => ({ default: m.Plan })));
 const Ready = lazy(() => import("./pages/Ready").then((m) => ({ default: m.Ready })));
 const Library = lazy(() => import("./pages/Library").then((m) => ({ default: m.Library })));
+const Sources = lazy(() => import("./pages/Sources").then((m) => ({ default: m.Sources })));
 
 const BASE = import.meta.env.BASE_URL || "/";
 
@@ -139,6 +140,7 @@ export default function App() {
                 {route.page === "plan" && <Plan parts={route.parts} />}
                 {route.page === "ready" && <Ready parts={route.parts} />}
                 {route.page === "library" && <Library shelf={route.parts[0]} term={route.parts[1]} />}
+                {route.page === "sources" && <Sources />}
               </Suspense>
             )}
           </ErrorBoundary>
@@ -210,6 +212,8 @@ function descriptionFor(route: Route) {
       return "Interactive proof-of-work readiness checklist for designers shipping code in their current role or preparing for hybrid roles.";
     case "library":
       return "Reference library comparing traditional and hybrid design work, layered skills, AI tooling pipelines, 8 roadmap.sh tracks, and a plain-English glossary.";
+    case "sources":
+      return "Every source and article behind the Design Engineer Field Guide's figures, and how the research brief's data is used.";
     default:
       return "Practical 2026 guide for designers upskilling into code or Design Engineer, Meta-Designer, and AX roles: market data, skills, tooling, and a 6-month plan.";
   }
@@ -227,7 +231,7 @@ function NotFound() {
         The link may be mistyped or out of date. Pick one of the guide's five pages instead.
       </p>
       <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-        {pages.map((p) => (
+        {navPages.map((p) => (
           <li key={p.id}>
             <a href={`${BASE}${pageHref(p.id)}`} className="relative rounded-card border border-edge bg-card shadow-1 group/card transition-[translate,box-shadow,border-color,opacity] duration-[260ms] ease-spring hover:-translate-y-[3px] hover:border-line-strong hover:shadow-2 active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink has-[>input:focus-visible]:outline-2 has-[>input:focus-visible]:outline-offset-4 has-[>input:focus-visible]:outline-accent-ink motion-reduce:hover:translate-y-0 group flex h-full flex-col p-5">
               <span className="font-mono text-label font-normal text-ink-3">{p.label}</span>

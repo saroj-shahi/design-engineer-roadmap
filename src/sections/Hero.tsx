@@ -196,7 +196,7 @@ export function HandoffEconomics() {
       {/* Evidence: everything open, as a bento grid — chart + org counts, the two cases, then every figure */}
       <section aria-labelledby="evidence-title" className="mt-24 sm:mt-32">
         <SubHead id="evidence-title" title="See the evidence" note="Case studies and survey data." />
-        <div className="grid grid-flow-dense gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-12">
+        <div className="grid grid-flow-dense gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-12 [&>*]:min-w-0">
           <AdoptionDumbbell className="md:col-span-2 lg:col-span-8" />
 
           {/* Org flattening */}
@@ -256,10 +256,10 @@ export function HandoffEconomics() {
             </article>
           ))}
 
-          <div data-reveal className="relative rounded-card border border-edge bg-card shadow-1 md:col-span-2 lg:col-span-12">
+          <div data-reveal className="relative min-w-0 rounded-card border border-edge bg-card shadow-1 md:col-span-2 lg:col-span-12">
             <h3 className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal">Every market figure, with scope and source</h3>
             <div className="px-5 pb-4 sm:px-6">
-              <div className="overflow-x-auto">
+              <div tabIndex={0} role="region" aria-label="Every market figure (scrolls sideways)" className="overflow-x-auto rounded-chip focus-visible:outline-offset-[-2px]">
                 <table className="w-full min-w-[560px] text-left text-sm">
                   <caption className="sr-only">Industry metrics 2025–2026</caption>
                   <thead>

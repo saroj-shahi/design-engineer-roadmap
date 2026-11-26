@@ -39,6 +39,27 @@ test.describe("navigation", () => {
   });
 });
 
+test.describe("sources", () => {
+  test("the footer links to the Sources page, which lists sources and works cited", async ({ page }) => {
+    await fresh(page, "/#/roles/de");
+    await page.getByRole("contentinfo").getByRole("link", { name: /Sources and method/ }).click();
+    await expect(page).toHaveURL(/#\/sources$/);
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("Sources");
+    await expect(page.getByRole("heading", { name: "Sources cited in the research brief" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Works cited" })).toBeVisible();
+    expect(await page.locator("main a[target=_blank]").count()).toBeGreaterThan(5);
+  });
+
+  test("Sources stays out of the top nav but is in search", async ({ page }) => {
+    await fresh(page, "/#/");
+    await expect(page.getByRole("navigation", { name: "Pages" }).getByRole("link", { name: "Sources" })).toHaveCount(0);
+    const box = page.locator("main").getByRole("combobox", { name: "Search the guide" });
+    await box.fill("sources and method");
+    await box.press("Enter");
+    await expect(page).toHaveURL(/#\/sources$/);
+  });
+});
+
 test.describe("search", () => {
   test("the Start page field finds a plan month and opens it", async ({ page }) => {
     await fresh(page, "/#/");

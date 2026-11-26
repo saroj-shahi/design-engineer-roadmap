@@ -1,6 +1,6 @@
 # Design Engineer Field Guide
 
-A static, five-page field guide for designers upskilling into code or moving into **Design Engineer**, **Meta-Designer**, and **AX Designer** roles (**Design Engineer Field Guide · 2026**). React 18 + TypeScript + Vite 5 + Tailwind v4. No backend, no router library. End-to-end tests run on Playwright.
+A static, five-page field guide (plus a Sources page linked from the footer) for designers upskilling into code or moving into **Design Engineer**, **Meta-Designer**, and **AX Designer** roles (**Design Engineer Field Guide · 2026**). React 18 + TypeScript + Vite 5 + Tailwind v4. No backend, no router library. End-to-end tests run on Playwright.
 
 See **[AGENTS.md](AGENTS.md)** for full cross-agent instructions and **[DESIGN.md](DESIGN.md)** for the complete Plum Dusk design system, color tokens, typography rules, and Visual QA checklist.
 
@@ -9,13 +9,14 @@ See **[AGENTS.md](AGENTS.md)** for full cross-agent instructions and **[DESIGN.m
 - `npm run dev`: dev server. For previews use the `dev` config in `.claude/launch.json` (port 5173, strict).
 - `npm run typecheck`: `tsc -b`. Run after every change; `noUnusedLocals`/`noUnusedParameters` are on, so dead imports fail.
 - `npm run build`: typecheck + production build to `dist/`.
+- `npm run icons`: re-renders `public/og-image.png` (1200×630, from `scripts/og/og-image.html`) and the app icons (`apple-touch-icon.png`, `icon-192/512.png`, `icon-maskable-512.png`, `favicon.ico`) from `public/favicon.svg`. Bump the `?v=` on the `og:image` URLs in `index.html` when the image changes so social caches refresh.
 - `npm run test:e2e`: Playwright suite in `tests/e2e/` against the production build, at desktop (1280×800) and phone (Pixel 7). Covers every route (title, one h1, no console errors, no sideways scroll, no cropped text or square corners in rounded cards), a WCAG 2.2 A/AA axe scan per route, pointer and focus visibility, and the main flows (nav, search, roles, checklist, plan, glossary). First run: `npx playwright install chromium`.
 
 ## Layout
 
 - `index.html`, `public/site.webmanifest`, `public/favicon.svg`, `public/404.html`: SEO metadata, Open Graph, Twitter/X, JSON-LD `@graph` (`WebSite` + `LearningResource`), dark Design × Code SVG favicon.
 - `src/App.tsx`: shell. Picks the page from the hash route, syncs `document.title` (`Page | Design Engineer Field Guide`) and `<meta name="description">`, skip link, error boundary, `Alt+G` grid overlay.
-- `src/pages/*`: thin page composers (`Home`, `Roles`, `Plan`, `Ready`, `Library`).
+- `src/pages/*`: thin page composers (`Home`, `Roles`, `Plan`, `Ready`, `Library`, `Sources`). `Sources` sets `nav: false` in `pages`, so it is reached from the footer and search, not the top nav.
 - `src/sections/*`: content blocks (`Hero`, `Roadmap`, `RoadmapTopics`, `Readiness`, `Comparison`, `SkillsExplorer`, `ToolingPipeline`, `Footer`).
 - `src/components/ui.tsx`: shared primitives and hooks (`Section`, `SectionHeader`, `SubHead`, `Tabs`/`TabPanel`/`useTabList`, `Disclosure`, `CheckRow`, `TopicCheckbox`, `Tag`, `BasisBadge`, `ContextBar`, `Meter`, `NextPage`, hash router, persisted state). Check here before writing a new primitive.
 - `src/components/icons.tsx` & `src/components/BrandLogo.tsx`: 24×24 Swiss geometric glyphs (including metric/basis icons and `user`/`users` role icons) and 25 monochrome `currentColor` app/brand marks.

@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>OG image source (1200×630)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=DM+Mono:wght@400;500&display=block"
+      rel="stylesheet"
+    />
+    <style>
+      /* Plum Dusk tokens, mirrored from src/index.css */
+      :root {
+        --desk: #140f19;
+        --card: #1c1623;
+        --edge: #3a2f45;
+        --ink: #efe8f4;
+        --ink-2: #cfc5d8;
+        --ink-3: #a99db4;
+        --line: rgba(239, 232, 244, 0.1);
+        --accent: #ff93b5;
+        --accent-ink: #ffa9c4;
+        --accent-soft: #33202d;
+        --on-accent: #140f19;
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      html, body { width: 1200px; height: 630px; }
+      body {
+        position: relative;
+        overflow: hidden;
+        background:
+          radial-gradient(90% 70% at 85% -10%, rgba(255, 147, 181, 0.16), transparent 60%),
+          radial-gradient(60% 60% at 0% 110%, rgba(255, 147, 181, 0.07), transparent 60%),
+          var(--desk);
+        color: var(--ink);
+        font-family: "DM Sans", system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .frame {
+        position: absolute;
+        inset: 40px;
+        border: 1px solid var(--edge);
+        border-radius: 28px;
+        background: linear-gradient(180deg, rgba(28, 22, 35, 0.92), rgba(24, 18, 32, 0.92));
+        box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.8);
+        padding: 36px 48px 40px;
+        display: flex;
+        flex-direction: column;
+      }
+      .top { display: flex; align-items: center; justify-content: space-between; }
+      .brand { display: flex; align-items: center; gap: 14px; }
+      .brand-name { font-family: "Bricolage Grotesque", sans-serif; font-weight: 600; font-size: 22px; letter-spacing: -0.02em; line-height: 1; }
+      .brand-sub { margin-top: 6px; font-family: "DM Mono", monospace; font-size: 14px; color: var(--ink-3); }
+      .brand-sub b { color: var(--accent-ink); font-weight: 400; }
+      .url { font-family: "DM Mono", monospace; font-size: 15px; color: var(--ink-3); }
+      .body { flex: 1; display: grid; grid-template-columns: 1fr 300px; gap: 40px; align-items: center; margin-top: 8px; }
+      h1 {
+        font-family: "Bricolage Grotesque", sans-serif;
+        font-weight: 600;
+        font-size: 70px;
+        line-height: 0.98;
+        letter-spacing: -0.045em;
+      }
+      h1 em { color: var(--accent); }
+      .lede { margin-top: 22px; max-width: 34ch; font-size: 21px; line-height: 1.45; color: var(--ink-2); }
+      .chips { display: flex; gap: 10px; flex-wrap: wrap; }
+      .chip {
+        border: 1px solid var(--edge);
+        border-radius: 999px;
+        padding: 9px 16px;
+        font-family: "DM Mono", monospace;
+        font-size: 14px;
+        color: var(--ink-2);
+        background: rgba(239, 232, 244, 0.03);
+      }
+      .chip.on { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-ink); }
+      svg text { font-family: "DM Mono", monospace; }
+    </style>
+  </head>
+  <body>
+    <div class="frame">
+      <div class="top">
+        <div class="brand">
+          <svg width="44" height="44" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <rect x="4.5" y="6.5" width="13.5" height="19" rx="2" stroke="#efe8f4" stroke-width="2" />
+            <rect x="2.75" y="4.75" width="3.5" height="3.5" fill="#1c1623" stroke="#efe8f4" stroke-width="1.5" />
+            <rect x="16.25" y="4.75" width="3.5" height="3.5" fill="#1c1623" stroke="#efe8f4" stroke-width="1.5" />
+            <rect x="2.75" y="23.75" width="3.5" height="3.5" fill="#1c1623" stroke="#efe8f4" stroke-width="1.5" />
+            <rect x="16.25" y="23.75" width="3.5" height="3.5" fill="#1c1623" stroke="#efe8f4" stroke-width="1.5" />
+            <polygon points="13,10 18,10 25,16 18,22 13,22" fill="#ff93b5" fill-opacity="0.2" />
+            <path d="M10.75 20.5L14.5 11.5" stroke="#ff93b5" stroke-width="2" stroke-linecap="square" />
+            <path d="M20.5 9.5L27 16L20.5 22.5" stroke="#ff93b5" stroke-width="2.25" stroke-linecap="square" />
+          </svg>
+          <div>
+            <div class="brand-name">Design Engineer</div>
+            <div class="brand-sub">Field Guide · <b>2026</b></div>
+          </div>
+        </div>
+        <div class="url">design-engineer-roadmap.vercel.app</div>
+      </div>
+
+      <div class="body">
+        <div>
+          <h1>The handoff is shrinking. <em>Design and code</em> now meet earlier.</h1>
+          <p class="lede">Three roles growing out of the shift, and a six-month path into one, whether you upskill at work or start fresh.</p>
+        </div>
+
+        <!-- Design frame → code: the guide's core idea, drawn in the site's illustration style -->
+        <svg width="300" height="330" viewBox="0 0 300 330" fill="none" aria-hidden="true">
+          <rect x="18" y="10" width="200" height="132" rx="14" fill="rgba(239,232,244,0.04)" stroke="#6a5a7a" stroke-width="1.5" />
+          <rect x="13" y="5" width="10" height="10" fill="#ff93b5" />
+          <rect x="213" y="5" width="10" height="10" fill="#ff93b5" />
+          <rect x="13" y="137" width="10" height="10" fill="#ff93b5" />
+          <rect x="213" y="137" width="10" height="10" fill="#ff93b5" />
+          <rect x="38" y="32" width="96" height="12" rx="6" fill="#6a5a7a" />
+          <rect x="38" y="54" width="150" height="7" rx="3.5" fill="#3a2f45" />
+          <rect x="38" y="68" width="124" height="7" rx="3.5" fill="#3a2f45" />
+          <rect x="38" y="96" width="72" height="26" rx="13" fill="#ff93b5" />
+          <text x="62" y="160" fill="#a99db4" font-size="12">DESIGN</text>
+
+          <path d="M150 150 C 150 185, 185 190, 185 212" stroke="#ff93b5" stroke-width="1.5" stroke-dasharray="5 6" />
+          <path d="M179 205 L185 214 L191 205" stroke="#ff93b5" stroke-width="1.5" />
+
+          <rect x="70" y="218" width="226" height="108" rx="14" fill="#1c1623" stroke="#ff93b5" stroke-width="1.5" />
+          <line x1="70" y1="242" x2="296" y2="242" stroke="#3a2f45" />
+          <circle cx="88" cy="230" r="4" fill="#6a5a7a" />
+          <circle cx="101" cy="230" r="4" fill="#6a5a7a" />
+          <circle cx="114" cy="230" r="4" fill="#6a5a7a" />
+          <text x="88" y="266" fill="#ff93b5" font-size="14">&lt;Button</text>
+          <text x="104" y="286" fill="#a99db4" font-size="14">variant="primary"</text>
+          <text x="88" y="308" fill="#ff93b5" font-size="14">/&gt;</text>
+        </svg>
+      </div>
+
+      <div class="chips">
+        <span class="chip on">Design Engineer</span>
+        <span class="chip on">Meta-Designer</span>
+        <span class="chip on">AX Designer</span>
+        <span class="chip">Six-month plan</span>
+        <span class="chip">Readiness checklist</span>
+        <span class="chip">Library</span>
+      </div>
+    </div>
+  </body>
+</html>

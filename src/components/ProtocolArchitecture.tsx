@@ -31,7 +31,7 @@ export function ProtocolArchitecture({
         <Hint touch="Tap a protocol">Click a protocol to inspect it</Hint>
       </div>
 
-      <div className="plate-field overflow-x-auto px-4 py-5 sm:px-6">
+      <div tabIndex={0} role="region" aria-label="Agent protocol map (scrolls sideways)" className="plate-field overflow-x-auto px-4 py-5 sm:px-6 focus-visible:outline-offset-[-2px]">
         <svg
           viewBox="0 0 880 276"
           role="img"

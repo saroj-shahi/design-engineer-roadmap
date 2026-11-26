@@ -80,7 +80,7 @@ export function Comparison() {
         </TabPanel>
       ) : (
         <TabPanel idPrefix="cmpview" id="table">
-          <div className="relative rounded-card border border-edge bg-card shadow-1 overflow-x-auto px-5 sm:px-7">
+          <div tabIndex={0} role="region" aria-label="Role comparison table (scrolls sideways)" className="relative rounded-card border border-edge bg-card shadow-1 overflow-x-auto px-5 sm:px-7 focus-visible:outline-offset-[-2px]">
             <table className="w-full min-w-[720px] text-left">
               <caption className="sr-only">Design-first UX designer and design engineer, compared</caption>
               <thead>

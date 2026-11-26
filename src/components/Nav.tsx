@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Glyph, type GlyphName } from "./icons";
 import { FindDialog } from "./QuickFind";
-import { pageHref, pages, type Page } from "./ui";
+import { navPages, pageHref, type Page } from "./ui";
 
 const BASE = import.meta.env.BASE_URL || "/";
 
@@ -11,6 +11,7 @@ const pageGlyph: Record<Page, GlyphName> = {
   plan: "route",
   ready: "check",
   library: "library",
+  sources: "library",
 };
 
 /** Drives the reading progress bar directly via ref so scrolling never re-renders Nav. */
@@ -70,7 +71,7 @@ export function Nav({ page }: { page: Page | null }) {
           aria-label="Pages"
           className="col-span-2 row-start-2 -mx-[var(--gutter)] flex h-12 items-center justify-between gap-1 overflow-x-auto border-t border-line px-[var(--gutter)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:col-span-1 lg:col-start-2 lg:row-start-1 lg:mx-0 lg:h-auto lg:justify-center lg:border-t-0 lg:px-0"
         >
-          {pages.map((p) => {
+          {navPages.map((p) => {
             const on = page === p.id;
             return (
               <a
