@@ -1,6 +1,6 @@
 import { useId } from "react";
 import { hiringShiftSeries } from "../data/research";
-import { BasisBadge } from "./ui";
+import { BasisBadge, svgFont, useSvgTextFloor } from "./ui";
 
 /* Zero-anchored diverging horizontal bar chart (-60% to +20%, per diagram-design type-bar).
    All figures trace directly to marketMetrics in src/data/research.ts, sorted high -> low. */
@@ -22,6 +22,7 @@ const PLOT_B = TOP + hiringShiftSeries.length * ROW_H + 6;
 
 export function MarketShiftChart() {
   const uid = useId().replace(/:/g, "");
+  const svgRef = useSvgTextFloor(W);
   return (
     <figure className="relative rounded-card border border-edge bg-card shadow-1 mt-8 sm:mt-10" data-reveal>
       <div className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal">
@@ -40,11 +41,7 @@ export function MarketShiftChart() {
               <li key={row.label} className="border-b border-line pb-3 last:border-b-0 last:pb-0">
                 <div className="flex items-baseline justify-between gap-2 text-sm">
                   <span className={focal ? "font-semibold text-ink" : "text-ink-2"}>{row.label}</span>
-                  <span
-                    className={`font-mono tabular-nums ${
-                      focal ? "font-semibold text-accent-ink" : positive ? "font-semibold text-ink" : "text-ink-2"
-                    }`}
-                  >
+                  <span className={`font-mono tabular-nums ${focal ? "font-semibold text-accent-ink" : positive ? "font-semibold text-ink" : "text-ink-2"}`}>
                     {row.display}
                   </span>
                 </div>
@@ -53,19 +50,12 @@ export function MarketShiftChart() {
                     {!positive && (
                       <span
                         style={{ width: `${pctWidth}%` }}
-                        className={`block h-3.5 ${
-                          focal ? "border-2 border-accent bg-accent/25" : "border border-ink-3 bg-ink/15"
-                        }`}
+                        className={`block h-3.5 ${focal ? "border-2 border-accent bg-accent/25" : "border border-ink-3 bg-ink/15"}`}
                       />
                     )}
                   </div>
                   <div className="flex justify-start pl-px">
-                    {positive && (
-                      <span
-                        style={{ width: `${(row.value / 20) * 100}%` }}
-                        className="block h-3.5 border border-ink bg-ink"
-                      />
-                    )}
+                    {positive && <span style={{ width: `${(row.value / 20) * 100}%` }} className="block h-3.5 border border-ink bg-ink" />}
                   </div>
                 </div>
               </li>
@@ -73,17 +63,11 @@ export function MarketShiftChart() {
           })}
         </ul>
 
-        <svg
-          viewBox={`0 0 ${W} ${H}`}
-          role="img"
-          aria-labelledby={`${uid}-title`}
-          className="mx-auto hidden h-auto w-full max-w-[920px] lg:block"
-        >
+        <svg ref={svgRef} viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby={`${uid}-title`} className="mx-auto hidden h-auto w-full max-w-[920px] lg:block">
           <title id={`${uid}-title`}>
-            Diverging bar chart comparing tech hiring changes on a shared -60% to +20% scale, sorted high to low: startup software
-            engineering +7%, US BLS web and interface design outlook +6%, big-tech software engineering -11%, startup design -22%,
-            front-end share of engineering hiring -25%, big-tech marketing -36%, big-tech product management -39%, and big-tech
-            design -48%.
+            Diverging bar chart comparing tech hiring changes on a shared -60% to +20% scale, sorted high to low: startup software engineering +7%, US BLS web
+            and interface design outlook +6%, big-tech software engineering -11%, startup design -22%, front-end share of engineering hiring -25%, big-tech
+            marketing -36%, big-tech product management -39%, and big-tech design -48%.
           </title>
 
           {/* Column header labels */}
@@ -92,7 +76,7 @@ export function MarketShiftChart() {
             y={24}
             textAnchor="end"
             fill="var(--ink-3)"
-            style={{ fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: "0.08em" }}
+            style={{ fontFamily: "var(--font-mono)", fontSize: svgFont(12), letterSpacing: "0.08em" }}
           >
             ROLE / BENCHMARK
           </text>
@@ -101,7 +85,7 @@ export function MarketShiftChart() {
             y={24}
             textAnchor="end"
             fill="var(--ink-3)"
-            style={{ fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: "0.08em" }}
+            style={{ fontFamily: "var(--font-mono)", fontSize: svgFont(12), letterSpacing: "0.08em" }}
           >
             ← CONTRACTION
           </text>
@@ -110,7 +94,7 @@ export function MarketShiftChart() {
             y={24}
             textAnchor="start"
             fill="var(--ink-3)"
-            style={{ fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: "0.08em" }}
+            style={{ fontFamily: "var(--font-mono)", fontSize: svgFont(12), letterSpacing: "0.08em" }}
           >
             GROWTH →
           </text>
@@ -121,20 +105,13 @@ export function MarketShiftChart() {
             const isZero = t === 0;
             return (
               <g key={t}>
-                <line
-                  x1={x}
-                  y1={TOP - 6}
-                  x2={x}
-                  y2={PLOT_B}
-                  stroke={isZero ? "var(--ink)" : "var(--line)"}
-                  strokeWidth={isZero ? 1.5 : 1}
-                />
+                <line x1={x} y1={TOP - 6} x2={x} y2={PLOT_B} stroke={isZero ? "var(--ink)" : "var(--line)"} strokeWidth={isZero ? 1.5 : 1} />
                 <text
                   x={x}
                   y={PLOT_B + 20}
                   textAnchor="middle"
                   fill={isZero ? "var(--ink)" : "var(--ink-3)"}
-                  style={{ fontFamily: "var(--font-mono)", fontSize: 12, fontWeight: isZero ? 500 : 400 }}
+                  style={{ fontFamily: "var(--font-mono)", fontSize: svgFont(12), fontWeight: isZero ? 500 : 400 }}
                 >
                   {t > 0 ? `+${t}%` : `${t}%`}
                 </text>
@@ -155,9 +132,7 @@ export function MarketShiftChart() {
             return (
               <g key={row.label}>
                 {/* Subtle row guide */}
-                {i > 0 && (
-                  <line x1={8} y1={y - 8} x2={PLOT_R} y2={y - 8} stroke="var(--line)" strokeWidth="0.75" strokeOpacity="0.65" />
-                )}
+                {i > 0 && <line x1={8} y1={y - 8} x2={PLOT_R} y2={y - 8} stroke="var(--line)" strokeWidth="0.75" strokeOpacity="0.65" />}
                 {/* Category label */}
                 <text
                   x={PLOT_L - 12}
@@ -166,7 +141,7 @@ export function MarketShiftChart() {
                   fill={focal ? "var(--ink)" : "var(--ink-2)"}
                   style={{
                     fontFamily: "var(--font-sans)",
-                    fontSize: 13.5,
+                    fontSize: svgFont(13.5),
                     fontWeight: focal ? 600 : 400,
                   }}
                 >
@@ -194,7 +169,7 @@ export function MarketShiftChart() {
                   fill={focal ? "var(--accent-ink)" : positive ? "var(--ink)" : "var(--ink-2)"}
                   style={{
                     fontFamily: "var(--font-mono)",
-                    fontSize: 12,
+                    fontSize: svgFont(12),
                     fontWeight: focal || positive ? 600 : 400,
                   }}
                 >
@@ -210,7 +185,7 @@ export function MarketShiftChart() {
             y={H - 10}
             textAnchor="middle"
             fill="var(--ink-3)"
-            style={{ fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: "0.1em" }}
+            style={{ fontFamily: "var(--font-mono)", fontSize: svgFont(12), letterSpacing: "0.1em" }}
           >
             CHANGE IN HIRING / 10-YEAR OUTLOOK (%) · ZERO-ANCHORED SCALE
           </text>

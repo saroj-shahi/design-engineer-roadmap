@@ -16,8 +16,7 @@ import { ArrowGlyph, BasisGlyph, ExternalGlyph } from "./icons";
 
 /* ───────── Motion plumbing ───────── */
 
-export const prefersReducedMotion = () =>
-  typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+export const prefersReducedMotion = () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 /** One observer for the whole page: anything with [data-reveal] gets .is-in once it enters the viewport,
  *  including nodes mounted later (tab panels, filtered lists). */
@@ -34,8 +33,7 @@ export function useRevealObserver() {
       },
       { rootMargin: "0px 0px -8% 0px", threshold: 0.01 },
     );
-    const scan = (root: ParentNode) =>
-      root.querySelectorAll<HTMLElement>("[data-reveal]:not(.is-in)").forEach((el) => io.observe(el));
+    const scan = (root: ParentNode) => root.querySelectorAll<HTMLElement>("[data-reveal]:not(.is-in)").forEach((el) => io.observe(el));
     scan(document);
     const mo = new MutationObserver((muts) => {
       for (const m of muts) {
@@ -111,7 +109,9 @@ export function Lines({
     <Tag id={id} className={className} data-reveal="lines" style={{ "--d": `${delay}ms` } as CSSProperties}>
       {lines.map((l, i) => (
         <span key={i} className="-mx-[0.08em] -mb-[0.2em] block overflow-hidden px-[0.08em] pb-[0.2em]" style={{ "--i": i } as CSSProperties}>
-          <span className="block translate-y-[105%] transition-transform duration-[1100ms] ease-silk [transition-delay:calc(var(--i,0)*80ms+var(--d,0ms))] in-[.is-in]:translate-y-0 motion-reduce:translate-y-0 print:translate-y-0">{l}</span>
+          <span className="block translate-y-[105%] transition-transform duration-[1100ms] ease-silk [transition-delay:calc(var(--i,0)*80ms+var(--d,0ms))] in-[.is-in]:translate-y-0 motion-reduce:translate-y-0 print:translate-y-0">
+            {l}
+          </span>
         </span>
       ))}
     </Tag>
@@ -127,12 +127,17 @@ export function CountUp({ value, className = "" }: { value: string; className?: 
   const ref = useRef<HTMLSpanElement>(null);
   const [shown, setShown] = useState(value);
   const [waiting, setWaiting] = useState(false);
+  // A new figure resets to its real text during render, before the effect below decides whether to animate it.
+  const [prevValue, setPrevValue] = useState(value);
+  if (prevValue !== value) {
+    setPrevValue(value);
+    setShown(value);
+    setWaiting(false);
+  }
 
   useLayoutEffect(() => {
     const el = ref.current;
     const match = value.match(/^([^\d]*)([\d,.]+)(.*)$/);
-    setShown(value);
-    setWaiting(false);
     if (!el || !match || prefersReducedMotion()) return;
     const [, pre, num, post] = match;
     const target = parseFloat(num.replace(/,/g, ""));
@@ -140,13 +145,12 @@ export function CountUp({ value, className = "" }: { value: string; className?: 
     const decimals = num.includes(".") ? num.split(".")[1].length : 0;
     const grouped = num.includes(",");
     const format = (n: number) => {
-      const s = grouped
-        ? n.toLocaleString("en-US", { minimumFractionDigits: decimals, maximumFractionDigits: decimals })
-        : n.toFixed(decimals);
+      const s = grouped ? n.toLocaleString("en-US", { minimumFractionDigits: decimals, maximumFractionDigits: decimals }) : n.toFixed(decimals);
       // Never show a signed zero such as "−0%".
       return `${parseFloat(s.replace(/,/g, "")) === 0 ? pre.replace(/[−+-]/g, "") : pre}${s}${post}`;
     };
     // Hide the visual copy (visibility, so it keeps its size) until it scrolls in; the text stays the real figure.
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- must run in a layout effect, before paint: it depends on reduced motion and IntersectionObserver
     setWaiting(true);
     let raf = 0;
     const finish = () => {
@@ -202,7 +206,9 @@ export function Roll({ children }: { children: string }) {
   return (
     <span className="relative inline-grid overflow-hidden">
       <span className={`${move} group-hover:-translate-y-full group-focus-visible:-translate-y-full`}>{children}</span>
-      <span aria-hidden="true" className={`${move} translate-y-full group-hover:translate-y-0 group-focus-visible:translate-y-0`}>{children}</span>
+      <span aria-hidden="true" className={`${move} translate-y-full group-hover:translate-y-0 group-focus-visible:translate-y-0`}>
+        {children}
+      </span>
     </span>
   );
 }
@@ -290,23 +296,15 @@ export function ActionLink({
 export function Section({ id, children, className = "" }: { id: string; children: ReactNode; className?: string }) {
   return (
     <section id={id} aria-labelledby={`${id}-title`} className={`relative ${className}`}>
-      <div data-wrap className="mx-auto w-full max-w-[1440px] px-(--gutter) pb-24 sm:pb-36">{children}</div>
+      <div data-wrap className="mx-auto w-full max-w-[1440px] px-(--gutter) pb-24 sm:pb-36">
+        {children}
+      </div>
     </section>
   );
 }
 
 /** Page opener: monumental title, optional glyph plate, lede offset to the right. */
-export function SectionHeader({
-  id,
-  title,
-  lede,
-  level = "h2",
-}: {
-  id: string;
-  title: ReactNode[];
-  lede?: ReactNode;
-  level?: "h1" | "h2";
-}) {
+export function SectionHeader({ id, title, lede, level = "h2" }: { id: string; title: ReactNode[]; lede?: ReactNode; level?: "h1" | "h2" }) {
   // Page titles share one layout on every page: title on the left, lede aligned to its baseline on the right.
   if (level === "h1") return <PageHeader id={`${id}-title`} title={title} lede={lede} />;
   // Section openers (Library shelves) mirror the page header: title left, lede on the right at its baseline.
@@ -422,7 +420,16 @@ export function CopyLink({
         title={iconOnly ? label : undefined}
         className="hit inline-flex items-center gap-1.5 font-mono text-label font-normal transition-colors hover:text-accent-ink"
       >
-        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="square" className="size-3.5 shrink-0">
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="square"
+          className="size-3.5 shrink-0"
+        >
           <path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1" />
           <path d="M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1" />
         </svg>
@@ -443,20 +450,12 @@ export function CopyLink({
   );
 }
 
-export function Hint({
-  children,
-  touch,
-  keys,
-  className = "",
-}: {
-  children: ReactNode;
-  touch?: ReactNode;
-  keys?: string[];
-  className?: string;
-}) {
+export function Hint({ children, touch, keys, className = "" }: { children: ReactNode; touch?: ReactNode; keys?: string[]; className?: string }) {
   return (
     // A caller that hides the hint at some sizes (e.g. "hidden sm:inline-flex") owns the display value.
-    <span className={`${/(^|\s)hidden(\s|$)/.test(className) ? "" : "inline-flex"} items-center gap-1.5 font-mono text-label font-normal text-current opacity-80 ${className}`}>
+    <span
+      className={`${/(^|\s)hidden(\s|$)/.test(className) ? "" : "inline-flex"} items-center gap-1.5 font-mono text-label font-normal text-current opacity-80 ${className}`}
+    >
       <svg aria-hidden="true" focusable="false" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" className="size-3.5 shrink-0">
         <path d="M5.5 2.5v7.2l1.9-1.6 1.4 3.4 1.5-.6-1.4-3.3h2.6L5.5 2.5Z" strokeLinejoin="round" />
       </svg>
@@ -484,7 +483,9 @@ export function Tag({ children, tone = "neutral" }: { children: ReactNode; tone?
     solid: "border-ink bg-ink text-paper",
   };
   return (
-    <span className={`inline-flex max-w-full items-center gap-1.5 rounded-full border px-2.5 py-[3px] font-mono text-xs leading-4 tracking-tight ${tones[tone]}`}>
+    <span
+      className={`inline-flex max-w-full items-center gap-1.5 rounded-full border px-2.5 py-[3px] font-mono text-xs leading-4 tracking-tight ${tones[tone]}`}
+    >
       {typeof children === "string" && <BrandLogosFor text={children} max={2} className="size-3.5" letters={false} />}
       <span>{children}</span>
     </span>
@@ -494,7 +495,9 @@ export function Tag({ children, tone = "neutral" }: { children: ReactNode; tone?
 /** `onBand` takes the text colour of a filled band (e.g. a card head) instead of the muted ink. */
 export function BasisBadge({ basis, onBand = false }: { basis: BasisKind; onBand?: boolean }) {
   return (
-    <span className={`font-mono text-label font-normal inline-flex items-center gap-1.5 whitespace-nowrap ${onBand ? "text-current [&_.glyph-accent]:stroke-current" : "text-ink-3"}`}>
+    <span
+      className={`font-mono text-label font-normal inline-flex items-center gap-1.5 whitespace-nowrap ${onBand ? "text-current [&_.glyph-accent]:stroke-current" : "text-ink-3"}`}
+    >
       <BasisGlyph basis={basis} className={`size-3.5 ${onBand ? "[--accent:currentColor]" : ""}`} />
       <span>{basisLabel[basis]}</span>
     </span>
@@ -552,8 +555,7 @@ export function useTabList({
         tabIndex: id === value ? 0 : -1,
         onClick: () => onChange(id),
       }) as const,
-    panelProps: (id: string) =>
-      ({ role: "tabpanel", id: `${idPrefix}-panel-${id}`, "aria-labelledby": `${idPrefix}-tab-${id}`, tabIndex: 0 }) as const,
+    panelProps: (id: string) => ({ role: "tabpanel", id: `${idPrefix}-panel-${id}`, "aria-labelledby": `${idPrefix}-tab-${id}`, tabIndex: 0 }) as const,
   };
 }
 
@@ -587,7 +589,10 @@ export function Tabs({
   const wrap = {
     underline: "flex gap-8 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden border-b border-line",
     segmented: "inline-flex max-w-full gap-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden rounded-ctl border border-edge bg-card p-1",
-    list: orientation === "vertical" ? "flex flex-col border-t border-line" : "grid grid-flow-col auto-cols-[minmax(13rem,1fr)] overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden border-t border-line",
+    list:
+      orientation === "vertical"
+        ? "flex flex-col border-t border-line"
+        : "grid grid-flow-col auto-cols-[minmax(13rem,1fr)] overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden border-t border-line",
   }[variant];
 
   return (
@@ -615,23 +620,34 @@ export function Tabs({
             {variant === "list" && orientation === "vertical" ? (
               <>
                 {t.sub && <span className="font-mono text-label font-normal w-8 shrink-0 text-ink-3">{t.sub}</span>}
-                <span className={`font-display font-semibold tracking-[-0.02em] text-pretty text-2xl leading-tight transition-transform duration-700 ease-silk ${selected ? "motion-safe:translate-x-2" : "motion-safe:group-hover:translate-x-1"}`}>
+                <span
+                  className={`font-display font-semibold tracking-[-0.02em] text-pretty text-2xl leading-tight transition-transform duration-700 ease-silk ${selected ? "motion-safe:translate-x-2" : "motion-safe:group-hover:translate-x-1"}`}
+                >
                   {t.label}
                 </span>
-                <span aria-hidden className={`inline-block size-[7px] shrink-0 rounded-full bg-current ml-auto self-center text-accent transition-transform duration-500 ease-silk ${selected ? "scale-100" : "scale-0"}`} />
+                <span
+                  aria-hidden
+                  className={`inline-block size-[7px] shrink-0 rounded-full bg-current ml-auto self-center text-accent transition-transform duration-500 ease-silk ${selected ? "scale-100" : "scale-0"}`}
+                />
               </>
             ) : variant === "list" ? (
               <>
                 {t.sub && <span className={`font-mono text-label font-normal block ${selected ? "text-accent-ink" : "text-ink-3"}`}>{t.sub}</span>}
                 <span className="mt-2 block text-[1.0625rem] font-medium leading-snug tracking-tight">{t.label}</span>
-                <span aria-hidden className={`absolute -top-px left-0 right-0 h-[2px] origin-left bg-accent transition-transform duration-700 ease-silk ${selected ? "scale-x-100" : "scale-x-0"}`} />
+                <span
+                  aria-hidden
+                  className={`absolute -top-px left-0 right-0 h-[2px] origin-left bg-accent transition-transform duration-700 ease-silk ${selected ? "scale-x-100" : "scale-x-0"}`}
+                />
               </>
             ) : (
               <>
                 <span className="block">{t.label}</span>
                 {t.sub && <span className="mt-0.5 block font-mono text-xs normal-case tracking-normal text-ink-3">{t.sub}</span>}
                 {variant === "underline" && (
-                  <span aria-hidden className={`absolute bottom-0 left-0 right-0 h-px origin-left bg-ink transition-transform duration-700 ease-silk ${selected ? "scale-x-100" : "scale-x-0"}`} />
+                  <span
+                    aria-hidden
+                    className={`absolute bottom-0 left-0 right-0 h-px origin-left bg-ink transition-transform duration-700 ease-silk ${selected ? "scale-x-100" : "scale-x-0"}`}
+                  />
                 )}
               </>
             )}
@@ -699,7 +715,9 @@ export function Disclosure({
           {meta && <span className="hidden sm:block">{meta}</span>}
           <span aria-hidden className="relative block size-3 shrink-0 text-ink-3 transition-colors duration-500 group-hover:text-accent">
             <span className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-current" />
-            <span className={`absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-current transition-transform duration-700 ease-silk ${open ? "scale-y-0" : ""}`} />
+            <span
+              className={`absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-current transition-transform duration-700 ease-silk ${open ? "scale-y-0" : ""}`}
+            />
           </span>
         </button>
       </Heading>
@@ -728,12 +746,19 @@ export function CheckRow({
   const id = useId();
   return (
     <li className="border-b border-line">
-      <label htmlFor={id} className="group -mx-3 grid cursor-pointer grid-cols-[2.25rem_1fr_auto] items-start gap-x-3 rounded-ctl px-3 py-5 transition-colors duration-300 hover:bg-sunken/60">
+      <label
+        htmlFor={id}
+        className="group -mx-3 grid cursor-pointer grid-cols-[2.25rem_1fr_auto] items-start gap-x-3 rounded-ctl px-3 py-5 transition-colors duration-300 hover:bg-sunken/60"
+      >
         <input id={id} type="checkbox" checked={checked} onChange={onToggle} className="peer sr-only" />
         <span className="font-mono text-label font-normal pt-1 text-ink-3 tabular-nums">{index !== undefined ? String(index).padStart(2, "0") : ""}</span>
         <span>
-          <span className={`block text-[1.0625rem] font-medium leading-snug tracking-tight transition-colors duration-500 ${checked ? "text-ink-3" : "text-ink"}`}>
-            <span className={`bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_1px] bg-[position:0_55%] bg-no-repeat transition-[background-size] duration-700 ease-silk ${checked ? "bg-[length:100%_1px]" : ""}`}>
+          <span
+            className={`block text-[1.0625rem] font-medium leading-snug tracking-tight transition-colors duration-500 ${checked ? "text-ink-3" : "text-ink"}`}
+          >
+            <span
+              className={`bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_1px] bg-[position:0_55%] bg-no-repeat transition-[background-size] duration-700 ease-silk ${checked ? "bg-[length:100%_1px]" : ""}`}
+            >
               {title}
             </span>
           </span>
@@ -746,7 +771,13 @@ export function CheckRow({
           }`}
         >
           <svg viewBox="0 0 12 12" className="size-3 text-on-accent" fill="none" stroke="currentColor" strokeWidth="1.75">
-            <path d="M2.5 6.5l2.2 2.2L9.5 3.5" pathLength={1} strokeDasharray={1} strokeDashoffset={checked ? 0 : 1} className="transition-[stroke-dashoffset] duration-500 ease-silk" />
+            <path
+              d="M2.5 6.5l2.2 2.2L9.5 3.5"
+              pathLength={1}
+              strokeDasharray={1}
+              strokeDashoffset={checked ? 0 : 1}
+              className="transition-[stroke-dashoffset] duration-500 ease-silk"
+            />
           </svg>
         </span>
       </label>
@@ -755,17 +786,7 @@ export function CheckRow({
 }
 
 /** Compact topic checkbox shared by Plan, PlanRoadmapBase, and Library → Roadmaps. */
-export function TopicCheckbox({
-  checked,
-  onToggle,
-  label,
-  meta,
-}: {
-  checked: boolean;
-  onToggle: () => void;
-  label: string;
-  meta?: string;
-}) {
+export function TopicCheckbox({ checked, onToggle, label, meta }: { checked: boolean; onToggle: () => void; label: string; meta?: string }) {
   return (
     <label className="group flex min-h-11 cursor-pointer items-start gap-2.5 py-3">
       <input type="checkbox" checked={checked} onChange={onToggle} className="peer sr-only" />
@@ -786,9 +807,7 @@ export function TopicCheckbox({
         </svg>
       </span>
       <span className="min-w-0 flex-1 text-sm leading-snug">
-        <span className={`transition-colors duration-300 ${checked ? "text-ink-3 line-through" : "text-ink-2 group-hover:text-ink"}`}>
-          {label}
-        </span>
+        <span className={`transition-colors duration-300 ${checked ? "text-ink-3 line-through" : "text-ink-2 group-hover:text-ink"}`}>{label}</span>
         {meta && <span className="font-mono text-label font-normal ml-2 text-ink-3">· {meta}</span>}
       </span>
     </label>
@@ -807,6 +826,30 @@ export function parseStringArray(raw: string | null): string[] {
     return [];
   }
 }
+
+/* ── SVG chart text floor ──────────────────────────────────────
+   SVG text scales with its chart. When a chart renders narrower than its viewBox, this sets
+   `--svg-k` on the <svg> so labels drawn at `minUnits` never render below 12px. Use `svgFont(n)`
+   for every label's font size. At full size k is 1, so the chart looks exactly as designed. */
+export function useSvgTextFloor(viewBoxWidth: number, minUnits = 12) {
+  const ref = useRef<SVGSVGElement>(null);
+  useLayoutEffect(() => {
+    const svg = ref.current;
+    if (!svg || typeof ResizeObserver === "undefined") return;
+    const update = () => {
+      const w = svg.getBoundingClientRect().width;
+      if (!w) return;
+      const k = Math.max(1, (12 / minUnits) * (viewBoxWidth / w));
+      svg.style.setProperty("--svg-k", String(Math.ceil(k * 1000) / 1000));
+    };
+    const ro = new ResizeObserver(update);
+    ro.observe(svg);
+    return () => ro.disconnect();
+  }, [viewBoxWidth, minUnits]);
+  return ref;
+}
+
+export const svgFont = (units: number) => `calc(${units}px * var(--svg-k, 1))`;
 
 export function usePersistentSet(key: string) {
   const [set, setSet] = useState<Set<string>>(() => {
@@ -961,8 +1004,7 @@ const clampStep = (raw: string | undefined, prefix: string, max: number) => {
 export function planFromParts(parts: string[]): PlanRoute | null {
   const [track, b, c] = parts;
   if (track === "a") {
-    const option: TrackAOption =
-      b === "pde" || b === "meta" ? b : readStored<TrackAOption>(TRACK_A_OPTION_KEY, "pde", ["pde", "meta"]);
+    const option: TrackAOption = b === "pde" || b === "meta" ? b : readStored<TrackAOption>(TRACK_A_OPTION_KEY, "pde", ["pde", "meta"]);
     return { track: "a", option, month: clampStep(c, "m", 6) };
   }
   if (track === "b") return { track: "b", stage: clampStep(b, "s", 4) };
@@ -1002,7 +1044,9 @@ function canonical(r: Route): string | null {
     const saved = lastPlanHref();
     if (saved !== pageHref("plan")) return saved;
     const t = readStoredTrack();
-    return t ? planHref(t === "a" ? { track: "a", option: readStored<TrackAOption>(TRACK_A_OPTION_KEY, "pde", ["pde", "meta"]), month: 1 } : { track: "b", stage: 1 }) : null;
+    return t
+      ? planHref(t === "a" ? { track: "a", option: readStored<TrackAOption>(TRACK_A_OPTION_KEY, "pde", ["pde", "meta"]), month: 1 } : { track: "b", stage: 1 })
+      : null;
   }
   if (r.page === "ready" && !trackFromPart(r.parts[0])) {
     const t = readStoredTrack();
@@ -1067,7 +1111,9 @@ export function useRoute() {
     return r;
   });
   const routeRef = useRef(route);
-  routeRef.current = route;
+  useLayoutEffect(() => {
+    routeRef.current = route;
+  }, [route]);
 
   useEffect(() => {
     try {
@@ -1101,10 +1147,7 @@ export function useRoute() {
       remember(final);
       current = location.pathname + location.hash;
       const prev = routeRef.current;
-      const pageChanged =
-        prev.page !== final.page ||
-        prev.notFound !== final.notFound ||
-        (final.page === "library" && prev.parts[0] !== final.parts[0]);
+      const pageChanged = prev.page !== final.page || prev.notFound !== final.notFound || (final.page === "library" && prev.parts[0] !== final.parts[0]);
       routeRef.current = final;
       setRoute(final);
       if (kind === "history") {
@@ -1235,9 +1278,16 @@ export function ContextBar({
               const last = i === trail.length - 1;
               return (
                 <li key={i} className={`flex min-w-0 items-center gap-2 ${last ? "" : "shrink-0 max-sm:[&:not(:first-child)]:hidden"}`}>
-                  {i > 0 && <span aria-hidden className={last ? "" : "max-sm:hidden"}>›</span>}
+                  {i > 0 && (
+                    <span aria-hidden className={last ? "" : "max-sm:hidden"}>
+                      ›
+                    </span>
+                  )}
                   {t.href && !last ? (
-                    <a href={t.href} className="hit bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-ink-2 hover:text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">
+                    <a
+                      href={t.href}
+                      className="hit bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-ink-2 hover:text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]"
+                    >
                       {t.label}
                     </a>
                   ) : (
@@ -1255,7 +1305,11 @@ export function ContextBar({
             <ul className="font-mono text-label font-normal flex items-center gap-4 text-ink-3">
               {jumps.map((j) => (
                 <li key={j.id}>
-                  <button type="button" onClick={() => jumpTo(j.id)} className="hit bg-[linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[0%_1px] bg-position-[100%_100%] pb-0.5 transition-[background-size,color] duration-[600ms] ease-silk hover:bg-size-[100%_1px] hover:bg-position-[0%_100%] focus-visible:bg-size-[100%_1px] focus-visible:bg-position-[0%_100%] data-[on=true]:bg-size-[100%_1px] data-[on=true]:bg-position-[0%_100%] text-ink-3 hover:text-ink group-hover:bg-size-[100%_1px] group-hover:bg-position-[0%_100%] group-focus-visible:bg-size-[100%_1px] group-focus-visible:bg-position-[0%_100%]">
+                  <button
+                    type="button"
+                    onClick={() => jumpTo(j.id)}
+                    className="hit bg-[linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[0%_1px] bg-position-[100%_100%] pb-0.5 transition-[background-size,color] duration-[600ms] ease-silk hover:bg-size-[100%_1px] hover:bg-position-[0%_100%] focus-visible:bg-size-[100%_1px] focus-visible:bg-position-[0%_100%] data-[on=true]:bg-size-[100%_1px] data-[on=true]:bg-position-[0%_100%] text-ink-3 hover:text-ink group-hover:bg-size-[100%_1px] group-hover:bg-position-[0%_100%] group-focus-visible:bg-size-[100%_1px] group-focus-visible:bg-position-[0%_100%]"
+                  >
                     {j.label}
                   </button>
                 </li>

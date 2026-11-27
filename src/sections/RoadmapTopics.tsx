@@ -16,13 +16,7 @@ import {
   useSaveNote,
   useTabList,
 } from "../components/ui";
-import {
-  companionRoadmaps,
-  countRoadmapTopics,
-  externalRoadmaps,
-  type ExternalRoadmap,
-  type RoadmapGroup,
-} from "../data/roadmaps";
+import { companionRoadmaps, countRoadmapTopics, externalRoadmaps, type ExternalRoadmap, type RoadmapGroup } from "../data/roadmaps";
 
 const STORAGE_KEY = "de-guide:roadmap-topics";
 const topicKey = (slug: string, milestoneId: string, item: string) => `${slug}:${milestoneId}:${item}`;
@@ -41,8 +35,7 @@ const groupMeta: Record<RoadmapGroup, { label: string; note: string }> = {
 const totalTopicsAll = externalRoadmaps.reduce((n, r) => n + countRoadmapTopics(r), 0);
 
 export function RoadmapTopics({ slug }: { slug?: string }) {
-  const active: ExternalRoadmap =
-    externalRoadmaps.find((r) => r.slug === slug) ?? externalRoadmaps[0];
+  const active: ExternalRoadmap = externalRoadmaps.find((r) => r.slug === slug) ?? externalRoadmaps[0];
   const [query, setQuery] = useState("");
   const [searchAll, setSearchAll] = useState(false);
   const [undoSet, setUndoSet] = useState<Set<string> | null>(null);
@@ -63,13 +56,7 @@ export function RoadmapTopics({ slug }: { slug?: string }) {
 
   const activeTotal = countRoadmapTopics(active);
   const activeDone = active.milestones.reduce(
-    (sum, m) =>
-      sum +
-      m.branches.reduce(
-        (bSum, b) =>
-          bSum + b.items.filter((item) => ticks.set.has(topicKey(active.slug, m.id, item))).length,
-        0,
-      ),
+    (sum, m) => sum + m.branches.reduce((bSum, b) => bSum + b.items.filter((item) => ticks.set.has(topicKey(active.slug, m.id, item))).length, 0),
     0,
   );
   const activePct = activeTotal > 0 ? Math.round((activeDone / activeTotal) * 100) : 0;
@@ -78,9 +65,7 @@ export function RoadmapTopics({ slug }: { slug?: string }) {
 
   const resetActive = () => {
     const prev = new Set(ticks.set);
-    const next = new Set(
-      [...ticks.set].filter((k) => !k.startsWith(`${active.slug}:`)),
-    );
+    const next = new Set([...ticks.set].filter((k) => !k.startsWith(`${active.slug}:`)));
     ticks.restore(next);
     setUndoSet(prev);
   };
@@ -97,9 +82,7 @@ export function RoadmapTopics({ slug }: { slug?: string }) {
           .map((r) => {
             const hits: { milestoneId: string; milestoneTitle: string; item: string }[] = [];
             for (const m of r.milestones) {
-              const mMatch =
-                m.title.toLowerCase().includes(needle) ||
-                m.summary.toLowerCase().includes(needle);
+              const mMatch = m.title.toLowerCase().includes(needle) || m.summary.toLowerCase().includes(needle);
               for (const b of m.branches) {
                 const bMatch = b.heading?.toLowerCase().includes(needle) ?? false;
                 for (const item of b.items) {
@@ -117,9 +100,7 @@ export function RoadmapTopics({ slug }: { slug?: string }) {
   const filteredMilestones = active.milestones
     .map((m) => {
       if (!needle) return m;
-      const mMatch =
-        m.title.toLowerCase().includes(needle) ||
-        m.summary.toLowerCase().includes(needle);
+      const mMatch = m.title.toLowerCase().includes(needle) || m.summary.toLowerCase().includes(needle);
       if (mMatch) return m;
       const branches = m.branches
         .map((b) => {
@@ -156,15 +137,7 @@ export function RoadmapTopics({ slug }: { slug?: string }) {
                   const on = r.slug === active.slug;
                   const total = countRoadmapTopics(r);
                   const done = r.milestones.reduce(
-                    (s, m) =>
-                      s +
-                      m.branches.reduce(
-                        (bs, b) =>
-                          bs +
-                          b.items.filter((item) => ticks.set.has(topicKey(r.slug, m.id, item)))
-                            .length,
-                        0,
-                      ),
+                    (s, m) => s + m.branches.reduce((bs, b) => bs + b.items.filter((item) => ticks.set.has(topicKey(r.slug, m.id, item))).length, 0),
                     0,
                   );
                   return (
@@ -182,12 +155,8 @@ export function RoadmapTopics({ slug }: { slug?: string }) {
                         }`}
                       />
                       <span className="flex items-baseline justify-between gap-2">
-                        <span className={`font-mono text-label font-normal ${on ? "text-accent-ink" : "text-ink-3"}`}>
-                          {r.milestones.length} sections
-                        </span>
-                        <span className="font-mono text-label font-normal tabular-nums text-ink-3">
-                          {done > 0 ? `${done}/${total}` : `${total} topics`}
-                        </span>
+                        <span className={`font-mono text-label font-normal ${on ? "text-accent-ink" : "text-ink-3"}`}>{r.milestones.length} sections</span>
+                        <span className="font-mono text-label font-normal tabular-nums text-ink-3">{done > 0 ? `${done}/${total}` : `${total} topics`}</span>
                       </span>
                       <span
                         className={`mt-2.5 flex items-center gap-2 font-display font-semibold tracking-[-0.02em] text-pretty text-[1.375rem] leading-[1.08] transition-colors duration-300 ${
@@ -197,9 +166,7 @@ export function RoadmapTopics({ slug }: { slug?: string }) {
                         <BrandLogosFor text={r.shortTitle} max={1} className="size-4 text-accent-ink" />
                         <span>{r.shortTitle}</span>
                       </span>
-                      <span className="mt-2 block text-xs leading-snug text-ink-2">
-                        {r.fits[0]}
-                      </span>
+                      <span className="mt-2 block text-xs leading-snug text-ink-2">{r.fits[0]}</span>
                     </button>
                   );
                 })}
@@ -327,12 +294,7 @@ export function RoadmapTopics({ slug }: { slug?: string }) {
 
             <div className="flex flex-wrap items-center gap-4 pb-1">
               <label className="inline-flex min-h-11 cursor-pointer items-center gap-2 text-xs text-ink-2 transition-colors hover:text-ink">
-                <input
-                  type="checkbox"
-                  checked={searchAll}
-                  onChange={(e) => setSearchAll(e.target.checked)}
-                  className="size-4 accent-[var(--accent)]"
-                />
+                <input type="checkbox" checked={searchAll} onChange={(e) => setSearchAll(e.target.checked)} className="size-4 accent-[var(--accent)]" />
                 <span>Search all {externalRoadmaps.length} roadmaps</span>
               </label>
               {needle && (
@@ -352,8 +314,8 @@ export function RoadmapTopics({ slug }: { slug?: string }) {
         {needle && searchAll ? (
           <div className="mt-10 space-y-6">
             <p aria-live="polite" className="font-mono text-label font-normal text-ink-3">
-              {crossMatches.reduce((n, e) => n + e.hits.length, 0)} matching topics across{" "}
-              {crossMatches.length} {crossMatches.length === 1 ? "roadmap" : "roadmaps"}
+              {crossMatches.reduce((n, e) => n + e.hits.length, 0)} matching topics across {crossMatches.length}{" "}
+              {crossMatches.length === 1 ? "roadmap" : "roadmaps"}
             </p>
             {crossMatches.length === 0 ? (
               <div className="relative rounded-card border border-edge bg-card shadow-1 p-6">
@@ -381,12 +343,7 @@ export function RoadmapTopics({ slug }: { slug?: string }) {
                       const checked = ticks.set.has(k);
                       return (
                         <li key={k} className="py-1">
-                          <TopicCheckbox
-                            checked={checked}
-                            onToggle={() => ticks.toggle(k)}
-                            label={h.item}
-                            meta={h.milestoneTitle}
-                          />
+                          <TopicCheckbox checked={checked} onToggle={() => ticks.toggle(k)} label={h.item} meta={h.milestoneTitle} />
                         </li>
                       );
                     })}
@@ -424,24 +381,16 @@ export function RoadmapTopics({ slug }: { slug?: string }) {
           >
             {filteredMilestones.map((m, i) => {
               const stageItems = m.branches.flatMap((b) => b.items);
-              const stageDone = stageItems.filter((item) =>
-                ticks.set.has(topicKey(active.slug, m.id, item)),
-              ).length;
+              const stageDone = stageItems.filter((item) => ticks.set.has(topicKey(active.slug, m.id, item))).length;
               const stageComplete = stageItems.length > 0 && stageDone === stageItems.length;
 
               return (
-                <li
-                  key={m.id}
-                  className="relative pl-12 sm:pl-16"
-                  style={{ "--i": i } as CSSProperties}
-                >
+                <li key={m.id} className="relative pl-12 sm:pl-16" style={{ "--i": i } as CSSProperties}>
                   {/* Spine node badge */}
                   <span
                     aria-hidden
                     className={`font-mono text-label font-normal absolute left-0 top-5 grid size-10 place-items-center rounded-full border border-edge tabular-nums sm:size-12 ${
-                      stageComplete
-                        ? "bg-accent text-on-accent"
-                        : "bg-card text-ink"
+                      stageComplete ? "bg-accent text-on-accent" : "bg-card text-ink"
                     }`}
                   >
                     {String(i + 1).padStart(2, "0")}
@@ -450,40 +399,24 @@ export function RoadmapTopics({ slug }: { slug?: string }) {
                   <article className="relative rounded-card border border-edge bg-card shadow-1">
                     <div className="flex flex-wrap items-baseline justify-between gap-3 border-b border-line px-5 py-4 sm:px-6">
                       <div className="min-w-0">
-                        <h3 className="font-display font-semibold tracking-[-0.02em] text-pretty text-[1.5rem] leading-[1.08] text-ink">
-                          {m.title}
-                        </h3>
+                        <h3 className="font-display font-semibold tracking-[-0.02em] text-pretty text-[1.5rem] leading-[1.08] text-ink">{m.title}</h3>
                         <p className="mt-1 text-sm leading-relaxed text-ink-2">{m.summary}</p>
                       </div>
-                      <span
-                        className={`font-mono text-label font-normal shrink-0 tabular-nums ${
-                          stageComplete ? "text-accent-ink" : "text-ink-3"
-                        }`}
-                      >
+                      <span className={`font-mono text-label font-normal shrink-0 tabular-nums ${stageComplete ? "text-accent-ink" : "text-ink-3"}`}>
                         {stageDone} / {stageItems.length}
                       </span>
                     </div>
 
-                    <div
-                      className={`grid gap-x-8 gap-y-6 px-5 py-5 sm:px-6 ${
-                        m.branches.length > 1 ? "md:grid-cols-2" : ""
-                      }`}
-                    >
+                    <div className={`grid gap-x-8 gap-y-6 px-5 py-5 sm:px-6 ${m.branches.length > 1 ? "md:grid-cols-2" : ""}`}>
                       {m.branches.map((branch, bi) => (
                         <div key={branch.heading ?? bi}>
-                          {branch.heading && (
-                            <Eyebrow className="!mb-2.5">{branch.heading}</Eyebrow>
-                          )}
+                          {branch.heading && <Eyebrow className="!mb-2.5">{branch.heading}</Eyebrow>}
                           <ul className="divide-y divide-line border-t border-line">
                             {branch.items.map((item) => {
                               const k = topicKey(active.slug, m.id, item);
                               return (
                                 <li key={k}>
-                                  <TopicCheckbox
-                                    checked={ticks.set.has(k)}
-                                    onToggle={() => ticks.toggle(k)}
-                                    label={item}
-                                  />
+                                  <TopicCheckbox checked={ticks.set.has(k)} onToggle={() => ticks.toggle(k)} label={item} />
                                 </li>
                               );
                             })}
@@ -509,12 +442,7 @@ export function RoadmapTopics({ slug }: { slug?: string }) {
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           {companionRoadmaps.map((c, i) => (
             <li key={c.slug} data-reveal style={{ "--i": i } as CSSProperties}>
-              <a
-                href={c.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`relative ${cardLink} group flex h-full flex-col p-5`}
-              >
+              <a href={c.url} target="_blank" rel="noopener noreferrer" className={`relative ${cardLink} group flex h-full flex-col p-5`}>
                 <span className="font-mono text-label font-normal text-ink-3">{c.category}</span>
                 <span className="mt-2.5 flex items-center justify-between gap-2 font-display font-semibold tracking-[-0.02em] text-pretty text-[1.375rem] leading-tight text-ink">
                   <span className="inline-flex items-center gap-2">
@@ -523,12 +451,8 @@ export function RoadmapTopics({ slug }: { slug?: string }) {
                   </span>
                   <ExternalGlyph className="shrink-0 text-ink-3 transition-colors duration-300 group-hover:text-accent-ink" />
                 </span>
-                <span className="mt-2 flex-1 text-xs leading-relaxed text-ink-2">
-                  {c.summary}
-                </span>
-                <span className="font-mono text-label font-normal mt-4 border-t border-line pt-3 text-accent-ink">
-                  {c.planLink}
-                </span>
+                <span className="mt-2 flex-1 text-xs leading-relaxed text-ink-2">{c.summary}</span>
+                <span className="font-mono text-label font-normal mt-4 border-t border-line pt-3 text-accent-ink">{c.planLink}</span>
                 <span className="sr-only"> (opens in new tab)</span>
               </a>
             </li>

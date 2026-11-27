@@ -2,8 +2,7 @@ import { pageHref } from "../components/ui";
 import { ExternalGlyph } from "../components/icons";
 
 /** Quiet text link for the footer: muted until hovered or focused. */
-const link =
-  "group inline-flex min-h-11 items-center gap-1 text-ink-2 transition-colors duration-300 hover:text-ink focus-visible:text-ink";
+const link = "group inline-flex min-h-11 items-center gap-1 text-ink-2 transition-colors duration-300 hover:text-ink focus-visible:text-ink";
 
 /** One slim row: who made it, where the sources live, and a way back up. */
 export function Footer() {

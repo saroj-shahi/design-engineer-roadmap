@@ -15,7 +15,12 @@ export function Comparison() {
     <Section id="compare">
       <SectionHeader
         id="compare"
-        title={["What changes", <>when you <em>build it too</em></>]}
+        title={[
+          "What changes",
+          <>
+            when you <em>build it too</em>
+          </>,
+        ]}
         lede="Two valid ways to do design work, side by side — how they differ day to day and when teams evaluate them."
       />
 
@@ -31,7 +36,11 @@ export function Comparison() {
             { id: "table", label: "Full matrix" },
           ]}
         />
-        {view === "focus" && <Hint keys={["←", "→"]} touch="Tap a dimension" className="hidden text-ink-3 sm:inline-flex">Pick a dimension, or step with</Hint>}
+        {view === "focus" && (
+          <Hint keys={["←", "→"]} touch="Tap a dimension" className="hidden text-ink-3 sm:inline-flex">
+            Pick a dimension, or step with
+          </Hint>
+        )}
       </div>
 
       {view === "focus" ? (
@@ -68,7 +77,9 @@ export function Comparison() {
                         <span>{c.who}</span>
                       </span>
                     </p>
-                    <p className="px-5 py-6 font-display font-semibold tracking-[-0.02em] text-pretty text-[clamp(1.375rem,2vw,1.75rem)] leading-[1.15] text-ink sm:px-6">{c.text}</p>
+                    <p className="px-5 py-6 font-display font-semibold tracking-[-0.02em] text-pretty text-[clamp(1.375rem,2vw,1.75rem)] leading-[1.15] text-ink sm:px-6">
+                      {c.text}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -85,14 +96,25 @@ export function Comparison() {
         </TabPanel>
       ) : (
         <TabPanel idPrefix="cmpview" id="table">
-          <div tabIndex={0} role="region" aria-label="Comparison table (scrolls sideways)" className="relative rounded-card border border-edge bg-card shadow-1 overflow-x-auto px-5 sm:px-7 focus-visible:outline-offset-[-2px]">
+          <div
+            tabIndex={0}
+            role="region"
+            aria-label="Comparison table (scrolls sideways)"
+            className="relative rounded-card border border-edge bg-card shadow-1 overflow-x-auto px-5 sm:px-7 focus-visible:outline-offset-[-2px]"
+          >
             <table className="w-full min-w-[720px] text-left">
               <caption className="sr-only">Design-first UX designer and Design Engineer, compared</caption>
               <thead>
                 <tr className="font-mono text-label font-normal border-b-2 border-edge text-ink-3">
-                  <th scope="col" className="w-[22%] py-3 pr-6 font-normal">Dimension</th>
-                  <th scope="col" className="py-3 pr-6 font-normal">Design-first UX designer</th>
-                  <th scope="col" className="py-3 font-normal">Design Engineer (design + code)</th>
+                  <th scope="col" className="w-[22%] py-3 pr-6 font-normal">
+                    Dimension
+                  </th>
+                  <th scope="col" className="py-3 pr-6 font-normal">
+                    Design-first UX designer
+                  </th>
+                  <th scope="col" className="py-3 font-normal">
+                    Design Engineer (design + code)
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -113,7 +135,6 @@ export function Comparison() {
           </div>
         </TabPanel>
       )}
-
     </Section>
   );
 }

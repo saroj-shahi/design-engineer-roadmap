@@ -11,22 +11,37 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "icons": "node scripts/og/render.mjs",
-    "pdfs": "node scripts/pdf/render.mjs"
+    "pdfs": "node scripts/pdf/render.mjs",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check": "npm run lint && npm run format:check && npm run typecheck && npm run build"
   },
   "dependencies": {
+    "@fontsource-variable/bricolage-grotesque": "^5.3.0",
+    "@fontsource-variable/dm-sans": "^5.3.0",
+    "@fontsource/dm-mono": "^5.3.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.0",
+    "@eslint/js": "^9.39.5",
     "@playwright/test": "^1.65.1",
     "@tailwindcss/vite": "^4.1.11",
     "@types/node": "^22.20.7",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.39.5",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.8",
+    "globals": "^17.14.0",
+    "prettier": "^3.10.1",
     "tailwindcss": "^4.1.11",
     "typescript": "^5.6.3",
+    "typescript-eslint": "^8.74.0",
     "vite": "^5.4.11"
   }
 }

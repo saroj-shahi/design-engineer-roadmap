@@ -58,9 +58,16 @@ for (const r of routes) {
             const cb = c.getBoundingClientRect();
             if (cb.width < 2 || cb.height < 2) continue; // thin accent bars count too
             const at = (x: boolean, y: boolean, r: string) => x && y && parseFloat(r) < pr - bw - 3;
-            const L = Math.abs(cb.left - pb.left - bw) < 2, R = Math.abs(pb.right - bw - cb.right) < 2;
-            const T = Math.abs(cb.top - pb.top - bw) < 2, B = Math.abs(pb.bottom - bw - cb.bottom) < 2;
-            if (at(L, T, ccs.borderTopLeftRadius) || at(R, T, ccs.borderTopRightRadius) || at(L, B, ccs.borderBottomLeftRadius) || at(R, B, ccs.borderBottomRightRadius))
+            const L = Math.abs(cb.left - pb.left - bw) < 2,
+              R = Math.abs(pb.right - bw - cb.right) < 2;
+            const T = Math.abs(cb.top - pb.top - bw) < 2,
+              B = Math.abs(pb.bottom - bw - cb.bottom) < 2;
+            if (
+              at(L, T, ccs.borderTopLeftRadius) ||
+              at(R, T, ccs.borderTopRightRadius) ||
+              at(L, B, ccs.borderBottomLeftRadius) ||
+              at(R, B, ccs.borderBottomRightRadius)
+            )
               out.push(`square corner inside rounded ${name(p)}: ${name(c)}`);
           }
         }
@@ -97,7 +104,11 @@ for (const r of routes) {
         for (const el of document.querySelectorAll<HTMLElement>(sel)) {
           const box = el.getBoundingClientRect();
           if (!box.width || !box.height || el.matches(":disabled") || el.closest("[aria-hidden=true], [inert], .sr-only")) continue;
-          if (el instanceof HTMLLabelElement && (el.querySelector("a, button") || (el.control && !["checkbox", "radio"].includes((el.control as HTMLInputElement).type)))) continue;
+          if (
+            el instanceof HTMLLabelElement &&
+            (el.querySelector("a, button") || (el.control && !["checkbox", "radio"].includes((el.control as HTMLInputElement).type)))
+          )
+            continue;
           if (el.matches("a") && getComputedStyle(el).display === "inline") {
             let block = el.parentElement;
             while (block && getComputedStyle(block).display.startsWith("inline")) block = block.parentElement;
@@ -109,15 +120,23 @@ for (const r of routes) {
             const hit = document.elementFromPoint(x, y);
             return !!hit && (el.contains(hit) || (el instanceof HTMLLabelElement && hit.closest("label") === el));
           };
-          const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+          const cx = r.left + r.width / 2,
+            cy = r.top + r.height / 2;
           if (!owns(cx, cy)) continue; // centre covered (e.g. by the sticky bar); measured on another route
-          let top = cy, bottom = cy, left = cx, right = cx;
+          let top = cy,
+            bottom = cy,
+            left = cx,
+            right = cx;
           while (top > r.top - 30 && owns(cx, top - 1)) top--;
           while (bottom < r.bottom + 30 && owns(cx, bottom + 1)) bottom++;
           while (left > r.left - 30 && owns(left - 1, cy)) left--;
           while (right < r.right + 30 && owns(right + 1, cy)) right++;
-          const w = Math.round(right - left + 1), h = Math.round(bottom - top + 1);
-          if (w < 44 || h < 44) out.push(`${el.tagName.toLowerCase()} "${(el.getAttribute("aria-label") || el.textContent || "").trim().replace(/\s+/g, " ").slice(0, 40)}" ${w}×${h}`);
+          const w = Math.round(right - left + 1),
+            h = Math.round(bottom - top + 1);
+          if (w < 44 || h < 44)
+            out.push(
+              `${el.tagName.toLowerCase()} "${(el.getAttribute("aria-label") || el.textContent || "").trim().replace(/\s+/g, " ").slice(0, 40)}" ${w}×${h}`,
+            );
         }
         return [...new Set(out)];
       });
@@ -162,10 +181,15 @@ test("social image and app icons are served at the right sizes", async ({ page, 
   await page.goto("/#/");
   const og = await page.locator('meta[property="og:image"]').getAttribute("content");
   expect(og).toMatch(/\/og-image\.png/);
-  const png = (await (await request.get(new URL(og!).pathname)).body());
+  const png = await (await request.get(new URL(og!).pathname)).body();
   // PNG header: width and height are big-endian at bytes 16 and 20.
   expect([png.readUInt32BE(16), png.readUInt32BE(20)]).toEqual([1200, 630]);
-  for (const [file, size] of [["/apple-touch-icon.png", 180], ["/icon-192.png", 192], ["/icon-512.png", 512], ["/icon-maskable-512.png", 512]] as const) {
+  for (const [file, size] of [
+    ["/apple-touch-icon.png", 180],
+    ["/icon-192.png", 192],
+    ["/icon-512.png", 512],
+    ["/icon-maskable-512.png", 512],
+  ] as const) {
     const b = await (await request.get(file)).body();
     expect([b.readUInt32BE(16), b.readUInt32BE(20)], file).toEqual([size, size]);
   }

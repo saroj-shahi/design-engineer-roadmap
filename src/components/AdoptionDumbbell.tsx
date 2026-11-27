@@ -10,7 +10,7 @@ import {
   shipsAiCode,
   teamsWhereOthersCreateUi,
 } from "../data/research";
-import { BasisBadge } from "./ui";
+import { BasisBadge, svgFont, useSvgTextFloor } from "./ui";
 
 /* Shared 0-100% dumbbell + bar chart per diagram-design type-bar:
    Top band compares Developers vs Designers on the exact same 0-100% scale (hollow vs solid
@@ -43,6 +43,7 @@ const convergence = adoptionShift.after.rows.map((r, i) => ({
 
 export function AdoptionDumbbell({ className = "" }: { className?: string }) {
   const uid = useId().replace(/:/g, "");
+  const svgRef = useSvgTextFloor(W);
   return (
     <figure className={`relative rounded-card border border-edge bg-card shadow-1 ${className}`}>
       <div className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal">
@@ -53,8 +54,8 @@ export function AdoptionDumbbell({ className = "" }: { className?: string }) {
         </span>
       </div>
 
-      {/* Phones: the same figures as HTML rows on the shared 0–100% scale, so labels stay at 12px or more without sideways scroll. */}
-      <div className="plate-field px-4 py-5 lg:hidden">
+      {/* Below 1280px: the same figures as HTML rows on the shared 0–100% scale, so labels stay at 12px or more without sideways scroll. */}
+      <div className="plate-field px-4 py-5 xl:hidden">
         <p className="font-mono text-label text-ink-3">2025 · {adoptionShift.before.label}</p>
         <ul className="mt-3 space-y-4">
           {dumbbells.map((d) => (
@@ -72,8 +73,14 @@ export function AdoptionDumbbell({ className = "" }: { className?: string }) {
                   className="absolute top-1/2 h-0.5 -translate-y-1/2 bg-line-strong"
                   style={{ left: `${Math.min(d.designer, d.developer)}%`, width: `${Math.abs(d.developer - d.designer)}%` }}
                 />
-                <span className="absolute top-1/2 size-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-ink-2 bg-card" style={{ left: `${d.designer}%` }} />
-                <span className="absolute top-1/2 size-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border border-ink bg-accent" style={{ left: `${d.developer}%` }} />
+                <span
+                  className="absolute top-1/2 size-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-ink-2 bg-card"
+                  style={{ left: `${d.designer}%` }}
+                />
+                <span
+                  className="absolute top-1/2 size-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border border-ink bg-accent"
+                  style={{ left: `${d.developer}%` }}
+                />
               </div>
               {d.sameTask && <p className="mt-1.5 font-mono text-label text-ink-3">Gap: +{d.developer - d.designer} pts</p>}
             </li>
@@ -98,8 +105,14 @@ export function AdoptionDumbbell({ className = "" }: { className?: string }) {
         </ul>
       </div>
 
-      <div tabIndex={0} role="region" aria-label="AI adoption chart (scrolls sideways)" className="plate-field hidden overflow-x-auto px-4 py-5 lg:block sm:px-6 focus-visible:outline-offset-[-2px]">
+      <div
+        tabIndex={0}
+        role="region"
+        aria-label="AI adoption chart (scrolls sideways)"
+        className="plate-field hidden overflow-x-auto px-4 py-5 xl:block sm:px-6 focus-visible:outline-offset-[-2px]"
+      >
         <svg
+          ref={svgRef}
           viewBox={`0 0 ${W} ${H}`}
           role="img"
           aria-labelledby={`${uid}-title`}
@@ -115,21 +128,8 @@ export function AdoptionDumbbell({ className = "" }: { className?: string }) {
             const isFloor = t === 0;
             return (
               <g key={t}>
-                <line
-                  x1={x}
-                  y1={42}
-                  x2={x}
-                  y2={334}
-                  stroke={isFloor ? "var(--ink-3)" : "var(--line)"}
-                  strokeWidth={isFloor ? 1.25 : 1}
-                />
-                <text
-                  x={x}
-                  y={354}
-                  textAnchor="middle"
-                  fill="var(--ink-3)"
-                  style={{ fontFamily: "var(--font-mono)", fontSize: 12 }}
-                >
+                <line x1={x} y1={42} x2={x} y2={334} stroke={isFloor ? "var(--ink-3)" : "var(--line)"} strokeWidth={isFloor ? 1.25 : 1} />
+                <text x={x} y={354} textAnchor="middle" fill="var(--ink-3)" style={{ fontFamily: "var(--font-mono)", fontSize: svgFont(12) }}>
                   {t}%
                 </text>
               </g>
@@ -137,12 +137,7 @@ export function AdoptionDumbbell({ className = "" }: { className?: string }) {
           })}
 
           {/* Band 1 header: 2025 */}
-          <text
-            x={8}
-            y={46}
-            fill="var(--ink-3)"
-            style={{ fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: "0.08em" }}
-          >
+          <text x={8} y={46} fill="var(--ink-3)" style={{ fontFamily: "var(--font-mono)", fontSize: svgFont(12), letterSpacing: "0.08em" }}>
             2025 · {adoptionShift.before.label.toUpperCase()}
           </text>
 
@@ -160,7 +155,7 @@ export function AdoptionDumbbell({ className = "" }: { className?: string }) {
                   y={d.y + 4 - (d.lines.length - 1) * 8}
                   textAnchor="end"
                   fill="var(--ink)"
-                  style={{ fontFamily: "var(--font-sans)", fontSize: 13, fontWeight: 500 }}
+                  style={{ fontFamily: "var(--font-sans)", fontSize: svgFont(13), fontWeight: 500 }}
                 >
                   {d.lines.map((l, i) => (
                     <tspan key={l} x={PLOT_L - 14} dy={i === 0 ? 0 : 16}>
@@ -177,7 +172,7 @@ export function AdoptionDumbbell({ className = "" }: { className?: string }) {
                     y={d.y - 11}
                     textAnchor="middle"
                     fill="var(--ink-3)"
-                    style={{ fontFamily: "var(--font-mono)", fontSize: 12 }}
+                    style={{ fontFamily: "var(--font-mono)", fontSize: svgFont(12) }}
                   >
                     +{gap} pts
                   </text>
@@ -187,13 +182,7 @@ export function AdoptionDumbbell({ className = "" }: { className?: string }) {
                 {/* Developers (solid accent focal dot with 1.25px ink outline for >=3:1 non-text contrast) */}
                 <circle cx={xDev} cy={d.y} r={6.5} fill="var(--accent)" stroke="var(--ink)" strokeWidth="1.25" />
                 {/* Outside endpoint labels */}
-                <text
-                  x={xLeft - 12}
-                  y={d.y + 4}
-                  textAnchor="end"
-                  fill="var(--ink-2)"
-                  style={{ fontFamily: "var(--font-mono)", fontSize: 12 }}
-                >
+                <text x={xLeft - 12} y={d.y + 4} textAnchor="end" fill="var(--ink-2)" style={{ fontFamily: "var(--font-mono)", fontSize: svgFont(12) }}>
                   {d.designer}%
                 </text>
                 <text
@@ -201,7 +190,7 @@ export function AdoptionDumbbell({ className = "" }: { className?: string }) {
                   y={d.y + 4}
                   textAnchor="start"
                   fill="var(--accent-ink)"
-                  style={{ fontFamily: "var(--font-mono)", fontSize: 12, fontWeight: 600 }}
+                  style={{ fontFamily: "var(--font-mono)", fontSize: svgFont(12), fontWeight: 600 }}
                 >
                   {d.developer}%
                 </text>
@@ -213,12 +202,7 @@ export function AdoptionDumbbell({ className = "" }: { className?: string }) {
           <line x1={8} y1={174} x2={PLOT_R} y2={174} stroke="var(--line-strong)" strokeWidth="1" strokeDasharray="4 4" />
 
           {/* Band 2 header: Q1 2026 */}
-          <text
-            x={8}
-            y={198}
-            fill="var(--accent-ink)"
-            style={{ fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: "0.08em" }}
-          >
+          <text x={8} y={198} fill="var(--accent-ink)" style={{ fontFamily: "var(--font-mono)", fontSize: svgFont(12), letterSpacing: "0.08em" }}>
             2026 · {adoptionShift.after.label.toUpperCase()}
           </text>
 
@@ -232,17 +216,21 @@ export function AdoptionDumbbell({ className = "" }: { className?: string }) {
                   y={c.y + 15}
                   textAnchor="end"
                   fill={c.focal ? "var(--ink)" : "var(--ink-2)"}
-                  style={{ fontFamily: "var(--font-sans)", fontSize: 12.5, fontWeight: c.focal ? 600 : 400 }}
+                  style={{ fontFamily: "var(--font-sans)", fontSize: svgFont(12.5), fontWeight: c.focal ? 600 : 400 }}
                 >
                   {/* Long labels break onto two lines so they never run past the left edge of the chart. */}
                   {(() => {
-                    const label = c.label.replace(/ /g, " ");
+                    const label = c.label.replace(/\u00a0/g, " ");
                     if (label.length <= 44) return c.label;
                     const mid = label.lastIndexOf(" ", Math.ceil(label.length / 2));
                     return (
                       <>
-                        <tspan x={PLOT_L - 14} dy={-7.5}>{label.slice(0, mid)}</tspan>
-                        <tspan x={PLOT_L - 14} dy={15}>{label.slice(mid + 1)}</tspan>
+                        <tspan x={PLOT_L - 14} dy={-7.5}>
+                          {label.slice(0, mid)}
+                        </tspan>
+                        <tspan x={PLOT_L - 14} dy={15}>
+                          {label.slice(mid + 1)}
+                        </tspan>
                       </>
                     );
                   })()}
@@ -263,7 +251,7 @@ export function AdoptionDumbbell({ className = "" }: { className?: string }) {
                   y={c.y + 15}
                   textAnchor="start"
                   fill={c.focal ? "var(--accent-ink)" : "var(--ink-2)"}
-                  style={{ fontFamily: "var(--font-mono)", fontSize: 12, fontWeight: c.focal ? 600 : 400 }}
+                  style={{ fontFamily: "var(--font-mono)", fontSize: svgFont(12), fontWeight: c.focal ? 600 : 400 }}
                 >
                   {c.value}%
                 </text>

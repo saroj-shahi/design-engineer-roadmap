@@ -17,7 +17,10 @@ import { join } from "node:path";
 const args = process.argv.slice(2);
 const route = args.find((a) => a.startsWith("#")) ?? "#/";
 const mobile = args.includes("--mobile");
-const opt = (name) => { const i = args.indexOf(name); return i >= 0 ? args[i + 1] : undefined; };
+const opt = (name) => {
+  const i = args.indexOf(name);
+  return i >= 0 ? args[i + 1] : undefined;
+};
 const steps = [];
 for (let i = 0; i < args.length; i++) {
   if (["--click", "--type", "--key"].includes(args[i])) steps.push([args[i].slice(2), args[i + 1]]);
@@ -48,10 +51,18 @@ for (const [kind, val] of steps) {
 }
 
 const info = await page.evaluate(() => {
-  const vis = (el) => { const r = el.getBoundingClientRect(); const s = getComputedStyle(el); return r.width > 0 && r.height > 0 && s.visibility !== "hidden"; };
+  const vis = (el) => {
+    const r = el.getBoundingClientRect();
+    const s = getComputedStyle(el);
+    return r.width > 0 && r.height > 0 && s.visibility !== "hidden";
+  };
   const headings = [...document.querySelectorAll("h1,h2,h3")].filter(vis).map((h) => `${h.tagName.toLowerCase()}: ${h.innerText.trim().replace(/\s+/g, " ")}`);
-  const controls = [...document.querySelectorAll("a[href],button,[role=tab],input,select,summary")].filter(vis)
-    .map((el) => `${el.getAttribute("role") ?? el.tagName.toLowerCase()}: ${(el.innerText || el.getAttribute("aria-label") || el.getAttribute("placeholder") || "").trim().replace(/\s+/g, " ").slice(0, 80)}${el.getAttribute("aria-selected") === "true" || el.getAttribute("aria-current") ? " [current]" : ""}`)
+  const controls = [...document.querySelectorAll("a[href],button,[role=tab],input,select,summary")]
+    .filter(vis)
+    .map(
+      (el) =>
+        `${el.getAttribute("role") ?? el.tagName.toLowerCase()}: ${(el.innerText || el.getAttribute("aria-label") || el.getAttribute("placeholder") || "").trim().replace(/\s+/g, " ").slice(0, 80)}${el.getAttribute("aria-selected") === "true" || el.getAttribute("aria-current") ? " [current]" : ""}`,
+    )
     .filter((s) => !s.endsWith(": "));
   const main = document.querySelector("main") ?? document.body;
   return { title: document.title, url: location.hash, height: document.documentElement.scrollHeight, headings, controls, text: main.innerText };
@@ -61,7 +72,9 @@ const shot = join(out, `${route.replace(/[^a-z0-9]+/gi, "_") || "home"}${mobile 
 await page.screenshot({ path: shot, fullPage: false });
 await browser.close();
 
-console.log(`TITLE: ${info.title}\nURL: ${info.url}\nVIEWPORT: ${mobile ? "Pixel 7 phone" : "1280x800 desktop"}\nPAGE HEIGHT: ${info.height}px\nSCREENSHOT (first screen): ${shot}`);
+console.log(
+  `TITLE: ${info.title}\nURL: ${info.url}\nVIEWPORT: ${mobile ? "Pixel 7 phone" : "1280x800 desktop"}\nPAGE HEIGHT: ${info.height}px\nSCREENSHOT (first screen): ${shot}`,
+);
 if (errors.length) console.log(`CONSOLE ERRORS:\n- ${errors.join("\n- ")}`);
 console.log(`\nHEADINGS:\n${info.headings.join("\n")}`);
 console.log(`\nCONTROLS (${info.controls.length}):\n${[...new Set(info.controls)].slice(0, 80).join("\n")}`);

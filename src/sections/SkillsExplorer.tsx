@@ -20,8 +20,20 @@ const patternTotal = patternCategories.reduce((n, c) => n + c.patterns.length, 0
 const domains = [
   { id: "core", glyph: "eye" as GlyphName, label: "Core design & judgment", sub: "Layer 01", items: coreSkills.map((s) => s.name) },
   { id: "eng", glyph: "terminal" as GlyphName, label: "Front-end & repo fluency", sub: "Layer 02", items: engineeringSkills.map((s) => s.name) },
-  { id: "ax", glyph: "orbit" as GlyphName, label: "Agentic experience & protocols", sub: "Layer 03", items: [...axDomains.map((s) => s.name), "Protocols: " + protocols.map((p) => p.name).join(", ")] },
-  { id: "patterns", glyph: "library" as GlyphName, label: "Human-AI pattern library", sub: "Appendix", items: [`${patternTotal} named patterns in ${patternCategories.length} families`] },
+  {
+    id: "ax",
+    glyph: "orbit" as GlyphName,
+    label: "Agentic experience & protocols",
+    sub: "Layer 03",
+    items: [...axDomains.map((s) => s.name), "Protocols: " + protocols.map((p) => p.name).join(", ")],
+  },
+  {
+    id: "patterns",
+    glyph: "library" as GlyphName,
+    label: "Human-AI pattern library",
+    sub: "Appendix",
+    items: [`${patternTotal} named patterns in ${patternCategories.length} families`],
+  },
 ];
 
 export function SkillsExplorer() {
@@ -41,10 +53,9 @@ export function SkillsExplorer() {
           <TabPanel idPrefix="skills" id="core">
             <SkillLedger skills={coreSkills} large />
             <Footnote>
-              These still set you apart when AI makes the first draft. In a Q1 2026 Designer Fund / Foundation Capital survey, {teamsWhereOthersCreateUi.value}% of
-              teams said PMs or engineers now create UI. Browse full topic syllabi in{" "}
-              the <TextLink href={pageHref("library", "roadmaps")}>UX Design and Product Design roadmaps</TextLink>
-              .
+              These still set you apart when AI makes the first draft. In a Q1 2026 Designer Fund / Foundation Capital survey, {teamsWhereOthersCreateUi.value}%
+              of teams said PMs or engineers now create UI. Browse full topic syllabi in the{" "}
+              <TextLink href={pageHref("library", "roadmaps")}>UX Design and Product Design roadmaps</TextLink>.
             </Footnote>
           </TabPanel>
         )}
@@ -52,9 +63,8 @@ export function SkillsExplorer() {
           <TabPanel idPrefix="skills" id="eng">
             <SkillLedger skills={engineeringSkills} />
             <Footnote>
-              Standardize on React, TypeScript and Tailwind CSS. Learn the browser before the AI: the six-month plan keeps AI code
-              generation switched off for all of month one. See full topic checklists in{" "}
-              the <TextLink href={pageHref("library", "roadmaps")}>Frontend and Design System roadmaps</TextLink>
+              Standardize on React, TypeScript and Tailwind CSS. Learn the browser before the AI: the six-month plan keeps AI code generation switched off for
+              all of month one. See full topic checklists in the <TextLink href={pageHref("library", "roadmaps")}>Frontend and Design System roadmaps</TextLink>
               .
             </Footnote>
           </TabPanel>
@@ -89,10 +99,15 @@ function LayerStack({ value, onChange }: { value: string; onChange: (id: string)
             {...tabProps(d.id, i)}
             style={{ "--step": i } as CSSProperties}
             className={`group relative grid grid-cols-[4.5rem_1fr] items-baseline gap-x-4 px-4 py-5 text-left sm:grid-cols-[6rem_1fr_auto] sm:px-6 lg:ml-[calc(var(--step)*(100%_+_24px)/12)] ${
-              appendix && !on ? "relative rounded-card border border-dashed border-line-strong bg-transparent shadow-none mt-4 text-ink-3 hover:text-ink" : `relative ${cardLink} ${appendix ? "mt-4" : ""}`
+              appendix && !on
+                ? "relative rounded-card border border-dashed border-line-strong bg-transparent shadow-none mt-4 text-ink-3 hover:text-ink"
+                : `relative ${cardLink} ${appendix ? "mt-4" : ""}`
             } ${on ? "is-on translate-y-0! border-accent! shadow-accent! text-ink" : "text-ink-3 hover:text-ink"}`}
           >
-            <span aria-hidden className={`absolute -left-px inset-y-5 w-[3px] origin-top rounded-full bg-accent transition-transform duration-700 ease-silk ${on ? "scale-y-100" : "scale-y-0"}`} />
+            <span
+              aria-hidden
+              className={`absolute -left-px inset-y-5 w-[3px] origin-top rounded-full bg-accent transition-transform duration-700 ease-silk ${on ? "scale-y-100" : "scale-y-0"}`}
+            />
             <span className="flex flex-col gap-3 self-start">
               <span className={`font-mono text-label font-normal ${on ? "text-accent-ink" : "text-ink-3"}`}>{d.sub}</span>
               <Glyph name={d.glyph} on={on} className={`!size-12 sm:!size-14 ${on ? "text-ink" : "text-ink-3 group-hover:text-ink"}`} />
@@ -115,7 +130,9 @@ function Footnote({ children }: { children: React.ReactNode }) {
   return (
     <div className="grid grid-cols-4 gap-x-4 lg:grid-cols-12 lg:gap-x-6 mt-8">
       <p className="col-span-4 flex gap-3 text-sm leading-relaxed text-ink-2 lg:col-span-6 lg:col-start-7">
-        <span aria-hidden className="font-mono text-accent-ink">*</span>
+        <span aria-hidden className="font-mono text-accent-ink">
+          *
+        </span>
         <span>{children}</span>
       </p>
     </div>
@@ -143,7 +160,8 @@ function SkillLedger({ skills, large = false }: { skills: Skill[]; large?: boole
             {s.detail}
             {s.source && (
               <>
-                {" "}Source: <TextLink href={s.source.url}>{s.source.label}</TextLink>.
+                {" "}
+                Source: <TextLink href={s.source.url}>{s.source.label}</TextLink>.
               </>
             )}
           </p>
@@ -175,7 +193,9 @@ function AxPanel() {
             <span className="block text-ink-3">{axShift.from}</span>
             <span className="sr-only">grows to include</span>
             <span className="mt-2 flex items-baseline gap-4">
-              <span aria-hidden className="font-mono text-[0.4em] text-accent">↳</span>
+              <span aria-hidden className="font-mono text-[0.4em] text-accent">
+                ↳
+              </span>
               <em>{axShift.to}</em>
             </span>
           </p>
@@ -235,8 +255,8 @@ function AxPanel() {
             <Lines as="h3" className="font-display text-display-m text-balance" lines={["Ground the interface in how agents", <em>actually talk.</em>]} />
           </div>
           <p className="col-span-4 self-end text-sm leading-relaxed text-ink-2 lg:col-span-6 lg:col-start-7">
-            Four open protocols split the job: two connect the agent to the screen (AG-UI, A2UI) and two connect it to tools and peer
-            agents (MCP, A2A). Pick any bridge in the diagram or open the rows below.
+            Four open protocols split the job: two connect the agent to the screen (AG-UI, A2UI) and two connect it to tools and peer agents (MCP, A2A). Pick
+            any bridge in the diagram or open the rows below.
           </p>
         </div>
 

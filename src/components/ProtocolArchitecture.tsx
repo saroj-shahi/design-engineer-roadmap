@@ -24,8 +24,7 @@ const nodes: PhoneNodeData[] = [
 ];
 
 function PhoneNode({ n }: { n: PhoneNodeData }) {
-  const band =
-    n.tone === "hub" ? "bg-accent font-semibold text-on-accent" : n.tone === "surface" ? "bg-inverse text-on-inverse" : "text-ink-3";
+  const band = n.tone === "hub" ? "bg-accent font-semibold text-on-accent" : n.tone === "surface" ? "bg-inverse text-on-inverse" : "text-ink-3";
   return (
     <div className={`border-2 border-edge bg-card ${n.tone === "hub" ? "shadow-[4px_4px_0_var(--hard)]" : ""}`}>
       <p className={`px-3 py-1 font-mono text-label tracking-[0.08em] ${band}`}>{n.tag}</p>
@@ -59,13 +58,7 @@ function PhoneBridges({ ids, activeId, onSelect }: { ids: string[]; activeId: st
   );
 }
 
-export function ProtocolArchitecture({
-  activeId,
-  onSelect,
-}: {
-  activeId: string;
-  onSelect: (id: string) => void;
-}) {
+export function ProtocolArchitecture({ activeId, onSelect }: { activeId: string; onSelect: (id: string) => void }) {
   const uid = useId().replace(/:/g, "");
   const active = protocols.find((p) => p.id === activeId) ?? protocols[0];
 
@@ -89,17 +82,17 @@ export function ProtocolArchitecture({
         </div>
       </div>
 
-      <div tabIndex={0} role="region" aria-label="Agent protocol map (scrolls sideways)" className="plate-field hidden overflow-x-auto px-4 py-5 lg:block sm:px-6 focus-visible:outline-offset-[-2px]">
-        <svg
-          viewBox="0 0 880 276"
-          role="img"
-          aria-labelledby={`${uid}-title`}
-          className="mx-auto block h-auto w-full min-w-[640px] max-w-[880px]"
-        >
+      <div
+        tabIndex={0}
+        role="region"
+        aria-label="Agent protocol map (scrolls sideways)"
+        className="plate-field hidden overflow-x-auto px-4 py-5 lg:block sm:px-6 focus-visible:outline-offset-[-2px]"
+      >
+        <svg viewBox="0 0 880 276" role="img" aria-labelledby={`${uid}-title`} className="mx-auto block h-auto w-full min-w-[640px] max-w-[880px]">
           <title id={`${uid}-title`}>
-            Architecture diagram connecting User and UI on the left to the AI Agent hub in the center via AG-UI (live state stream)
-            and A2UI (approved design-system components), and connecting the AI Agent hub to Tools and Data on the upper right via MCP
-            and to Other Agents on the lower right via A2A.
+            Architecture diagram connecting User and UI on the left to the AI Agent hub in the center via AG-UI (live state stream) and A2UI (approved
+            design-system components), and connecting the AI Agent hub to Tools and Data on the upper right via MCP and to Other Agents on the lower right via
+            A2A.
           </title>
 
           {/* Left node: User & UI */}
@@ -232,7 +225,10 @@ export function ProtocolArchitecture({
         </svg>
       </div>
 
-      <figcaption id={`${uid}-cap`} className="rounded-b-[calc(var(--radius-card)-1px)] border-t border-line px-[1.125rem] py-3 text-balance grid gap-4 bg-card text-sm sm:grid-cols-2">
+      <figcaption
+        id={`${uid}-cap`}
+        className="rounded-b-[calc(var(--radius-card)-1px)] border-t border-line px-[1.125rem] py-3 text-balance grid gap-4 bg-card text-sm sm:grid-cols-2"
+      >
         <div>
           <span className="font-mono text-label font-normal text-ink-3">
             {active.name} · {active.owner}

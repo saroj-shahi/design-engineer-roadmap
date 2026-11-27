@@ -24,7 +24,11 @@ const snippet = (text: string, max = 140) => {
   return out.length <= max ? out : `${out.slice(0, out.lastIndexOf(" ", max)).replace(/[,;:]$/, "")}…`;
 };
 
-const slugify = (t: string) => t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+const slugify = (t: string) =>
+  t
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 
 /** The questions the Start page answers, in the reader's words. Shared with the Start page's chips. */
 const startQuestions: { label: string; href: string; jump?: string }[] = [
@@ -39,9 +43,17 @@ const startQuestions: { label: string; href: string; jump?: string }[] = [
 function useDestinations(): Destination[] {
   return useMemo(() => {
     const list: Destination[] = [];
-    for (const q of startQuestions) list.push({ label: q.label, group: "Questions", hint: q.jump ? undefined : pages.find((p) => pageHref(p.id) === q.href)?.label, href: q.href, jump: q.jump });
+    for (const q of startQuestions)
+      list.push({
+        label: q.label,
+        group: "Questions",
+        hint: q.jump ? undefined : pages.find((p) => pageHref(p.id) === q.href)?.label,
+        href: q.href,
+        jump: q.jump,
+      });
     // A page whose title is already one of the questions above isn't listed twice.
-    for (const p of pages) if (!startQuestions.some((q) => q.label === p.title)) list.push({ label: p.title, group: "Pages", hint: p.label, href: pageHref(p.id) });
+    for (const p of pages)
+      if (!startQuestions.some((q) => q.label === p.title)) list.push({ label: p.title, group: "Pages", hint: p.label, href: pageHref(p.id) });
     for (const a of archetypes) list.push({ label: a.name, group: "Roles page", hint: a.short, href: pageHref("roles", a.id) });
     for (const m of planFor("pde"))
       list.push({ label: `Month ${m.month}: ${m.title}`, group: "Plan page · Design Engineer", hint: m.build, href: `#/plan/a/pde/m${m.month}` });
@@ -57,7 +69,12 @@ function useDestinations(): Destination[] {
     ] as const)
       list.push({ label, group: "Library shelf", href: pageHref("library", id) });
     for (const g of glossary)
-      list.push({ label: g.term, group: `Library · Glossary · ${glossaryTopicLabel[g.topic]}`, hint: g.meaning, href: pageHref("library", "glossary", slugify(g.term)) });
+      list.push({
+        label: g.term,
+        group: `Library · Glossary · ${glossaryTopicLabel[g.topic]}`,
+        hint: g.meaning,
+        href: pageHref("library", "glossary", slugify(g.term)),
+      });
     return list;
   }, []);
 }
@@ -94,12 +111,17 @@ export function FindBox({ autoFocus = false, onDone, large = false }: { autoFocu
     const rank = (d: Destination) => {
       const label = d.label.toLowerCase();
       const score =
-        label === query ? 0
-        : label.startsWith(query) ? 1
-        : label.split(/[^a-z0-9]+/).some((w) => w.startsWith(query)) ? 2
-        : label.includes(query) ? 3
-        : words.every((w) => label.includes(w)) ? 4
-        : 5;
+        label === query
+          ? 0
+          : label.startsWith(query)
+            ? 1
+            : label.split(/[^a-z0-9]+/).some((w) => w.startsWith(query))
+              ? 2
+              : label.includes(query)
+                ? 3
+                : words.every((w) => label.includes(w))
+                  ? 4
+                  : 5;
       return score * 2 + (d.group.startsWith("Library · Glossary") ? 0 : 1);
     };
     return all
@@ -145,7 +167,15 @@ export function FindBox({ autoFocus = false, onDone, large = false }: { autoFocu
           large ? "h-14" : "h-12"
         }`}
       >
-        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="size-[18px] shrink-0 text-ink-3">
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          className="size-[18px] shrink-0 text-ink-3"
+        >
           <circle cx="11" cy="11" r="7" />
           <path d="m20 20-3.5-3.5" />
         </svg>
@@ -170,11 +200,10 @@ export function FindBox({ autoFocus = false, onDone, large = false }: { autoFocu
         />
         <kbd className="hidden rounded-md border border-edge px-2 py-0.5 font-mono text-xs text-ink-3 sm:inline">⌘K</kbd>
       </div>
-      <div
-        className={`${open ? "" : "hidden"} absolute inset-x-0 top-[calc(100%+6px)] z-50 rounded-ctl border border-edge bg-card p-1.5 shadow-2`}
-      >
+      <div className={`${open ? "" : "hidden"} absolute inset-x-0 top-[calc(100%+6px)] z-50 rounded-ctl border border-edge bg-card p-1.5 shadow-2`}>
         <ul id={listId} role="listbox" aria-label="Results" className="max-h-[min(26rem,55vh)] overflow-y-auto">
           {results.map((d, i) => (
+            // eslint-disable-next-line jsx-a11y/click-events-have-key-events -- keyboard picks options via the combobox input (aria-activedescendant)
             <li
               key={`${d.group}-${d.label}`}
               id={`${listId}-${i}`}
@@ -260,6 +289,7 @@ export function FindDialog() {
         <span className="max-sm:sr-only">Search</span>
         <kbd className="hidden font-mono text-xs text-ink-3 lg:inline">⌘K</kbd>
       </button>
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions -- backdrop click to close; Esc closes the native <dialog> for keyboard users */}
       <dialog
         ref={ref}
         aria-label="Search the guide"

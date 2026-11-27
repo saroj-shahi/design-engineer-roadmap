@@ -23,9 +23,8 @@ export function ToolingPipeline() {
           <RoleMatrix value={roleId} onChange={setRoleId} />
         </div>
         <p className="col-span-4 self-end text-sm leading-relaxed text-ink-2 lg:col-span-3 lg:col-start-10">
-          Each row is a level or role; each column is a step of the work. A filled cell means that row's recommended tools cover that step,
-          and the number is how many of that step's tools it uses. Step 04, app builders, sits outside every recommended stack.
-          Pick a row to see its chain.
+          Each row is a level or role; each column is a step of the work. A filled cell means that row's recommended tools cover that step, and the number is
+          how many of that step's tools it uses. Step 04, app builders, sits outside every recommended stack. Pick a row to see its chain.
         </p>
       </div>
 
@@ -36,7 +35,9 @@ export function ToolingPipeline() {
               <Glyph name="user" className="!size-3.5 [--accent:currentColor]" />
               <span>Recommended pipeline · {role.label}</span>
             </span>
-            <span>{role.stages.length} of {toolStages.length} steps in use</span>
+            <span>
+              {role.stages.length} of {toolStages.length} steps in use
+            </span>
           </div>
           <div className="plate-field px-5 py-6 sm:px-7">
             <ol aria-label={`${role.label} recommended tool chain`} className="flex flex-wrap items-center gap-3">
@@ -66,7 +67,9 @@ export function ToolingPipeline() {
               </li>
             </ol>
           </div>
-          <p className="rounded-b-[calc(var(--radius-card)-1px)] border-t border-line px-[1.125rem] py-3 text-balance bg-card text-sm leading-relaxed text-ink-2">{role.summary}</p>
+          <p className="rounded-b-[calc(var(--radius-card)-1px)] border-t border-line px-[1.125rem] py-3 text-balance bg-card text-sm leading-relaxed text-ink-2">
+            {role.summary}
+          </p>
         </div>
 
         <ol className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -84,8 +87,16 @@ export function ToolingPipeline() {
                   <Glyph name={stageGlyph[s.id]} on={on} className={`!size-14 ${on ? "text-ink" : "text-ink-3"}`} />
                   <span className={`font-mono text-label font-normal ${on ? "text-accent-ink" : "text-ink-3"}`}>{on ? "In stack" : "Outside"}</span>
                 </div>
-                <span className={`font-display font-semibold leading-[0.9] tracking-[-0.04em] tabular-nums mt-5 text-[3.5rem] transition-colors duration-700 ${on ? "text-ink" : "text-ink-3"}`}>0{s.id}</span>
-                <h3 className={`mt-4 text-[1.0625rem] font-medium leading-snug tracking-tight transition-colors duration-700 ${on ? "text-ink" : "text-ink-3"}`}>{s.name}</h3>
+                <span
+                  className={`font-display font-semibold leading-[0.9] tracking-[-0.04em] tabular-nums mt-5 text-[3.5rem] transition-colors duration-700 ${on ? "text-ink" : "text-ink-3"}`}
+                >
+                  0{s.id}
+                </span>
+                <h3
+                  className={`mt-4 text-[1.0625rem] font-medium leading-snug tracking-tight transition-colors duration-700 ${on ? "text-ink" : "text-ink-3"}`}
+                >
+                  {s.name}
+                </h3>
                 <ul className="mt-4 flex flex-wrap gap-1.5">
                   {s.tools.map((t) => {
                     const hit = highlighted.includes(t);
@@ -118,7 +129,7 @@ function stepsSentence(r: (typeof roleStacks)[number]) {
     const n = r.toolsByStage[id]?.length ?? 0;
     return `step ${id} (${n} ${n === 1 ? "tool" : "tools"})`;
   });
-  const list = parts.length > 1 ? `${parts.slice(0, -1).join(", ")} and ${parts[parts.length - 1]}` : parts[0] ?? "no steps";
+  const list = parts.length > 1 ? `${parts.slice(0, -1).join(", ")} and ${parts[parts.length - 1]}` : (parts[0] ?? "no steps");
   return `recommended tools in ${list}`;
 }
 
@@ -148,7 +159,10 @@ function RoleMatrix({ value, onChange }: { value: string; onChange: (id: string)
               className={`group ${cols} items-center border-b border-line py-1.5 text-left transition-colors duration-500 ${on ? "bg-surface" : "hover:bg-sunken"}`}
             >
               <span className={`flex items-center gap-2 pr-2 text-sm leading-tight sm:text-[0.9375rem] ${on ? "font-medium text-ink" : "text-ink-2"}`}>
-                <span aria-hidden className={`inline-block size-[7px] shrink-0 rounded-full bg-current text-accent transition-transform duration-500 ease-silk ${on ? "scale-100" : "scale-0"}`} />
+                <span
+                  aria-hidden
+                  className={`inline-block size-[7px] shrink-0 rounded-full bg-current text-accent transition-transform duration-500 ease-silk ${on ? "scale-100" : "scale-0"}`}
+                />
                 <Glyph name="user" className={`!size-3.5 shrink-0 ${on ? "text-ink" : "text-ink-3"}`} />
                 <span>{r.label}</span>
               </span>

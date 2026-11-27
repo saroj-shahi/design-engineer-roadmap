@@ -11,6 +11,9 @@ See **[AGENTS.md](AGENTS.md)** for full cross-agent instructions and **[DESIGN.m
 - `npm run build`: typecheck + production build to `dist/`.
 - `npm run icons`: re-renders `public/og-image.png` (1200×630, from `scripts/og/og-image.html`) and the app icons (`apple-touch-icon.png`, `icon-192/512.png`, `icon-maskable-512.png`, `favicon.ico`) from `public/favicon.svg`. Bump the `?v=` on the `og:image` URLs in `index.html` when the image changes so social caches refresh.
 - `npm run pdfs`: re-renders the printable plan PDFs in `public/plans/` (one per plan, listed in `src/data/planPdfs.ts`) from `src/data/research.ts` via `scripts/pdf/render.mjs`. Run it after changing any plan data so the downloads on the Plan page stay in sync.
+- `npm run lint`: ESLint 9 flat config (`eslint.config.js`): JS + typescript-eslint recommended, react-hooks, react-refresh (warn) and jsx-a11y recommended. Must report zero errors; only react-refresh warnings are expected.
+- `npm run format` / `npm run format:check`: Prettier (`.prettierrc`, `printWidth: 160`, otherwise defaults). `.prettierignore` skips `public/`, `docs/`, `.claude/`, Markdown and the lockfile.
+- `npm run check`: release gate: `lint`, `format:check`, `typecheck` and `build` in order.
 - `npm run test:e2e`: Playwright suite in `tests/e2e/` against the production build, at desktop (1280×800) and phone (Pixel 7). Covers every route (title, one h1, no console errors, no sideways scroll, no cropped text or square corners in rounded cards), a WCAG 2.2 A/AA axe scan per route, pointer and focus visibility, and the main flows (nav, search, roles, checklist, plan, glossary). First run: `npx playwright install chromium`.
 
 ## Layout
@@ -57,7 +60,7 @@ See **[AGENTS.md](AGENTS.md)** for full cross-agent instructions and **[DESIGN.m
 
 ## Verifying changes
 
-Run `npm run typecheck`, `npm run build` and `npm run test:e2e`, then check the preview at desktop (`~1280px`) and mobile (`~375px`).
+Run `npm run format`, then `npm run check` (lint, format check, typecheck, build) and `npm run test:e2e`, then check the preview at desktop (`~1280px`) and mobile (`~375px`).
 
 ## Git
 

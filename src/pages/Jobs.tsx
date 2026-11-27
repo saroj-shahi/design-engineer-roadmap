@@ -27,7 +27,11 @@ export function Jobs({ figure }: { figure?: string }) {
           <SubHead
             id="jobs-shift-title"
             eyebrow="01 · Hiring"
-            title={<>Where hiring grew, <em>and where it shrank</em></>}
+            title={
+              <>
+                Where hiring grew, <em>and where it shrank</em>
+              </>
+            }
             note="Change in hiring by role and company size (mostly compared with 2019), next to the US government's forecast for web and interface design jobs."
           />
           <MarketShiftChart />
@@ -37,7 +41,11 @@ export function Jobs({ figure }: { figure?: string }) {
           <SubHead
             id="jobs-teams-title"
             eyebrow="02 · Teams"
-            title={<>How teams are <em>changing</em></>}
+            title={
+              <>
+                How teams are <em>changing</em>
+              </>
+            }
             note="AI is now part of the work for many designers and developers, and teams are getting flatter. Both point toward people who can work across design and code."
           />
           <TeamShift />

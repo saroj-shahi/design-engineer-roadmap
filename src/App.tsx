@@ -31,7 +31,9 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boole
           <button type="button" onClick={() => window.location.reload()} className={actionClass("primary")}>
             Reload page
           </button>
-          <ActionLink href={`${BASE}#/`} variant="secondary">Back to start</ActionLink>
+          <ActionLink href={`${BASE}#/`} variant="secondary">
+            Back to start
+          </ActionLink>
         </div>
       </section>
     );
@@ -133,7 +135,9 @@ export default function App() {
             {route.notFound ? (
               <NotFound />
             ) : (
-              <Suspense fallback={<div className="mx-auto w-full max-w-[1440px] px-(--gutter) py-24 font-mono text-label font-normal text-ink-3">Loading…</div>}>
+              <Suspense
+                fallback={<div className="mx-auto w-full max-w-[1440px] px-(--gutter) py-24 font-mono text-label font-normal text-ink-3">Loading…</div>}
+              >
                 {route.page === "home" && <Home />}
                 {route.page === "jobs" && <Jobs figure={route.parts[0]} />}
                 {route.page === "roles" && <Roles role={route.parts[0]} />}
@@ -232,9 +236,7 @@ function NotFound() {
       <h1 id="nf-title" className="font-display text-display-xl text-balance mt-4 text-ink">
         That page <em>doesn't exist.</em>
       </h1>
-      <p className="max-w-[44ch] text-lede text-pretty text-ink-2 mt-8">
-        The link may be mistyped or out of date. Pick one of the guide's five pages instead.
-      </p>
+      <p className="max-w-[44ch] text-lede text-pretty text-ink-2 mt-8">The link may be mistyped or out of date. Pick one of the guide's five pages instead.</p>
       <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         {navPages.map((p) => (
           <li key={p.id}>

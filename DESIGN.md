@@ -33,7 +33,7 @@ Never hard-code hex/rgb values in JSX or CSS outside the `:root` block in `src/i
 
 ## 3. Typography & orphan/widow hygiene
 
-- **Families:** `Bricolage Grotesque` (display, numerals), `DM Sans` (reading, UI) and `DM Mono` (`font-mono text-label` metadata, code, tabular numbers), loaded from Google Fonts in `index.html`.
+- **Families:** `Bricolage Grotesque` (display, numerals), `DM Sans` (reading, UI) and `DM Mono` (`font-mono text-label` metadata, code, tabular numbers), self-hosted through Fontsource (`@fontsource-variable/bricolage-grotesque`, `@fontsource-variable/dm-sans`, `@fontsource/dm-mono`), imported in `src/main.tsx`. The CSP allows fonts and styles from `'self'` only.
 - **Type scale (Tailwind `@theme` text sizes in `src/index.css`; each carries its own line-height, tracking and weight):**
   - `font-display text-hero` — Start page headline (`clamp(2.75rem, 6.4vw, 5.5rem)`, `-0.045em` tracking)
   - `font-display text-display-xl` / `text-display-l` / `text-display-m` — page, section and card titles (`600`, add `text-balance`)

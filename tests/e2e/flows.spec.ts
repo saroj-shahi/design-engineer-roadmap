@@ -42,7 +42,10 @@ test.describe("navigation", () => {
 test.describe("sources", () => {
   test("the footer links to the Sources page, which lists sources and works cited", async ({ page }) => {
     await fresh(page, "/#/roles/de");
-    await page.getByRole("contentinfo").getByRole("link", { name: /Sources and method/ }).click();
+    await page
+      .getByRole("contentinfo")
+      .getByRole("link", { name: /Sources and method/ })
+      .click();
     await expect(page).toHaveURL(/#\/sources$/);
     await expect(page.getByRole("heading", { level: 1 })).toContainText("Sources");
     await expect(page.getByRole("heading", { name: "Sources cited in the research brief" })).toBeVisible();
@@ -86,7 +89,10 @@ test.describe("search", () => {
 
   test("the Search button opens the dialog and a result navigates", async ({ page }) => {
     await fresh(page, "/#/");
-    await page.getByRole("button", { name: /Search/ }).first().click();
+    await page
+      .getByRole("button", { name: /Search/ })
+      .first()
+      .click();
     const dialog = page.getByRole("dialog", { name: "Search the guide" });
     await dialog.getByRole("combobox").fill("AX Designer");
     await dialog.getByRole("option").first().click();
@@ -132,7 +138,10 @@ test.describe("roles", () => {
   test("arrow keys move between roles", async ({ page }, info) => {
     test.skip(info.project.name === "mobile", "keyboard only");
     await fresh(page, "/#/roles/de");
-    await page.getByRole("tab", { name: /Design Engineer/ }).first().focus();
+    await page
+      .getByRole("tab", { name: /Design Engineer/ })
+      .first()
+      .focus();
     await page.keyboard.press("ArrowDown");
     await expect(page).toHaveURL(/#\/roles\/meta/);
   });
@@ -216,7 +225,10 @@ test.describe("glossary", () => {
     const see = page.locator("dd", { hasText: /^See / }).first().getByRole("link").first();
     const target = (await see.textContent())!.trim();
     await see.click();
-    const slug = target.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+    const slug = target
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
     await expect(page).toHaveURL(new RegExp(`#/library/glossary/${slug}$`));
     await expect(page.locator(`#term-${slug}`)).toBeInViewport();
   });
@@ -242,43 +254,50 @@ test.describe("charts", () => {
     test(`chart text on ${path} never renders below 12px`, async ({ page }) => {
       await fresh(page, path);
       if (tab) await page.locator(tab).click();
-      const measure = () => page.evaluate(() => {
-        const shown = (el: Element) => {
-          const r = el.getBoundingClientRect();
-          if (!r.width || !r.height) return false;
-          for (let e: Element | null = el; e; e = e.parentElement) {
-            const cs = getComputedStyle(e);
-            if (cs.display === "none" || cs.visibility === "hidden") return false;
-          }
-          return true;
-        };
-        const out: { text: string; px: number }[] = [];
-        document.querySelectorAll("main figure").forEach((fig) => {
-          if (!fig.querySelector("svg text")) return;
-          const walker = document.createTreeWalker(fig, NodeFilter.SHOW_TEXT);
-          while (walker.nextNode()) {
-            const node = walker.currentNode;
-            const el = node.parentElement;
-            if (!el || !node.textContent?.trim() || !shown(el)) continue;
-            let px = parseFloat(getComputedStyle(el).fontSize);
-            const svg = el instanceof SVGElement ? el.ownerSVGElement : null;
-            const m = svg?.getScreenCTM();
-            if (m) px *= Math.hypot(m.a, m.b);
-            out.push({ text: node.textContent.trim().slice(0, 30), px: Math.round(px * 100) / 100 });
-          }
+      const measure = () =>
+        page.evaluate(() => {
+          const shown = (el: Element) => {
+            const r = el.getBoundingClientRect();
+            if (!r.width || !r.height) return false;
+            for (let e: Element | null = el; e; e = e.parentElement) {
+              const cs = getComputedStyle(e);
+              if (cs.display === "none" || cs.visibility === "hidden") return false;
+            }
+            return true;
+          };
+          const out: { text: string; px: number }[] = [];
+          document.querySelectorAll("main figure").forEach((fig) => {
+            if (!fig.querySelector("svg text")) return;
+            const walker = document.createTreeWalker(fig, NodeFilter.SHOW_TEXT);
+            while (walker.nextNode()) {
+              const node = walker.currentNode;
+              const el = node.parentElement;
+              if (!el || !node.textContent?.trim() || !shown(el)) continue;
+              let px = parseFloat(getComputedStyle(el).fontSize);
+              const svg = el instanceof SVGElement ? el.ownerSVGElement : null;
+              const m = svg?.getScreenCTM();
+              if (m) px *= Math.hypot(m.a, m.b);
+              out.push({ text: node.textContent.trim().slice(0, 30), px: Math.round(px * 100) / 100 });
+            }
+          });
+          return out;
         });
-        return out;
-      });
       const sizes = await measure();
       expect(sizes.length).toBeGreaterThan(0);
-      // Desktop keeps the full SVG charts as designed; the 12px floor is enforced on phones, where they used to shrink,
-      // and on tablets (768px), where the HTML chart variants now apply up to 1024px.
-      if (test.info().project.name === "mobile") expect(sizes.filter((s) => s.px < 12)).toEqual([]);
-      else {
-        await page.setViewportSize({ width: 768, height: 1024 });
-        const tablet = await measure();
-        expect(tablet.length).toBeGreaterThan(0);
-        expect(tablet.filter((s) => s.px < 12)).toEqual([]);
+      // The 12px floor holds at every width: phones and tablets get the HTML chart variants, and from 1024px up
+      // the SVG labels scale up (useSvgTextFloor) wherever a chart renders narrower than its viewBox.
+      expect(sizes.filter((s) => s.px < 12)).toEqual([]);
+      if (test.info().project.name !== "mobile") {
+        for (const width of [768, 1024, 1100]) {
+          await page.setViewportSize({ width, height: 1024 });
+          await page.waitForTimeout(100);
+          const atWidth = await measure();
+          expect(atWidth.length, `chart text at ${width}px`).toBeGreaterThan(0);
+          expect(
+            atWidth.filter((s) => s.px < 12),
+            `chart text at ${width}px`,
+          ).toEqual([]);
+        }
       }
     });
   }

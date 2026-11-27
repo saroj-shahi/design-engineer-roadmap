@@ -84,17 +84,11 @@ export function RoadmapMap({
                 >
                   {s.title}
                 </span>
-                {s.note && (
-                  <span className={`mt-2 block text-xs ${isBase ? "text-inverse-muted" : "text-ink-2"}`}>
-                    {s.note}
-                  </span>
-                )}
+                {s.note && <span className={`mt-2 block text-xs ${isBase ? "text-inverse-muted" : "text-ink-2"}`}>{s.note}</span>}
                 {s.base && (
                   <span
                     className={`font-mono text-label font-normal mt-2.5 block border-t pt-2 ${
-                      isBase
-                        ? "border-inverse-line text-inverse-muted"
-                        : "border-line text-ink-3"
+                      isBase ? "border-inverse-line text-inverse-muted" : "border-line text-ink-3"
                     }`}
                   >
                     {s.base}

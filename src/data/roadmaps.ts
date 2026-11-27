@@ -49,8 +49,7 @@ export const externalRoadmaps: ExternalRoadmap[] = [
     shortTitle: "UX Design",
     url: "https://roadmap.sh/ux-design",
     group: "design",
-    tagline:
-      "Behavioral psychology, product framing, conceptual design, wireframing, UX patterns and experimentation.",
+    tagline: "Behavioral psychology, product framing, conceptual design, wireframing, UX patterns and experimentation.",
     fits: ["Track B · Starting out", "AX Designer", "All designers"],
     related: ["product-design", "design-system", "ai-product-builder", "frontend"],
     milestones: [
@@ -61,22 +60,11 @@ export const externalRoadmaps: ExternalRoadmap[] = [
         branches: [
           {
             heading: "Frameworks",
-            items: [
-              "BJ Fogg's Behavior Model",
-              "CREATE Action Funnel",
-              "Spectrum of Thinking Interventions",
-              "Dual Process Theory",
-            ],
+            items: ["BJ Fogg's Behavior Model", "CREATE Action Funnel", "Spectrum of Thinking Interventions", "Dual Process Theory"],
           },
           {
             heading: "Key concepts",
-            items: [
-              "Nudge Theory",
-              "Persuasive Technology",
-              "Behavioral Science",
-              "Behavioral Economics",
-              "Behavior Design",
-            ],
+            items: ["Nudge Theory", "Persuasive Technology", "Behavioral Science", "Behavioral Economics", "Behavior Design"],
           },
         ],
       },
@@ -87,12 +75,7 @@ export const externalRoadmaps: ExternalRoadmap[] = [
         branches: [
           {
             heading: "Classifying behavior & shortcuts",
-            items: [
-              "BJ Fogg's Behavior Grid",
-              "Defaulting",
-              "Making it Incidental",
-              "Automate the Act of Repetition",
-            ],
+            items: ["BJ Fogg's Behavior Grid", "Defaulting", "Making it Incidental", "Automate the Act of Repetition"],
           },
           {
             heading: "Existing habits",
@@ -106,12 +89,7 @@ export const externalRoadmaps: ExternalRoadmap[] = [
           },
           {
             heading: "New habits & conscious action",
-            items: [
-              "Nir Eyal's Hook Model",
-              "Cue-Routine-Reward Model",
-              "Educate & encourage user",
-              "Help user think about their action",
-            ],
+            items: ["Nir Eyal's Hook Model", "Cue-Routine-Reward Model", "Educate & encourage user", "Help user think about their action"],
           },
         ],
       },
@@ -122,12 +100,7 @@ export const externalRoadmaps: ExternalRoadmap[] = [
         branches: [
           {
             heading: "Clarify product & users",
-            items: [
-              "Target Outcome",
-              "Target Actor",
-              "Target Action",
-              "Create User Personas",
-            ],
+            items: ["Target Outcome", "Target Actor", "Target Action", "Create User Personas"],
           },
           {
             heading: "Existing business model",
@@ -135,12 +108,7 @@ export const externalRoadmaps: ExternalRoadmap[] = [
           },
           {
             heading: "New business model",
-            items: [
-              "Business Model Inspirator",
-              "Competitor Analysis",
-              "Porter's Five Forces Model",
-              "SWOT Analysis",
-            ],
+            items: ["Business Model Inspirator", "Competitor Analysis", "Porter's Five Forces Model", "SWOT Analysis"],
           },
         ],
       },
@@ -181,11 +149,7 @@ export const externalRoadmaps: ExternalRoadmap[] = [
         summary: "Testing ideas interactively before engineering commits to production code.",
         branches: [
           {
-            items: [
-              "Interactive clickable prototypes",
-              "Rapid validation of flows & states",
-              "Validating layout & comprehension with users",
-            ],
+            items: ["Interactive clickable prototypes", "Rapid validation of flows & states", "Validating layout & comprehension with users"],
           },
         ],
       },
@@ -196,24 +160,11 @@ export const externalRoadmaps: ExternalRoadmap[] = [
         branches: [
           {
             heading: "Patterns for scarce attention",
-            items: [
-              "Call to Action",
-              "How-to-Tips",
-              "Status Reports",
-              "Reminders & Planning Prompts",
-            ],
+            items: ["Call to Action", "How-to-Tips", "Status Reports", "Reminders & Planning Prompts"],
           },
           {
             heading: "Patterns for repeat engagement",
-            items: [
-              "Behavior Change Games",
-              "Decision-Making Support",
-              "Gamification",
-              "Goal Trackers",
-              "Reminders",
-              "Social Sharing",
-              "Tutorials & Planners",
-            ],
+            items: ["Behavior Change Games", "Decision-Making Support", "Gamification", "Goal Trackers", "Reminders", "Social Sharing", "Tutorials & Planners"],
           },
           {
             heading: "Attention & intuitive reaction",
@@ -244,11 +195,7 @@ export const externalRoadmaps: ExternalRoadmap[] = [
           },
           {
             heading: "Make action effortless",
-            items: [
-              "Elicit implementation intentions",
-              "Default everything",
-              "Lessen the burden of action / info",
-            ],
+            items: ["Elicit implementation intentions", "Default everything", "Lessen the burden of action / info"],
           },
         ],
       },
@@ -259,12 +206,7 @@ export const externalRoadmaps: ExternalRoadmap[] = [
         branches: [
           {
             heading: "Testing & iteration",
-            items: [
-              "Incremental A/B Testing",
-              "Multivariate Testing",
-              "Gather Lessons",
-              "Prioritize & Integrate",
-            ],
+            items: ["Incremental A/B Testing", "Multivariate Testing", "Gather Lessons", "Prioritize & Integrate"],
           },
         ],
       },
@@ -276,8 +218,7 @@ export const externalRoadmaps: ExternalRoadmap[] = [
     shortTitle: "Product Design",
     url: "https://roadmap.sh/product-design",
     group: "design",
-    tagline:
-      "End-to-end digital product design: discovery, framing, strategy, UI craft, engineering collaboration, systems and measurement.",
+    tagline: "End-to-end digital product design: discovery, framing, strategy, UI craft, engineering collaboration, systems and measurement.",
     fits: ["Track B · Starting out", "Design Engineer", "Meta-Designer"],
     related: ["ux-design", "design-system", "frontend", "ai-product-builder"],
     milestones: [
@@ -292,23 +233,11 @@ export const externalRoadmaps: ExternalRoadmap[] = [
           },
           {
             heading: "Defining success",
-            items: [
-              "Goal Setting",
-              "Product Vision",
-              "Value Proposition",
-              "Product-Market Fit",
-              "Success Metrics",
-            ],
+            items: ["Goal Setting", "Product Vision", "Value Proposition", "Product-Market Fit", "Success Metrics"],
           },
           {
             heading: "Design principles",
-            items: [
-              "User-Centered Design",
-              "Functionality over Polish",
-              "Consistency & Coherence",
-              "Collaboration by Design",
-              "Iteration over Perfection",
-            ],
+            items: ["User-Centered Design", "Functionality over Polish", "Consistency & Coherence", "Collaboration by Design", "Iteration over Perfection"],
           },
         ],
       },
@@ -319,22 +248,11 @@ export const externalRoadmaps: ExternalRoadmap[] = [
         branches: [
           {
             heading: "Gathering information",
-            items: [
-              "Interviews",
-              "Surveys",
-              "Contextual Inquiry",
-              "Heatmaps",
-              "Session Recordings",
-            ],
+            items: ["Interviews", "Surveys", "Contextual Inquiry", "Heatmaps", "Session Recordings"],
           },
           {
             heading: "Mapping & organizing",
-            items: [
-              "Journey Mapping",
-              "Task Analysis",
-              "Synthesizing Research",
-              "Research Repository",
-            ],
+            items: ["Journey Mapping", "Task Analysis", "Synthesizing Research", "Research Repository"],
           },
         ],
       },
@@ -345,22 +263,11 @@ export const externalRoadmaps: ExternalRoadmap[] = [
         branches: [
           {
             heading: "Framing the problem",
-            items: [
-              "Personas",
-              "Empathy Maps",
-              "Jobs-to-be-Done (JTBD)",
-              "Problem Statements",
-              "How Might We Questions",
-            ],
+            items: ["Personas", "Empathy Maps", "Jobs-to-be-Done (JTBD)", "Problem Statements", "How Might We Questions"],
           },
           {
             heading: "Prioritizing opportunities",
-            items: [
-              "Product Sense",
-              "Business & User Needs",
-              "Opportunity Solution Trees",
-              "Prioritization Frameworks (Kano, RICE, MoSCoW)",
-            ],
+            items: ["Product Sense", "Business & User Needs", "Opportunity Solution Trees", "Prioritization Frameworks (Kano, RICE, MoSCoW)"],
           },
         ],
       },
@@ -393,23 +300,11 @@ export const externalRoadmaps: ExternalRoadmap[] = [
         branches: [
           {
             heading: "Information architecture",
-            items: [
-              "Site Maps",
-              "Navigation",
-              "Content Organization",
-              "User Flows",
-              "Task Flows",
-            ],
+            items: ["Site Maps", "Navigation", "Content Organization", "User Flows", "Task Flows"],
           },
           {
             heading: "Ideation",
-            items: [
-              "Brainstorming",
-              "Mind Maps",
-              "Sketching",
-              "Wireframing",
-              "Prototyping",
-            ],
+            items: ["Brainstorming", "Mind Maps", "Sketching", "Wireframing", "Prototyping"],
           },
         ],
       },
@@ -420,13 +315,7 @@ export const externalRoadmaps: ExternalRoadmap[] = [
         branches: [
           {
             heading: "Testing & review",
-            items: [
-              "Usability Testing",
-              "Accessibility Testing",
-              "UX Benchmarking",
-              "Expert Review",
-              "Critiques & Reviews",
-            ],
+            items: ["Usability Testing", "Accessibility Testing", "UX Benchmarking", "Expert Review", "Critiques & Reviews"],
           },
         ],
       },
@@ -437,22 +326,11 @@ export const externalRoadmaps: ExternalRoadmap[] = [
         branches: [
           {
             heading: "Visual & interface design",
-            items: [
-              "Color, Typography, Layout & Grid",
-              "Icons & Visual Hierarchy",
-              "Components & UI Patterns",
-              "Design Tokens",
-              "Interface States",
-            ],
+            items: ["Color, Typography, Layout & Grid", "Icons & Visual Hierarchy", "Components & UI Patterns", "Design Tokens", "Interface States"],
           },
           {
             heading: "Motion, content & responsibility",
-            items: [
-              "Micro-interactions & Motion Principles",
-              "UX Writing, Voice & Tone, Microcopy",
-              "Inclusive Design & Ethical Design",
-              "AI-Assisted Design",
-            ],
+            items: ["Micro-interactions & Motion Principles", "UX Writing, Voice & Tone, Microcopy", "Inclusive Design & Ethical Design", "AI-Assisted Design"],
           },
         ],
       },
@@ -463,21 +341,11 @@ export const externalRoadmaps: ExternalRoadmap[] = [
         branches: [
           {
             heading: "Constraints & feasibility",
-            items: [
-              "Stack & Platform Constraints",
-              "API & Data Limitations",
-              "Performance Constraints",
-              "Feasibility Assessment & Specs",
-            ],
+            items: ["Stack & Platform Constraints", "API & Data Limitations", "Performance Constraints", "Feasibility Assessment & Specs"],
           },
           {
             heading: "Handoff & collaboration",
-            items: [
-              "Edge Cases & States",
-              "Handoff Tools (Figma Dev Mode, Zeplin)",
-              "Launch Readiness",
-              "Developer Collaboration",
-            ],
+            items: ["Edge Cases & States", "Handoff Tools (Figma Dev Mode, Zeplin)", "Launch Readiness", "Developer Collaboration"],
           },
         ],
       },
@@ -497,13 +365,7 @@ export const externalRoadmaps: ExternalRoadmap[] = [
         summary: "Tracking product performance after launch and iterating with experiments.",
         branches: [
           {
-            items: [
-              "Product Analytics",
-              "HEART Framework",
-              "A/B Testing",
-              "Feature Flags",
-              "Continuous Improvement",
-            ],
+            items: ["Product Analytics", "HEART Framework", "A/B Testing", "Feature Flags", "Continuous Improvement"],
           },
         ],
       },
@@ -515,8 +377,7 @@ export const externalRoadmaps: ExternalRoadmap[] = [
     shortTitle: "Design System",
     url: "https://roadmap.sh/design-system",
     group: "design",
-    tagline:
-      "Auditing existing UI, defining design language and tokens, building core components, release tooling and governance.",
+    tagline: "Auditing existing UI, defining design language and tokens, building core components, release tooling and governance.",
     fits: ["Meta-Designer", "Design Engineer", "Track A · Month 3–4"],
     related: ["product-design", "frontend", "ux-design", "prompt-engineering"],
     milestones: [
@@ -537,12 +398,7 @@ export const externalRoadmaps: ExternalRoadmap[] = [
           },
           {
             heading: "Shared terminology",
-            items: [
-              "Component & Component Library",
-              "Design Language & Guidelines",
-              "Pattern, Token & UI Kit",
-              "Pilot & Governance",
-            ],
+            items: ["Component & Component Library", "Design Language & Guidelines", "Pattern, Token & UI Kit", "Pilot & Governance"],
           },
         ],
       },
@@ -563,11 +419,7 @@ export const externalRoadmaps: ExternalRoadmap[] = [
           },
           {
             heading: "Inventory elements & components",
-            items: [
-              "Icons, Sizing & Visual Forms",
-              "Color, Spacing & Typography",
-              "Avatars, Banners, Badges, Cards, Forms, Buttons, Dropdowns",
-            ],
+            items: ["Icons, Sizing & Visual Forms", "Color, Spacing & Typography", "Avatars, Banners, Badges, Cards, Forms, Buttons, Dropdowns"],
           },
         ],
       },
@@ -578,20 +430,11 @@ export const externalRoadmaps: ExternalRoadmap[] = [
         branches: [
           {
             heading: "Brand & voice",
-            items: [
-              "Design Principles & Vision",
-              "Writing Guidelines & Tone of Voice",
-              "Terminology & Microcopy Guidelines",
-            ],
+            items: ["Design Principles & Vision", "Writing Guidelines & Tone of Voice", "Terminology & Microcopy Guidelines"],
           },
           {
             heading: "Logo & accessibility guidelines",
-            items: [
-              "Monochrome, Small-Use & Placement Rules",
-              "Logo Usage & File Formats",
-              "Accessibility Guidelines",
-              "User Onboarding Guidelines",
-            ],
+            items: ["Monochrome, Small-Use & Placement Rules", "Logo Usage & File Formats", "Accessibility Guidelines", "User Onboarding Guidelines"],
           },
         ],
       },
@@ -602,11 +445,7 @@ export const externalRoadmaps: ExternalRoadmap[] = [
         branches: [
           {
             heading: "Colors & layout",
-            items: [
-              "Functional Colors & Accessibility Contrast",
-              "Dark Mode Tokens",
-              "Units, Grid, Breakpoints & Spacing",
-            ],
+            items: ["Functional Colors & Accessibility Contrast", "Dark Mode Tokens", "Units, Grid, Breakpoints & Spacing"],
           },
           {
             heading: "Typography & iconography",
@@ -625,20 +464,11 @@ export const externalRoadmaps: ExternalRoadmap[] = [
         branches: [
           {
             heading: "Display & actions",
-            items: [
-              "Avatar, Banner, Badge, Icon",
-              "Button, Card, Carousel, List",
-              "Loading Indicator, Toast, Tooltip",
-            ],
+            items: ["Avatar, Banner, Badge, Icon", "Button, Card, Carousel, List", "Loading Indicator, Toast, Tooltip"],
           },
           {
             heading: "Inputs & navigation",
-            items: [
-              "Input Text & Textarea",
-              "Checkbox, Radio & Switch",
-              "Select & Dropdown",
-              "Modal & Tabs",
-            ],
+            items: ["Input Text & Textarea", "Checkbox, Radio & Switch", "Select & Dropdown", "Modal & Tabs"],
           },
         ],
       },
@@ -659,11 +489,7 @@ export const externalRoadmaps: ExternalRoadmap[] = [
           },
           {
             heading: "Project management & adoption",
-            items: [
-              "Roadmap, Milestones & Ticketing",
-              "Component, Tooling & Health Analytics",
-              "Community Meetings, Open Hours & FAQs",
-            ],
+            items: ["Roadmap, Milestones & Ticketing", "Component, Tooling & Health Analytics", "Community Meetings, Open Hours & FAQs"],
           },
         ],
       },
@@ -675,8 +501,7 @@ export const externalRoadmaps: ExternalRoadmap[] = [
     shortTitle: "Frontend",
     url: "https://roadmap.sh/frontend",
     group: "engineering-ai",
-    tagline:
-      "Core web standards, Git, Tailwind, React, TypeScript, testing, accessibility, performance and AI-assisted development.",
+    tagline: "Core web standards, Git, Tailwind, React, TypeScript, testing, accessibility, performance and AI-assisted development.",
     fits: ["Design Engineer", "Track A · Month 1–5", "Track B · Stage 2"],
     related: ["design-system", "product-design", "claude-code", "ai-product-builder"],
     milestones: [
@@ -687,18 +512,11 @@ export const externalRoadmaps: ExternalRoadmap[] = [
         branches: [
           {
             heading: "How the web works",
-            items: [
-              "HTTP, DNS, Domains & Hosting",
-              "How Browsers Parse & Render Pages",
-            ],
+            items: ["HTTP, DNS, Domains & Hosting", "How Browsers Parse & Render Pages"],
           },
           {
             heading: "HTML, CSS & JavaScript",
-            items: [
-              "Semantic HTML, Forms & Validation",
-              "CSS Layouts (Flexbox, Grid) & Responsive Design",
-              "JavaScript DOM, Events, Fetch & async/await",
-            ],
+            items: ["Semantic HTML, Forms & Validation", "CSS Layouts (Flexbox, Grid) & Responsive Design", "JavaScript DOM, Events, Fetch & async/await"],
           },
         ],
       },
@@ -709,19 +527,11 @@ export const externalRoadmaps: ExternalRoadmap[] = [
         branches: [
           {
             heading: "Workflow & styling",
-            items: [
-              "Git, GitHub & Pull Requests",
-              "Package Managers (npm, pnpm, yarn, Bun)",
-              "Tailwind CSS",
-            ],
+            items: ["Git, GitHub & Pull Requests", "Package Managers (npm, pnpm, yarn, Bun)", "Tailwind CSS"],
           },
           {
             heading: "Frameworks & types",
-            items: [
-              "React (Components, Props, State, Hooks)",
-              "TypeScript Type Checking",
-              "SSR & SSG (Next.js, Astro, React Router)",
-            ],
+            items: ["React (Components, Props, State, Hooks)", "TypeScript Type Checking", "SSR & SSG (Next.js, Astro, React Router)"],
           },
         ],
       },
@@ -747,11 +557,7 @@ export const externalRoadmaps: ExternalRoadmap[] = [
         branches: [
           {
             heading: "Tooling & testing",
-            items: [
-              "Bundlers (Vite, esbuild, Rollup)",
-              "Linters & Formatters (ESLint, Prettier, Biome)",
-              "Testing (Vitest, Playwright, Cypress)",
-            ],
+            items: ["Bundlers (Vite, esbuild, Rollup)", "Linters & Formatters (ESLint, Prettier, Biome)", "Testing (Vitest, Playwright, Cypress)"],
           },
           {
             heading: "Quality & production",
@@ -772,8 +578,7 @@ export const externalRoadmaps: ExternalRoadmap[] = [
     shortTitle: "AI Product Builder",
     url: "https://roadmap.sh/ai-product-builder",
     group: "engineering-ai",
-    tagline:
-      "Going from problem definition to live deployed software with AI prototyping tools, coding agents, testing and hosting.",
+    tagline: "Going from problem definition to live deployed software with AI prototyping tools, coding agents, testing and hosting.",
     fits: ["Track B · Stage 2–3", "Design Engineer", "Product Designers shipping code"],
     related: ["product-design", "frontend", "claude-code", "prompt-engineering"],
     milestones: [
@@ -783,12 +588,7 @@ export const externalRoadmaps: ExternalRoadmap[] = [
         summary: "Scoping the problem, app anatomy and stack constraints before prompting an AI tool.",
         branches: [
           {
-            items: [
-              "Problem Definition",
-              "App Anatomy",
-              "Feature Scoping",
-              "Tech Stack & Constraints",
-            ],
+            items: ["Problem Definition", "App Anatomy", "Feature Scoping", "Tech Stack & Constraints"],
           },
         ],
       },
@@ -818,12 +618,7 @@ export const externalRoadmaps: ExternalRoadmap[] = [
           },
           {
             heading: "Learn by need",
-            items: [
-              "HTML / CSS / JavaScript",
-              "React",
-              "Browsers & DevTools",
-              "Node.js basics",
-            ],
+            items: ["HTML / CSS / JavaScript", "React", "Browsers & DevTools", "Node.js basics"],
           },
         ],
       },
@@ -834,19 +629,11 @@ export const externalRoadmaps: ExternalRoadmap[] = [
         branches: [
           {
             heading: "Testing & change management",
-            items: [
-              "User Testing",
-              "Unit, Integration & E2E Testing",
-              "Change Management & CI (GitHub, GitLab)",
-            ],
+            items: ["User Testing", "Unit, Integration & E2E Testing", "Change Management & CI (GitHub, GitLab)"],
           },
           {
             heading: "Deployment & data",
-            items: [
-              "Serverless Hosting (Vercel, Cloudflare)",
-              "PaaS & Cloud (Railway, Render, AWS, GCP, Azure)",
-              "Databases (Supabase, PostgreSQL, MongoDB)",
-            ],
+            items: ["Serverless Hosting (Vercel, Cloudflare)", "PaaS & Cloud (Railway, Render, AWS, GCP, Azure)", "Databases (Supabase, PostgreSQL, MongoDB)"],
           },
         ],
       },
@@ -858,8 +645,7 @@ export const externalRoadmaps: ExternalRoadmap[] = [
     shortTitle: "Prompt & Context",
     url: "https://roadmap.sh/prompt-engineering",
     group: "engineering-ai",
-    tagline:
-      "Structuring prompts, grounding context layers, CLAUDE.md/AGENTS.md conventions, evals and defending against prompt injection.",
+    tagline: "Structuring prompts, grounding context layers, CLAUDE.md/AGENTS.md conventions, evals and defending against prompt injection.",
     fits: ["Meta-Designer", "AX Designer", "Design Engineer"],
     related: ["ai-agents", "claude-code", "design-system", "ai-product-builder"],
     milestones: [
@@ -870,20 +656,11 @@ export const externalRoadmaps: ExternalRoadmap[] = [
         branches: [
           {
             heading: "Core terminology",
-            items: [
-              "Prompt vs Context Engineering",
-              "Tokens, Context Window & Hallucination",
-              "Fine-Tuning vs Prompt Engineering",
-              "RAG, Embeddings & Agents",
-            ],
+            items: ["Prompt vs Context Engineering", "Tokens, Context Window & Hallucination", "Fine-Tuning vs Prompt Engineering", "RAG, Embeddings & Agents"],
           },
           {
             heading: "Model choices",
-            items: [
-              "Reasoning vs Standard Models",
-              "Open vs Closed Models",
-              "Model Size, Cost & Capabilities",
-            ],
+            items: ["Reasoning vs Standard Models", "Open vs Closed Models", "Model Size, Cost & Capabilities"],
           },
         ],
       },
@@ -919,22 +696,11 @@ export const externalRoadmaps: ExternalRoadmap[] = [
         branches: [
           {
             heading: "Anatomy & retrieval",
-            items: [
-              "Context Sources & Context Layers",
-              "Context Failure Modes & Context Rot",
-              "Context Grounding & Agentic Search",
-              "Just-in-Time Retrieval",
-            ],
+            items: ["Context Sources & Context Layers", "Context Failure Modes & Context Rot", "Context Grounding & Agentic Search", "Just-in-Time Retrieval"],
           },
           {
             heading: "Memory, compaction & multi-agent",
-            items: [
-              "Memory & State",
-              "CLAUDE.md & AGENTS.md",
-              "Context Compaction & Budgeting",
-              "Prompt Caching",
-              "Context Isolation & Briefing Subagents",
-            ],
+            items: ["Memory & State", "CLAUDE.md & AGENTS.md", "Context Compaction & Budgeting", "Prompt Caching", "Context Isolation & Briefing Subagents"],
           },
         ],
       },
@@ -945,19 +711,11 @@ export const externalRoadmaps: ExternalRoadmap[] = [
         branches: [
           {
             heading: "Evaluation",
-            items: [
-              "Building Eval Sets",
-              "LLM-as-Judge",
-              "Regression Testing & Prompt Versioning",
-            ],
+            items: ["Building Eval Sets", "LLM-as-Judge", "Regression Testing & Prompt Versioning"],
           },
           {
             heading: "Security & safety",
-            items: [
-              "Prompt Injection & Indirect Injection",
-              "Jailbreaks",
-              "Output Validation & Context Security",
-            ],
+            items: ["Prompt Injection & Indirect Injection", "Jailbreaks", "Output Validation & Context Security"],
           },
         ],
       },
@@ -969,8 +727,7 @@ export const externalRoadmaps: ExternalRoadmap[] = [
     shortTitle: "AI Agents",
     url: "https://roadmap.sh/ai-agents",
     group: "engineering-ai",
-    tagline:
-      "How autonomous agents perceive, plan, call tools via MCP, retain memory, get evaluated and stay within safety guardrails.",
+    tagline: "How autonomous agents perceive, plan, call tools via MCP, retain memory, get evaluated and stay within safety guardrails.",
     fits: ["AX Designer", "Track A · Meta/AX Month 5", "Meta-Designer"],
     related: ["prompt-engineering", "claude-code", "ux-design"],
     milestones: [
@@ -997,19 +754,11 @@ export const externalRoadmaps: ExternalRoadmap[] = [
         branches: [
           {
             heading: "Core loop",
-            items: [
-              "1. Perception / User Input",
-              "2. Reason and Plan",
-              "3. Acting / Tool Invocation",
-              "4. Observation & Reflection",
-            ],
+            items: ["1. Perception / User Input", "2. Reason and Plan", "3. Acting / Tool Invocation", "4. Observation & Reflection"],
           },
           {
             heading: "Harness & use cases",
-            items: [
-              "Harness Engineering",
-              "Code Generation, Research & Assistant Workflows",
-            ],
+            items: ["Harness Engineering", "Code Generation, Research & Assistant Workflows"],
           },
         ],
       },
@@ -1020,18 +769,11 @@ export const externalRoadmaps: ExternalRoadmap[] = [
         branches: [
           {
             heading: "Tool contracts",
-            items: [
-              "Tool Name, Description & Input/Output Schema",
-              "Error Handling & Usage Examples",
-              "Web Search, Code Execution, APIs & File Access",
-            ],
+            items: ["Tool Name, Description & Input/Output Schema", "Error Handling & Usage Examples", "Web Search, Code Execution, APIs & File Access"],
           },
           {
             heading: "Model Context Protocol (MCP)",
-            items: [
-              "MCP Hosts, Clients & Servers",
-              "Creating Local & Remote MCP Servers",
-            ],
+            items: ["MCP Hosts, Clients & Servers", "Creating Local & Remote MCP Servers"],
           },
         ],
       },
@@ -1042,11 +784,7 @@ export const externalRoadmaps: ExternalRoadmap[] = [
         branches: [
           {
             heading: "Memory",
-            items: [
-              "Short-Term (In-Prompt) vs Long-Term Memory",
-              "Episodic vs Semantic Memory",
-              "User Profile Storage, Compression & Forgetting",
-            ],
+            items: ["Short-Term (In-Prompt) vs Long-Term Memory", "Episodic vs Semantic Memory", "User Profile Storage, Compression & Forgetting"],
           },
           {
             heading: "Architectures & frameworks",
@@ -1065,11 +803,7 @@ export const externalRoadmaps: ExternalRoadmap[] = [
         branches: [
           {
             heading: "Testing & observability",
-            items: [
-              "Tool Unit Tests & Flow Integration Tests",
-              "Human-in-the-Loop Evaluation",
-              "Tracing & Eval Tools (LangSmith, DeepEval, Ragas, LangFuse)",
-            ],
+            items: ["Tool Unit Tests & Flow Integration Tests", "Human-in-the-Loop Evaluation", "Tracing & Eval Tools (LangSmith, DeepEval, Ragas, LangFuse)"],
           },
           {
             heading: "Security & ethics",
@@ -1090,8 +824,7 @@ export const externalRoadmaps: ExternalRoadmap[] = [
     shortTitle: "Claude Code",
     url: "https://roadmap.sh/claude-code",
     group: "engineering-ai",
-    tagline:
-      "Practical coding-agent workflows: Plan mode, CLAUDE.md, Skills, Hooks, MCP servers, context control, worktrees and PR reviews.",
+    tagline: "Practical coding-agent workflows: Plan mode, CLAUDE.md, Skills, Hooks, MCP servers, context control, worktrees and PR reviews.",
     fits: ["Design Engineer", "Track A · Month 3–5", "Meta-Designer"],
     related: ["frontend", "prompt-engineering", "ai-product-builder", "ai-agents"],
     milestones: [
@@ -1125,11 +858,7 @@ export const externalRoadmaps: ExternalRoadmap[] = [
           },
           {
             heading: "Project instructions & automation",
-            items: [
-              "Structuring CLAUDE.md (Project & Global)",
-              "Creating & Using Skills",
-              "Hooks (Events, Matchers, Inputs & Outputs)",
-            ],
+            items: ["Structuring CLAUDE.md (Project & Global)", "Creating & Using Skills", "Hooks (Events, Matchers, Inputs & Outputs)"],
           },
         ],
       },
@@ -1149,10 +878,7 @@ export const externalRoadmaps: ExternalRoadmap[] = [
           },
           {
             heading: "Review & safety",
-            items: [
-              "Code Review on Pull Requests",
-              "Sandboxing & Security Best Practices",
-            ],
+            items: ["Code Review on Pull Requests", "Sandboxing & Security Best Practices"],
           },
         ],
       },
@@ -1246,8 +972,5 @@ export const companionRoadmaps: CompanionRoadmap[] = [
 
 /** Count every individual topic item inside a roadmap. */
 export function countRoadmapTopics(r: ExternalRoadmap): number {
-  return r.milestones.reduce(
-    (sum, m) => sum + m.branches.reduce((bSum, b) => bSum + b.items.length, 0),
-    0,
-  );
+  return r.milestones.reduce((sum, m) => sum + m.branches.reduce((bSum, b) => bSum + b.items.length, 0), 0);
 }

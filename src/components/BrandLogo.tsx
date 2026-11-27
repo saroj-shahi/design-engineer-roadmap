@@ -87,33 +87,21 @@ const marks: Record<BrandId, () => JSX.Element> = {
   typescript: () => (
     <g>
       <rect x="2.5" y="2.5" width="19" height="19" stroke="currentColor" strokeWidth="1.75" />
-      <text
-        x="12.5"
-        y="16.5"
-        textAnchor="middle"
-        fill="currentColor"
-        fontSize="10.5"
-        fontWeight="700"
-        fontFamily="var(--font-mono)"
-      >
-        TS
-      </text>
+      {/* Letters drawn as strokes, not <text>, so they stay crisp at icon size and need no font. */}
+      <g stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round">
+        <path d="M7 9.6h4.8M9.4 9.6V17" />
+        <path d="M18 10.6c-.4-.7-1.2-1.1-2.3-1.1-1.4 0-2.4.7-2.4 1.8 0 2.4 5 1.3 5 3.9 0 1.2-1.1 1.9-2.6 1.9-1.2 0-2.1-.4-2.6-1.3" strokeLinecap="round" />
+      </g>
     </g>
   ),
   javascript: () => (
     <g>
       <rect x="2.5" y="2.5" width="19" height="19" stroke="currentColor" strokeWidth="1.75" />
-      <text
-        x="12.5"
-        y="16.5"
-        textAnchor="middle"
-        fill="currentColor"
-        fontSize="10.5"
-        fontWeight="700"
-        fontFamily="var(--font-mono)"
-      >
-        JS
-      </text>
+      {/* Letters drawn as strokes, not <text>, so they stay crisp at icon size and need no font. */}
+      <g stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round">
+        <path d="M8 9.6h3.6v5.1c0 1.5-.8 2.3-2.2 2.3-1 0-1.7-.4-2.1-1.2" />
+        <path d="M18 10.6c-.4-.7-1.2-1.1-2.3-1.1-1.4 0-2.4.7-2.4 1.8 0 2.4 5 1.3 5 3.9 0 1.2-1.1 1.9-2.6 1.9-1.2 0-2.1-.4-2.6-1.3" strokeLinecap="round" />
+      </g>
     </g>
   ),
   tailwind: () => (
@@ -162,12 +150,7 @@ const marks: Record<BrandId, () => JSX.Element> = {
       <rect x="4" y="15" width="8" height="6" />
     </g>
   ),
-  lovable: () => (
-    <path
-      fill="currentColor"
-      d="M12 20.5 4.4 13a4.9 4.9 0 0 1 0-7 4.9 4.9 0 0 1 7 0l.6.7.6-.7a4.9 4.9 0 0 1 7 0 4.9 4.9 0 0 1 0 7L12 20.5Z"
-    />
-  ),
+  lovable: () => <path fill="currentColor" d="M12 20.5 4.4 13a4.9 4.9 0 0 1 0-7 4.9 4.9 0 0 1 7 0l.6.7.6-.7a4.9 4.9 0 0 1 7 0 4.9 4.9 0 0 1 0 7L12 20.5Z" />,
   bolt: () => <path fill="currentColor" d="M13.8 2.5L4.5 13.5h6.3L9.8 21.5l9.7-11h-6.3l.6-8Z" />,
   linear: () => (
     <g stroke="currentColor" strokeWidth="1.75">

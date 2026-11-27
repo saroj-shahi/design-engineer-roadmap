@@ -205,13 +205,31 @@ const seniorDeShareMetric: Metric = {
 
 export const marketMetrics: Metric[] = [
   designHiringBigTech,
-  { value: "−22%", label: "Design hiring at early-stage startups, compared with 2019", scope: "Startup group, June 2026", source: "SignalFire", basis: "analytics" },
+  {
+    value: "−22%",
+    label: "Design hiring at early-stage startups, compared with 2019",
+    scope: "Startup group, June 2026",
+    source: "SignalFire",
+    basis: "analytics",
+  },
   { value: "−39%", label: "Product manager hiring at big tech", scope: "Big tech, compared with 2019", source: "SignalFire", basis: "analytics" },
   { value: "−36%", label: "Marketing hiring at big tech", scope: "Big tech, compared with 2019", source: "SignalFire", basis: "analytics" },
   { value: "−11% / +7%", label: "Software engineer hiring: big tech / startups", scope: "Compared with 2019", source: "SignalFire", basis: "analytics" },
   { value: "−65% / −76%", label: "Entry-level hiring: big tech / startups", scope: "All of tech, June 2026", source: "SignalFire", basis: "analytics" },
-  { value: "−25%", label: "Front-end share of engineering hiring, compared with 2022", scope: "Engineering roles, June 2026", source: "SignalFire", basis: "analytics" },
-  { value: "12.6–13%", label: "Designers who leave their job each year (about 9% for engineers)", scope: "Tech workers in SignalFire's talent data, 2026", source: "SignalFire", basis: "analytics" },
+  {
+    value: "−25%",
+    label: "Front-end share of engineering hiring, compared with 2022",
+    scope: "Engineering roles, June 2026",
+    source: "SignalFire",
+    basis: "analytics",
+  },
+  {
+    value: "12.6–13%",
+    label: "Designers who leave their job each year (about 9% for engineers)",
+    scope: "Tech workers in SignalFire's talent data, 2026",
+    source: "SignalFire",
+    basis: "analytics",
+  },
   usJobPostsMetric,
   seniorDeShareMetric,
   designerJobsOutlook,
@@ -224,7 +242,8 @@ const [dePosts, pdPosts] = usJobPostsMetric.value.split(" vs. ");
 export const titleReality = `Design Engineer is still a small, senior title. There are about ${dePosts} US job posts for it, against ${pdPosts} for Product Designer. In Europe, ${seniorDeShareMetric.value} of its listings ask for senior level. For most designers, the first step is hybrid work in the job they already have, not a new title.`;
 
 /** One-line version of `titleReality` for Start and Roles. */
-export const titleRealityShort = "Design Engineer is still a small, senior title, so for most designers the first step is hybrid work in the job they already have.";
+export const titleRealityShort =
+  "Design Engineer is still a small, senior title, so for most designers the first step is hybrid work in the job they already have.";
 
 /** Entry route for beginners, shown beside `titleReality` on Jobs. Copy only, from the Track B plan and checklist. */
 export const entryRoute =
@@ -353,14 +372,8 @@ export const archetypes: Archetype[] = [
     plan: "meta",
     deliverable:
       "A design system that works across many products. You set up Figma so AI tools can read it, limit how components can be used, and write rules AI must follow.",
-    signals:
-      "Needed where one designer supports 15 to 20 engineers. In product-led companies, it is 1 designer to 2 to 9 engineers.",
-    skills: [
-      "Designing large systems",
-      "Understanding business rules",
-      "Naming and structuring design tokens",
-      "Rules for UI made by non-designers",
-    ],
+    signals: "Needed where one designer supports 15 to 20 engineers. In product-led companies, it is 1 designer to 2 to 9 engineers.",
+    skills: ["Designing large systems", "Understanding business rules", "Naming and structuring design tokens", "Rules for UI made by non-designers"],
   },
   {
     id: "ax",
@@ -446,8 +459,7 @@ export const coreSkills: Skill[] = [
   },
   {
     name: "Human craft, visual taste & curation",
-    detail:
-      `Visual hierarchy, small interaction details, typography and judgment. These still matter when AI makes the first draft. ${judgmentOverAi.value} of designers still rely on their own judgment over AI (${judgmentOverAi.basis}).`,
+    detail: `Visual hierarchy, small interaction details, typography and judgment. These still matter when AI makes the first draft. ${judgmentOverAi.value} of designers still rely on their own judgment over AI (${judgmentOverAi.basis}).`,
     source: { label: judgmentOverAi.source, url: judgmentOverAi.url! },
     tags: ["Craft"],
   },
@@ -504,8 +516,7 @@ export const engineeringSkills: Skill[] = [
 export const axShift = {
   from: "Designing screens",
   to: "Also designing how AI behaves",
-  summary:
-    "Screens still matter. The work grows to include rules for trust, how much the AI can do alone, and when it must ask a person.",
+  summary: "Screens still matter. The work grows to include rules for trust, how much the AI can do alone, and when it must ask a person.",
 };
 
 export const axDomains: Skill[] = [
@@ -521,7 +532,8 @@ export const axDomains: Skill[] = [
   },
   {
     name: "Recovering from mistakes",
-    detail: "Show people a list of what the agent did, with time to undo it (an Action Audit). When the agent is unsure, pass the task to a person (an Escalation Pathway).",
+    detail:
+      "Show people a list of what the agent did, with time to undo it (an Action Audit). When the agent is unsure, pass the task to a person (an Escalation Pathway).",
     tags: ["Action Audit", "Escalation"],
   },
   {
@@ -587,22 +599,19 @@ export const patternCategories: PatternCategory[] = [
   {
     id: "transparency",
     name: "Transparency & Reasoning",
-    objective:
-      "Show the agent's steps, sources, doubts and limits. Keep it simple enough that people aren't overwhelmed.",
+    objective: "Show the agent's steps, sources, doubts and limits. Keep it simple enough that people aren't overwhelmed.",
     patterns: ["Agent status & activity", "Confidence visualization"],
   },
   {
     id: "interaction",
     name: "Interaction & Modality",
-    objective:
-      "Go beyond text chat: UI the agent builds on the fly, fast voice, spaces where several agents work together, and smooth switches between modes.",
+    objective: "Go beyond text chat: UI the agent builds on the fly, fast voice, spaces where several agents work together, and smooth switches between modes.",
     patterns: ["Generative UI"],
   },
   {
     id: "trust",
     name: "Trust, Privacy & Compliance",
-    objective:
-      "Fail gently, follow privacy laws (GDPR, CCPA, AI Acts), give users fine control over their data, and keep every AI state accessible.",
+    objective: "Fail gently, follow privacy laws (GDPR, CCPA, AI Acts), give users fine control over their data, and keep every AI state accessible.",
     patterns: ["Error handling & recovery", "Progressive consent"],
   },
 ];
@@ -615,33 +624,28 @@ export const toolStages: ToolStage[] = [
     name: "Visual prototyping",
     tools: ["Claude Design", "Figma Make", "Google Stitch"],
     capabilities: "Make screens from a prompt, explore visual directions, create decks, and build clickable prototypes.",
-    guardrail:
-      "Treat the output as a sketch, not a final layout. Check it yourself with real content, edge cases and accessibility.",
+    guardrail: "Treat the output as a sketch, not a final layout. Check it yourself with real content, edge cases and accessibility.",
   },
   {
     id: 2,
     name: "Moving between design and code",
     tools: ["Figma MCP", "Codex (Figma integration)", "Claude Code (Figma plugin/MCP)"],
-    capabilities:
-      "Works both ways. Agents read Figma tokens, variables and Code Connect components, or turn code back into editable Figma layers.",
-    guardrail:
-      "Agents copy what they get. Messy Figma files give poor code, so keep tokens and component names clean.",
+    capabilities: "Works both ways. Agents read Figma tokens, variables and Code Connect components, or turn code back into editable Figma layers.",
+    guardrail: "Agents copy what they get. Messy Figma files give poor code, so keep tokens and component names clean.",
   },
   {
     id: 3,
     name: "Production UI and code",
     tools: ["Codex", "Claude Code", "v0 (Vercel)", "Cursor"],
     capabilities: "Real code changes across many files, React components (v0), inline edits (Cursor) and GitHub pull requests.",
-    guardrail:
-      "You need front-end skills to review the PRs, check tests and ARIA labels, and keep the code well structured.",
+    guardrail: "You need front-end skills to review the PRs, check tests and ARIA labels, and keep the code well structured.",
   },
   {
     id: 4,
     name: "App builders (MVPs and demos)",
     tools: ["Replit (Agent 4 & Design Canvas)", "Lovable", "Bolt"],
     capabilities: "Quick full apps with databases, admin dashboards and proof-of-concept software.",
-    guardrail:
-      "Check for plain default components, missing empty and error states, weak visual hierarchy and security holes.",
+    guardrail: "Check for plain default components, missing empty and error states, weak visual hierarchy and security holes.",
   },
 ];
 
@@ -650,8 +654,7 @@ export const roleStacks: RoleStack[] = [
     id: "junior",
     label: "Student / Junior",
     chain: ["Figma", "Claude Design / Figma Make / Stitch", "Cursor (basic React/CSS)"],
-    summary:
-      "Learn the basics in Figma. Prototype fast with Claude Design, Figma Make or Stitch. Use Cursor to learn basic front-end code.",
+    summary: "Learn the basics in Figma. Prototype fast with Claude Design, Figma Make or Stitch. Use Cursor to learn basic front-end code.",
     stages: [1, 3],
     toolsByStage: { 1: ["Claude Design", "Figma Make", "Google Stitch"], 3: ["Cursor"] },
   },
@@ -659,8 +662,7 @@ export const roleStacks: RoleStack[] = [
     id: "mid",
     label: "Mid-level",
     chain: ["Figma", "Figma MCP", "v0 (React UI)", "Cursor / Claude Code"],
-    summary:
-      "Use Figma MCP so AI tools can read your design system. Use v0 to start React components. Handle changes and PRs in Cursor, Codex or Claude Code.",
+    summary: "Use Figma MCP so AI tools can read your design system. Use v0 to start React components. Handle changes and PRs in Cursor, Codex or Claude Code.",
     stages: [2, 3],
     toolsByStage: { 2: ["Figma MCP"], 3: ["v0 (Vercel)", "Cursor", "Claude Code", "Codex"] },
   },
@@ -726,8 +728,7 @@ export const startAudience = {
 };
 
 /** How fast to go. The brief gives no hours per week, so this stays a guide, not a schedule. */
-export const planPace =
-  "Go at your own pace. Months and stages are a guide, not a deadline, and the plan works alongside a full-time\u00A0job.";
+export const planPace = "Go at your own pace. Months and stages are a guide, not a deadline, and the plan works alongside a full-time\u00A0job.";
 
 /** For readers who already code: where to join Track A. Months 1–2 cover browser basics and JavaScript & React. */
 export const skipAheadMonth = 3;
@@ -763,11 +764,7 @@ export const sixMonthPlan: Month[] = [
         slug: "product-design",
         source: "Product Design",
         area: "Build the Interface",
-        topics: [
-          "Color, Typography, Layout & Grid",
-          "Visual Hierarchy & Responsive Breakpoints",
-          "Inclusive Design & Accessibility Basics",
-        ],
+        topics: ["Color, Typography, Layout & Grid", "Visual Hierarchy & Responsive Breakpoints", "Inclusive Design & Accessibility Basics"],
       },
     ],
     resources: [
@@ -794,21 +791,13 @@ export const sixMonthPlan: Month[] = [
         slug: "frontend",
         source: "Frontend",
         area: "JavaScript & React Core",
-        topics: [
-          "JavaScript DOM, Events, Fetch & async/await",
-          "Package Managers (npm, pnpm)",
-          "React (Components, Props, State, Hooks)",
-        ],
+        topics: ["JavaScript DOM, Events, Fetch & async/await", "Package Managers (npm, pnpm)", "React (Components, Props, State, Hooks)"],
       },
       {
         slug: "product-design",
         source: "Product Design",
         area: "Interaction & Engineering Constraints",
-        topics: [
-          "Interface States (Hover, Focus, Active, Disabled)",
-          "Micro-interactions & Motion Principles",
-          "API & Data Limitations",
-        ],
+        topics: ["Interface States (Hover, Focus, Active, Disabled)", "Micro-interactions & Motion Principles", "API & Data Limitations"],
       },
     ],
     resources: [
@@ -836,22 +825,13 @@ export const sixMonthPlan: Month[] = [
         slug: "frontend",
         source: "Frontend",
         area: "Styling, Types & Build Tools",
-        topics: [
-          "Tailwind CSS Utility Architecture",
-          "TypeScript Type Checking for Props & Data",
-          "Bundlers (Vite) & Deployment (Vercel, Netlify)",
-        ],
+        topics: ["Tailwind CSS Utility Architecture", "TypeScript Type Checking for Props & Data", "Bundlers (Vite) & Deployment (Vercel, Netlify)"],
       },
       {
         slug: "design-system",
         source: "Design System",
         area: "Defining Design Tokens",
-        topics: [
-          "Functional Colors & Accessibility Contrast",
-          "Dark Mode Tokens",
-          "Units, Grid, Breakpoints & Spacing",
-          "Responsive Type Scale & Readability",
-        ],
+        topics: ["Functional Colors & Accessibility Contrast", "Dark Mode Tokens", "Units, Grid, Breakpoints & Spacing", "Responsive Type Scale & Readability"],
       },
     ],
     resources: [
@@ -889,11 +869,7 @@ export const sixMonthPlan: Month[] = [
         slug: "claude-code",
         source: "Claude Code",
         area: "Daily Workflow & Context",
-        topics: [
-          "Plan Mode, Rewind & Permission Controls",
-          "Structuring CLAUDE.md for Project Conventions",
-          "Spec-Driven Prompts & Context Grounding",
-        ],
+        topics: ["Plan Mode, Rewind & Permission Controls", "Structuring CLAUDE.md for Project Conventions", "Spec-Driven Prompts & Context Grounding"],
       },
     ],
     resources: [
@@ -914,28 +890,21 @@ export const sixMonthPlan: Month[] = [
     deliverable: "Get 1–3 PRs into a real product: CSS bugs, accessibility fixes or component variants.",
     guardrail: "Pick up real front-end fixes at work, or help with open-source UI libraries.",
     aiPolicy: "production",
-    start: "Ask a front-end lead which small UI bugs they'd review from you. No access at work? Filter an open-source UI library's issues by “good first issue”.",
+    start:
+      "Ask a front-end lead which small UI bugs they'd review from you. No access at work? Filter an open-source UI library's issues by “good first issue”.",
     doneWhen: "At least one pull request is merged after a real review.",
     roadmapTopics: [
       {
         slug: "frontend",
         source: "Frontend",
         area: "Git, Testing & Quality Gates",
-        topics: [
-          "Git, GitHub & Pull Requests",
-          "Linters & Formatters (ESLint, Prettier, Biome)",
-          "Testing (Vitest, Playwright) & Lighthouse Performance",
-        ],
+        topics: ["Git, GitHub & Pull Requests", "Linters & Formatters (ESLint, Prettier, Biome)", "Testing (Vitest, Playwright) & Lighthouse Performance"],
       },
       {
         slug: "product-design",
         source: "Product Design",
         area: "Working with Engineering",
-        topics: [
-          "Stack & Platform Constraints",
-          "Edge Cases & Interface States",
-          "Launch Readiness & Developer Collaboration",
-        ],
+        topics: ["Stack & Platform Constraints", "Edge Cases & Interface States", "Launch Readiness & Developer Collaboration"],
       },
     ],
     resources: [
@@ -952,9 +921,11 @@ export const sixMonthPlan: Month[] = [
     title: "Proof & positioning",
     learn: ["Live demos & clean repos", "Problem framing & HEART metrics", "Accessibility & security polish", "Internal case or ~20 applications"],
     build: "Live work, write-ups & merged PRs",
-    focus: "Package what you've built so teammates, managers or hiring teams can see the impact — whether you're expanding your current role or looking for a new one.",
+    focus:
+      "Package what you've built so teammates, managers or hiring teams can see the impact — whether you're expanding your current role or looking for a new one.",
     deliverable: "Document two live builds and your merged PRs for an internal demo, promotion case, or updated portfolio.",
-    guardrail: "Staying in your role? Share a demo with your design and engineering leads and ask to take on more code work. Looking to move? Send about 20 careful applications to teams that hire hybrids, rather than many quick ones.",
+    guardrail:
+      "Staying in your role? Share a demo with your design and engineering leads and ask to take on more code work. Looking to move? Send about 20 careful applications to teams that hire hybrids, rather than many quick ones.",
     aiPolicy: "position",
     start: "Pick your two strongest builds and write two or three paragraphs on the problem, trade-offs and result.",
     doneWhen: "Every item on the readiness checklist is ticked.",
@@ -1028,7 +999,11 @@ const metaMonths: Month[] = [
     resources: [
       { label: "Figma: Guide to variables", url: "https://help.figma.com/hc/en-us/articles/15339657135383-Guide-to-variables-in-Figma", cost: "free" },
       { label: "Figma: Code Connect docs", url: "https://developers.figma.com/docs/code-connect/", cost: "free" },
-      { label: "Figma: Guide to the Figma MCP server", url: "https://help.figma.com/hc/en-us/articles/32132100833559-Guide-to-the-Figma-MCP-server", cost: "free" },
+      {
+        label: "Figma: Guide to the Figma MCP server",
+        url: "https://help.figma.com/hc/en-us/articles/32132100833559-Guide-to-the-Figma-MCP-server",
+        cost: "free",
+      },
       { label: "roadmap.sh: Design System roadmap", url: "https://roadmap.sh/design-system", cost: "free" },
       { label: "roadmap.sh: Prompt & Context Engineering", url: "https://roadmap.sh/prompt-engineering", cost: "free" },
       { label: "Design Tokens Community Group (W3C)", url: "https://www.designtokens.org/", cost: "free" },
@@ -1085,7 +1060,8 @@ const metaMonths: Month[] = [
     build: "Systems rollout & trust-flow demos",
     focus: "Show the impact of your system and AI-product work with live links behind every claim — to drive team adoption or anchor a hybrid portfolio.",
     deliverable: "Package your AI-readable design system, trust flows and merged PRs as an internal rollout deck or live portfolio.",
-    guardrail: "Growing in your current role? Run a working session so your team adopts the tokens and MCP setup. Looking to move? Send ~20 careful applications to teams hiring hybrids.",
+    guardrail:
+      "Growing in your current role? Run a working session so your team adopts the tokens and MCP setup. Looking to move? Send ~20 careful applications to teams hiring hybrids.",
     aiPolicy: "position",
     start: "Write a short case study showing an AI tool using your system: what broke, what you fixed, and what it saves the team.",
     doneWhen: "Every item on the readiness checklist is ticked.",
@@ -1094,21 +1070,13 @@ const metaMonths: Month[] = [
         slug: "design-system",
         source: "Design System",
         area: "Governance & Health Metrics",
-        topics: [
-          "System Roadmap, Milestones & Adoption",
-          "Component, Tooling & Health Analytics",
-          "Documentation, Open Hours & Contribution Guidelines",
-        ],
+        topics: ["System Roadmap, Milestones & Adoption", "Component, Tooling & Health Analytics", "Documentation, Open Hours & Contribution Guidelines"],
       },
       {
         slug: "product-design",
         source: "Product Design",
         area: "Strategy & Stakeholder Proof",
-        topics: [
-          "Business Metrics & OKRs",
-          "Stakeholder Alignment & DesignOps",
-          "Assumption Mapping & Risk Identification",
-        ],
+        topics: ["Business Metrics & OKRs", "Stakeholder Alignment & DesignOps", "Assumption Mapping & Risk Identification"],
       },
     ],
     resources: [
@@ -1120,8 +1088,7 @@ const metaMonths: Month[] = [
 ];
 
 /** The six months for a Track A option. */
-export const planFor = (option: "pde" | "meta"): Month[] =>
-  option === "meta" ? [...sixMonthPlan.slice(0, 3), ...metaMonths] : sixMonthPlan;
+export const planFor = (option: "pde" | "meta"): Month[] => (option === "meta" ? [...sixMonthPlan.slice(0, 3), ...metaMonths] : sixMonthPlan);
 
 export const aiPolicyLabel: Record<Month["aiPolicy"], string> = {
   none: "AI off",
@@ -1157,14 +1124,12 @@ export const leverageHabits: ChecklistItem[] = [
   {
     id: "upstream",
     title: "Spend saved time on the unclear problems",
-    detail:
-      "Use the hours you save on routine layouts for business rules, trust in AI features and testing real user workflows.",
+    detail: "Use the hours you save on routine layouts for business rules, trust in AI features and testing real user workflows.",
   },
   {
     id: "isolation",
     title: "Don't work alone",
-    detail:
-      `${designerIsolation.value} of designers say they collaborate less (up from 5% in 2025). Measure your value by clear team decisions and user results, not by the number of screens.`,
+    detail: `${designerIsolation.value} of designers say they collaborate less (up from 5% in 2025). Measure your value by clear team decisions and user results, not by the number of screens.`,
   },
 ];
 
@@ -1172,8 +1137,7 @@ export const leverageHabits: ChecklistItem[] = [
 
 /** Hire vs. upskill, built only from content elsewhere in this file (titleRealityShort, comparison, interviewFocus). */
 export const forLeads = {
-  intro:
-    "Hiring and upskilling are both valid ways to bring design and code closer on your team. You can often start with the people you already have.",
+  intro: "Hiring and upskilling are both valid ways to bring design and code closer on your team. You can often start with the people you already have.",
   upskill: {
     title: "Upskill your team",
     detail:
@@ -1207,7 +1171,12 @@ export const forLeads = {
 type ContextFigure = { value: string; label: string; source: string; basis: BasisKind };
 
 /** Applications per job post; also shown in `beginnerContext`. */
-export const applicationsPerPost: ContextFigure = { value: "300–800", label: "Applications per job post", source: "Personal.ink; Bootcamp (Medium)", basis: "commentary" };
+export const applicationsPerPost: ContextFigure = {
+  value: "300–800",
+  label: "Applications per job post",
+  source: "Personal.ink; Bootcamp (Medium)",
+  basis: "commentary",
+};
 
 export const beginnerContext: ContextFigure[] = [
   { value: "−65%", label: "Entry-level hiring at big tech", source: "SignalFire", basis: "analytics" },
@@ -1231,13 +1200,20 @@ export interface LaunchStage {
 export const launchStages: LaunchStage[] = [
   {
     n: 1,
-    learn: ["Behavior, decision making & UX patterns", "Interviews, research, personas & JTBD", "IA, user flows & wireframing", "Visual craft, typography, layout & WCAG", "Usability, impact testing & heuristic critique"],
+    learn: [
+      "Behavior, decision making & UX patterns",
+      "Interviews, research, personas & JTBD",
+      "IA, user flows & wireframing",
+      "Visual craft, typography, layout & WCAG",
+      "Usability, impact testing & heuristic critique",
+    ],
     name: "Learn the lasting basics",
     detail:
       "Before you use AI screen tools, learn usability, accessibility (WCAG), typography, information architecture and interaction patterns. Take real products apart to see where they fail and why.",
     output: "Basics you can explain",
     start: "Pick an app you use daily and write down three places it fails a new user, and why.",
-    doneWhen: "You can explain a usability or accessibility problem, and its fix, in plain words. Covered this in school or a bootcamp? Check yourself against this and move on.",
+    doneWhen:
+      "You can explain a usability or accessibility problem, and its fix, in plain words. Covered this in school or a bootcamp? Check yourself against this and move on.",
     roadmapTopics: [
       {
         slug: "ux-design",
@@ -1285,11 +1261,7 @@ export const launchStages: LaunchStage[] = [
         slug: "frontend",
         source: "Frontend",
         area: "HTML, CSS & Browser Basics",
-        topics: [
-          "Semantic HTML, Forms & Validation",
-          "CSS Flexbox, Grid & Responsive Design",
-          "Browsers, DevTools & GitHub Pages / Vercel Deploy",
-        ],
+        topics: ["Semantic HTML, Forms & Validation", "CSS Flexbox, Grid & Responsive Design", "Browsers, DevTools & GitHub Pages / Vercel Deploy"],
       },
       {
         slug: "ai-product-builder",
@@ -1335,11 +1307,7 @@ export const launchStages: LaunchStage[] = [
         slug: "ai-product-builder",
         source: "AI Product Builder",
         area: "Testing, Git & Live Launch",
-        topics: [
-          "User Testing with Live Prototypes",
-          "Change Management with GitHub Pull Requests",
-          "Serverless Hosting (Vercel, Cloudflare) & Real Data",
-        ],
+        topics: ["User Testing with Live Prototypes", "Change Management with GitHub Pull Requests", "Serverless Hosting (Vercel, Cloudflare) & Real Data"],
       },
     ],
     resources: [
@@ -1353,8 +1321,7 @@ export const launchStages: LaunchStage[] = [
     n: 4,
     learn: ["Product sense, OKRs & RICE/Kano", "3–4 outcome-led case studies", "Feasibility specs & edge cases", "Seed startups, agencies & B2B"],
     name: "Aim at the right employers",
-    detail:
-      `Write three or four short, easy-to-scan case studies. Small startups and agencies are often the most open to first-time designers, so aim them there. Also try industry-focused B2B companies, not only big tech junior programs.`,
+    detail: `Write three or four short, easy-to-scan case studies. Small startups and agencies are often the most open to first-time designers, so aim them there. Also try industry-focused B2B companies, not only big tech junior programs.`,
     output: "A portfolio aimed at where hiring happens",
     start: "Rewrite the opening of your best case study: who you are, the problem, and what you did.",
     doneWhen: "Every item on the readiness checklist is ticked.",
@@ -1396,7 +1363,8 @@ export const trackBCostNote =
   freeResources === allResources.length
     ? "Every learning resource linked in this plan is free."
     : `${freeResources} of ${allResources.length} learning resources linked in this plan are free.`;
-export const toolPricingNote = "Some tools have free plans; we did not check their limits. Prices and free plans change, so check each tool's current pricing before you sign\u00A0up.";
+export const toolPricingNote =
+  "Some tools have free plans; we did not check their limits. Prices and free plans change, so check each tool's current pricing before you sign\u00A0up.";
 
 export const beginnerStack = [
   { phase: "Explore", tools: ["Figma", "Claude Design", "Figma Make", "Google Stitch"] },
@@ -1440,7 +1408,8 @@ export const juniorChecklist: ChecklistItem[] = [
   {
     id: "friction",
     title: "Easy to open, tightly focused",
-    detail: "No passwords, broken links or clutter. Keep a small toolset: Figma plus Claude Design, Figma Make or Stitch to explore; React, Tailwind and Cursor to build.",
+    detail:
+      "No passwords, broken links or clutter. Keep a small toolset: Figma plus Claude Design, Figma Make or Stitch to explore; React, Tailwind and Cursor to build.",
   },
 ];
 
@@ -1463,13 +1432,25 @@ export const icGrowth = [
 
 export const readinessItems: ChecklistItem[] = [
   { id: "demo", title: "A live demo anyone can use in seconds", detail: "A link a teammate, manager or reviewer can open and use right away." },
-  { id: "repo", title: "A clean GitHub repository (public or team)", detail: "Clear components, state, CSS structure and ARIA labels others can read and review." },
+  {
+    id: "repo",
+    title: "A clean GitHub repository (public or team)",
+    detail: "Clear components, state, CSS structure and ARIA labels others can read and review.",
+  },
   { id: "writeup", title: "A 2–3 paragraph design and code write-up", detail: "What you wanted, your decisions, trade-offs and next steps." },
   { id: "ai", title: "Proof of an AI-assisted workflow", detail: "Show you guided Cursor or Claude Code to ship real features." },
   { id: "access", title: "Easy to open", detail: "No broken links, setup hoops or clutter — anyone you share it with can try it right away." },
   { id: "scope", title: "Honest about your role", detail: "Say clearly what you designed, built and reviewed — and label practice projects as such." },
-  { id: "deployed", title: "A live project you built and launched", detail: "Components with every state and layouts that fit any screen, live on Vercel or similar. Month 3 in Track A (either role)." },
-  { id: "merged", title: "A merged pull request in a real codebase", detail: "Even a small UI fix in your team's code or an open-source project counts. Month 5 in Track A (either role)." },
+  {
+    id: "deployed",
+    title: "A live project you built and launched",
+    detail: "Components with every state and layouts that fit any screen, live on Vercel or similar. Month 3 in Track A (either role).",
+  },
+  {
+    id: "merged",
+    title: "A merged pull request in a real codebase",
+    detail: "Even a small UI fix in your team's code or an open-source project counts. Month 5 in Track A (either role).",
+  },
 ];
 
 /** When the guide's content was last updated. Keep in sync with `dateModified` in index.html's JSON-LD. */
@@ -1485,7 +1466,10 @@ export const sources: Source[] = [
   { label: "SignalFire, State of Talent Report 2026", url: "https://www.signalfire.com/blog/signalfire-state-of-talent-report-2026" },
   { label: "Figma, Designer and Developer 2025 Trends", url: "https://www.figma.com/reports/designer-developer-trends/" },
   { label: "CollabSoft (via Figma design statistics)", url: "https://www.figma.com/resource-library/design-statistics/" },
-  { label: "Designer Fund / Foundation Capital, Q1 2026 survey", url: "https://designerfund.com/blog/how-figma-midjourney-and-databricks-harness-ai-in-design" },
+  {
+    label: "Designer Fund / Foundation Capital, Q1 2026 survey",
+    url: "https://designerfund.com/blog/how-figma-midjourney-and-databricks-harness-ai-in-design",
+  },
   { label: "US BLS Employment Projections · SOC 15-1255", url: "https://www.bls.gov/ooh/computer-and-information-technology/web-developers.htm" },
   { label: "Academy UX (job aggregator), Oct 2026", url: "https://www.academyux.com/ux-job-market-hot-or-not" },
   { label: "Hymera recruiting analysis, July 2026", url: "https://hymera.co/research-design-engineer-hire-search" },
@@ -1495,26 +1479,65 @@ export const sources: Source[] = [
 export const worksCited: { title: string; url: string }[] = [
   { title: "Is design engineer a real job? Why the role exists now - Modeinspect", url: "https://modeinspect.com/design-engineer/why-design-engineers-now" },
   { title: "SignalFire State of Talent Report 2026", url: "https://www.signalfire.com/blog/signalfire-state-of-talent-report-2026" },
-  { title: "The Next Curve: Why the Design Engineer is the Future of Product Creation", url: "https://medium.com/@moeinsaboohi96/the-next-curve-why-the-design-engineer-is-the-future-of-product-creation-87dc0199ff03" },
-  { title: "From UX Designer to UX Engineer: The Hybrid Role AI Just Made Inevitable", url: "https://www.designsystemscollective.com/from-ux-designer-to-ux-engineer-the-hybrid-role-ai-just-made-inevitable-e75090f37e02" },
-  { title: "Designer hiring at big tech is down 48% since 2019 — Design Bootcamp", url: "https://medium.com/design-bootcamp/designer-hiring-at-big-tech-is-down-48-since-2019-new-job-titles-keep-appearing-d02260aa305f" },
+  {
+    title: "The Next Curve: Why the Design Engineer is the Future of Product Creation",
+    url: "https://medium.com/@moeinsaboohi96/the-next-curve-why-the-design-engineer-is-the-future-of-product-creation-87dc0199ff03",
+  },
+  {
+    title: "From UX Designer to UX Engineer: The Hybrid Role AI Just Made Inevitable",
+    url: "https://www.designsystemscollective.com/from-ux-designer-to-ux-engineer-the-hybrid-role-ai-just-made-inevitable-e75090f37e02",
+  },
+  {
+    title: "Designer hiring at big tech is down 48% since 2019 — Design Bootcamp",
+    url: "https://medium.com/design-bootcamp/designer-hiring-at-big-tech-is-down-48-since-2019-new-job-titles-keep-appearing-d02260aa305f",
+  },
   { title: "Craft - AI in Design Report 2026", url: "https://stateofaidesign.com/chapters/craft" },
   { title: "State of UX 2026 — NN/g", url: "https://www.nngroup.com/articles/state-of-ux-2026/" },
   { title: "Is it realistic to land a junior UX/UI job in 2026? - Mate academy", url: "https://mate.academy/en/answers/ui-ux-design/uxui-junior-market-2026" },
-  { title: "Entry Level UI UX Jobs in 2026 Are Disappearing | by Ahnaf Tahmid", url: "https://medium.com/design-bootcamp/entry-level-ui-ux-jobs-in-2026-are-disappearing-364d3b5e04ee" },
-  { title: "Being a Product Designer in 2026 Without Losing Your Mind - Medium", url: "https://medium.com/design-bootcamp/being-a-product-designer-in-2026-without-losing-your-mind-5ca7f4e683b6" },
-  { title: "What a Junior Product Designer Portfolio Needs in 2026 (Hiring Manager Checklist)", url: "https://fueler.io/blog/what-a-junior-product-designer-portfolio-needs" },
-  { title: "SignalFire data shows engineering hiring is more resilient than almost anyone expected", url: "https://startupfortune.com/signalfire-data-shows-engineering-hiring-is-more-resilient-than-almost-anyone-expected/" },
-  { title: "UX Designer Demand and Hiring Market Outlook for Employers 2026", url: "https://designcareers.aiga.org/career-resources/hire-designers-11/ux-designer-hiring-market-demand-and-supply-2026-158" },
-  { title: "How Figma, Midjourney, Databricks, and Modyfi Harness AI with Design", url: "https://designerfund.com/blog/how-figma-midjourney-and-databricks-harness-ai-in-design" },
+  {
+    title: "Entry Level UI UX Jobs in 2026 Are Disappearing | by Ahnaf Tahmid",
+    url: "https://medium.com/design-bootcamp/entry-level-ui-ux-jobs-in-2026-are-disappearing-364d3b5e04ee",
+  },
+  {
+    title: "Being a Product Designer in 2026 Without Losing Your Mind - Medium",
+    url: "https://medium.com/design-bootcamp/being-a-product-designer-in-2026-without-losing-your-mind-5ca7f4e683b6",
+  },
+  {
+    title: "What a Junior Product Designer Portfolio Needs in 2026 (Hiring Manager Checklist)",
+    url: "https://fueler.io/blog/what-a-junior-product-designer-portfolio-needs",
+  },
+  {
+    title: "SignalFire data shows engineering hiring is more resilient than almost anyone expected",
+    url: "https://startupfortune.com/signalfire-data-shows-engineering-hiring-is-more-resilient-than-almost-anyone-expected/",
+  },
+  {
+    title: "UX Designer Demand and Hiring Market Outlook for Employers 2026",
+    url: "https://designcareers.aiga.org/career-resources/hire-designers-11/ux-designer-hiring-market-demand-and-supply-2026-158",
+  },
+  {
+    title: "How Figma, Midjourney, Databricks, and Modyfi Harness AI with Design",
+    url: "https://designerfund.com/blog/how-figma-midjourney-and-databricks-harness-ai-in-design",
+  },
   { title: "Careers at Profound", url: "https://www.tryprofound.com/careers" },
   { title: "Careers at Raycast: Build, Innovate, and Work from Anywhere", url: "https://www.raycast.com/careers" },
   { title: "Best AI Tools for Designers in 2026: Choose by Workflow - The Crit", url: "https://thecrit.co/resources/best-ai-coding-tools-designers-2026" },
-  { title: "On the hunt for the elusive product-led employer | Melio's R&D blog", url: "https://medium.com/meliopayments/on-the-hunt-for-the-elusive-product-led-employer-106da39537e1" },
-  { title: "Interleavings: Notes & Thoughts on Recent Reads, 9 November 2026", url: "https://sajithpai.com/interleavings-notes-thoughts-on-recent-reads-9-november-2026/" },
-  { title: "AX Design Explained: The 2026 Guide to Agentic Experience", url: "https://www.pixelmojo.io/blogs/what-is-ax-design-complete-guide-agentic-experience-2026" },
+  {
+    title: "On the hunt for the elusive product-led employer | Melio's R&D blog",
+    url: "https://medium.com/meliopayments/on-the-hunt-for-the-elusive-product-led-employer-106da39537e1",
+  },
+  {
+    title: "Interleavings: Notes & Thoughts on Recent Reads, 9 November 2026",
+    url: "https://sajithpai.com/interleavings-notes-thoughts-on-recent-reads-9-november-2026/",
+  },
+  {
+    title: "AX Design Explained: The 2026 Guide to Agentic Experience",
+    url: "https://www.pixelmojo.io/blogs/what-is-ax-design-complete-guide-agentic-experience-2026",
+  },
   { title: "Agentic UI/UX Design Patterns", url: "https://agentic-design.ai/patterns/ui-ux-patterns" },
-  { title: "Design Team Promotion Framework: Timelines, KPIs, and What It Really Takes to Grow", url: "https://medium.muz.li/design-team-promotion-framework-timelines-kpis-and-what-it-really-takes-to-grow-028ac1f98ebf" },
+  {
+    title: "Design Team Promotion Framework: Timelines, KPIs, and What It Really Takes to Grow",
+    url: "https://medium.muz.li/design-team-promotion-framework-timelines-kpis-and-what-it-really-takes-to-grow-028ac1f98ebf",
+  },
   { title: "What is the best AI for designers? 2026 tools compared - Modeinspect", url: "https://modeinspect.com/blog/best-ai-tools-for-designers" },
   { title: "12 designer portfolio examples that landed interviews (2026)", url: "https://personal.ink/blog/designer-portfolio-examples-2026/" },
   { title: "Best AI Tools for Product Design in 2026 - Mowgli", url: "https://mowgli.ai/blog/best-ai-tools-product-design-2026" },
@@ -1526,7 +1549,6 @@ export const worksCited: { title: string; url: string }[] = [
 
 /** Works cited that are not already listed as a data source, so each URL is shown once. */
 export const articles = worksCited.filter((w) => !sources.some((s) => s.url === w.url));
-
 
 /* ───────── Skill map: where the three archetypes overlap ───────── */
 
@@ -1553,14 +1575,24 @@ export const skillMap: SkillRegion[] = [
     sets: ["meta"],
     name: "Meta-Designer",
     detail: "Systems focus",
-    skills: ["Design token structure", "System rules for consistency and accessibility", "Connecting Figma to AI (Figma MCP)", "Turning business rules into design rules"],
+    skills: [
+      "Design token structure",
+      "System rules for consistency and accessibility",
+      "Connecting Figma to AI (Figma MCP)",
+      "Turning business rules into design rules",
+    ],
   },
   {
     id: "ax",
     sets: ["ax"],
     name: "AX Designer",
     detail: "AI agent focus",
-    skills: ["Designing for trust and transparency", "Controls for how much AI acts alone", "Recovering from AI mistakes", "Agent protocols: MCP, AG-UI, A2A, A2UI"],
+    skills: [
+      "Designing for trust and transparency",
+      "Controls for how much AI acts alone",
+      "Recovering from AI mistakes",
+      "Agent protocols: MCP, AG-UI, A2A, A2UI",
+    ],
   },
   { id: "de-meta", sets: ["de", "meta"], name: "Code meets system", detail: "Connecting design tokens to real components." },
   { id: "de-ax", sets: ["de", "ax"], name: "UI built live", detail: "Screens the AI puts together while the app runs." },
@@ -1586,132 +1618,524 @@ export const glossaryTopicLabel: Record<GlossaryTopic, string> = {
 
 /** `see` names other glossary terms to cross-link; each must match a `term` exactly. */
 export const glossary: { term: string; topic: GlossaryTopic; meaning: string; see?: string[] }[] = [
-  { term: "Design Engineer", topic: "design", meaning: "A designer who also builds the real interface in code and owns how it looks and works once it ships. See the Roles page.", see: ["Meta-Designer", "AX (Agentic Experience)", "UX Engineer / Design Technologist"] },
-  { term: "Meta-Designer", topic: "design", meaning: "A designer who builds the system others design with: tokens, components and the rules people and AI follow. See the Roles page.", see: ["Design Engineer", "Design system"] },
-  { term: "UX Engineer / Design Technologist", topic: "design", meaning: "Other job titles for work close to a Design Engineer's. What each covers varies by company: some lean toward prototypes, others toward production code.", see: ["Design Engineer", "Prototype"] },
-  { term: "UX (user experience)", topic: "design", meaning: "How it feels to use a product from start to finish, including whether it solves the problem.", see: ["UI (user interface)"] },
+  {
+    term: "Design Engineer",
+    topic: "design",
+    meaning: "A designer who also builds the real interface in code and owns how it looks and works once it ships. See the Roles page.",
+    see: ["Meta-Designer", "AX (Agentic Experience)", "UX Engineer / Design Technologist"],
+  },
+  {
+    term: "Meta-Designer",
+    topic: "design",
+    meaning: "A designer who builds the system others design with: tokens, components and the rules people and AI follow. See the Roles page.",
+    see: ["Design Engineer", "Design system"],
+  },
+  {
+    term: "UX Engineer / Design Technologist",
+    topic: "design",
+    meaning:
+      "Other job titles for work close to a Design Engineer's. What each covers varies by company: some lean toward prototypes, others toward production code.",
+    see: ["Design Engineer", "Prototype"],
+  },
+  {
+    term: "UX (user experience)",
+    topic: "design",
+    meaning: "How it feels to use a product from start to finish, including whether it solves the problem.",
+    see: ["UI (user interface)"],
+  },
   { term: "UI (user interface)", topic: "design", meaning: "The screens, buttons, text and controls people see and touch.", see: ["UX (user experience)"] },
-  { term: "UX research", topic: "design", meaning: "Learning about users and their needs through interviews, surveys, testing and data.", see: ["User interview", "Usability testing"] },
-  { term: "User interview", topic: "design", meaning: "A one-to-one conversation to learn how someone does a task and where it gets hard.", see: ["UX research", "Pain point"] },
+  {
+    term: "UX research",
+    topic: "design",
+    meaning: "Learning about users and their needs through interviews, surveys, testing and data.",
+    see: ["User interview", "Usability testing"],
+  },
+  {
+    term: "User interview",
+    topic: "design",
+    meaning: "A one-to-one conversation to learn how someone does a task and where it gets hard.",
+    see: ["UX research", "Pain point"],
+  },
   { term: "Pain point", topic: "design", meaning: "A moment where using a product frustrates or blocks someone.", see: ["Journey map"] },
   { term: "Persona", topic: "design", meaning: "A short profile of a typical user, based on research, used to guide decisions.", see: ["UX research"] },
-  { term: "Journey map", topic: "design", meaning: "A timeline of what a user does, thinks and feels while using a product or service.", see: ["Pain point", "Service blueprint"] },
-  { term: "Service blueprint", topic: "design", meaning: "A diagram of a service that shows what users see and what happens behind the scenes to make it work.", see: ["Journey map"] },
-  { term: "Usability testing", topic: "design", meaning: "Watching real people try to use your design to find where they get stuck.", see: ["Heuristic evaluation"] },
-  { term: "Heuristic evaluation", topic: "design", meaning: "Checking a design against a list of well-known usability rules, without needing users.", see: ["Usability testing"] },
-  { term: "Affinity mapping", topic: "design", meaning: "Grouping research notes by theme, often on sticky notes, to spot patterns.", see: ["Research synthesis"] },
+  {
+    term: "Journey map",
+    topic: "design",
+    meaning: "A timeline of what a user does, thinks and feels while using a product or service.",
+    see: ["Pain point", "Service blueprint"],
+  },
+  {
+    term: "Service blueprint",
+    topic: "design",
+    meaning: "A diagram of a service that shows what users see and what happens behind the scenes to make it work.",
+    see: ["Journey map"],
+  },
+  {
+    term: "Usability testing",
+    topic: "design",
+    meaning: "Watching real people try to use your design to find where they get stuck.",
+    see: ["Heuristic evaluation"],
+  },
+  {
+    term: "Heuristic evaluation",
+    topic: "design",
+    meaning: "Checking a design against a list of well-known usability rules, without needing users.",
+    see: ["Usability testing"],
+  },
+  {
+    term: "Affinity mapping",
+    topic: "design",
+    meaning: "Grouping research notes by theme, often on sticky notes, to spot patterns.",
+    see: ["Research synthesis"],
+  },
   { term: "Research synthesis", topic: "design", meaning: "Turning raw research notes into clear findings and next steps.", see: ["Affinity mapping"] },
-  { term: "Qualitative vs quantitative", topic: "design", meaning: "Qualitative research explains why, through interviews and observation. Quantitative measures how many, through numbers.", see: ["UX research", "A/B test"] },
-  { term: "Information architecture (IA)", topic: "design", meaning: "Deciding where content goes and what to call it, like a menu structure or sitemap.", see: ["User flow"] },
-  { term: "User flow", topic: "design", meaning: "The steps a person takes to finish a task, like signing up or checking out.", see: ["Information architecture (IA)"] },
-  { term: "Design brief", topic: "design", meaning: "A short description of the problem, the audience and the goals for a piece of design work.", see: ["PRD (product requirements document)"] },
-  { term: "Wireframe", topic: "design", meaning: "A simple, low-detail sketch of a screen that shows layout and content, not style.", see: ["Fidelity (lo-fi / hi-fi)"] },
+  {
+    term: "Qualitative vs quantitative",
+    topic: "design",
+    meaning: "Qualitative research explains why, through interviews and observation. Quantitative measures how many, through numbers.",
+    see: ["UX research", "A/B test"],
+  },
+  {
+    term: "Information architecture (IA)",
+    topic: "design",
+    meaning: "Deciding where content goes and what to call it, like a menu structure or sitemap.",
+    see: ["User flow"],
+  },
+  {
+    term: "User flow",
+    topic: "design",
+    meaning: "The steps a person takes to finish a task, like signing up or checking out.",
+    see: ["Information architecture (IA)"],
+  },
+  {
+    term: "Design brief",
+    topic: "design",
+    meaning: "A short description of the problem, the audience and the goals for a piece of design work.",
+    see: ["PRD (product requirements document)"],
+  },
+  {
+    term: "Wireframe",
+    topic: "design",
+    meaning: "A simple, low-detail sketch of a screen that shows layout and content, not style.",
+    see: ["Fidelity (lo-fi / hi-fi)"],
+  },
   { term: "Mockup", topic: "design", meaning: "A static, detailed picture of a screen that shows how it will look.", see: ["Prototype"] },
   { term: "Prototype", topic: "design", meaning: "A clickable model of a design that you can test before anything is built.", see: ["Usability testing"] },
-  { term: "Fidelity (lo-fi / hi-fi)", topic: "design", meaning: "How close a design is to the final product. Lo-fi is rough; hi-fi looks real.", see: ["Wireframe", "Mockup"] },
+  {
+    term: "Fidelity (lo-fi / hi-fi)",
+    topic: "design",
+    meaning: "How close a design is to the final product. Lo-fi is rough; hi-fi looks real.",
+    see: ["Wireframe", "Mockup"],
+  },
   { term: "Moodboard", topic: "design", meaning: "A collection of images, colors and type used to set a visual direction." },
-  { term: "Affordance", topic: "design", meaning: "What an object lets you do, like a button that can be pressed. The visual cue that shows it, like a raised edge, is called a signifier." },
-  { term: "Hick's law", topic: "design", meaning: "The more choices people see, the longer they take to decide. A reason to keep menus and options focused.", see: ["Fitts's law"] },
-  { term: "Fitts's law", topic: "design", meaning: "Bigger, closer targets are faster to hit. A reason to make key buttons large and easy to reach.", see: ["Hick's law"] },
+  {
+    term: "Affordance",
+    topic: "design",
+    meaning: "What an object lets you do, like a button that can be pressed. The visual cue that shows it, like a raised edge, is called a signifier.",
+  },
+  {
+    term: "Hick's law",
+    topic: "design",
+    meaning: "The more choices people see, the longer they take to decide. A reason to keep menus and options focused.",
+    see: ["Fitts's law"],
+  },
+  {
+    term: "Fitts's law",
+    topic: "design",
+    meaning: "Bigger, closer targets are faster to hit. A reason to make key buttons large and easy to reach.",
+    see: ["Hick's law"],
+  },
   { term: "Visual hierarchy", topic: "design", meaning: "Using size, weight, color and space so the most important thing is seen first." },
   { term: "Grid (layout)", topic: "design", meaning: "A set of columns and rows used to line up content consistently.", see: ["Gutter", "CSS Grid"] },
   { term: "Gutter", topic: "design", meaning: "The gap between columns in a grid.", see: ["Grid (layout)"] },
   { term: "Whitespace", topic: "design", meaning: "Empty space around and between elements. It helps content breathe and read clearly." },
   { term: "Typeface vs font", topic: "design", meaning: "A typeface is the family, like Inter. A font is one style of it, like Inter Bold." },
-  { term: "Kerning", topic: "design", meaning: "The space between two specific letters, adjusted so a word looks evenly spaced.", see: ["Tracking", "Leading"] },
+  {
+    term: "Kerning",
+    topic: "design",
+    meaning: "The space between two specific letters, adjusted so a word looks evenly spaced.",
+    see: ["Tracking", "Leading"],
+  },
   { term: "Tracking", topic: "design", meaning: "The spacing across all the letters in a word or block of text.", see: ["Kerning", "Leading"] },
   { term: "Leading", topic: "design", meaning: "The space between lines of text. In CSS it is called line height.", see: ["Kerning", "Tracking"] },
-  { term: "Contrast ratio", topic: "design", meaning: "A score for how different text and background colors are, from 1:1 to 21:1. WCAG level AA asks for at least 4.5:1 for normal text and 3:1 for large text.", see: ["WCAG"] },
-  { term: "Responsive design", topic: "design", meaning: "Layouts that adapt to different screen sizes, from phone to desktop.", see: ["Breakpoint", "Mobile-first"] },
+  {
+    term: "Contrast ratio",
+    topic: "design",
+    meaning:
+      "A score for how different text and background colors are, from 1:1 to 21:1. WCAG level AA asks for at least 4.5:1 for normal text and 3:1 for large text.",
+    see: ["WCAG"],
+  },
+  {
+    term: "Responsive design",
+    topic: "design",
+    meaning: "Layouts that adapt to different screen sizes, from phone to desktop.",
+    see: ["Breakpoint", "Mobile-first"],
+  },
   { term: "Breakpoint", topic: "design", meaning: "A screen width where the layout changes, like moving from one column to two.", see: ["Responsive design"] },
   { term: "Mobile-first", topic: "design", meaning: "Designing for small screens first, then adding more for larger ones.", see: ["Responsive design"] },
   { term: "Frame", topic: "design", meaning: "A container in Figma that holds a screen or a part of one, like an artboard.", see: ["Auto Layout"] },
-  { term: "Auto Layout", topic: "design", meaning: "A Figma setting that makes a frame grow, shrink and space its contents automatically, like CSS Flexbox.", see: ["Frame", "Flexbox"] },
+  {
+    term: "Auto Layout",
+    topic: "design",
+    meaning: "A Figma setting that makes a frame grow, shrink and space its contents automatically, like CSS Flexbox.",
+    see: ["Frame", "Flexbox"],
+  },
   { term: "Component", topic: "design", meaning: "A reusable piece of UI, like a button or card, built once and used everywhere.", see: ["Variants", "Props"] },
-  { term: "Variants", topic: "design", meaning: "Versions of one Figma component, like a button's sizes and states. In code these are usually props.", see: ["Component", "Props"] },
-  { term: "Interaction states", topic: "design", meaning: "How an element looks as people use it: hovered, focused with a keyboard, pressed or disabled. Not the same as state in code.", see: ["State (code)"] },
-  { term: "Design system", topic: "design", meaning: "A shared set of components, tokens, patterns and guidelines that teams build from.", see: ["Style guide", "Component library", "Design tokens"] },
-  { term: "Style guide", topic: "design", meaning: "Brand rules, like colors, type and tone of voice. A design system usually includes one.", see: ["Design system"] },
-  { term: "Atomic design", topic: "design", meaning: "A way of building interfaces from small parts up: atoms, molecules, organisms, templates and pages.", see: ["Component"] },
-  { term: "Design tokens", topic: "design", meaning: "Names for design choices, like \"color-brand\" instead of a hex code, shared by design and code so one change updates everywhere. Many tools save them in the W3C Design Tokens Community Group (DTCG) format, a shared JSON file that design tools and code can both read.", see: ["Semantic tokens", "Figma variables", "CSS custom properties"] },
-  { term: "Semantic tokens", topic: "design", meaning: "Tokens named by purpose, like \"color-danger\", that point to raw values, like \"red-500\". Teams often layer them: raw values, then purpose tokens, then component tokens.", see: ["Design tokens", "Theming"] },
-  { term: "Theming", topic: "design", meaning: "Swapping token values to change a product's look, like light and dark mode or a different brand.", see: ["Semantic tokens"] },
-  { term: "Figma variables", topic: "design", meaning: "Saved values in Figma, like colors and spacing, that can switch by mode. They are the Figma side of design tokens.", see: ["Design tokens", "CSS custom properties"] },
-  { term: "Dev Mode", topic: "design", meaning: "A Figma view for developers that shows measurements, tokens and code hints for a design.", see: ["Handoff", "Code Connect"] },
-  { term: "Code Connect", topic: "design", meaning: "A Figma feature that links design components to the matching components in code.", see: ["Dev Mode", "Component library"] },
+  {
+    term: "Variants",
+    topic: "design",
+    meaning: "Versions of one Figma component, like a button's sizes and states. In code these are usually props.",
+    see: ["Component", "Props"],
+  },
+  {
+    term: "Interaction states",
+    topic: "design",
+    meaning: "How an element looks as people use it: hovered, focused with a keyboard, pressed or disabled. Not the same as state in code.",
+    see: ["State (code)"],
+  },
+  {
+    term: "Design system",
+    topic: "design",
+    meaning: "A shared set of components, tokens, patterns and guidelines that teams build from.",
+    see: ["Style guide", "Component library", "Design tokens"],
+  },
+  {
+    term: "Style guide",
+    topic: "design",
+    meaning: "Brand rules, like colors, type and tone of voice. A design system usually includes one.",
+    see: ["Design system"],
+  },
+  {
+    term: "Atomic design",
+    topic: "design",
+    meaning: "A way of building interfaces from small parts up: atoms, molecules, organisms, templates and pages.",
+    see: ["Component"],
+  },
+  {
+    term: "Design tokens",
+    topic: "design",
+    meaning:
+      'Names for design choices, like "color-brand" instead of a hex code, shared by design and code so one change updates everywhere. Many tools save them in the W3C Design Tokens Community Group (DTCG) format, a shared JSON file that design tools and code can both read.',
+    see: ["Semantic tokens", "Figma variables", "CSS custom properties"],
+  },
+  {
+    term: "Semantic tokens",
+    topic: "design",
+    meaning:
+      'Tokens named by purpose, like "color-danger", that point to raw values, like "red-500". Teams often layer them: raw values, then purpose tokens, then component tokens.',
+    see: ["Design tokens", "Theming"],
+  },
+  {
+    term: "Theming",
+    topic: "design",
+    meaning: "Swapping token values to change a product's look, like light and dark mode or a different brand.",
+    see: ["Semantic tokens"],
+  },
+  {
+    term: "Figma variables",
+    topic: "design",
+    meaning: "Saved values in Figma, like colors and spacing, that can switch by mode. They are the Figma side of design tokens.",
+    see: ["Design tokens", "CSS custom properties"],
+  },
+  {
+    term: "Dev Mode",
+    topic: "design",
+    meaning: "A Figma view for developers that shows measurements, tokens and code hints for a design.",
+    see: ["Handoff", "Code Connect"],
+  },
+  {
+    term: "Code Connect",
+    topic: "design",
+    meaning: "A Figma feature that links design components to the matching components in code.",
+    see: ["Dev Mode", "Component library"],
+  },
   { term: "Microcopy", topic: "design", meaning: "Small bits of interface text, like button labels, hints and error messages.", see: ["Empty state"] },
   { term: "Empty state", topic: "design", meaning: "What a screen shows when there is no content yet, like an empty inbox.", see: ["Microcopy"] },
-  { term: "CTA (call to action)", topic: "design", meaning: "The main action you want someone to take, like \"Sign up\" or \"Buy now\"." },
-  { term: "Micro-interaction", topic: "design", meaning: "A small, focused moment of feedback, like a like-button animation or a toggle sliding.", see: ["Easing"] },
+  { term: "CTA (call to action)", topic: "design", meaning: 'The main action you want someone to take, like "Sign up" or "Buy now".' },
+  {
+    term: "Micro-interaction",
+    topic: "design",
+    meaning: "A small, focused moment of feedback, like a like-button animation or a toggle sliding.",
+    see: ["Easing"],
+  },
   { term: "Easing", topic: "design", meaning: "How an animation speeds up or slows down, so motion feels natural.", see: ["Micro-interaction"] },
-  { term: "Accessibility (a11y)", topic: "design", meaning: "Making products usable by people with disabilities, and easier for everyone. \"a11y\" is shorthand.", see: ["WCAG", "Alt text", "ARIA"] },
-  { term: "WCAG", topic: "design", meaning: "The Web Content Accessibility Guidelines: testable rules for making web content accessible. They have three levels, A, AA and AAA, and most teams aim for AA.", see: ["Accessibility (a11y)", "Contrast ratio"] },
+  {
+    term: "Accessibility (a11y)",
+    topic: "design",
+    meaning: 'Making products usable by people with disabilities, and easier for everyone. "a11y" is shorthand.',
+    see: ["WCAG", "Alt text", "ARIA"],
+  },
+  {
+    term: "WCAG",
+    topic: "design",
+    meaning:
+      "The Web Content Accessibility Guidelines: testable rules for making web content accessible. They have three levels, A, AA and AAA, and most teams aim for AA.",
+    see: ["Accessibility (a11y)", "Contrast ratio"],
+  },
   { term: "Alt text", topic: "design", meaning: "A short text description of an image that screen readers read aloud.", see: ["Accessibility (a11y)"] },
   { term: "Design principles", topic: "design", meaning: "A short list of agreed beliefs that guide design decisions across a team." },
   { term: "Design critique", topic: "design", meaning: "A structured feedback session where the team reviews work against its goals." },
-  { term: "Portfolio", topic: "design", meaning: "A collection of your best work that shows how you think and what you can do. It is also useful at work, for a promotion case or a team demo.", see: ["Case study"] },
-  { term: "Case study", topic: "design", meaning: "A story about one project that walks through the problem, your process and the outcome.", see: ["Portfolio"] },
-  { term: "Handoff", topic: "design", meaning: "The point where design and engineering agree on what to build: specs, states, edge cases and open questions. It works best as an ongoing conversation, not a one-time drop.", see: ["Dev Mode", "Design QA", "Redlines"] },
-  { term: "Redlines", topic: "design", meaning: "Notes drawn on a design that give developers exact sizes, spacing and colors to build from.", see: ["Handoff", "Dev Mode"] },
+  {
+    term: "Portfolio",
+    topic: "design",
+    meaning: "A collection of your best work that shows how you think and what you can do. It is also useful at work, for a promotion case or a team demo.",
+    see: ["Case study"],
+  },
+  {
+    term: "Case study",
+    topic: "design",
+    meaning: "A story about one project that walks through the problem, your process and the outcome.",
+    see: ["Portfolio"],
+  },
+  {
+    term: "Handoff",
+    topic: "design",
+    meaning:
+      "The point where design and engineering agree on what to build: specs, states, edge cases and open questions. It works best as an ongoing conversation, not a one-time drop.",
+    see: ["Dev Mode", "Design QA", "Redlines"],
+  },
+  {
+    term: "Redlines",
+    topic: "design",
+    meaning: "Notes drawn on a design that give developers exact sizes, spacing and colors to build from.",
+    see: ["Handoff", "Dev Mode"],
+  },
   { term: "Design QA", topic: "design", meaning: "Checking the built product against the design before it ships.", see: ["Handoff"] },
   { term: "Design debt", topic: "design", meaning: "Inconsistencies and shortcuts in a design that pile up and need fixing later.", see: ["Tech debt"] },
   { term: "DesignOps", topic: "design", meaning: "The people, tools and processes that help a design team work well as it grows." },
-  { term: "Front end vs back end", topic: "code", meaning: "The front end is the part of a product people see and use. The back end is the hidden part, like servers and databases, that stores data and does the work.", see: ["API"] },
+  {
+    term: "Front end vs back end",
+    topic: "code",
+    meaning:
+      "The front end is the part of a product people see and use. The back end is the hidden part, like servers and databases, that stores data and does the work.",
+    see: ["API"],
+  },
   { term: "HTML", topic: "code", meaning: "The code that gives a web page its structure, like headings, lists and buttons.", see: ["Semantic HTML"] },
-  { term: "Semantic HTML", topic: "code", meaning: "Using the HTML element that matches the meaning, like <button> for a button, so browsers and screen readers understand it.", see: ["HTML", "ARIA"] },
-  { term: "ARIA", topic: "code", meaning: "Attributes added to HTML that tell screen readers what a custom control is and what state it is in. Semantic HTML often needs none.", see: ["Semantic HTML", "Accessibility (a11y)"] },
+  {
+    term: "Semantic HTML",
+    topic: "code",
+    meaning: "Using the HTML element that matches the meaning, like <button> for a button, so browsers and screen readers understand it.",
+    see: ["HTML", "ARIA"],
+  },
+  {
+    term: "ARIA",
+    topic: "code",
+    meaning: "Attributes added to HTML that tell screen readers what a custom control is and what state it is in. Semantic HTML often needs none.",
+    see: ["Semantic HTML", "Accessibility (a11y)"],
+  },
   { term: "CSS", topic: "code", meaning: "The code that styles a web page: colors, type, spacing and layout.", see: ["CSS custom properties", "Tailwind CSS"] },
-  { term: "CSS custom properties", topic: "code", meaning: "Variables in CSS, like --color-brand, that hold a value used across a site. This is a common way design tokens reach code.", see: ["Design tokens", "Figma variables"] },
-  { term: "Tailwind CSS", topic: "code", meaning: "A CSS approach where you style elements with small ready-made class names, like \"p-4\" for padding, right in the markup.", see: ["CSS"] },
+  {
+    term: "CSS custom properties",
+    topic: "code",
+    meaning: "Variables in CSS, like --color-brand, that hold a value used across a site. This is a common way design tokens reach code.",
+    see: ["Design tokens", "Figma variables"],
+  },
+  {
+    term: "Tailwind CSS",
+    topic: "code",
+    meaning: 'A CSS approach where you style elements with small ready-made class names, like "p-4" for padding, right in the markup.',
+    see: ["CSS"],
+  },
   { term: "Flexbox", topic: "code", meaning: "A CSS layout tool that lines items up in one direction, a row or a column.", see: ["CSS Grid", "Auto Layout"] },
-  { term: "CSS Grid", topic: "code", meaning: "A CSS layout tool that places items in rows and columns at once, good for whole-page layouts.", see: ["Flexbox", "Grid (layout)"] },
+  {
+    term: "CSS Grid",
+    topic: "code",
+    meaning: "A CSS layout tool that places items in rows and columns at once, good for whole-page layouts.",
+    see: ["Flexbox", "Grid (layout)"],
+  },
   { term: "px vs rem", topic: "code", meaning: "Units for size in CSS. A px is fixed; a rem scales with the reader's text size setting." },
   { term: "SVG", topic: "code", meaning: "An image format made of shapes and lines, so it stays sharp at any size." },
-  { term: "JavaScript", topic: "code", meaning: "The code that makes web pages interactive, like menus that open or forms that check input.", see: ["TypeScript"] },
-  { term: "TypeScript", topic: "code", meaning: "JavaScript with types added, so mistakes like a missing value are caught before the code runs.", see: ["JavaScript"] },
-  { term: "Framework (e.g. React)", topic: "code", meaning: "Ready-made code that developers build apps on, using reusable components. React is technically a library, but you'll hear both words.", see: ["Component library", "Props"] },
-  { term: "Component library", topic: "code", meaning: "The coded versions of a design system's components that developers import and use.", see: ["Design system", "Storybook"] },
-  { term: "Storybook", topic: "code", meaning: "A tool for building, viewing and documenting coded components on their own, outside the app.", see: ["Component library"] },
-  { term: "Props", topic: "code", meaning: "Settings passed into a code component, like a button's label or size. Think of them as Figma component properties.", see: ["Variants", "Component"] },
-  { term: "State (code)", topic: "code", meaning: "Data that changes while an app runs, like whether a menu is open. Not the same as interaction states in design.", see: ["Interaction states"] },
+  {
+    term: "JavaScript",
+    topic: "code",
+    meaning: "The code that makes web pages interactive, like menus that open or forms that check input.",
+    see: ["TypeScript"],
+  },
+  {
+    term: "TypeScript",
+    topic: "code",
+    meaning: "JavaScript with types added, so mistakes like a missing value are caught before the code runs.",
+    see: ["JavaScript"],
+  },
+  {
+    term: "Framework (e.g. React)",
+    topic: "code",
+    meaning: "Ready-made code that developers build apps on, using reusable components. React is technically a library, but you'll hear both words.",
+    see: ["Component library", "Props"],
+  },
+  {
+    term: "Component library",
+    topic: "code",
+    meaning: "The coded versions of a design system's components that developers import and use.",
+    see: ["Design system", "Storybook"],
+  },
+  {
+    term: "Storybook",
+    topic: "code",
+    meaning: "A tool for building, viewing and documenting coded components on their own, outside the app.",
+    see: ["Component library"],
+  },
+  {
+    term: "Props",
+    topic: "code",
+    meaning: "Settings passed into a code component, like a button's label or size. Think of them as Figma component properties.",
+    see: ["Variants", "Component"],
+  },
+  {
+    term: "State (code)",
+    topic: "code",
+    meaning: "Data that changes while an app runs, like whether a menu is open. Not the same as interaction states in design.",
+    see: ["Interaction states"],
+  },
   { term: "API", topic: "code", meaning: "A defined way for one piece of software to ask another for data or actions.", see: ["Front end vs back end"] },
-  { term: "Terminal", topic: "code", meaning: "A text window where you type commands to run tools, like starting a project on your computer. Also called the command line.", see: ["npm", "Localhost"] },
-  { term: "npm", topic: "code", meaning: "A tool and online store for packages: ready-made code other people wrote that you add to a project.", see: ["Terminal"] },
-  { term: "Vite", topic: "code", meaning: "A build tool that runs a fast local preview while you work and bundles the project for release. It is often used with React.", see: ["npm", "Localhost"] },
-  { term: "Localhost", topic: "code", meaning: "A private preview of a website that only your computer can see while you build it.", see: ["Terminal", "Deploy"] },
-  { term: "Git", topic: "code", meaning: "A tool that tracks every change to a project's files, so you can review or undo them.", see: ["Repo (repository)", "Commit"] },
-  { term: "Repo (repository)", topic: "code", meaning: "A project's folder of files plus every past version of them. GitHub is a common place to keep one online.", see: ["Git"] },
+  {
+    term: "Terminal",
+    topic: "code",
+    meaning: "A text window where you type commands to run tools, like starting a project on your computer. Also called the command line.",
+    see: ["npm", "Localhost"],
+  },
+  {
+    term: "npm",
+    topic: "code",
+    meaning: "A tool and online store for packages: ready-made code other people wrote that you add to a project.",
+    see: ["Terminal"],
+  },
+  {
+    term: "Vite",
+    topic: "code",
+    meaning: "A build tool that runs a fast local preview while you work and bundles the project for release. It is often used with React.",
+    see: ["npm", "Localhost"],
+  },
+  {
+    term: "Localhost",
+    topic: "code",
+    meaning: "A private preview of a website that only your computer can see while you build it.",
+    see: ["Terminal", "Deploy"],
+  },
+  {
+    term: "Git",
+    topic: "code",
+    meaning: "A tool that tracks every change to a project's files, so you can review or undo them.",
+    see: ["Repo (repository)", "Commit"],
+  },
+  {
+    term: "Repo (repository)",
+    topic: "code",
+    meaning: "A project's folder of files plus every past version of them. GitHub is a common place to keep one online.",
+    see: ["Git"],
+  },
   { term: "Commit", topic: "code", meaning: "A saved snapshot of your changes in Git, with a short message about what changed.", see: ["Git", "Branch"] },
-  { term: "Branch", topic: "code", meaning: "A separate line of work, so your changes stay apart from the main version until they are merged.", see: ["Commit", "Merge"] },
-  { term: "Diff", topic: "code", meaning: "A view of what changed between two versions of a file, usually red for removed lines and green for added ones.", see: ["PR (pull request)"] },
-  { term: "PR (pull request)", topic: "code", meaning: "A request that says \"here are my changes, please review them and add them to the project.\"", see: ["Code review", "Diff", "Merge"] },
-  { term: "Code review", topic: "code", meaning: "When teammates read a pull request, leave comments and approve it before it is merged.", see: ["PR (pull request)"] },
-  { term: "Merge", topic: "code", meaning: "Combining the changes from a branch or pull request into the shared version of the project.", see: ["Branch", "PR (pull request)"] },
-  { term: "Staging vs production", topic: "code", meaning: "Staging is a private test copy of the product. Production is the live version real users see.", see: ["Deploy"] },
+  {
+    term: "Branch",
+    topic: "code",
+    meaning: "A separate line of work, so your changes stay apart from the main version until they are merged.",
+    see: ["Commit", "Merge"],
+  },
+  {
+    term: "Diff",
+    topic: "code",
+    meaning: "A view of what changed between two versions of a file, usually red for removed lines and green for added ones.",
+    see: ["PR (pull request)"],
+  },
+  {
+    term: "PR (pull request)",
+    topic: "code",
+    meaning: 'A request that says "here are my changes, please review them and add them to the project."',
+    see: ["Code review", "Diff", "Merge"],
+  },
+  {
+    term: "Code review",
+    topic: "code",
+    meaning: "When teammates read a pull request, leave comments and approve it before it is merged.",
+    see: ["PR (pull request)"],
+  },
+  {
+    term: "Merge",
+    topic: "code",
+    meaning: "Combining the changes from a branch or pull request into the shared version of the project.",
+    see: ["Branch", "PR (pull request)"],
+  },
+  {
+    term: "Staging vs production",
+    topic: "code",
+    meaning: "Staging is a private test copy of the product. Production is the live version real users see.",
+    see: ["Deploy"],
+  },
   { term: "Deploy", topic: "code", meaning: "Publishing code so it goes live on the internet.", see: ["Staging vs production", "CI/CD"] },
   { term: "CI/CD", topic: "code", meaning: "Automated steps that test and publish code every time changes are merged.", see: ["Deploy"] },
   { term: "Feature flag", topic: "code", meaning: "A switch that turns a feature on or off for some users without a new release.", see: ["A/B test"] },
   { term: "Bug", topic: "code", meaning: "Something in the product that doesn't work as intended." },
   { term: "Tech debt", topic: "code", meaning: "Shortcuts in code that make future changes slower until someone cleans them up.", see: ["Design debt"] },
   { term: "Stakeholder", topic: "team", meaning: "Anyone with a say in or a stake in the work, like product managers, leaders or clients." },
-  { term: "Cross-functional team", topic: "team", meaning: "A team that mixes roles, like design, engineering and product, working toward one goal.", see: ["Product trio"] },
-  { term: "Product trio", topic: "team", meaning: "The product manager, designer and engineering lead who shape a product area together.", see: ["Cross-functional team"] },
+  {
+    term: "Cross-functional team",
+    topic: "team",
+    meaning: "A team that mixes roles, like design, engineering and product, working toward one goal.",
+    see: ["Product trio"],
+  },
+  {
+    term: "Product trio",
+    topic: "team",
+    meaning: "The product manager, designer and engineering lead who shape a product area together.",
+    see: ["Cross-functional team"],
+  },
   { term: "PRD (product requirements document)", topic: "team", meaning: "A document that explains what to build, for whom and why.", see: ["Design brief"] },
   { term: "MVP (minimum viable product)", topic: "team", meaning: "The smallest version of a product that can be shipped to learn from real users." },
   { term: "Discovery", topic: "team", meaning: "Early work to understand the problem and users before deciding what to build.", see: ["Double Diamond"] },
-  { term: "Double Diamond", topic: "team", meaning: "A process shaped like two diamonds. First explore the problem widely and define it. Then explore solutions widely and pick one.", see: ["Discovery"] },
-  { term: "Design sprint", topic: "team", meaning: "A short workshop, often five days, that goes from a problem to a tested prototype.", see: ["Prototype", "Sprint"] },
-  { term: "JTBD (jobs to be done)", topic: "team", meaning: "A way of framing needs by the goal a person is trying to get done, not by who they are.", see: ["Persona"] },
+  {
+    term: "Double Diamond",
+    topic: "team",
+    meaning: "A process shaped like two diamonds. First explore the problem widely and define it. Then explore solutions widely and pick one.",
+    see: ["Discovery"],
+  },
+  {
+    term: "Design sprint",
+    topic: "team",
+    meaning: "A short workshop, often five days, that goes from a problem to a tested prototype.",
+    see: ["Prototype", "Sprint"],
+  },
+  {
+    term: "JTBD (jobs to be done)",
+    topic: "team",
+    meaning: "A way of framing needs by the goal a person is trying to get done, not by who they are.",
+    see: ["Persona"],
+  },
   { term: "A/B test", topic: "team", meaning: "Showing two versions to different users to see which works better.", see: ["Conversion rate", "Feature flag"] },
   { term: "Funnel", topic: "team", meaning: "The steps users go through toward a goal, and where they drop off along the way.", see: ["Conversion rate"] },
   { term: "Conversion rate", topic: "team", meaning: "The share of people who complete a goal, like signing up or buying.", see: ["Funnel"] },
   { term: "Retention", topic: "team", meaning: "How many users keep coming back over time." },
-  { term: "KPI (key performance indicator)", topic: "team", meaning: "A number a team tracks to see whether it is meeting its goals.", see: ["OKR (objectives and key results)"] },
-  { term: "OKR (objectives and key results)", topic: "team", meaning: "A goal-setting method: a clear objective plus measurable results that show progress.", see: ["KPI (key performance indicator)"] },
+  {
+    term: "KPI (key performance indicator)",
+    topic: "team",
+    meaning: "A number a team tracks to see whether it is meeting its goals.",
+    see: ["OKR (objectives and key results)"],
+  },
+  {
+    term: "OKR (objectives and key results)",
+    topic: "team",
+    meaning: "A goal-setting method: a clear objective plus measurable results that show progress.",
+    see: ["KPI (key performance indicator)"],
+  },
   { term: "North Star metric", topic: "team", meaning: "The one number a product team treats as the best sign of value delivered to users." },
-  { term: "HEART framework", topic: "team", meaning: "A framework from Google for measuring user experience: Happiness, Engagement, Adoption, Retention and Task success. Teams usually pick the few that fit their product.", see: ["Retention", "KPI (key performance indicator)"] },
-  { term: "RICE", topic: "team", meaning: "A way to rank ideas by Reach, Impact, Confidence and Effort. The scores are estimates, so use them to compare ideas, not as exact answers.", see: ["Kano model", "Backlog"] },
-  { term: "Kano model", topic: "team", meaning: "A way to sort features by how they affect satisfaction: basics people expect, features where more is better, and extras that delight.", see: ["RICE"] },
+  {
+    term: "HEART framework",
+    topic: "team",
+    meaning:
+      "A framework from Google for measuring user experience: Happiness, Engagement, Adoption, Retention and Task success. Teams usually pick the few that fit their product.",
+    see: ["Retention", "KPI (key performance indicator)"],
+  },
+  {
+    term: "RICE",
+    topic: "team",
+    meaning: "A way to rank ideas by Reach, Impact, Confidence and Effort. The scores are estimates, so use them to compare ideas, not as exact answers.",
+    see: ["Kano model", "Backlog"],
+  },
+  {
+    term: "Kano model",
+    topic: "team",
+    meaning: "A way to sort features by how they affect satisfaction: basics people expect, features where more is better, and extras that delight.",
+    see: ["RICE"],
+  },
   { term: "NPS (Net Promoter Score)", topic: "team", meaning: "A survey score based on how likely people are to recommend a product." },
   { term: "Agile", topic: "team", meaning: "A way of working in short cycles, shipping small pieces and adjusting as you learn.", see: ["Sprint"] },
   { term: "Sprint", topic: "team", meaning: "A fixed, short period, often one or two weeks, where a team finishes a set of work.", see: ["Agile", "Backlog"] },
@@ -1723,33 +2147,139 @@ export const glossary: { term: string; topic: GlossaryTopic; meaning: string; se
   { term: "Edge case", topic: "team", meaning: "An unusual situation a design must still handle, like a very long name or no internet.", see: ["Handoff"] },
   { term: "Single source of truth", topic: "team", meaning: "One agreed place where a piece of information lives, so everyone uses the same version." },
   { term: "Dogfooding", topic: "team", meaning: "Using your own product day to day to find problems before users do." },
-  { term: "IC (individual contributor)", topic: "team", meaning: "Someone who does the hands-on work rather than managing people.", see: ["IC levels (IC1, IC2…)", "Super IC"] },
-  { term: "IC levels (IC1, IC2…)", topic: "team", meaning: "Level labels on job posts and career ladders. Lower numbers are earlier in a career, like junior, and higher ones more senior. What each number means varies by company.", see: ["IC (individual contributor)"] },
-  { term: "ATS (applicant tracking system)", topic: "team", meaning: "Software companies use to collect and sort job applications before a person reads them. A simple, clearly structured CV is easier for it to read.", see: ["Portfolio"] },
-  { term: "Super IC", topic: "team", meaning: "A senior hands-on person with wide scope and no direct reports. Some teams use it for people who work across design and code.", see: ["IC (individual contributor)"] },
-  { term: "Product-led company", topic: "team", meaning: "A company that grows mainly through people trying and using the product, rather than through sales calls.", see: ["SaaS"] },
+  {
+    term: "IC (individual contributor)",
+    topic: "team",
+    meaning: "Someone who does the hands-on work rather than managing people.",
+    see: ["IC levels (IC1, IC2…)", "Super IC"],
+  },
+  {
+    term: "IC levels (IC1, IC2…)",
+    topic: "team",
+    meaning:
+      "Level labels on job posts and career ladders. Lower numbers are earlier in a career, like junior, and higher ones more senior. What each number means varies by company.",
+    see: ["IC (individual contributor)"],
+  },
+  {
+    term: "ATS (applicant tracking system)",
+    topic: "team",
+    meaning:
+      "Software companies use to collect and sort job applications before a person reads them. A simple, clearly structured CV is easier for it to read.",
+    see: ["Portfolio"],
+  },
+  {
+    term: "Super IC",
+    topic: "team",
+    meaning: "A senior hands-on person with wide scope and no direct reports. Some teams use it for people who work across design and code.",
+    see: ["IC (individual contributor)"],
+  },
+  {
+    term: "Product-led company",
+    topic: "team",
+    meaning: "A company that grows mainly through people trying and using the product, rather than through sales calls.",
+    see: ["SaaS"],
+  },
   { term: "Seed-stage startup", topic: "team", meaning: "A young company on its first round of money from outside investors, usually with a small team." },
   { term: "SaaS", topic: "team", meaning: "Software as a service: software you use in the browser on a subscription, like Figma or Notion.", see: ["B2B"] },
   { term: "B2B", topic: "team", meaning: "Business to business: products sold to companies rather than to individual people.", see: ["SaaS"] },
-  { term: "LLM (large language model)", topic: "ai", meaning: "The kind of AI behind chat tools that reads and writes text.", see: ["Prompt", "Hallucination"] },
+  {
+    term: "LLM (large language model)",
+    topic: "ai",
+    meaning: "The kind of AI behind chat tools that reads and writes text.",
+    see: ["Prompt", "Hallucination"],
+  },
   { term: "Prompt", topic: "ai", meaning: "The instructions or question you give an AI tool.", see: ["LLM (large language model)"] },
-  { term: "AI agent", topic: "ai", meaning: "An AI tool that can carry out a task with several steps on its own, like editing files, instead of only chatting.", see: ["AX (Agentic Experience)", "Guardrail"] },
-  { term: "AX (Agentic Experience)", topic: "ai", meaning: "Design for products where AI agents act for the user, not just answer questions.", see: ["AI agent", "Human-in-the-loop (HITL)"] },
-  { term: "Vibe coding", topic: "ai", meaning: "Building software mostly by describing what you want to an AI tool, then refining what it makes. You don't need a coding background to try it.", see: ["Prompt"] },
+  {
+    term: "AI agent",
+    topic: "ai",
+    meaning: "An AI tool that can carry out a task with several steps on its own, like editing files, instead of only chatting.",
+    see: ["AX (Agentic Experience)", "Guardrail"],
+  },
+  {
+    term: "AX (Agentic Experience)",
+    topic: "ai",
+    meaning: "Design for products where AI agents act for the user, not just answer questions.",
+    see: ["AI agent", "Human-in-the-loop (HITL)"],
+  },
+  {
+    term: "Vibe coding",
+    topic: "ai",
+    meaning: "Building software mostly by describing what you want to an AI tool, then refining what it makes. You don't need a coding background to try it.",
+    see: ["Prompt"],
+  },
   { term: "Hallucination", topic: "ai", meaning: "When an AI tool states something false as if it were true.", see: ["Eval"] },
   { term: "Context window", topic: "ai", meaning: "How much text an AI model can take in at once, including your prompt and files." },
   { term: "Eval", topic: "ai", meaning: "A repeatable test that checks how well an AI feature performs.", see: ["Hallucination"] },
-  { term: "Guardrail", topic: "ai", meaning: "A limit built into a product or AI tool that stops a risky action or asks a person to approve it.", see: ["Human-in-the-loop (HITL)"] },
+  {
+    term: "Guardrail",
+    topic: "ai",
+    meaning: "A limit built into a product or AI tool that stops a risky action or asks a person to approve it.",
+    see: ["Human-in-the-loop (HITL)"],
+  },
   { term: "Human-in-the-loop (HITL)", topic: "ai", meaning: "A person approves each step before the AI acts.", see: ["Human-on-the-loop (HOTL)", "Guardrail"] },
-  { term: "Human-on-the-loop (HOTL)", topic: "ai", meaning: "The AI acts on its own while a person watches and can step in.", see: ["Human-in-the-loop (HITL)"] },
-  { term: "MCP (Model Context Protocol)", topic: "ai", meaning: "A standard that lets AI tools connect to other apps, to read their data and take actions. The AI tool is the client; each app it connects to runs a server, and the server decides what the tool can read or change.", see: ["Figma MCP"] },
-  { term: "Figma MCP", topic: "ai", meaning: "Lets AI coding tools read your Figma designs, tokens and components directly.", see: ["MCP (Model Context Protocol)", "Code Connect"] },
-  { term: "Token taxonomy", topic: "design", meaning: "How design tokens are named, grouped and layered. Clear names help both people and AI tools pick the right one.", see: ["Semantic tokens", "Design tokens"] },
-  { term: "A2A (Agent-to-Agent)", topic: "ai", meaning: "A standard that lets AI agents pass tasks and updates to each other.", see: ["MCP (Model Context Protocol)"] },
+  {
+    term: "Human-on-the-loop (HOTL)",
+    topic: "ai",
+    meaning: "The AI acts on its own while a person watches and can step in.",
+    see: ["Human-in-the-loop (HITL)"],
+  },
+  {
+    term: "MCP (Model Context Protocol)",
+    topic: "ai",
+    meaning:
+      "A standard that lets AI tools connect to other apps, to read their data and take actions. The AI tool is the client; each app it connects to runs a server, and the server decides what the tool can read or change.",
+    see: ["Figma MCP"],
+  },
+  {
+    term: "Figma MCP",
+    topic: "ai",
+    meaning: "Lets AI coding tools read your Figma designs, tokens and components directly.",
+    see: ["MCP (Model Context Protocol)", "Code Connect"],
+  },
+  {
+    term: "Token taxonomy",
+    topic: "design",
+    meaning: "How design tokens are named, grouped and layered. Clear names help both people and AI tools pick the right one.",
+    see: ["Semantic tokens", "Design tokens"],
+  },
+  {
+    term: "A2A (Agent-to-Agent)",
+    topic: "ai",
+    meaning: "A standard that lets AI agents pass tasks and updates to each other.",
+    see: ["MCP (Model Context Protocol)"],
+  },
   { term: "AG-UI", topic: "ai", meaning: "A standard for sending live updates from an AI agent to the app screen.", see: ["A2UI (Agent-to-User Interface)"] },
-  { term: "A2UI (Agent-to-User Interface)", topic: "ai", meaning: "A standard that lets an agent show users only components from an approved design system.", see: ["AG-UI", "Design system"] },
-  { term: "Autonomy Dial", topic: "ai", meaning: "A control that lets users choose how much an AI agent does on its own, from doing the task themselves to full automation. Riskier tasks get tighter limits.", see: ["Human-in-the-loop (HITL)", "Human-on-the-loop (HOTL)", "Guardrail"] },
-  { term: "CLAUDE.md / AGENTS.md", topic: "ai", meaning: "A plain text file in a project that tells an AI coding tool the project's rules, like which commands to run and how to name things. Claude Code reads CLAUDE.md; AGENTS.md is a shared format many tools read.", see: ["AI agent", "Plan mode"] },
-  { term: "Plan mode", topic: "ai", meaning: "A setting in some AI coding tools, such as Claude Code, where the agent reads the project and proposes a plan before it changes any files. You review the plan first.", see: ["CLAUDE.md / AGENTS.md", "Human-in-the-loop (HITL)"] },
-  { term: "llms.txt", topic: "ai", meaning: "A proposed standard: a plain text file on a website that gives AI tools a short, easy-to-read guide to its pages or docs. Support for it varies.", see: ["MCP (Model Context Protocol)"] },
+  {
+    term: "A2UI (Agent-to-User Interface)",
+    topic: "ai",
+    meaning: "A standard that lets an agent show users only components from an approved design system.",
+    see: ["AG-UI", "Design system"],
+  },
+  {
+    term: "Autonomy Dial",
+    topic: "ai",
+    meaning:
+      "A control that lets users choose how much an AI agent does on its own, from doing the task themselves to full automation. Riskier tasks get tighter limits.",
+    see: ["Human-in-the-loop (HITL)", "Human-on-the-loop (HOTL)", "Guardrail"],
+  },
+  {
+    term: "CLAUDE.md / AGENTS.md",
+    topic: "ai",
+    meaning:
+      "A plain text file in a project that tells an AI coding tool the project's rules, like which commands to run and how to name things. Claude Code reads CLAUDE.md; AGENTS.md is a shared format many tools read.",
+    see: ["AI agent", "Plan mode"],
+  },
+  {
+    term: "Plan mode",
+    topic: "ai",
+    meaning:
+      "A setting in some AI coding tools, such as Claude Code, where the agent reads the project and proposes a plan before it changes any files. You review the plan first.",
+    see: ["CLAUDE.md / AGENTS.md", "Human-in-the-loop (HITL)"],
+  },
+  {
+    term: "llms.txt",
+    topic: "ai",
+    meaning: "A proposed standard: a plain text file on a website that gives AI tools a short, easy-to-read guide to its pages or docs. Support for it varies.",
+    see: ["MCP (Model Context Protocol)"],
+  },
 ];

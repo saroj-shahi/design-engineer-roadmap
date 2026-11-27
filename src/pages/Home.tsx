@@ -7,7 +7,12 @@ import { cardLink, ActionLink, SubHead, jumpTo, pageHref, type Page } from "../c
 
 /** What's on each page, in the reader's words: one question per page. */
 const inside: { to: Page; glyph: GlyphName; question: string; answer: string }[] = [
-  { to: "jobs", glyph: "forecast", question: "Is my job going away?", answer: "The hiring data for designers, how teams are changing, and every figure with its source." },
+  {
+    to: "jobs",
+    glyph: "forecast",
+    question: "Is my job going away?",
+    answer: "The hiring data for designers, how teams are changing, and every figure with its source.",
+  },
   { to: "roles", glyph: "eye", question: "Which role fits you?", answer: "Three ways design and code meet, what each covers, and who it suits." },
   { to: "plan", glyph: "route", question: "What do I do next?", answer: "A step-by-step plan — whether you're upskilling at work or starting out." },
   { to: "ready", glyph: "check", question: "How do I know I'm ready?", answer: "A short proof-of-work checklist for your current team or a job search." },
@@ -114,7 +119,11 @@ export function Home() {
             id="start-here"
             n={1}
             label="Where you start"
-            title={<>Where are you <em>starting from?</em></>}
+            title={
+              <>
+                Where are you <em>starting from?</em>
+              </>
+            }
           >
             <StartHere />
           </Chapter>
@@ -127,13 +136,22 @@ export function Home() {
             id="inside"
             n={3}
             label="What's inside"
-            title={<>Five questions, one page <em>for each</em></>}
+            title={
+              <>
+                Five questions, one page <em>for each</em>
+              </>
+            }
             note="Read in any order. Each page answers one question, and the detail stays tucked away until you ask for it."
           >
             {/* A directory of the guide's pages (the same set as the top nav), so it counts as navigation. */}
             <ul data-nav aria-label="Pages in this guide" className="grid gap-5 sm:grid-cols-2 xl:grid-cols-6">
               {inside.map((x, i) => (
-                <li key={x.to} data-reveal style={{ "--i": i } as CSSProperties} className={i < 2 ? "xl:col-span-3" : i === inside.length - 1 ? "sm:col-span-2 xl:col-span-2" : "xl:col-span-2"}>
+                <li
+                  key={x.to}
+                  data-reveal
+                  style={{ "--i": i } as CSSProperties}
+                  className={i < 2 ? "xl:col-span-3" : i === inside.length - 1 ? "sm:col-span-2 xl:col-span-2" : "xl:col-span-2"}
+                >
                   <a href={pageHref(x.to)} className={`relative ${cardLink} group flex h-full flex-col p-5 sm:p-6`}>
                     <Glyph name={x.glyph} className="size-12 text-ink" />
                     <span className="font-display text-display-m text-balance mt-8 block text-ink">{x.question}</span>

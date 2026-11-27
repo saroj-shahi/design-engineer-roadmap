@@ -20,7 +20,25 @@ import { HeroStage } from "../components/HeroStage";
 import { ArchetypeGlyph, ArrowGlyph, Glyph, type GlyphName } from "../components/icons";
 
 const heroMetricGlyphs: GlyphName[] = ["trendDown", "shareBar", "survey", "forecast"];
-import { cardLink, ActionLink, BasisBadge, CopyLink, CountUp, Eyebrow, PageHeader, SubHead, Tag, TextLink, actionClass, jumpTo, navigate, pageHref, planHref, useMediaQuery, useTabList } from "../components/ui";
+import {
+  cardLink,
+  ActionLink,
+  BasisBadge,
+  CopyLink,
+  CountUp,
+  Eyebrow,
+  PageHeader,
+  SubHead,
+  Tag,
+  TextLink,
+  actionClass,
+  jumpTo,
+  navigate,
+  pageHref,
+  planHref,
+  useMediaQuery,
+  useTabList,
+} from "../components/ui";
 
 /** Opening of the Start page: a split hero. Words, search and the reader's questions on the left;
  *  the before/now stage (how work moved) on the right, so the idea is shown as well as told. */
@@ -39,9 +57,8 @@ export function HeroIntro({ children }: { children?: ReactNode }) {
           <em className="text-accent">Design and code</em> now meet earlier.
         </h1>
         <p className="mt-5 max-w-[54ch] text-lede text-pretty text-ink-2">
-          Designers and developers now pass less work back and forth. AI tools make it faster to turn a design into working code, so more
-          designers build alongside developers. Whether you're
-          upskilling in your current role or aiming for a new one, this guide maps three roles and a step-by-step plan.
+          Designers and developers now pass less work back and forth. AI tools make it faster to turn a design into working code, so more designers build
+          alongside developers. Whether you're upskilling in your current role or aiming for a new one, this guide maps three roles and a step-by-step plan.
         </p>
         {children}
       </div>
@@ -56,9 +73,11 @@ export function HeroIntro({ children }: { children?: ReactNode }) {
 export function ChoosePathButton() {
   return (
     <button type="button" onClick={() => jumpTo("start-here")} className={actionClass("primary")}>
-          <span>Find your starting point</span>
-          <span aria-hidden className="font-mono text-sm transition-transform duration-300 motion-safe:group-hover:translate-y-0.5">↓</span>
-        </button>
+      <span>Find your starting point</span>
+      <span aria-hidden className="font-mono text-sm transition-transform duration-300 motion-safe:group-hover:translate-y-0.5">
+        ↓
+      </span>
+    </button>
   );
 }
 
@@ -110,35 +129,40 @@ export function StartHere() {
 /** The short answer to "Is my job going away?". On Start it links on to the Jobs page and the roles. */
 export function JobsShortAnswer({ more = false }: { more?: boolean }) {
   return (
-    <div data-reveal className="relative rounded-card border border-edge bg-card shadow-1 border-[color-mix(in_srgb,var(--accent)_45%,var(--edge))]! shadow-accent! grid gap-y-6 lg:grid-cols-12">
-        <p className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal lg:col-span-12">
-          <span>The short answer</span>
+    <div
+      data-reveal
+      className="relative rounded-card border border-edge bg-card shadow-1 border-[color-mix(in_srgb,var(--accent)_45%,var(--edge))]! shadow-accent! grid gap-y-6 lg:grid-cols-12"
+    >
+      <p className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal lg:col-span-12">
+        <span>The short answer</span>
+      </p>
+      {/* The answer leads in reading order (and on phones); on desktop the +6% figure sits to its left. */}
+      <div className="px-5 sm:px-7 lg:order-2 lg:col-span-8 lg:pl-0 lg:pb-7 lg:pt-1">
+        <p className="font-display font-semibold tracking-[-0.02em] text-pretty text-[clamp(1.75rem,3vw,2.75rem)] leading-[1.05] text-ink">
+          No, but it's changing.
         </p>
-        {/* The answer leads in reading order (and on phones); on desktop the +6% figure sits to its left. */}
-        <div className="px-5 sm:px-7 lg:order-2 lg:col-span-8 lg:pl-0 lg:pb-7 lg:pt-1">
-          <p className="font-display font-semibold tracking-[-0.02em] text-pretty text-[clamp(1.75rem,3vw,2.75rem)] leading-[1.05] text-ink">No, but it's changing.</p>
-          <p className="mt-4 max-w-[58ch] leading-relaxed text-ink-2">
-            Big-tech hiring for some design roles is down. But design jobs overall are still projected to grow, and half of surveyed designers
-            already ship some AI-generated code. Your design skills still matter most; what's growing is demand for designers who can
-            also work in code with developers. The rest of this guide shows how.
+        <p className="mt-4 max-w-[58ch] leading-relaxed text-ink-2">
+          Big-tech hiring for some design roles is down. But design jobs overall are still projected to grow, and half of surveyed designers already ship some
+          AI-generated code. Your design skills still matter most; what's growing is demand for designers who can also work in code with developers. The rest of
+          this guide shows how.
+        </p>
+        <p className="mt-4 max-w-[58ch] text-sm leading-relaxed text-ink-2">{more ? titleRealityShort : titleReality}</p>
+        {more ? (
+          <p className="mt-6">
+            <ActionLink href={pageHref("jobs")}>See the full jobs outlook</ActionLink>
           </p>
-          <p className="mt-4 max-w-[58ch] text-sm leading-relaxed text-ink-2">{more ? titleRealityShort : titleReality}</p>
-          {more ? (
-            <p className="mt-6">
-              <ActionLink href={pageHref("jobs")}>See the full jobs outlook</ActionLink>
-            </p>
-          ) : (
-            <p className="mt-3 max-w-[58ch] text-sm leading-relaxed text-ink-2">
-              {entryRoute} <TextLink href={pageHref("plan", "b")}>See the Track B plan</TextLink>
-            </p>
-          )}
-        </div>
-        <div className="px-5 pb-7 sm:px-7 lg:order-1 lg:col-span-4">
-          <p className="font-display font-semibold leading-[0.9] tracking-[-0.04em] tabular-nums text-[clamp(4rem,8vw,7rem)] text-accent">+6%</p>
-          <p className="mt-3 max-w-[30ch] text-sm leading-snug text-ink-2">US web & interface design jobs, 2025 → 2035</p>
-          <p className="font-mono text-label font-normal mt-2 text-ink-3">US BLS projection</p>
-        </div>
+        ) : (
+          <p className="mt-3 max-w-[58ch] text-sm leading-relaxed text-ink-2">
+            {entryRoute} <TextLink href={pageHref("plan", "b")}>See the Track B plan</TextLink>
+          </p>
+        )}
       </div>
+      <div className="px-5 pb-7 sm:px-7 lg:order-1 lg:col-span-4">
+        <p className="font-display font-semibold leading-[0.9] tracking-[-0.04em] tabular-nums text-[clamp(4rem,8vw,7rem)] text-accent">+6%</p>
+        <p className="mt-3 max-w-[30ch] text-sm leading-snug text-ink-2">US web & interface design jobs, 2025 → 2035</p>
+        <p className="font-mono text-label font-normal mt-2 text-ink-3">US BLS projection</p>
+      </div>
+    </div>
   );
 }
 
@@ -149,38 +173,42 @@ export function JobsFigures({ figure }: { figure?: string }) {
     if (figure && heroMetrics.some((m) => m.id === figure)) jumpTo(`figure-${figure}`);
   }, [figure]);
   return (
-      <dl className="grid grid-cols-2 gap-4 sm:mt-10 sm:gap-6 lg:grid-cols-4">
-        {heroMetrics.map((m, i) => (
-          <div
-            key={m.label}
-            id={m.id ? `figure-${m.id}` : undefined}
-            data-reveal
-            style={{ "--i": i } as CSSProperties}
-            className="relative rounded-card border border-edge bg-card shadow-1 group flex min-h-[17rem] flex-col sm:min-h-[21rem]"
+    <dl className="grid grid-cols-2 gap-4 sm:mt-10 sm:gap-6 lg:grid-cols-4">
+      {heroMetrics.map((m, i) => (
+        <div
+          key={m.label}
+          id={m.id ? `figure-${m.id}` : undefined}
+          data-reveal
+          style={{ "--i": i } as CSSProperties}
+          className="relative rounded-card border border-edge bg-card shadow-1 group flex min-h-[17rem] flex-col sm:min-h-[21rem]"
+        >
+          <dt className="order-5 mt-2 flex-1 max-w-[26ch] px-4 text-sm leading-snug text-pretty text-ink-2 sm:px-5">{m.label}</dt>
+          <dd className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal order-1 rounded-t-[calc(var(--radius-card)-1px)]">
+            <BasisBadge basis={m.basis} onBand />
+            {m.id && (
+              <CopyLink
+                hash={pageHref("jobs", m.id)}
+                label={`Copy link to the ${m.value} figure`}
+                iconOnly
+                className="transition-opacity duration-200 focus-within:opacity-100 group-hover:opacity-100 [@media(hover:hover)]:opacity-0"
+              />
+            )}
+          </dd>
+          <dd aria-hidden="true" className="order-2 flex items-center justify-between px-4 pt-5 sm:px-5 sm:pt-6">
+            <Glyph name={heroMetricGlyphs[i] ?? "survey"} className="glyph-xl size-11 text-ink sm:size-12" />
+          </dd>
+          <dd
+            className={`font-display font-semibold leading-[0.9] tracking-[-0.04em] tabular-nums order-3 mt-auto px-4 pt-6 text-[clamp(3rem,5vw,5rem)] sm:px-5 ${i === 0 ? "text-accent" : "text-ink"}`}
           >
-            <dt className="order-5 mt-2 flex-1 max-w-[26ch] px-4 text-sm leading-snug text-pretty text-ink-2 sm:px-5">{m.label}</dt>
-            <dd className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal order-1 rounded-t-[calc(var(--radius-card)-1px)]">
-              <BasisBadge basis={m.basis} onBand />
-              {m.id && (
-                <CopyLink
-                  hash={pageHref("jobs", m.id)}
-                  label={`Copy link to the ${m.value} figure`}
-                  iconOnly
-                  className="transition-opacity duration-200 focus-within:opacity-100 group-hover:opacity-100 [@media(hover:hover)]:opacity-0"
-                />
-              )}
-            </dd>
-            <dd aria-hidden="true" className="order-2 flex items-center justify-between px-4 pt-5 sm:px-5 sm:pt-6">
-              <Glyph name={heroMetricGlyphs[i] ?? "survey"} className="glyph-xl size-11 text-ink sm:size-12" />
-            </dd>
-            <dd className={`font-display font-semibold leading-[0.9] tracking-[-0.04em] tabular-nums order-3 mt-auto px-4 pt-6 text-[clamp(3rem,5vw,5rem)] sm:px-5 ${i === 0 ? "text-accent" : "text-ink"}`}>
-              <CountUp value={m.value} />
-            </dd>
-            {m.caption && <dd className="order-4 mt-4 max-w-[30ch] px-4 font-medium leading-snug text-pretty text-ink sm:px-5">{m.caption}</dd>}
-            <dd className="rounded-b-[calc(var(--radius-card)-1px)] border-t border-line px-[1.125rem] py-3 text-balance font-mono text-label font-normal order-6 mt-5 flex min-h-[3.5rem] items-center text-ink-3 sm:px-5">{m.source}</dd>
-          </div>
-        ))}
-      </dl>
+            <CountUp value={m.value} />
+          </dd>
+          {m.caption && <dd className="order-4 mt-4 max-w-[30ch] px-4 font-medium leading-snug text-pretty text-ink sm:px-5">{m.caption}</dd>}
+          <dd className="rounded-b-[calc(var(--radius-card)-1px)] border-t border-line px-[1.125rem] py-3 text-balance font-mono text-label font-normal order-6 mt-5 flex min-h-[3.5rem] items-center text-ink-3 sm:px-5">
+            {m.source}
+          </dd>
+        </div>
+      ))}
+    </dl>
   );
 }
 
@@ -255,26 +283,30 @@ export function HandoffProblem() {
 export function TeamShift() {
   return (
     <div className="grid grid-flow-dense gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-12 [&>*]:min-w-0">
-          <AdoptionDumbbell className="md:col-span-2 lg:col-span-8" />
+      <AdoptionDumbbell className="md:col-span-2 lg:col-span-8" />
 
-          {/* Org flattening */}
-          <div data-reveal className="relative rounded-card border border-edge bg-card shadow-1 flex flex-col md:col-span-2 lg:col-span-4">
-            <h3 className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal">Org-chart flattening</h3>
-            <div className="flex flex-1 flex-col px-5 pb-6 pt-5 sm:px-6">
-              <p className="max-w-[52ch] text-sm text-ink-2">
-                Teams are getting flatter: more people per manager, and more senior hands-on roles that span design and code.
-              </p>
-              <dl className="mt-auto grid grid-cols-3 border-t border-line pt-1">
-                {orgFlattening.map((o, i) => (
-                  <div key={o.label} className={`flex flex-col px-3 pt-5 first:pl-0 last:pr-0 sm:px-4 ${i > 0 ? "border-l border-line" : ""}`}>
-                    <dt className="order-2 mt-3 text-xs leading-snug text-ink-2 sm:text-sm">{o.label}</dt>
-                    <dd className="font-display font-semibold leading-[0.9] tracking-[-0.04em] tabular-nums order-1 text-[clamp(2.25rem,3.2vw,3.25rem)]">{o.value}</dd>
-                    <dd className="font-mono text-label font-normal order-3 mt-3 text-accent-ink">{o.delta}</dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-          </div>
+      {/* Org flattening */}
+      <div data-reveal className="relative rounded-card border border-edge bg-card shadow-1 flex flex-col md:col-span-2 lg:col-span-4">
+        <h3 className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal">
+          Org-chart flattening
+        </h3>
+        <div className="flex flex-1 flex-col px-5 pb-6 pt-5 sm:px-6">
+          <p className="max-w-[52ch] text-sm text-ink-2">
+            Teams are getting flatter: more people per manager, and more senior hands-on roles that span design and code.
+          </p>
+          <dl className="mt-auto grid grid-cols-3 border-t border-line pt-1">
+            {orgFlattening.map((o, i) => (
+              <div key={o.label} className={`flex flex-col px-3 pt-5 first:pl-0 last:pr-0 sm:px-4 ${i > 0 ? "border-l border-line" : ""}`}>
+                <dt className="order-2 mt-3 text-xs leading-snug text-ink-2 sm:text-sm">{o.label}</dt>
+                <dd className="font-display font-semibold leading-[0.9] tracking-[-0.04em] tabular-nums order-1 text-[clamp(2.25rem,3.2vw,3.25rem)]">
+                  {o.value}
+                </dd>
+                <dd className="font-mono text-label font-normal order-3 mt-3 text-accent-ink">{o.delta}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </div>
     </div>
   );
 }
@@ -284,7 +316,15 @@ export function CaseStudies() {
   return (
     <div className="mx-auto w-full max-w-[1440px] px-(--gutter) pb-24 sm:pb-36">
       <section aria-labelledby="cases-title">
-        <SubHead id="cases-title" title={<>Teams that <em>moved designers into code</em></>} note="Two single-company case studies: what changed when designers started working in code. They are examples, not market benchmarks." />
+        <SubHead
+          id="cases-title"
+          title={
+            <>
+              Teams that <em>moved designers into code</em>
+            </>
+          }
+          note="Two single-company case studies: what changed when designers started working in code. They are examples, not market benchmarks."
+        />
         <div className="grid gap-4 sm:gap-5 lg:grid-cols-12 [&>*]:min-w-0">
           {handoffCases.map((c, i) => (
             <article
@@ -310,12 +350,18 @@ export function CaseStudies() {
                       <dd className="mt-3 flex flex-wrap items-baseline gap-x-3 whitespace-nowrap">
                         {s.from && (
                           <>
-                            <span className="font-display font-semibold leading-[0.9] tracking-[-0.04em] tabular-nums text-[clamp(1.5rem,2vw,2rem)] text-ink-3 line-through decoration-1">{s.from}</span>
-                            <span aria-hidden className="font-mono text-ink-3">→</span>
+                            <span className="font-display font-semibold leading-[0.9] tracking-[-0.04em] tabular-nums text-[clamp(1.5rem,2vw,2rem)] text-ink-3 line-through decoration-1">
+                              {s.from}
+                            </span>
+                            <span aria-hidden className="font-mono text-ink-3">
+                              →
+                            </span>
                             <span className="sr-only"> to </span>
                           </>
                         )}
-                        <span className="font-display font-semibold leading-[0.9] tracking-[-0.04em] tabular-nums text-[clamp(2.25rem,3vw,3rem)] text-accent">{s.to}</span>
+                        <span className="font-display font-semibold leading-[0.9] tracking-[-0.04em] tabular-nums text-[clamp(2.25rem,3vw,3rem)] text-accent">
+                          {s.to}
+                        </span>
                       </dd>
                     </div>
                   ))}
@@ -338,7 +384,15 @@ export function ForLeads() {
   return (
     <div className="mx-auto w-full max-w-[1440px] px-(--gutter) pb-24 sm:pb-36">
       <section id="leads" aria-labelledby="leads-title" className="scroll-mt-28">
-        <SubHead id="leads-title" title={<>For <em>design leads</em></>} note={forLeads.intro} />
+        <SubHead
+          id="leads-title"
+          title={
+            <>
+              For <em>design leads</em>
+            </>
+          }
+          note={forLeads.intro}
+        />
         <div className="grid gap-4 sm:gap-5 lg:grid-cols-12 [&>*]:min-w-0">
           {cards.map((c) => (
             <article key={c.title} className="relative rounded-card border border-edge bg-card shadow-1 flex flex-col p-5 sm:p-6 lg:col-span-4">
@@ -390,40 +444,49 @@ export function ForLeads() {
 /** Every market figure in one table, with scope and source. */
 export function MarketTable() {
   return (
-          <div data-reveal className="relative min-w-0 rounded-card border border-edge bg-card shadow-1">
-            <h3 className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal">Industry figures, 2025–2026</h3>
-            <div className="px-5 pb-4 sm:px-6">
-              <div tabIndex={0} role="region" aria-label="Every market figure (scrolls sideways)" className="relative overflow-x-auto rounded-chip focus-visible:outline-offset-[-2px]">
-                <table className="w-full min-w-[560px] text-left text-sm">
-                  <caption className="sr-only">Industry metrics 2025–2026</caption>
-                  <thead>
-                    <tr className="font-mono text-label font-normal border-b border-line-strong text-ink-3">
-                      <th scope="col" className="py-3 pr-4 font-normal">Figure</th>
-                      <th scope="col" className="py-3 pr-4 font-normal">Metric</th>
-                      <th scope="col" className="py-3 pr-4 font-normal">Scope</th>
-                      <th scope="col" className="py-3 font-normal">Source</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {marketMetrics.map((m) => (
-                      <tr key={m.label} className="border-b border-line align-top last:border-0">
-                        <td className="whitespace-nowrap py-3 pr-4 font-mono tabular-nums text-ink">{m.value}</td>
-                        <td className="py-3 pr-4 text-ink-2">{m.label}</td>
-                        <td className="py-3 pr-4 text-ink-3">{m.scope}</td>
-                        <td className="py-3 text-ink-3">
-                          {m.url ? (
-                            <TextLink href={m.url}>{m.source}</TextLink>
-                          ) : (
-                            m.source
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
+    <div data-reveal className="relative min-w-0 rounded-card border border-edge bg-card shadow-1">
+      <h3 className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal">
+        Industry figures, 2025–2026
+      </h3>
+      <div className="px-5 pb-4 sm:px-6">
+        <div
+          tabIndex={0}
+          role="region"
+          aria-label="Every market figure (scrolls sideways)"
+          className="relative overflow-x-auto rounded-chip focus-visible:outline-offset-[-2px]"
+        >
+          <table className="w-full min-w-[560px] text-left text-sm">
+            <caption className="sr-only">Industry metrics 2025–2026</caption>
+            <thead>
+              <tr className="font-mono text-label font-normal border-b border-line-strong text-ink-3">
+                <th scope="col" className="py-3 pr-4 font-normal">
+                  Figure
+                </th>
+                <th scope="col" className="py-3 pr-4 font-normal">
+                  Metric
+                </th>
+                <th scope="col" className="py-3 pr-4 font-normal">
+                  Scope
+                </th>
+                <th scope="col" className="py-3 font-normal">
+                  Source
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {marketMetrics.map((m) => (
+                <tr key={m.label} className="border-b border-line align-top last:border-0">
+                  <td className="whitespace-nowrap py-3 pr-4 font-mono tabular-nums text-ink">{m.value}</td>
+                  <td className="py-3 pr-4 text-ink-2">{m.label}</td>
+                  <td className="py-3 pr-4 text-ink-3">{m.scope}</td>
+                  <td className="py-3 text-ink-3">{m.url ? <TextLink href={m.url}>{m.source}</TextLink> : m.source}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -450,18 +513,32 @@ export function Archetypes({ role, intro }: { role?: string; intro?: ReactNode }
       if (el) window.scrollTo({ top: el.getBoundingClientRect().top - (window.innerWidth >= 1024 ? 96 : 120), behavior: "instant" as ScrollBehavior });
     });
     return () => cancelAnimationFrame(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- arrival-only scroll; re-running on role change would yank the reader back up
   }, []);
   return (
     <div id="archetypes" className="mx-auto w-full max-w-[1440px] px-(--gutter) pb-24 pt-8 sm:pb-36 sm:pt-12">
       <PageHeader
         id="roles-title"
-        title={["Which role", <>fits <em>you?</em></>]}
+        title={[
+          "Which role",
+          <>
+            fits <em>you?</em>
+          </>,
+        ]}
         lede="Three roles where design and code meet. First, the problem they solve. Then pick the one that fits your team or where you want to grow — you don't need a new title to work this way."
       />
 
       {intro && <div className="mb-24 sm:mb-36">{intro}</div>}
 
-      <SubHead id="roles-pick" title={<>Three roles that <em>join design and code</em></>} note="Pick one to see what it involves, the titles it goes by and where it's in demand." />
+      <SubHead
+        id="roles-pick"
+        title={
+          <>
+            Three roles that <em>join design and code</em>
+          </>
+        }
+        note="Pick one to see what it involves, the titles it goes by and where it's in demand."
+      />
 
       {/* One surface: the role list on the left stays in view while the chosen role's detail reads on the right. */}
       <div className="grid gap-6 lg:grid-cols-[minmax(0,19rem)_minmax(0,1fr)] lg:items-start lg:gap-8">
@@ -501,7 +578,11 @@ export function Archetypes({ role, intro }: { role?: string; intro?: ReactNode }
           </div>
         </div>
 
-        <div {...panelProps(a.id)} key={a.id} className="relative rounded-card border border-edge bg-card shadow-1 animate-panel-in motion-reduce:animate-fade-in focus-visible:outline-offset-8">
+        <div
+          {...panelProps(a.id)}
+          key={a.id}
+          className="relative rounded-card border border-edge bg-card shadow-1 animate-panel-in motion-reduce:animate-fade-in focus-visible:outline-offset-8"
+        >
           <div className="flex flex-col gap-6 border-b border-line px-5 py-7 sm:px-8 sm:py-9">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <span className="font-mono text-label font-normal inline-flex items-center gap-1.5 text-accent-ink">
@@ -522,23 +603,26 @@ export function Archetypes({ role, intro }: { role?: string; intro?: ReactNode }
               <p className="max-w-[60ch] text-sm leading-relaxed text-ink-2">
                 <span className="font-medium text-ink">Coming from code? </span>
                 {a.fromCode}{" "}
-                <TextLink href={planHref({ track: "a", option: a.plan, month: skipAheadMonth })}>
-                  Start the plan at Month&nbsp;{skipAheadMonth}
-                </TextLink>
+                <TextLink href={planHref({ track: "a", option: a.plan, month: skipAheadMonth })}>Start the plan at Month&nbsp;{skipAheadMonth}</TextLink>
               </p>
             )}
             <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
               <ActionLink href={`#/plan/a/${a.plan}`}>See the plan for this role</ActionLink>
-              <ActionLink href="#/plan/b/s1" variant="secondary">Starting out? See the beginner plan</ActionLink>
+              <ActionLink href="#/plan/b/s1" variant="secondary">
+                Starting out? See the beginner plan
+              </ActionLink>
             </div>
-            {sharesPlanWith.length > 0 && (
-              <p className="text-sm text-ink-2">Shares a six-month plan with the {sharesPlanWith.join(" and ")} role.</p>
-            )}
+            {sharesPlanWith.length > 0 && <p className="text-sm text-ink-2">Shares a six-month plan with the {sharesPlanWith.join(" and ")} role.</p>}
           </div>
 
-          <div className="[&>*]:animate-panel-in [&>*]:[animation-delay:calc(var(--i,0)*60ms)] motion-reduce:[&>*]:animate-fade-in px-5 py-7 sm:px-8 sm:py-9" style={{ "--i": 0 } as CSSProperties}>
+          <div
+            className="[&>*]:animate-panel-in [&>*]:[animation-delay:calc(var(--i,0)*60ms)] motion-reduce:[&>*]:animate-fade-in px-5 py-7 sm:px-8 sm:py-9"
+            style={{ "--i": 0 } as CSSProperties}
+          >
             <Eyebrow>Core deliverable & scope</Eyebrow>
-            <p className="max-w-[44ch] font-display font-semibold tracking-[-0.02em] text-pretty text-[clamp(1.375rem,2vw,1.75rem)] leading-[1.2] text-ink">{a.deliverable}</p>
+            <p className="max-w-[44ch] font-display font-semibold tracking-[-0.02em] text-pretty text-[clamp(1.375rem,2vw,1.75rem)] leading-[1.2] text-ink">
+              {a.deliverable}
+            </p>
           </div>
 
           <div className="[&>*]:animate-panel-in [&>*]:[animation-delay:calc(var(--i,0)*60ms)] motion-reduce:[&>*]:animate-fade-in grid border-t border-line sm:grid-cols-2">
@@ -575,12 +659,17 @@ export function Archetypes({ role, intro }: { role?: string; intro?: ReactNode }
                           <span className="font-display font-semibold leading-[0.9] tracking-[-0.04em] tabular-nums text-2xl">{s.value}%</span>
                         </div>
                         <div className="relative h-1.5 overflow-hidden rounded-full bg-line mt-1.5" aria-hidden>
-                          <span className="absolute inset-y-0 left-0 origin-left rounded-full bg-ink transition-transform duration-[1300ms] ease-silk [transition-delay:calc(var(--i,0)*70ms)] [[data-reveal=bar]:not(.is-in)_&]:scale-x-0 motion-reduce:transition-none !bg-accent" style={{ width: `${s.value}%` }} />
+                          <span
+                            className="absolute inset-y-0 left-0 origin-left rounded-full bg-ink transition-transform duration-[1300ms] ease-silk [transition-delay:calc(var(--i,0)*70ms)] [[data-reveal=bar]:not(.is-in)_&]:scale-x-0 motion-reduce:transition-none !bg-accent"
+                            style={{ width: `${s.value}%` }}
+                          />
                         </div>
                       </li>
                     ))}
                   </ul>
-                  <p className="font-mono text-label font-normal mt-5 text-ink-3">Share of Design Engineer listings requiring each. Git workflows also cited.</p>
+                  <p className="font-mono text-label font-normal mt-5 text-ink-3">
+                    Share of Design Engineer listings requiring each. Git workflows also cited.
+                  </p>
                   {a.skillStatsBasis && (
                     <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
                       <BasisBadge basis={a.skillStatsBasis} />
@@ -604,7 +693,14 @@ export function Archetypes({ role, intro }: { role?: string; intro?: ReactNode }
 
       {/* The overlap map, always open: it shows how the three roles share skills */}
       <section aria-labelledby="overlap-title" className="mt-16 sm:mt-24">
-        <SubHead id="overlap-title" title={<>How the three roles <em>overlap</em></>} />
+        <SubHead
+          id="overlap-title"
+          title={
+            <>
+              How the three roles <em>overlap</em>
+            </>
+          }
+        />
         <ArchetypeVenn selected={sel} />
       </section>
     </div>

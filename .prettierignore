@@ -1,0 +1,11 @@
+dist
+node_modules
+public
+playwright-report
+test-results
+blob-report
+package-lock.json
+*.tsbuildinfo
+.claude
+docs
+*.md

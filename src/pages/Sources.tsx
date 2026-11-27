@@ -41,9 +41,7 @@ export function Sources() {
           </div>
           <div className="relative rounded-card border border-edge bg-card p-6 shadow-1 sm:p-7">
             <p className="font-mono text-label text-accent-ink">Case studies</p>
-            <p className="mt-3 max-w-[56ch] leading-relaxed text-ink-2">
-              Case studies describe single organizations and are not market benchmarks.
-            </p>
+            <p className="mt-3 max-w-[56ch] leading-relaxed text-ink-2">Case studies describe single organizations and are not market benchmarks.</p>
           </div>
         </div>
       </section>

@@ -54,10 +54,13 @@ export function HandoffFlow() {
         </div>
       </div>
 
-      <figcaption id="handoff-flow-cap" className="rounded-b-[calc(var(--radius-card)-1px)] border-t border-line px-[1.125rem] py-3 text-balance bg-card text-sm leading-relaxed text-ink-2">
-        <strong className="font-medium text-ink">Before:</strong> two specialists separated by a spec wall, with extra rework rounds when
-        details don't survive the jump between tools. <strong className="font-medium text-ink">After:</strong> both work in the same
-        codebase, so decisions happen once in the browser.
+      <figcaption
+        id="handoff-flow-cap"
+        className="rounded-b-[calc(var(--radius-card)-1px)] border-t border-line px-[1.125rem] py-3 text-balance bg-card text-sm leading-relaxed text-ink-2"
+      >
+        <strong className="font-medium text-ink">Before:</strong> two specialists separated by a spec wall, with extra rework rounds when details don't survive
+        the jump between tools. <strong className="font-medium text-ink">After:</strong> both work in the same codebase, so decisions happen once in the
+        browser.
       </figcaption>
     </figure>
   );
@@ -157,16 +160,23 @@ function Row({
       <div className="mt-2 hidden grid-cols-4 gap-7 sm:grid" aria-hidden>
         {bottleneck ? (
           <div className="relative col-span-3 col-start-2 h-6 border-x border-b border-dashed border-accent">
-            <svg aria-hidden="true" viewBox="0 0 10 8" focusable="false" className="absolute -left-[5.5px] -top-2 h-2 w-2.5 text-accent"><path d="M5 0 10 8H0z" fill="currentColor" /></svg>
+            <svg aria-hidden="true" viewBox="0 0 10 8" focusable="false" className="absolute -left-[5.5px] -top-2 h-2 w-2.5 text-accent">
+              <path d="M5 0 10 8H0z" fill="currentColor" />
+            </svg>
           </div>
         ) : (
           <div className="relative col-span-2 col-start-2 h-5 border-x border-b border-ink-3">
-            <svg aria-hidden="true" viewBox="0 0 10 8" focusable="false" className="absolute -left-[5.5px] -top-2 h-2 w-2.5 text-ink-3"><path d="M5 0 10 8H0z" fill="currentColor" /></svg>
+            <svg aria-hidden="true" viewBox="0 0 10 8" focusable="false" className="absolute -left-[5.5px] -top-2 h-2 w-2.5 text-ink-3">
+              <path d="M5 0 10 8H0z" fill="currentColor" />
+            </svg>
           </div>
         )}
       </div>
       <p className={`font-mono text-label font-normal mt-3 flex items-center gap-2 sm:justify-end ${bottleneck ? "text-accent-ink" : "text-ink-3"}`}>
-        <span aria-hidden className="font-mono">↺</span> {loop}
+        <span aria-hidden className="font-mono">
+          ↺
+        </span>{" "}
+        {loop}
       </p>
     </div>
   );

@@ -61,7 +61,9 @@ export function Nav({ page }: { page: Page | null }) {
         >
           <BrandMark />
           <span className="flex flex-col leading-none">
-            <span className="font-display font-semibold tracking-[-0.02em] text-pretty text-[1.0625rem] text-ink transition-colors duration-300 group-hover:text-accent-ink">Design Engineer</span>
+            <span className="font-display font-semibold tracking-[-0.02em] text-pretty text-[1.0625rem] text-ink transition-colors duration-300 group-hover:text-accent-ink">
+              Design Engineer
+            </span>
             <span className="font-mono text-label font-normal mt-1 text-ink-3">
               Field Guide · <span className="text-accent-ink">2026</span>
             </span>
@@ -106,13 +108,7 @@ export function Nav({ page }: { page: Page | null }) {
 /** Bespoke Design × Code emblem: a vector selection frame with corner handles compiling into a code bracket. */
 function BrandMark() {
   return (
-    <svg
-      viewBox="0 0 32 32"
-      fill="none"
-      aria-hidden="true"
-      focusable="false"
-      className="brand-mark size-8 shrink-0 text-ink"
-    >
+    <svg viewBox="0 0 32 32" fill="none" aria-hidden="true" focusable="false" className="brand-mark size-8 shrink-0 text-ink">
       {/* Design frame + vector corner anchor handles */}
       <g className="bm-frame" stroke="currentColor" strokeLinecap="square" strokeLinejoin="miter">
         <rect x="4.5" y="6.5" width="13.5" height="19" rx="2" strokeWidth="2" />
@@ -125,14 +121,7 @@ function BrandMark() {
       <polygon className="bm-merge" points="13,10 18,10 25,16 18,22 13,22" fill="var(--accent)" fillOpacity="0.18" />
       {/* Code slash + closing angle bracket */}
       <path className="bm-slash" d="M10.75 20.5L14.5 11.5" stroke="var(--accent)" strokeWidth="2" strokeLinecap="square" />
-      <path
-        className="bm-code"
-        d="M20.5 9.5L27 16L20.5 22.5"
-        stroke="var(--accent)"
-        strokeWidth="2.25"
-        strokeLinecap="square"
-        strokeLinejoin="miter"
-      />
+      <path className="bm-code" d="M20.5 9.5L27 16L20.5 22.5" stroke="var(--accent)" strokeWidth="2.25" strokeLinecap="square" strokeLinejoin="miter" />
     </svg>
   );
 }

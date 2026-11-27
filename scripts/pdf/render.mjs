@@ -34,7 +34,6 @@ const MARK = (await readFile(path.join(root, "public/favicon.svg"), "utf8")).rep
 const mark = (size) => MARK.replace("<svg ", `<svg width="${size}" height="${size}" aria-hidden="true" `);
 const pad = (n) => String(n).padStart(2, "0");
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-const list = (items) => `<ul>${items.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>`;
 const tags = (items) => `<p class="tags">${items.map((t) => `<span class="tag">${esc(t)}</span>`).join("")}</p>`;
 const checks = (items) =>
   `<ol class="checks">${items.map((c) => `<li><span class="box" aria-hidden="true"></span><div><b>${esc(c.title)}</b><p>${esc(c.detail)}</p></div></li>`).join("")}</ol>`;
@@ -154,9 +153,12 @@ function trackB() {
     <h1>Your first role,<br /><em>four-stage plan</em></h1>
     <p class="lead">Get your first role, with code in your portfolio. Stage 1 is your UX &amp; Product Design base; then move through the other three stages in order.</p>
     ${field("Your plan at a glance", overview)}
-    ${field("One focused stack, in order", `<div class="stack">${beginnerStack
-      .map((p, i) => `<div><p class="topic-head">${pad(i + 1)} — ${esc(p.phase)}</p>${tags(p.tools)}</div>`)
-      .join("")}</div>`)}
+    ${field(
+      "One focused stack, in order",
+      `<div class="stack">${beginnerStack
+        .map((p, i) => `<div><p class="topic-head">${pad(i + 1)} — ${esc(p.phase)}</p>${tags(p.tools)}</div>`)
+        .join("")}</div>`,
+    )}
     <p class="small muted">Interactive version, with checklists that save your progress: <a href="${SITE}#/plan/b/s1">${SITE}#/plan/b/s1</a></p>
   </section>`;
 

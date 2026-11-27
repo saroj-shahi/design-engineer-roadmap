@@ -1,6 +1,6 @@
 import { useId, useState } from "react";
 import { skillMap, type ArchetypeId, type SkillRegion } from "../data/research";
-import { Hint } from "./ui";
+import { Hint, svgFont, useSvgTextFloor } from "./ui";
 
 /* Geometry in viewBox units (divisible by 4 per diagram-design type-venn).
    Three equal circles with generous outer margin so full role names sit cleanly
@@ -38,6 +38,7 @@ const marker = (r: SkillRegion) => String(overlaps.indexOf(r) + 1);
  *  compoundable fills clarify intersections, and coral accents the single focal core (plus hover). */
 export function ArchetypeVenn({ selected }: { selected: string }) {
   const uid = useId().replace(/:/g, "");
+  const svgRef = useSvgTextFloor(W);
   const [hot, setHot] = useState<string | null>(null);
   const [pinned, setPinned] = useState<string | null>(null);
   const activeRegion = hot ?? pinned;
@@ -61,210 +62,211 @@ export function ArchetypeVenn({ selected }: { selected: string }) {
       <figure className="relative rounded-card border border-edge bg-card col-span-4 flex flex-col shadow-1 lg:col-span-7">
         <figcaption className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal">
           <span>Skill map · three overlapping roles</span>
-          <Hint touch="Tap a region" className="hidden sm:inline-flex">Hover or click a region</Hint>
+          <Hint touch="Tap a region" className="hidden sm:inline-flex">
+            Hover or click a region
+          </Hint>
         </figcaption>
         <div className="plate-field flex-1 p-3 sm:p-6">
           <div className="relative mx-auto max-w-[720px]">
-          <svg
-            viewBox={`0 0 ${W} ${H}`}
-            role="img"
-            aria-labelledby={id("title")}
-            className="mx-auto block h-auto w-full max-w-[720px] overflow-visible"
-            onPointerLeave={() => setHot(pinned)}
-          >
-            <title id={id("title")}>
-              Venn diagram of the Design Engineer, Meta-Designer and AX Designer archetypes. Each has its own skills, each pair shares
-              one, and all three share a focal core of visual taste and problem framing. The key lists every region.
-            </title>
-            <defs>
+            <svg
+              ref={svgRef}
+              viewBox={`0 0 ${W} ${H}`}
+              role="img"
+              aria-labelledby={id("title")}
+              className="mx-auto block h-auto w-full max-w-[720px] overflow-visible"
+              onPointerLeave={() => setHot(pinned)}
+            >
+              <title id={id("title")}>
+                Venn diagram of the Design Engineer, Meta-Designer and AX Designer archetypes. Each has its own skills, each pair shares one, and all three
+                share a focal core of visual taste and problem framing. The key lists every region.
+              </title>
+              <defs>
+                {ALL.map((s) => (
+                  <clipPath key={s} id={id(`clip-${s}`)}>
+                    <circle cx={C[s].x} cy={C[s].y} r={R} />
+                  </clipPath>
+                ))}
+                {skillMap.map((r) => {
+                  const out = ALL.filter((s) => !r.sets.includes(s));
+                  return (
+                    <mask key={r.id} id={id(`out-${r.id}`)} maskUnits="userSpaceOnUse" x="0" y="0" width={W} height={H}>
+                      <rect width={W} height={H} fill="white" />
+                      {out.map((s) => (
+                        <circle key={s} cx={C[s].x} cy={C[s].y} r={R} fill="black" />
+                      ))}
+                    </mask>
+                  );
+                })}
+                <pattern id={id("hatch")} width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                  <line x1="0" y1="0" x2="0" y2="8" stroke="var(--accent)" strokeWidth="1.25" strokeOpacity="0.45" />
+                </pattern>
+              </defs>
+
+              {/* Subtle compoundable base tints so pairwise overlaps naturally read deeper */}
               {ALL.map((s) => (
-                <clipPath key={s} id={id(`clip-${s}`)}>
-                  <circle cx={C[s].x} cy={C[s].y} r={R} />
-                </clipPath>
+                <circle key={`base-${s}`} cx={C[s].x} cy={C[s].y} r={R} fill="var(--ink)" fillOpacity="0.045" pointerEvents="none" />
               ))}
+
+              {/* Interactive regions: clip by every circle the region is in, mask out the ones it isn't. */}
               {skillMap.map((r) => {
-                const out = ALL.filter((s) => !r.sets.includes(s));
+                const on = activeRegion === r.id;
+                const isCore = r.id === "core";
+                const isSel = r.sets.length === 1 && r.sets[0] === selected;
+                const fill = on
+                  ? "color-mix(in srgb, var(--accent) 26%, transparent)"
+                  : isCore
+                    ? `url(#${id("hatch")})`
+                    : isSel
+                      ? "color-mix(in srgb, var(--ink) 7%, transparent)"
+                      : "transparent";
+                const shape = (
+                  <rect
+                    width={W}
+                    height={H}
+                    fill={fill}
+                    mask={`url(#${id(`out-${r.id}`)})`}
+                    className="cursor-pointer transition-[fill] duration-300"
+                    onPointerEnter={() => setHot(r.id)}
+                    onClick={() => {
+                      const next = pinned === r.id ? null : r.id;
+                      setPinned(next);
+                      setHot(next);
+                    }}
+                  />
+                );
                 return (
-                  <mask key={r.id} id={id(`out-${r.id}`)} maskUnits="userSpaceOnUse" x="0" y="0" width={W} height={H}>
-                    <rect width={W} height={H} fill="white" />
-                    {out.map((s) => (
-                      <circle key={s} cx={C[s].x} cy={C[s].y} r={R} fill="black" />
-                    ))}
-                  </mask>
+                  <g key={r.id} data-region={r.id}>
+                    {r.sets.reduceRight<JSX.Element>(
+                      (inner, s) => (
+                        <g clipPath={`url(#${id(`clip-${s}`)})`}>{inner}</g>
+                      ),
+                      shape,
+                    )}
+                  </g>
                 );
               })}
-              <pattern id={id("hatch")} width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-                <line x1="0" y1="0" x2="0" y2="8" stroke="var(--accent)" strokeWidth="1.25" strokeOpacity="0.45" />
-              </pattern>
-            </defs>
 
-            {/* Subtle compoundable base tints so pairwise overlaps naturally read deeper */}
-            {ALL.map((s) => (
-              <circle
-                key={`base-${s}`}
-                cx={C[s].x}
-                cy={C[s].y}
-                r={R}
-                fill="var(--ink)"
-                fillOpacity="0.045"
-                pointerEvents="none"
-              />
-            ))}
+              {/* Outlines on top */}
+              {ALL.map((s) => {
+                const on = s === selected;
+                return (
+                  <circle
+                    key={s}
+                    cx={C[s].x}
+                    cy={C[s].y}
+                    r={R}
+                    fill="none"
+                    stroke={on ? "var(--accent)" : "var(--ink)"}
+                    strokeWidth={on ? 2.25 : 1.25}
+                    strokeOpacity={on ? 1 : 0.7}
+                    vectorEffect="non-scaling-stroke"
+                    pointerEvents="none"
+                    className="transition-[stroke] duration-300"
+                  />
+                );
+              })}
 
-            {/* Interactive regions: clip by every circle the region is in, mask out the ones it isn't. */}
-            {skillMap.map((r) => {
-              const on = activeRegion === r.id;
-              const isCore = r.id === "core";
-              const isSel = r.sets.length === 1 && r.sets[0] === selected;
-              const fill = on
-                ? "color-mix(in srgb, var(--accent) 26%, transparent)"
-                : isCore
-                  ? `url(#${id("hatch")})`
-                  : isSel
-                    ? "color-mix(in srgb, var(--ink) 7%, transparent)"
-                    : "transparent";
-              const shape = (
-                <rect
-                  width={W}
-                  height={H}
-                  fill={fill}
-                  mask={`url(#${id(`out-${r.id}`)})`}
-                  className="cursor-pointer transition-[fill] duration-300"
-                  onPointerEnter={() => setHot(r.id)}
-                  onClick={() => {
-                    const next = pinned === r.id ? null : r.id;
-                    setPinned(next);
-                    setHot(next);
-                  }}
-                />
-              );
-              return (
-                <g key={r.id} data-region={r.id}>
-                  {r.sets.reduceRight<JSX.Element>(
-                    (inner, s) => (
-                      <g clipPath={`url(#${id(`clip-${s}`)})`}>{inner}</g>
-                    ),
-                    shape,
-                  )}
-                </g>
-              );
-            })}
-
-            {/* Outlines on top */}
-            {ALL.map((s) => {
-              const on = s === selected;
-              return (
-                <circle
-                  key={s}
-                  cx={C[s].x}
-                  cy={C[s].y}
-                  r={R}
-                  fill="none"
-                  stroke={on ? "var(--accent)" : "var(--ink)"}
-                  strokeWidth={on ? 2.25 : 1.25}
-                  strokeOpacity={on ? 1 : 0.7}
-                  vectorEffect="non-scaling-stroke"
-                  pointerEvents="none"
-                  className="transition-[stroke] duration-300"
-                />
-              );
-            })}
-
-            {/* Outside-stroke set labels (never cross circle strokes). On phones the diagram is too small for
+              {/* Outside-stroke set labels (never cross circle strokes). Below 1280px the diagram is too small for
                 SVG text to stay at 12px, so these hide and the HTML overlay below draws them at full size. */}
-            <g pointerEvents="none" aria-hidden className="max-lg:hidden">
+              <g pointerEvents="none" aria-hidden className="max-xl:hidden">
+                {ALL.map((s) => {
+                  const l = setLabel[s];
+                  const isSel = s === selected;
+                  return (
+                    <g key={`lbl-${s}`}>
+                      <text
+                        x={l.x}
+                        y={l.y}
+                        textAnchor={l.align}
+                        fill={isSel ? "var(--accent-ink)" : "var(--ink)"}
+                        style={{ fontFamily: "var(--font-display)", fontStretch: "72%", fontWeight: 600, fontSize: svgFont(24), letterSpacing: "-0.015em" }}
+                      >
+                        {l.name}
+                      </text>
+                      <text
+                        x={l.x}
+                        y={l.y + 18}
+                        textAnchor={l.align}
+                        fill="var(--ink-3)"
+                        style={{ fontFamily: "var(--font-mono)", fontStretch: "87.5%", fontSize: svgFont(12), letterSpacing: "0.08em" }}
+                      >
+                        {l.sub}
+                      </text>
+                    </g>
+                  );
+                })}
+
+                {/* Overlap markers: coral marks the single focal sweet spot (4 · Shared core) */}
+                {overlaps.map((r) => {
+                  const a = anchor[r.id];
+                  const isCore = r.id === "core";
+                  const on = activeRegion === r.id;
+                  const accentBox = on || isCore;
+                  return (
+                    <g key={r.id} transform={`translate(${a.x} ${a.y})`}>
+                      <rect
+                        x={isCore ? -18 : -14}
+                        y={isCore ? -18 : -14}
+                        width={isCore ? 36 : 28}
+                        height={isCore ? 36 : 28}
+                        fill={accentBox ? "var(--accent)" : "var(--card)"}
+                        stroke={accentBox ? "var(--edge)" : "var(--ink)"}
+                        strokeWidth="1.75"
+                        className="transition-[fill] duration-300"
+                      />
+                      <text
+                        textAnchor="middle"
+                        dominantBaseline="central"
+                        fill={accentBox ? "var(--on-accent)" : "var(--ink)"}
+                        style={{ fontFamily: "var(--font-mono)", fontWeight: 600, fontSize: svgFont(isCore ? 16 : 14) }}
+                      >
+                        {marker(r)}
+                      </text>
+                    </g>
+                  );
+                })}
+              </g>
+            </svg>
+            {/* Overlay below 1280px: the same labels and markers in HTML, placed by viewBox percentages, so text stays at 12px or more. */}
+            <div aria-hidden className="pointer-events-none absolute inset-0 xl:hidden">
               {ALL.map((s) => {
                 const l = setLabel[s];
                 const isSel = s === selected;
+                const top = s === "de";
                 return (
-                  <g key={`lbl-${s}`}>
-                    <text
-                      x={l.x}
-                      y={l.y}
-                      textAnchor={l.align}
-                      fill={isSel ? "var(--accent-ink)" : "var(--ink)"}
-                      style={{ fontFamily: "var(--font-display)", fontStretch: "72%", fontWeight: 600, fontSize: 24, letterSpacing: "-0.015em" }}
-                    >
-                      {l.name}
-                    </text>
-                    <text
-                      x={l.x}
-                      y={l.y + 18}
-                      textAnchor={l.align}
-                      fill="var(--ink-3)"
-                      style={{ fontFamily: "var(--font-mono)", fontStretch: "87.5%", fontSize: 12, letterSpacing: "0.08em" }}
-                    >
-                      {l.sub}
-                    </text>
-                  </g>
+                  <span
+                    key={`html-lbl-${s}`}
+                    style={
+                      top
+                        ? { left: "50%", top: 0 }
+                        : l.align === "start"
+                          ? { left: `${(l.x / W) * 100}%`, bottom: 0 }
+                          : { right: `${((W - l.x) / W) * 100}%`, bottom: 0 }
+                    }
+                    className={`absolute flex whitespace-nowrap leading-tight ${top ? "-translate-x-1/2 items-baseline gap-2" : `flex-col ${l.align === "end" ? "items-end" : "items-start"}`}`}
+                  >
+                    <span className={`font-display text-sm font-semibold ${isSel ? "text-accent-ink" : "text-ink"}`}>{l.name}</span>
+                    <span className="font-mono text-label text-ink-3">{l.sub}</span>
+                  </span>
                 );
               })}
-
-              {/* Overlap markers: coral marks the single focal sweet spot (4 · Shared core) */}
               {overlaps.map((r) => {
                 const a = anchor[r.id];
                 const isCore = r.id === "core";
-                const on = activeRegion === r.id;
-                const accentBox = on || isCore;
+                const accentBox = activeRegion === r.id || isCore;
                 return (
-                  <g key={r.id} transform={`translate(${a.x} ${a.y})`}>
-                    <rect
-                      x={isCore ? -18 : -14}
-                      y={isCore ? -18 : -14}
-                      width={isCore ? 36 : 28}
-                      height={isCore ? 36 : 28}
-                      fill={accentBox ? "var(--accent)" : "var(--card)"}
-                      stroke={accentBox ? "var(--edge)" : "var(--ink)"}
-                      strokeWidth="1.75"
-                      className="transition-[fill] duration-300"
-                    />
-                    <text
-                      textAnchor="middle"
-                      dominantBaseline="central"
-                      fill={accentBox ? "var(--on-accent)" : "var(--ink)"}
-                      style={{ fontFamily: "var(--font-mono)", fontWeight: 600, fontSize: isCore ? 16 : 14 }}
-                    >
-                      {marker(r)}
-                    </text>
-                  </g>
+                  <span
+                    key={`html-${r.id}`}
+                    style={{ left: `${(a.x / W) * 100}%`, top: `${(a.y / H) * 100}%` }}
+                    className={`absolute grid -translate-x-1/2 -translate-y-1/2 place-items-center border-[1.5px] font-mono text-label font-semibold transition-colors duration-300 ${
+                      isCore ? "size-7" : "size-6"
+                    } ${accentBox ? "border-edge bg-accent text-on-accent" : "border-ink bg-card text-ink"}`}
+                  >
+                    {marker(r)}
+                  </span>
                 );
               })}
-            </g>
-          </svg>
-          {/* Phone overlay: the same labels and markers in HTML, placed by viewBox percentages, so text stays at 12px or more. */}
-          <div aria-hidden className="pointer-events-none absolute inset-0 lg:hidden">
-            {ALL.map((s) => {
-              const l = setLabel[s];
-              const isSel = s === selected;
-              const top = s === "de";
-              return (
-                <span
-                  key={`html-lbl-${s}`}
-                  style={top ? { left: "50%", top: 0 } : l.align === "start" ? { left: `${(l.x / W) * 100}%`, bottom: 0 } : { right: `${((W - l.x) / W) * 100}%`, bottom: 0 }}
-                  className={`absolute flex whitespace-nowrap leading-tight ${top ? "-translate-x-1/2 items-baseline gap-2" : `flex-col ${l.align === "end" ? "items-end" : "items-start"}`}`}
-                >
-                  <span className={`font-display text-sm font-semibold ${isSel ? "text-accent-ink" : "text-ink"}`}>{l.name}</span>
-                  <span className="font-mono text-label text-ink-3">{l.sub}</span>
-                </span>
-              );
-            })}
-            {overlaps.map((r) => {
-              const a = anchor[r.id];
-              const isCore = r.id === "core";
-              const accentBox = activeRegion === r.id || isCore;
-              return (
-                <span
-                  key={`html-${r.id}`}
-                  style={{ left: `${(a.x / W) * 100}%`, top: `${(a.y / H) * 100}%` }}
-                  className={`absolute grid -translate-x-1/2 -translate-y-1/2 place-items-center border-[1.5px] font-mono text-label font-semibold transition-colors duration-300 ${
-                    isCore ? "size-7" : "size-6"
-                  } ${accentBox ? "border-edge bg-accent text-on-accent" : "border-ink bg-card text-ink"}`}
-                >
-                  {marker(r)}
-                </span>
-              );
-            })}
-          </div>
+            </div>
           </div>
         </div>
         <div className="rounded-b-[calc(var(--radius-card)-1px)] border-t border-line px-[1.125rem] py-3 text-balance flex flex-wrap items-center justify-between gap-3 bg-card text-sm text-ink-2">
@@ -334,8 +336,7 @@ export function ArchetypeVenn({ selected }: { selected: string }) {
                   </span>
                   <div>
                     <p className="font-medium tracking-tight text-ink">
-                      {r.name}{" "}
-                      <span className="font-normal text-ink-3">· {r.sets.length === 3 ? "all three" : r.sets.map((s) => code[s]).join(" + ")}</span>
+                      {r.name} <span className="font-normal text-ink-3">· {r.sets.length === 3 ? "all three" : r.sets.map((s) => code[s]).join(" + ")}</span>
                     </p>
                     <p className="mt-1 text-sm leading-relaxed text-ink-2">{r.detail}</p>
                   </div>

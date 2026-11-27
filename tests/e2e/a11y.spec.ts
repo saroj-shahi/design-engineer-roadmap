@@ -9,7 +9,11 @@ for (const r of routes) {
     await page.waitForTimeout(500);
     const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"]).analyze();
     const summary = results.violations.map(
-      (v) => `${v.id} (${v.impact}): ${v.nodes.length}× — ${v.nodes.slice(0, 3).map((n) => n.target.join(" ")).join(" | ")}`,
+      (v) =>
+        `${v.id} (${v.impact}): ${v.nodes.length}× — ${v.nodes
+          .slice(0, 3)
+          .map((n) => n.target.join(" "))
+          .join(" | ")}`,
     );
     expect(summary).toEqual([]);
   });
