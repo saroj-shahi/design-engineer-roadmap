@@ -1,6 +1,12 @@
 {
   "name": "design-engineer-roadmap",
   "private": true,
+  "license": "MIT",
+  "author": "Saroj Shahi",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saroj-shahi/design-engineer-roadmap.git"
+  },
   "version": "1.0.0",
   "type": "module",
   "scripts": {
