@@ -1,5 +1,7 @@
 # Design Engineer Field Guide
 
+[![Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-support-ff813f?logo=buymeacoffee&logoColor=white)](https://buymeacoffee.com/sarojshahi)
+
 A static, six-page field guide for designers upskilling into code or growing into **Design Engineer**, **Meta-Designer**, and **Agentic Experience (AX) Designer** roles in 2026. Built with React 18, TypeScript, Vite 5, and Tailwind CSS v4.
 
 - **Production:** https://design-engineer-roadmap.vercel.app/
