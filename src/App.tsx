@@ -137,7 +137,7 @@ export default function App() {
             ) : (
               <Suspense fallback={<div className="mx-auto w-full max-w-[1440px] px-(--gutter) py-24 font-mono text-label font-normal text-ink-3">Loading…</div>}>
                 {route.page === "home" && <Home />}
-                {route.page === "jobs" && <Jobs />}
+                {route.page === "jobs" && <Jobs figure={route.parts[0]} />}
                 {route.page === "roles" && <Roles role={route.parts[0]} />}
                 {route.page === "plan" && <Plan parts={route.parts} />}
                 {route.page === "ready" && <Ready parts={route.parts} />}

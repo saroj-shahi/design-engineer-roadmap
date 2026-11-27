@@ -14,7 +14,6 @@ import {
   leverageHabits,
   planFor,
   planPace,
-  seedStageHiring,
   sixMonthPlan,
   skipAheadMonth,
   toolPricingNote,
@@ -811,7 +810,7 @@ function TrackB({ stage }: { stage: number }) {
       <div id="plan-market">
         <SubHead n="B.2" title="The market you're entering" note={
             <>
-              Seed-stage startups (young companies on their first funding round) have the highest design hiring rate ({seedStageHiring.value}). With{" "}
+              Small startups and agencies are often the most open to first-time designers. With{" "}
               {applicationsPerPost.value} applicants per role, a portfolio with something that runs is one way to stand out.{" "}
               <a href={pageHref("jobs")} className="font-medium text-ink underline decoration-line-strong underline-offset-4 hover:decoration-current">
                 See the full jobs outlook

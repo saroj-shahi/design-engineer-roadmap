@@ -3,7 +3,7 @@ import { MarketShiftChart } from "../components/MarketShiftChart";
 import { NextPage, PageHeader, SubHead } from "../components/ui";
 
 /** "Is my job going away?": the short answer first, then the hiring data, how teams are changing, and every figure. */
-export function Jobs() {
+export function Jobs({ figure }: { figure?: string }) {
   return (
     <>
       <div className="mx-auto w-full max-w-[1440px] px-(--gutter) pb-24 pt-8 sm:pb-32 sm:pt-12">
@@ -17,7 +17,7 @@ export function Jobs() {
         <section aria-label="The short answer" className="mt-4">
           <JobsShortAnswer />
           <div className="mt-8 sm:mt-10">
-            <JobsFigures />
+            <JobsFigures figure={figure} />
           </div>
         </section>
 

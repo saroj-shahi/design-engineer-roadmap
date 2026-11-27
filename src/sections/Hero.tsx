@@ -3,7 +3,7 @@ import {
   archetypes,
   forLeads,
   handoffCases,
-  handoffFindings,
+  handoffImprovableText,
   heroMetrics,
   marketMetrics,
   orgFlattening,
@@ -18,7 +18,7 @@ import { HeroStage } from "../components/HeroStage";
 import { ArchetypeGlyph, ArrowGlyph, Glyph, type GlyphName } from "../components/icons";
 
 const heroMetricGlyphs: GlyphName[] = ["trendDown", "shareBar", "survey", "forecast"];
-import { BasisBadge, CountUp, Eyebrow, PageHeader, Roll, SubHead, Tag, jumpTo, navigate, pageHref, planHref, useMediaQuery, useTabList } from "../components/ui";
+import { BasisBadge, CopyLink, CountUp, Eyebrow, PageHeader, Roll, SubHead, Tag, jumpTo, navigate, pageHref, planHref, useMediaQuery, useTabList } from "../components/ui";
 
 /** Quiet inline text link with a growing underline. */
 const textLink =
@@ -148,13 +148,18 @@ export function JobsShortAnswer({ more = false }: { more?: boolean }) {
   );
 }
 
-/** One card per headline statistic. */
-export function JobsFigures() {
+/** One card per headline statistic. Each card has a stable id (`figure-<slug>`) and a copy-link button, so a reader
+ *  can share one figure; `figure` (from #/jobs/<slug>) scrolls to that card on arrival. */
+export function JobsFigures({ figure }: { figure?: string }) {
+  useEffect(() => {
+    if (figure && heroMetrics.some((m) => m.id === figure)) jumpTo(`figure-${figure}`);
+  }, [figure]);
   return (
       <dl className="grid grid-cols-2 gap-4 sm:mt-10 sm:gap-6 lg:grid-cols-4">
         {heroMetrics.map((m, i) => (
           <div
             key={m.label}
+            id={m.id ? `figure-${m.id}` : undefined}
             data-reveal
             style={{ "--i": i } as CSSProperties}
             className="relative rounded-card border border-edge bg-card shadow-1 group flex min-h-[17rem] flex-col sm:min-h-[21rem]"
@@ -162,6 +167,14 @@ export function JobsFigures() {
             <dt className="order-4 mt-4 flex-1 max-w-[26ch] px-4 text-sm leading-snug text-pretty text-ink-2 sm:px-5">{m.label}</dt>
             <dd className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal order-1 rounded-t-[calc(var(--radius-card)-1px)]">
               <BasisBadge basis={m.basis} onBand />
+              {m.id && (
+                <CopyLink
+                  hash={pageHref("jobs", m.id)}
+                  label={`Copy link to the ${m.value} figure`}
+                  iconOnly
+                  className="transition-opacity duration-200 focus-within:opacity-100 group-hover:opacity-100 [@media(hover:hover)]:opacity-0"
+                />
+              )}
             </dd>
             <dd aria-hidden="true" className="order-2 flex items-center justify-between px-4 pt-5 sm:px-5 sm:pt-6">
               <Glyph name={heroMetricGlyphs[i] ?? "survey"} className="glyph-xl size-11 text-ink sm:size-12" />
@@ -232,7 +245,7 @@ export function HandoffProblem() {
       <SubHead
         id="handoff-title"
         title="Why: handoffs are the bottleneck."
-        note={`All three roles grow from the same problem. Moving a design from Figma into code takes time, and details can get lost between tools. In Figma's 2025 research, ${handoffFindings.handoffImprovable.value.toLowerCase()} designers and developers said the handoff could be improved, and ${handoffFindings.firstBuildMatchText}. The fix belongs in the process.`}
+        note={`All three roles grow from the same problem. Moving a design from Figma into code takes time, and details can get lost between tools. In Figma's 2025 research, ${handoffImprovableText}, and builds often need another pass to match the design. The fix belongs in the process.`}
       />
       <div className="grid grid-cols-4 gap-x-4 lg:grid-cols-12 lg:gap-x-6 gap-y-16">
         <div className="col-span-4 space-y-24 sm:space-y-32 lg:col-span-12">
@@ -369,7 +382,7 @@ export function MarketTable() {
           <div data-reveal className="relative min-w-0 rounded-card border border-edge bg-card shadow-1">
             <h3 className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal">Industry figures, 2025–2026</h3>
             <div className="px-5 pb-4 sm:px-6">
-              <div tabIndex={0} role="region" aria-label="Every market figure (scrolls sideways)" className="overflow-x-auto rounded-chip focus-visible:outline-offset-[-2px]">
+              <div tabIndex={0} role="region" aria-label="Every market figure (scrolls sideways)" className="relative overflow-x-auto rounded-chip focus-visible:outline-offset-[-2px]">
                 <table className="w-full min-w-[560px] text-left text-sm">
                   <caption className="sr-only">Industry metrics 2025–2026</caption>
                   <thead>
@@ -386,7 +399,16 @@ export function MarketTable() {
                         <td className="whitespace-nowrap py-3 pr-4 font-mono tabular-nums text-ink">{m.value}</td>
                         <td className="py-3 pr-4 text-ink-2">{m.label}</td>
                         <td className="py-3 pr-4 text-ink-3">{m.scope}</td>
-                        <td className="py-3 text-ink-3">{m.source}</td>
+                        <td className="py-3 text-ink-3">
+                          {m.url ? (
+                            <a href={m.url} target="_blank" rel="noopener noreferrer" className="underline decoration-line-strong underline-offset-4 hover:text-ink hover:decoration-current">
+                              {m.source}
+                              <span className="sr-only"> (opens in new tab)</span>
+                            </a>
+                          ) : (
+                            m.source
+                          )}
+                        </td>
                       </tr>
                     ))}
                   </tbody>

@@ -1,6 +1,5 @@
 import type { CSSProperties } from "react";
 import { Glyph, type GlyphName } from "./icons";
-import { handoffFindings } from "../data/research";
 
 interface Step {
   who: string;
@@ -40,7 +39,7 @@ export function HandoffFlow() {
           title="The handoff"
           steps={before}
           handoffAfter={1}
-          loop={`Rework loop: ${handoffFindings.firstBuildMatchText}`}
+          loop="Rework loop: builds often need another pass to match the design"
           bottleneck
         />
         <div className="border-t-2 border-dashed border-line-strong pt-8">

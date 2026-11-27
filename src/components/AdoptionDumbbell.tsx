@@ -43,7 +43,52 @@ export function AdoptionDumbbell({ className = "" }: { className?: string }) {
         </span>
       </div>
 
-      <div tabIndex={0} role="region" aria-label="AI adoption chart (scrolls sideways)" className="plate-field overflow-x-auto px-4 py-5 sm:px-6 focus-visible:outline-offset-[-2px]">
+      {/* Phones: the same figures as HTML rows on the shared 0–100% scale, so labels stay at 12px or more without sideways scroll. */}
+      <div className="plate-field px-4 py-5 sm:hidden">
+        <p className="font-mono text-label text-ink-3">2025 divergence · {adoptionShift.before.label}</p>
+        <ul className="mt-3 space-y-4">
+          {dumbbells.map((d) => (
+            <li key={d.lines.join(" ")} className="border-b border-line pb-4">
+              <p className="text-sm font-medium text-ink">{d.sameTask ? d.lines[0] : "Different tasks (not a like-for-like gap)"}</p>
+              <dl className="mt-1.5 grid grid-cols-[1fr_auto] gap-x-3 gap-y-0.5 text-sm">
+                <dt className="text-ink-2">{d.sameTask ? "Designers" : d.lines[1]}</dt>
+                <dd className="font-mono tabular-nums text-ink-2">{d.designer}%</dd>
+                <dt className="text-ink-2">{d.sameTask ? "Developers" : d.lines[0]}</dt>
+                <dd className="font-mono font-semibold tabular-nums text-accent-ink">{d.developer}%</dd>
+              </dl>
+              <div aria-hidden className="relative mt-2.5 h-3.5">
+                <span className="absolute inset-x-0 top-1/2 h-px bg-line" />
+                <span
+                  className="absolute top-1/2 h-0.5 -translate-y-1/2 bg-line-strong"
+                  style={{ left: `${Math.min(d.designer, d.developer)}%`, width: `${Math.abs(d.developer - d.designer)}%` }}
+                />
+                <span className="absolute top-1/2 size-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-ink-2 bg-card" style={{ left: `${d.designer}%` }} />
+                <span className="absolute top-1/2 size-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border border-ink bg-accent" style={{ left: `${d.developer}%` }} />
+              </div>
+              {d.sameTask && <p className="mt-1.5 font-mono text-label text-ink-3">Gap: +{d.developer - d.designer} pts</p>}
+            </li>
+          ))}
+        </ul>
+        <p className="mt-5 font-mono text-label text-accent-ink">2026 convergence · {adoptionShift.after.label}</p>
+        <ul className="mt-3 space-y-3">
+          {convergence.map((c) => (
+            <li key={c.label}>
+              <div className="flex items-baseline justify-between gap-3 text-sm">
+                <span className={c.focal ? "font-semibold text-ink" : "text-ink-2"}>{c.label}</span>
+                <span className={`font-mono tabular-nums ${c.focal ? "font-semibold text-accent-ink" : "text-ink-2"}`}>{c.value}%</span>
+              </div>
+              <span aria-hidden className="mt-1.5 block h-3.5 bg-line/40">
+                <span
+                  className={`block h-full ${c.focal ? "border-2 border-accent bg-accent/25" : "border border-ink-3 bg-ink/15"}`}
+                  style={{ width: `${c.value}%` }}
+                />
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div tabIndex={0} role="region" aria-label="AI adoption chart (scrolls sideways)" className="plate-field hidden overflow-x-auto px-4 py-5 sm:block sm:px-6 focus-visible:outline-offset-[-2px]">
         <svg
           viewBox={`0 0 ${W} ${H}`}
           role="img"

@@ -14,6 +14,51 @@ const bridges: { id: string; label: string; sub: string }[] = [
   { id: "a2a", label: "A2A", sub: "Peer agent handoff" },
 ];
 
+/** The same nodes as the SVG, top to bottom, for the phone layout. */
+type PhoneNodeData = { tag: string; title: string; note: string; tone?: "surface" | "hub" };
+const nodes: PhoneNodeData[] = [
+  { tag: "SURFACE", title: "User & UI", note: "Approvals, live state, design-system cards", tone: "surface" },
+  { tag: "ORCHESTRATOR", title: "AI Agent", note: "Plans steps, calls tools, streams UI updates. HITL / HOTL guardrails.", tone: "hub" },
+  { tag: "CONTEXT", title: "Tools & Data", note: "Figma, repos, APIs" },
+  { tag: "PEERS", title: "Other Agents", note: "Specialist workflows" },
+];
+
+function PhoneNode({ n }: { n: PhoneNodeData }) {
+  const band =
+    n.tone === "hub" ? "bg-accent font-semibold text-on-accent" : n.tone === "surface" ? "bg-inverse text-on-inverse" : "text-ink-3";
+  return (
+    <div className={`border-2 border-edge bg-card ${n.tone === "hub" ? "shadow-[4px_4px_0_var(--hard)]" : ""}`}>
+      <p className={`px-3 py-1 font-mono text-label tracking-[0.08em] ${band}`}>{n.tag}</p>
+      <p className="px-3 pt-1 font-display text-lg font-semibold text-ink">{n.title}</p>
+      <p className="px-3 pb-2.5 text-sm text-ink-2">{n.note}</p>
+    </div>
+  );
+}
+
+function PhoneBridges({ ids, activeId, onSelect }: { ids: string[]; activeId: string; onSelect: (id: string) => void }) {
+  return (
+    <div className="grid grid-cols-2 gap-2">
+      {bridges
+        .filter((b) => ids.includes(b.id))
+        .map((b) => {
+          const on = activeId === b.id;
+          return (
+            <button
+              key={b.id}
+              type="button"
+              aria-pressed={on}
+              onClick={() => onSelect(b.id)}
+              className={`grid border px-2 py-2 text-center transition-colors duration-300 ${on ? "border-edge bg-accent text-on-accent" : "border-ink bg-card text-ink hover:border-accent"}`}
+            >
+              <span className="font-mono text-sm font-semibold">{b.label}</span>
+              <span className={`text-label ${on ? "text-on-accent" : "text-ink-3"}`}>{b.sub}</span>
+            </button>
+          );
+        })}
+    </div>
+  );
+}
+
 export function ProtocolArchitecture({
   activeId,
   onSelect,
@@ -31,7 +76,20 @@ export function ProtocolArchitecture({
         <Hint touch="Tap a protocol">Click a protocol to inspect it</Hint>
       </div>
 
-      <div tabIndex={0} role="region" aria-label="Agent protocol map (scrolls sideways)" className="plate-field overflow-x-auto px-4 py-5 sm:px-6 focus-visible:outline-offset-[-2px]">
+      {/* Phones: the same topology as a top-to-bottom stack of HTML nodes and protocol buttons, so text stays at 12px or more.
+          The SVG below carries the same content for wider screens; only one of the two is ever displayed. */}
+      <div className="plate-field grid gap-2 px-4 py-5 sm:hidden">
+        <PhoneNode n={nodes[0]} />
+        <PhoneBridges ids={["agui", "a2ui"]} activeId={active.id} onSelect={onSelect} />
+        <PhoneNode n={nodes[1]} />
+        <PhoneBridges ids={["mcp", "a2a"]} activeId={active.id} onSelect={onSelect} />
+        <div className="grid grid-cols-2 gap-2">
+          <PhoneNode n={nodes[2]} />
+          <PhoneNode n={nodes[3]} />
+        </div>
+      </div>
+
+      <div tabIndex={0} role="region" aria-label="Agent protocol map (scrolls sideways)" className="plate-field hidden overflow-x-auto px-4 py-5 sm:block sm:px-6 focus-visible:outline-offset-[-2px]">
         <svg
           viewBox="0 0 880 276"
           role="img"

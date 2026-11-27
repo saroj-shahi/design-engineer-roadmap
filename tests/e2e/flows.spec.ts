@@ -220,3 +220,57 @@ test.describe("glossary", () => {
     await expect(page.locator(`#term-${slug}`)).toBeInViewport();
   });
 });
+
+test.describe("jobs figures", () => {
+  test("a figure link scrolls to its card and the card copies its own link", async ({ page, context }) => {
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+    await fresh(page, "/#/jobs/designers-ship-ai-code");
+    const card = page.locator("#figure-designers-ship-ai-code");
+    await expect(card).toBeInViewport();
+    await expect(page).toHaveURL(/#\/jobs\/designers-ship-ai-code$/);
+    await card.hover();
+    await card.getByRole("button", { name: /Copy link to the 50% figure/ }).click();
+    await expect(card.getByRole("status")).toHaveText("Link copied");
+    expect(await page.evaluate(() => navigator.clipboard.readText())).toMatch(/#\/jobs\/designers-ship-ai-code$/);
+  });
+});
+
+test.describe("charts", () => {
+  // Every chart label that is on screen renders at 12px or more (SVG text is scaled by the SVG's on-screen size).
+  for (const { path, tab } of [{ path: "/#/jobs" }, { path: "/#/roles/de" }, { path: "/#/library/skills", tab: "#skills-tab-ax" }]) {
+    test(`chart text on ${path} never renders below 12px`, async ({ page }) => {
+      await fresh(page, path);
+      if (tab) await page.locator(tab).click();
+      const sizes = await page.evaluate(() => {
+        const shown = (el: Element) => {
+          const r = el.getBoundingClientRect();
+          if (!r.width || !r.height) return false;
+          for (let e: Element | null = el; e; e = e.parentElement) {
+            const cs = getComputedStyle(e);
+            if (cs.display === "none" || cs.visibility === "hidden") return false;
+          }
+          return true;
+        };
+        const out: { text: string; px: number }[] = [];
+        document.querySelectorAll("main figure").forEach((fig) => {
+          if (!fig.querySelector("svg text")) return;
+          const walker = document.createTreeWalker(fig, NodeFilter.SHOW_TEXT);
+          while (walker.nextNode()) {
+            const node = walker.currentNode;
+            const el = node.parentElement;
+            if (!el || !node.textContent?.trim() || !shown(el)) continue;
+            let px = parseFloat(getComputedStyle(el).fontSize);
+            const svg = el instanceof SVGElement ? el.ownerSVGElement : null;
+            const m = svg?.getScreenCTM();
+            if (m) px *= Math.hypot(m.a, m.b);
+            out.push({ text: node.textContent.trim().slice(0, 30), px: Math.round(px * 100) / 100 });
+          }
+        });
+        return out;
+      });
+      expect(sizes.length).toBeGreaterThan(0);
+      // Desktop keeps the full SVG charts as designed; the 12px floor is enforced on phones, where they used to shrink.
+      if (test.info().project.name === "mobile") expect(sizes.filter((s) => s.px < 12)).toEqual([]);
+    });
+  }
+});

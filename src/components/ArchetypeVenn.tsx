@@ -64,6 +64,7 @@ export function ArchetypeVenn({ selected }: { selected: string }) {
           <Hint touch="Tap a region" className="hidden sm:inline-flex">Hover or click a region</Hint>
         </figcaption>
         <div className="plate-field flex-1 p-3 sm:p-6">
+          <div className="relative mx-auto max-w-[720px]">
           <svg
             viewBox={`0 0 ${W} ${H}`}
             role="img"
@@ -169,8 +170,9 @@ export function ArchetypeVenn({ selected }: { selected: string }) {
               );
             })}
 
-            {/* Outside-stroke set labels (never cross circle strokes) */}
-            <g pointerEvents="none" aria-hidden>
+            {/* Outside-stroke set labels (never cross circle strokes). On phones the diagram is too small for
+                SVG text to stay at 12px, so these hide and the HTML overlay below draws them at full size. */}
+            <g pointerEvents="none" aria-hidden className="max-sm:hidden">
               {ALL.map((s) => {
                 const l = setLabel[s];
                 const isSel = s === selected;
@@ -190,7 +192,7 @@ export function ArchetypeVenn({ selected }: { selected: string }) {
                       y={l.y + 18}
                       textAnchor={l.align}
                       fill="var(--ink-3)"
-                      style={{ fontFamily: "var(--font-mono)", fontStretch: "87.5%", fontSize: 11, letterSpacing: "0.08em" }}
+                      style={{ fontFamily: "var(--font-mono)", fontStretch: "87.5%", fontSize: 12, letterSpacing: "0.08em" }}
                     >
                       {l.sub}
                     </text>
@@ -229,6 +231,41 @@ export function ArchetypeVenn({ selected }: { selected: string }) {
               })}
             </g>
           </svg>
+          {/* Phone overlay: the same labels and markers in HTML, placed by viewBox percentages, so text stays at 12px or more. */}
+          <div aria-hidden className="pointer-events-none absolute inset-0 sm:hidden">
+            {ALL.map((s) => {
+              const l = setLabel[s];
+              const isSel = s === selected;
+              const top = s === "de";
+              return (
+                <span
+                  key={`html-lbl-${s}`}
+                  style={top ? { left: "50%", top: 0 } : l.align === "start" ? { left: `${(l.x / W) * 100}%`, bottom: 0 } : { right: `${((W - l.x) / W) * 100}%`, bottom: 0 }}
+                  className={`absolute flex whitespace-nowrap leading-tight ${top ? "-translate-x-1/2 items-baseline gap-2" : `flex-col ${l.align === "end" ? "items-end" : "items-start"}`}`}
+                >
+                  <span className={`font-display text-sm font-semibold ${isSel ? "text-accent-ink" : "text-ink"}`}>{l.name}</span>
+                  <span className="font-mono text-label text-ink-3">{l.sub}</span>
+                </span>
+              );
+            })}
+            {overlaps.map((r) => {
+              const a = anchor[r.id];
+              const isCore = r.id === "core";
+              const accentBox = activeRegion === r.id || isCore;
+              return (
+                <span
+                  key={`html-${r.id}`}
+                  style={{ left: `${(a.x / W) * 100}%`, top: `${(a.y / H) * 100}%` }}
+                  className={`absolute grid -translate-x-1/2 -translate-y-1/2 place-items-center border-[1.5px] font-mono text-label font-semibold transition-colors duration-300 ${
+                    isCore ? "size-7" : "size-6"
+                  } ${accentBox ? "border-edge bg-accent text-on-accent" : "border-ink bg-card text-ink"}`}
+                >
+                  {marker(r)}
+                </span>
+              );
+            })}
+          </div>
+          </div>
         </div>
         <div className="rounded-b-[calc(var(--radius-card)-1px)] border-t border-line px-[1.125rem] py-3 text-balance flex flex-wrap items-center justify-between gap-3 bg-card text-sm text-ink-2">
           {(() => {

@@ -11,11 +11,15 @@
 export type BasisKind = "survey" | "analytics" | "projection" | "case" | "commentary";
 
 export interface Metric {
+  /** Stable slug for deep links to a headline figure (#/jobs/<id>). Set on the Jobs key figures. */
+  id?: string;
   value: string;
   label: string;
   scope: string;
   source: string;
   basis: BasisKind;
+  /** Public page for `source`, where one is known. */
+  url?: string;
 }
 
 export interface Archetype {
@@ -131,6 +135,7 @@ export interface ChecklistItem {
 /* ───────────── §1 Macro market ───────────── */
 
 const designHiringBigTech: Metric = {
+  id: "big-tech-design-hiring",
   value: "−48%",
   label: "Design hiring at 12 big tech companies, compared with\u00A02019",
   scope: "12 big tech companies, June 2026",
@@ -139,6 +144,7 @@ const designHiringBigTech: Metric = {
 };
 
 const designerJobsOutlook: Metric = {
+  id: "design-jobs-outlook",
   value: "+6%",
   label: "US web and interface designers, 132,700 →\u00A0140,800",
   scope: "2025 → 2035, SOC 15-1255",
@@ -149,6 +155,7 @@ const designerJobsOutlook: Metric = {
 export const heroMetrics: Metric[] = [
   designHiringBigTech,
   {
+    id: "engineer-share-of-hires",
     value: "55%",
     label: "Share of big tech hires who are software engineers (46% in\u00A02019)",
     scope: "Big tech companies, 2026",
@@ -156,6 +163,7 @@ export const heroMetrics: Metric[] = [
     basis: "analytics",
   },
   {
+    id: "designers-ship-ai-code",
     value: "50%",
     label: "Surveyed designers who ship AI-written code to real\u00A0products",
     scope: "Q1 2026 survey",
@@ -168,17 +176,19 @@ export const heroMetrics: Metric[] = [
 const usJobPostsMetric: Metric = {
   value: "3,423 vs. 20,726",
   label: "US job posts: Design Engineer vs. Product Designer",
-  scope: "US job posts, Oct 2026 (+15% month on month, with AI product design roles)",
+  scope: "US job posts, Oct 2026, via Adzuna (+15% month on month for AI Product Designer and Design Engineering combined)",
   source: "Academy UX (aggregator)",
   basis: "analytics",
+  url: "https://www.academyux.com/ux-job-market-hot-or-not",
 };
 
 const seniorDeShareMetric: Metric = {
   value: "97%",
   label: "Design Engineer roles that ask for senior level (open 57 days on average)",
-  scope: "European job posts, July 2026",
+  scope: "European job posts, July 2026, from 76 clearly hybrid design-engineer posts",
   source: "Hymera",
   basis: "analytics",
+  url: "https://hymera.co/research-design-engineer-hire-search",
 };
 
 export const marketMetrics: Metric[] = [
@@ -262,25 +272,21 @@ export const adoptionShift = {
   },
 };
 
-/** Figma 2025 research on design-to-code handoff. One wording for the "1 in 5" claim, used everywhere. */
+/** Figma 2025 research on design-to-code handoff. One wording, used everywhere. */
 export const handoffFindings = {
-  firstBuildMatch: {
-    value: "1 in 5",
-    label: "Designers who see a first build that matches the design",
-    scope: "2025",
-    source: "Figma 2025 trend & AI research",
-    basis: "survey",
-  } satisfies Metric,
-  /** Sentence form of `firstBuildMatch`, for prose. */
-  firstBuildMatchText: "only 1 designer in 5 sees a first build that matches the design",
   handoffImprovable: {
-    value: "Nearly all",
-    label: "Designers and developers who say the handoff could be improved",
+    value: "91% / 92%",
+    label: "Developers / designers who say the handoff process could be improved",
     scope: "2025",
-    source: "Figma 2025 trend & AI research",
+    source: "Figma, Designer and Developer 2025 Trends",
     basis: "survey",
+    url: "https://www.figma.com/reports/designer-developer-trends/",
   } satisfies Metric,
 };
+
+const [devsImprovable, designersImprovable] = handoffFindings.handoffImprovable.value.split(" / ");
+/** Sentence form of `handoffFindings.handoffImprovable`, for prose. */
+export const handoffImprovableText = `${designersImprovable} of designers and ${devsImprovable} of developers say the handoff process could be improved`;
 
 /** Q1 2026 Designer Fund / Foundation Capital survey rows, by meaning. */
 export const shipsAiCode = adoptionShift.after.rows[0];
@@ -308,12 +314,10 @@ export const archetypes: Archetype[] = [
     skillStats: [
       { label: "Visual craft / taste", value: 79 },
       { label: "React", value: 46 },
-      { label: "Live code portfolio", value: 46 },
       { label: "TypeScript", value: 42 },
     ],
-    // TODO(source): the brief gives these job-post shares without naming the dataset behind them.
     skillStatsBasis: "analytics",
-    skillStatsSource: "Design Engineer job posts, 2026",
+    skillStatsSource: "Hymera, European Design Engineer job ads, July 2026",
   },
   {
     id: "meta",
@@ -476,15 +480,6 @@ export const axShift = {
   summary:
     "Screens still matter. The work grows to include rules for trust, how much the AI can do alone, and when it must ask a person.",
 };
-
-// TODO(source): the brief gives these agent maturity shares without naming the study behind them; basis assumed survey.
-export const agentMaturityBasis: BasisKind = "survey";
-
-export const agentMaturity = [
-  { level: 1, label: "Not using agents", value: 21, detail: "Have not set up any AI agents." },
-  { level: 2, label: "Testing", value: 68, detail: "Testing agents in safe test spaces. Nothing live yet." },
-  { level: 3, label: "Live", value: 11, detail: "Agents run on their own in real products, with company rules for trust." },
-];
 
 export const axDomains: Skill[] = [
   {
@@ -1101,13 +1096,13 @@ export const aiPolicyLabel: Record<Month["aiPolicy"], string> = {
   position: "Prove impact",
 };
 
-// TODO(source): the brief gives this figure without naming its source; basis assumed survey.
 export const designerIsolation: Metric = {
   value: "20%",
-  label: "Designers who feel isolated (up from 5% in 2025)",
+  label: "Designers who say collaboration has decreased (up from 5% in 2025)",
   scope: "2026",
-  source: "Research brief",
+  source: "State of AI in Design 2026",
   basis: "survey",
+  url: "https://stateofaidesign.com/chapters/craft",
 };
 
 export const leverageHabits: ChecklistItem[] = [
@@ -1133,7 +1128,7 @@ export const leverageHabits: ChecklistItem[] = [
     id: "isolation",
     title: "Don't work alone",
     detail:
-      `${designerIsolation.value} of designers feel isolated (up from 5% in 2025). Measure your value by clear team decisions and user results, not by the number of screens.`,
+      `${designerIsolation.value} of designers say they collaborate less (up from 5% in 2025). Measure your value by clear team decisions and user results, not by the number of screens.`,
   },
 ];
 
@@ -1174,15 +1169,6 @@ export const beginnerContext: { value: string; label: string; source: string; ba
 
 /** Applications per job post, from `beginnerContext`. */
 export const applicationsPerPost = beginnerContext[2];
-
-// TODO(source): the brief gives this seed-stage hiring rate without naming its source; basis assumed hiring data.
-export const seedStageHiring: Metric = {
-  value: "25%",
-  label: "Design hiring rate at seed-stage startups, the highest of any stage",
-  scope: "2026",
-  source: "Research brief",
-  basis: "analytics",
-};
 
 export interface LaunchStage {
   n: number;
@@ -1322,7 +1308,7 @@ export const launchStages: LaunchStage[] = [
     learn: ["Product sense, OKRs & RICE/Kano", "3–4 outcome-led case studies", "Feasibility specs & edge cases", "Seed startups, agencies & B2B"],
     name: "Aim at the right employers",
     detail:
-      `Write three or four short, easy-to-scan case studies. Aim them at early (seed-stage) startups, which hire the most designers relative to size (${seedStageHiring.value}). Also try small agencies and industry-focused B2B companies, not only big tech junior programs.`,
+      `Write three or four short, easy-to-scan case studies. Small startups and agencies are often the most open to first-time designers, so aim them there. Also try industry-focused B2B companies, not only big tech junior programs.`,
     output: "A portfolio aimed at where hiring happens",
     start: "Rewrite the opening of your best case study: who you are, the problem, and what you did.",
     doneWhen: "Every item on the readiness checklist is ticked.",
@@ -1451,12 +1437,13 @@ export interface Source {
 
 export const sources: Source[] = [
   { label: "SignalFire, State of Talent Report 2026", url: "https://www.signalfire.com/blog/signalfire-state-of-talent-report-2026" },
-  { label: "Figma 2025 trend & AI research" },
-  { label: "CollabSoft" },
+  { label: "Figma, Designer and Developer 2025 Trends", url: "https://www.figma.com/reports/designer-developer-trends/" },
+  { label: "CollabSoft (via Figma design statistics)", url: "https://www.figma.com/resource-library/design-statistics/" },
   { label: "Designer Fund / Foundation Capital, Q1 2026 survey", url: "https://designerfund.com/blog/how-figma-midjourney-and-databricks-harness-ai-in-design" },
   { label: "US BLS Employment Projections · SOC 15-1255", url: "https://www.bls.gov/ooh/computer-and-information-technology/web-developers.htm" },
-  { label: "Academy UX (job aggregator), Oct 2026" },
-  { label: "Hymera recruiting analysis, July 2026" },
+  { label: "Academy UX (job aggregator), Oct 2026", url: "https://www.academyux.com/ux-job-market-hot-or-not" },
+  { label: "Hymera recruiting analysis, July 2026", url: "https://hymera.co/research-design-engineer-hire-search" },
+  { label: "State of AI in Design 2026, Craft chapter", url: "https://stateofaidesign.com/chapters/craft" },
 ];
 
 export const worksCited: { title: string; url: string }[] = [

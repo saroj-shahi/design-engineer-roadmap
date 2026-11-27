@@ -306,9 +306,20 @@ export function SubHead({
    Mouse and trackpad readers see `children`; touch readers see `touch` (defaults to `children`).
    `keys` adds keyboard shortcuts as <kbd> chips, shown only where there is a fine pointer. */
 
-/** Copies the full URL for a deep link (a plan month, a stage) so it can be shared. The result is announced
- *  in a polite live region; if the clipboard is blocked, it says so instead of failing silently. */
-export function CopyLink({ hash, label = "Copy link", className = "" }: { hash: string; label?: string; className?: string }) {
+/** Copies the full URL for a deep link (a plan month, a stage, a key figure) so it can be shared. The result is announced
+ *  in a polite live region; if the clipboard is blocked, it says so instead of failing silently. `iconOnly` keeps the
+ *  label for screen readers only and shows the result in a small bubble, for tight spots such as card bands. */
+export function CopyLink({
+  hash,
+  label = "Copy link",
+  className = "",
+  iconOnly = false,
+}: {
+  hash: string;
+  label?: string;
+  className?: string;
+  iconOnly?: boolean;
+}) {
   const [status, setStatus] = useState<"idle" | "copied" | "failed">("idle");
   const timer = useRef<number | undefined>(undefined);
   useEffect(() => () => window.clearTimeout(timer.current), []);
@@ -323,19 +334,28 @@ export function CopyLink({ hash, label = "Copy link", className = "" }: { hash: 
     timer.current = window.setTimeout(() => setStatus("idle"), 3000);
   };
   return (
-    <span className={`inline-flex items-center gap-x-2 ${className}`}>
+    <span className={`inline-flex items-center gap-x-2 ${iconOnly ? "relative" : ""} ${className}`}>
       <button
         type="button"
         onClick={copy}
+        title={iconOnly ? label : undefined}
         className="relative inline-flex items-center gap-1.5 font-mono text-label font-normal transition-colors after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] hover:text-accent-ink"
       >
         <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="square" className="size-3.5 shrink-0">
           <path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1" />
           <path d="M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1" />
         </svg>
-        {label}
+        {iconOnly ? <span className="sr-only">{label}</span> : label}
       </button>
-      <span role="status" aria-live="polite" className="font-mono text-label font-normal">
+      <span
+        role="status"
+        aria-live="polite"
+        className={`font-mono text-label font-normal ${
+          iconOnly
+            ? "absolute right-0 top-full z-10 mt-2 w-max max-w-[11rem] rounded-chip border border-line bg-card px-2 py-1 text-ink shadow-1 empty:border-0 empty:p-0 empty:shadow-none"
+            : ""
+        }`}
+      >
         {status === "copied" ? "Link copied" : status === "failed" ? "Couldn't copy. Use the address bar." : ""}
       </span>
     </span>

@@ -34,7 +34,7 @@ const lists: Record<
     lede: "Three small steps you can take this week, then what screeners look for in a junior portfolio alongside your case studies.",
     start: "Tick items as you go. The first one needs no code and fits in an evening: pick an app you use daily and note where it fails a new user.",
     readyLabel: "Ready to apply",
-    ready: "Every item checked. Aim at seed-stage startups, small agencies and industry B2B companies, not only big tech.",
+    ready: "Every item checked. Aim at small startups, agencies and industry B2B companies, not only big tech.",
     almostNote: (title) => `One item left: “${title}”. Finish it before you apply.`,
   },
 };

@@ -1,8 +1,6 @@
 import { useState, type CSSProperties } from "react";
 import {
   agentLayers,
-  agentMaturity,
-  agentMaturityBasis,
   axDomains,
   axShift,
   coreSkills,
@@ -15,7 +13,7 @@ import {
 import { BrandLogosFor } from "../components/BrandLogo";
 import { Glyph, type GlyphName } from "../components/icons";
 import { ProtocolArchitecture } from "../components/ProtocolArchitecture";
-import { BasisBadge, Disclosure, Lines, Section, SectionHeader, TabPanel, Tabs, Tag, pageHref, useTabList } from "../components/ui";
+import { Disclosure, Lines, Section, SectionHeader, TabPanel, Tabs, Tag, pageHref, useTabList } from "../components/ui";
 
 const patternTotal = patternCategories.reduce((n, c) => n + c.patterns.length, 0);
 
@@ -188,39 +186,6 @@ function AxPanel() {
           </p>
           <p className="mt-8 max-w-[52ch] leading-relaxed text-ink-2">{axShift.summary}</p>
         </div>
-        <figure className="col-span-4 self-end lg:col-span-4 lg:col-start-9">
-          <figcaption className="mb-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
-            <span className="font-mono text-label font-normal text-ink-3">Enterprise agent maturity</span>
-            <BasisBadge basis={agentMaturityBasis} />
-          </figcaption>
-          <div
-            className="flex h-24 overflow-hidden rounded-ctl border border-edge"
-            role="img"
-            aria-label={agentMaturity.map((m) => `${m.value}% ${m.label.toLowerCase()}`).join(", ")}
-          >
-            {agentMaturity.map((m) => (
-              <div
-                key={m.level}
-                className={`flex items-end p-2 ${m.level === 3 ? "bg-accent text-on-accent" : m.level === 2 ? "bg-ink text-paper" : "text-ink"} ${
-                  m.level > 1 ? "border-l border-edge" : ""
-                }`}
-                style={{ width: `${m.value}%` }}
-              >
-                <span className="font-display font-semibold leading-[0.9] tracking-[-0.04em] tabular-nums text-2xl">{m.value}</span>
-              </div>
-            ))}
-          </div>
-          <dl className="mt-5 text-sm">
-            {agentMaturity.map((m) => (
-              <div key={m.level} className="flex gap-3 border-b border-line py-2.5">
-                <dt className="font-mono text-label font-normal w-28 shrink-0 pt-0.5 text-ink-3">
-                  L{m.level} · {m.label}
-                </dt>
-                <dd className="text-ink-2">{m.detail}</dd>
-              </div>
-            ))}
-          </dl>
-        </figure>
       </div>
 
       {/* Capability layer explorer */}
