@@ -4,7 +4,7 @@ Instructions for AI coding agents working in the **Design Engineer Field Guide**
 
 ## Project overview
 
-A static, six-page interactive field guide (**Design Engineer Field Guide · 2026**) built with **React 18 + TypeScript + Vite 5 + Tailwind CSS v4**. No backend, no external router library, no test runner.
+A static, six-page interactive field guide (**Design Engineer Field Guide**) built with **React 18 + TypeScript + Vite 5 + Tailwind CSS v4**. No backend, no external router library, no test runner.
 
 - **Audience:** Serves **both** working product designers upskilling inside their current role and designers aiming for a new hybrid role (`Track A`), plus beginners/career-switchers breaking into their first role (`Track B`). Never drift back to job-search-only framing on Home, Roles, Track A, or Checklist.
 - **Design system:** Read [DESIGN.md](DESIGN.md) before changing layout, colors, typography, cards, icons, or CSS.

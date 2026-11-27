@@ -64,9 +64,7 @@ export function Nav({ page }: { page: Page | null }) {
             <span className="font-display font-semibold tracking-[-0.02em] text-pretty text-[1.0625rem] text-ink transition-colors duration-300 group-hover:text-accent-ink">
               Design Engineer
             </span>
-            <span className="font-mono text-label font-normal mt-1 text-ink-3">
-              Field Guide · <span className="text-accent-ink">2026</span>
-            </span>
+            <span className="font-mono text-label font-normal mt-1 text-ink-3">Field Guide</span>
           </span>
         </a>
 

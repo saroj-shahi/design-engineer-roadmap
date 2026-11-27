@@ -199,7 +199,7 @@ export function Roadmap({ plan }: { plan: PlanRoute | null }) {
 
       <div className="mt-6 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3 border-t border-line pt-5 text-sm text-ink-2">
         <p>
-          New to a term like PR, tokens or MCP? <TextLink href={pageHref("library", "glossary")}>See the glossary</TextLink>
+          New to a term like PR, tokens or MCP? <TextLink href={pageHref("library", "glossary")}>See the{"\u00A0"}glossary</TextLink>
         </p>
       </div>
 

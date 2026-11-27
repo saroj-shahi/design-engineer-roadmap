@@ -37,7 +37,7 @@ const lists: Record<
     ...checklists.a,
     who: "Working designer",
     lede: "Concrete proof you can work across design and code — to demo to your team, support a promotion case, or share when you're ready for a new\u00A0role.",
-    start: "Start with one live demo. It's the quickest proof to share with teammates or reviewers.",
+    start: "Start with one live demo. It's the quickest proof to share with teammates or\u00A0reviewers.",
     readyLabel: "Ready to ship",
     ready:
       "Every item checked. Bring this workflow into your team's next project — or, if you're looking to move, send about 20 focused applications to teams that hire hybrids.",

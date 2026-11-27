@@ -190,7 +190,7 @@ export const heroMetrics: Metric[] = [
 ];
 
 const usJobPostsMetric: Metric = {
-  value: "3,423 vs. 20,726",
+  value: "3,423 vs.\u00A020,726",
   label: "US job posts: Design Engineer vs. Product Designer",
   scope: "US job posts, Oct 2026, via Adzuna (+15% month on month for AI Product Designer and Design Engineering combined)",
   source: "Academy UX (aggregator)",
@@ -219,7 +219,7 @@ export const marketMetrics: Metric[] = [
   { value: "−39%", label: "Product manager hiring at big tech", scope: "Big tech, compared with 2019", source: "SignalFire", basis: "analytics" },
   { value: "−36%", label: "Marketing hiring at big tech", scope: "Big tech, compared with 2019", source: "SignalFire", basis: "analytics" },
   { value: "−11% / +7%", label: "Software engineer hiring: big tech / startups", scope: "Compared with 2019", source: "SignalFire", basis: "analytics" },
-  { value: "−65% / −76%", label: "Entry-level hiring: big tech / startups", scope: "All of tech, June 2026", source: "SignalFire", basis: "analytics" },
+  { value: "−65% /\u00A0−76%", label: "Entry-level hiring: big tech / startups", scope: "All of tech, June 2026", source: "SignalFire", basis: "analytics" },
   {
     value: "−25%",
     label: "Front-end share of engineering hiring, compared with 2022",
@@ -278,9 +278,9 @@ export const hiringShiftSeries: HiringShiftRow[] = [
 ];
 
 export const orgFlattening = [
-  { value: "12", label: "Engineers per engineering manager at big tech", delta: "+14% vs. 2019" },
-  { value: "15", label: "Engineers per engineering manager at startups", delta: "+34% vs. 2019" },
-  { value: "+22%", label: "More engineers per product manager", delta: "vs. 2019" },
+  { value: "12", label: "Engineers per engineering manager at big tech", delta: "+14% vs.\u00A02019" },
+  { value: "15", label: "Engineers per engineering manager at startups", delta: "+34% vs.\u00A02019" },
+  { value: "+22%", label: "More engineers per product\u00A0manager", delta: "vs. 2019" },
 ];
 
 export const handoffCases = [
@@ -406,7 +406,7 @@ export const archetypes: Archetype[] = [
 export const interviewFocus: CompareRow = {
   dimension: "Interview focus",
   traditional: "Portfolio walkthroughs, visual design critiques and whiteboard wireframes.",
-  hybrid: "Code reviews, walkthroughs of how you built things, live AI workflow demos and talks about technical trade-offs.",
+  hybrid: "Code reviews, walkthroughs of how you built things, live AI workflow demos and talks about technical\u00A0trade-offs.",
 };
 
 export const comparison: CompareRow[] = [
@@ -746,7 +746,7 @@ export const sixMonthPlan: Month[] = [
     title: "Browser basics",
     learn: ["Semantic HTML & forms", "Flexbox, CSS Grid & breakpoints", "Typography, color & hierarchy", "Browser DevTools"],
     build: "3 responsive landing pages",
-    focus: "HTML, CSS layout (Flexbox, Grid) and checking layouts in DevTools.",
+    focus: "HTML, CSS layout (Flexbox, Grid) and checking layouts in\u00A0DevTools.",
     deliverable: "Three responsive landing pages, built from scratch with no frameworks.",
     guardrail: "No AI code and no CSS frameworks this month, so you learn to read and fix layouts by hand. You'll need that skill to check AI's work later.",
     aiPolicy: "none",
@@ -1098,9 +1098,9 @@ export const aiPolicyLabel: Record<Month["aiPolicy"], string> = {
   none: "AI off",
   read: "Read first",
   assist: "AI assist",
-  oversee: "AI + oversight",
+  oversee: "AI\u00A0+\u00A0oversight",
   production: "Real PRs",
-  position: "Prove impact",
+  position: "Prove\u00A0impact",
 };
 
 export const designerIsolation: Metric = {

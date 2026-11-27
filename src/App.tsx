@@ -174,7 +174,7 @@ const shelfTitles: Record<string, string> = {
 
 function titleFor(route: Route) {
   if (route.notFound) return `Page Not Found | ${SITE}`;
-  if (route.page === "home") return `${SITE} | 2026 Roles, Skills & Roadmap`;
+  if (route.page === "home") return `${SITE} | Roles, Skills & Roadmap`;
   const p = pages.find((x) => x.id === route.page)!;
   if (route.page === "roles") {
     const roleName = route.parts[0] ? roleTitles[route.parts[0]] : null;
@@ -224,7 +224,7 @@ function descriptionFor(route: Route) {
     case "sources":
       return "Every source and article behind the Design Engineer Field Guide's figures, and how the research brief's data is used.";
     default:
-      return "A 2026 guide for designers moving into code: a six-month plan for working designers and a four-stage plan for people starting out, plus Design Engineer, Meta-Designer and AX Designer roles, hiring data and tools.";
+      return "A guide for designers moving into code: a six-month plan for working designers and a four-stage plan for people starting out, plus Design Engineer, Meta-Designer and AX Designer roles, hiring data and tools.";
   }
 }
 
