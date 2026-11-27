@@ -38,7 +38,7 @@ export function MarketShiftChart() {
             const pctWidth = (Math.abs(row.value) / 60) * 100;
             return (
               <li key={row.label} className="border-b border-line pb-3 last:border-b-0 last:pb-0">
-                <div className="flex items-baseline justify-between gap-2 text-xs">
+                <div className="flex items-baseline justify-between gap-2 text-sm">
                   <span className={focal ? "font-semibold text-ink" : "text-ink-2"}>{row.label}</span>
                   <span
                     className={`font-mono tabular-nums ${
@@ -92,7 +92,7 @@ export function MarketShiftChart() {
             y={24}
             textAnchor="end"
             fill="var(--ink-3)"
-            style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.08em" }}
+            style={{ fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: "0.08em" }}
           >
             ROLE / BENCHMARK
           </text>
@@ -101,7 +101,7 @@ export function MarketShiftChart() {
             y={24}
             textAnchor="end"
             fill="var(--ink-3)"
-            style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.08em" }}
+            style={{ fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: "0.08em" }}
           >
             ← CONTRACTION
           </text>
@@ -110,7 +110,7 @@ export function MarketShiftChart() {
             y={24}
             textAnchor="start"
             fill="var(--ink-3)"
-            style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.08em" }}
+            style={{ fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: "0.08em" }}
           >
             GROWTH →
           </text>
@@ -134,7 +134,7 @@ export function MarketShiftChart() {
                   y={PLOT_B + 20}
                   textAnchor="middle"
                   fill={isZero ? "var(--ink)" : "var(--ink-3)"}
-                  style={{ fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: isZero ? 500 : 400 }}
+                  style={{ fontFamily: "var(--font-mono)", fontSize: 12, fontWeight: isZero ? 500 : 400 }}
                 >
                   {t > 0 ? `+${t}%` : `${t}%`}
                 </text>
@@ -210,18 +210,18 @@ export function MarketShiftChart() {
             y={H - 10}
             textAnchor="middle"
             fill="var(--ink-3)"
-            style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.1em" }}
+            style={{ fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: "0.1em" }}
           >
             CHANGE IN HIRING / 10-YEAR OUTLOOK (%) · ZERO-ANCHORED SCALE
           </text>
         </svg>
       </div>
 
-      <figcaption className="rounded-b-[calc(var(--radius-card)-1px)] border-t border-line px-[1.125rem] py-3 text-balance flex flex-wrap items-center justify-between gap-3 bg-card text-xs text-ink-2">
+      <figcaption className="rounded-b-[calc(var(--radius-card)-1px)] border-t border-line px-[1.125rem] py-3 text-balance flex flex-wrap items-center justify-between gap-3 bg-card text-sm text-ink-2">
         <span className="flex flex-wrap items-center gap-x-5 gap-y-1.5">
           <span className="inline-flex items-center gap-2">
             <span aria-hidden className="inline-block h-3 w-4 border-2 border-accent bg-accent/20" />
-            <span>Focal contraction (−48% big-tech design)</span>
+            <span>Biggest drop (−48% big-tech design hiring)</span>
           </span>
           <span className="inline-flex items-center gap-2">
             <span aria-hidden className="inline-block h-3 w-4 border border-ink bg-ink" />

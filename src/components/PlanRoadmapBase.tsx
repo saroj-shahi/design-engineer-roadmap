@@ -180,7 +180,7 @@ export function PlanRoadmapBase({
                 <span>{entry.roadmap.shortTitle}</span>
               </span>
               <span className="mt-1.5 block text-xs text-ink-3">
-                {entry.roadmap.milestones.length} stages
+                {entry.roadmap.milestones.length} sections
               </span>
             </button>
           );
@@ -244,7 +244,7 @@ export function PlanRoadmapBase({
                 type="search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search stages or topics…"
+                placeholder="Search sections or topics…"
                 autoComplete="off"
                 className="w-full rounded-none border-0 border-b border-line-strong bg-transparent py-3 text-xl tracking-[-0.01em] text-ink transition-colors duration-[400ms] ease-silk placeholder:text-ink-3 focus:border-accent-ink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink !py-1.5 !text-sm"
               />

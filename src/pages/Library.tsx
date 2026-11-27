@@ -5,10 +5,10 @@ import { ToolingPipeline } from "../sections/ToolingPipeline";
 import { glossary, glossaryTopicLabel, type GlossaryTopic } from "../data/research";
 import { externalRoadmaps } from "../data/roadmaps";
 import { useEffect, useState } from "react";
-import { ContextBar, NextPage, PageHeader, SubHead, jumpTo, lastPlanHref, navigate, pageHref } from "../components/ui";
+import { ContextBar, Disclosure, NextPage, PageHeader, SubHead, jumpTo, lastPlanHref, navigate, pageHref, useMediaQuery } from "../components/ui";
 
 const shelves = [
-  { id: "compare", label: "Compare roles" },
+  { id: "compare", label: "Design vs. design + code" },
   { id: "skills", label: "Skills" },
   { id: "tools", label: "Tools" },
   { id: "roadmaps", label: "Roadmaps" },
@@ -84,10 +84,14 @@ function Glossary({ term }: { term?: string }) {
       (topic === "all" || g.topic === topic) &&
       (!needle || g.term.toLowerCase().includes(needle) || g.meaning.toLowerCase().includes(needle)),
   );
+  const topicIds = Object.keys(glossaryTopicLabel) as GlossaryTopic[];
   const topics: { id: GlossaryTopic | "all"; label: string }[] = [
     { id: "all", label: "All" },
-    ...(Object.keys(glossaryTopicLabel) as GlossaryTopic[]).map((id) => ({ id, label: glossaryTopicLabel[id] })),
+    ...topicIds.map((id) => ({ id, label: glossaryTopicLabel[id] })),
   ];
+  const isPhone = useMediaQuery("(max-width: 639px)");
+  const grouped = isPhone && topic === "all" && !needle;
+  const card = (g: (typeof glossary)[number]) => <GlossaryCard key={g.term} g={g} term={term} openTerm={openTerm} />;
   const openTerm = (name: string) => {
     setQ("");
     setTopic("all");
@@ -139,52 +143,76 @@ function Glossary({ term }: { term?: string }) {
             Clear filter
           </button>
         </div>
-      ) : (
-        <dl className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {terms.map((g) => {
-            const slug = slugify(g.term);
-            const href = pageHref("library", "glossary", slug);
+      ) : grouped ? (
+        /* Phones, "All", no filter: one collapsible group per topic keeps the page short. The first group and
+           the group holding a deep-linked term open; keying on that remounts a group open when a link targets it. */
+        <div className="mt-6 border-t border-line">
+          {topicIds.map((t, i) => {
+            const inTopic = terms.filter((g) => g.topic === t);
+            const termTopic = term ? glossary.find((g) => slugify(g.term) === term)?.topic : undefined;
+            const holdsTerm = termTopic === t;
             return (
-              <div key={g.term} id={`term-${slug}`} className={`relative rounded-card border border-edge bg-card shadow-1 p-5 ${slug === term ? "!border-accent" : ""}`}>
-                <dt className="font-display font-semibold tracking-[-0.02em] text-pretty text-[1.5rem] leading-tight text-ink">
-                  <a
-                    href={href}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      navigate(href, { replace: true });
-                    }}
-                    className="hover:text-accent-ink"
-                  >
-                    {g.term}
-                  </a>
-                </dt>
-                <dd className="mt-2 text-sm leading-relaxed text-ink-2">{g.meaning}</dd>
-                {g.see && g.see.length > 0 && (
-                  <dd className="mt-3 text-sm text-ink-3">
-                    See{" "}
-                    {g.see.map((name, i) => (
-                      <span key={name}>
-                        {i > 0 && ", "}
-                        <a
-                          href={pageHref("library", "glossary", slugify(name))}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            openTerm(name);
-                          }}
-                          className="bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-ink hover:text-accent-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]"
-                        >
-                          {name}
-                        </a>
-                      </span>
-                    ))}
-                  </dd>
-                )}
-                <dd className="font-mono text-label font-normal mt-4 text-ink-3">{glossaryTopicLabel[g.topic]}</dd>
-              </div>
+              <Disclosure
+                key={`${t}-${holdsTerm}`}
+                headingLevel="h3"
+                defaultOpen={holdsTerm || (!termTopic && i === 0)}
+                summary={
+                  <>
+                    {glossaryTopicLabel[t]} <span className="font-mono text-label font-normal text-ink-3">· {inTopic.length} terms</span>
+                  </>
+                }
+              >
+                <dl className="grid gap-4">{inTopic.map(card)}</dl>
+              </Disclosure>
             );
           })}
-        </dl>
+        </div>
+      ) : (
+        <dl className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{terms.map(card)}</dl>
       )}
     </section>
+  );
+}
+
+function GlossaryCard({ g, term, openTerm }: { g: (typeof glossary)[number]; term?: string; openTerm: (name: string) => void }) {
+  const slug = slugify(g.term);
+  const href = pageHref("library", "glossary", slug);
+  return (
+    <div id={`term-${slug}`} className={`relative rounded-card border border-edge bg-card shadow-1 p-5 ${slug === term ? "!border-accent" : ""}`}>
+      <dt className="font-display font-semibold tracking-[-0.02em] text-pretty text-[1.5rem] leading-tight text-ink">
+        <a
+          href={href}
+          onClick={(e) => {
+            e.preventDefault();
+            navigate(href, { replace: true });
+          }}
+          className="hover:text-accent-ink"
+        >
+          {g.term}
+        </a>
+      </dt>
+      <dd className="mt-2 text-sm leading-relaxed text-ink-2">{g.meaning}</dd>
+      {g.see && g.see.length > 0 && (
+        <dd className="mt-3 text-sm text-ink-3">
+          See{" "}
+          {g.see.map((name, i) => (
+            <span key={name}>
+              {i > 0 && ", "}
+              <a
+                href={pageHref("library", "glossary", slugify(name))}
+                onClick={(e) => {
+                  e.preventDefault();
+                  openTerm(name);
+                }}
+                className="bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-ink hover:text-accent-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]"
+              >
+                {name}
+              </a>
+            </span>
+          ))}
+        </dd>
+      )}
+      <dd className="font-mono text-label font-normal mt-4 text-ink-3">{glossaryTopicLabel[g.topic]}</dd>
+    </div>
   );
 }

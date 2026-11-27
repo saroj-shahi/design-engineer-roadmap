@@ -1,5 +1,5 @@
 import { useState, type CSSProperties } from "react";
-import { roleStacks, toolStages } from "../data/research";
+import { roleStacks, toolStages, toolPricingNote } from "../data/research";
 import { BrandLogosFor } from "../components/BrandLogo";
 import { Section, SectionHeader, TabPanel, Tag, useTabList } from "../components/ui";
 import { Glyph, type GlyphName } from "../components/icons";
@@ -15,7 +15,7 @@ export function ToolingPipeline() {
       <SectionHeader
         id="tooling"
         title={["The right tool", <em>for each step.</em>]}
-        lede="Pick your level to see the tools for each step of the work. Choose one set and stick with it. Too many tools slow you down."
+        lede={`Pick your level or role to see the tools for each step of the work. Choose one set and stick with it. Too many tools slow you down. ${toolPricingNote}`}
       />
 
       <div className="grid grid-cols-4 gap-x-4 lg:grid-cols-12 lg:gap-x-6 gap-y-6">
@@ -23,8 +23,8 @@ export function ToolingPipeline() {
           <RoleMatrix value={roleId} onChange={setRoleId} />
         </div>
         <p className="col-span-4 self-end text-sm leading-relaxed text-ink-3 lg:col-span-3 lg:col-start-10">
-          Each row is a level; each column a step of the work. A filled cell means that level's recommended stack works in that step,
-          and the figure is how many of that step's tools it uses. Step 04, app builders, sits outside every recommended stack.
+          Each row is a level or role; each column is a step of the work. A filled cell means that row's recommended tools cover that step,
+          and the number is how many of that step's tools it uses. Step 04, app builders, sits outside every recommended stack.
           Pick a row to see its chain.
         </p>
       </div>
@@ -36,7 +36,7 @@ export function ToolingPipeline() {
               <Glyph name="user" className="!size-3.5 [--accent:currentColor]" />
               <span>Recommended pipeline · {role.label}</span>
             </span>
-            <span>{role.stages.length} of {toolStages.length} stages active</span>
+            <span>{role.stages.length} of {toolStages.length} steps in use</span>
           </div>
           <div className="plate-field px-5 py-6 sm:px-7">
             <ol aria-label={`${role.label} recommended tool chain`} className="flex flex-wrap items-center gap-3">
@@ -115,7 +115,17 @@ export function ToolingPipeline() {
   );
 }
 
-/** Role × stage matrix. Every row is a tab; the selected row drives the chain and the stage cards below. */
+/** Plain sentence for screen readers, e.g. "recommended tools in step 1 (3 tools) and step 3 (1 tool)". */
+function stepsSentence(r: (typeof roleStacks)[number]) {
+  const parts = r.stages.map((id) => {
+    const n = r.toolsByStage[id]?.length ?? 0;
+    return `step ${id} (${n} ${n === 1 ? "tool" : "tools"})`;
+  });
+  const list = parts.length > 1 ? `${parts.slice(0, -1).join(", ")} and ${parts[parts.length - 1]}` : parts[0] ?? "no steps";
+  return `recommended tools in ${list}`;
+}
+
+/** Level/role × step matrix. Every row is a tab; the selected row drives the chain and the stage cards below. */
 function RoleMatrix({ value, onChange }: { value: string; onChange: (id: string) => void }) {
   const { listProps, tabProps } = useTabList({ ids: roleStacks.map((r) => r.id), value, onChange, idPrefix: "role", orientation: "vertical" });
   const cols = "grid grid-cols-[minmax(6.5rem,1.4fr)_repeat(4,minmax(0,1fr))] gap-x-1 sm:gap-x-1.5";
@@ -131,7 +141,7 @@ function RoleMatrix({ value, onChange }: { value: string; onChange: (id: string)
           </span>
         ))}
       </div>
-      <div {...listProps} aria-label="Your level" className="flex flex-col">
+      <div {...listProps} aria-label="Your level or role" className="flex flex-col">
         {roleStacks.map((r, i) => {
           const on = r.id === value;
           return (
@@ -160,9 +170,7 @@ function RoleMatrix({ value, onChange }: { value: string; onChange: (id: string)
                   </span>
                 );
               })}
-              <span className="sr-only">
-                , works in steps {r.stages.join(", ")}
-              </span>
+              <span className="sr-only">{`: ${stepsSentence(r)}`}</span>
             </button>
           );
         })}

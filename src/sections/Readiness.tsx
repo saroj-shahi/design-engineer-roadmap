@@ -31,8 +31,8 @@ const lists: Record<
     key: "de-guide:junior-checklist",
     items: juniorChecklist,
     who: "Starting out",
-    lede: "What screeners look for in a junior portfolio alongside your case studies.",
-    start: "Start with the first item. It needs no code: open each case study with who you are and the problem you solved.",
+    lede: "Three small steps you can take this week, then what screeners look for in a junior portfolio alongside your case studies.",
+    start: "Tick items as you go. The first one needs no code and fits in an evening: pick an app you use daily and note where it fails a new user.",
     readyLabel: "Ready to apply",
     ready: "Every item checked. Aim at seed-stage startups, small agencies and industry B2B companies, not only big tech.",
     almostNote: (title) => `One item left: “${title}”. Finish it before you apply.`,
@@ -41,7 +41,7 @@ const lists: Record<
 
 /** Status line by share of items done. Mid-way notes name the first unticked item, so they fit either track's list. */
 function levelFor(done: number, total: number, list: (typeof lists)[Track], next?: ChecklistItem) {
-  if (done === 0) return { label: "Not started", note: list.start };
+  if (done === 0) return { label: "First step", note: list.start };
   if (done === total || !next) return { label: list.readyLabel, note: list.ready };
   if (done === total - 1) return { label: "Almost ready", note: list.almostNote(next.title) };
   if (done >= total / 2) return { label: "Getting close", note: `${done * 2 === total ? "Halfway there" : "Over halfway"}. Next up: “${next.title}”.` };
@@ -145,11 +145,18 @@ function Checklist({ track }: { track: Track }) {
           <div className="flex justify-end">
             <Glyph name="check" on={done === total} className="glyph-xl !size-16 text-ink" />
           </div>
-          <p className="font-display font-semibold leading-[0.9] tracking-[-0.04em] tabular-nums mt-4 flex items-start text-[clamp(7rem,15vw,13rem)] text-ink">
-            <span className="tabular-nums">{pct}</span>
-            <span aria-hidden className="mt-[0.12em] text-[0.35em] text-accent">%</span>
-            <span className="sr-only">percent ready</span>
-          </p>
+          {done === 0 ? (
+            /* Empty state: a giant "0%" reads as a verdict, so invite the first tick instead. */
+            <p className="mt-4 font-display text-display-l text-balance text-ink">
+              Not started yet <span className="mt-3 block font-sans text-lede font-normal text-ink-2">Tick items as you go.</span>
+            </p>
+          ) : (
+            <p className="font-display font-semibold leading-[0.9] tracking-[-0.04em] tabular-nums mt-4 flex items-start text-[clamp(7rem,15vw,13rem)] text-ink">
+              <span className="tabular-nums">{pct}</span>
+              <span aria-hidden className="mt-[0.12em] text-[0.35em] text-accent">%</span>
+              <span className="sr-only">percent ready</span>
+            </p>
+          )}
           <div className="mt-6 flex gap-1" aria-hidden>
             {list.items.map((it, i) => (
               <span key={it.id} className="relative h-2 flex-1 bg-line">

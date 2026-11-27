@@ -51,7 +51,7 @@ export const externalRoadmaps: ExternalRoadmap[] = [
     group: "design",
     tagline:
       "Behavioral psychology, product framing, conceptual design, wireframing, UX patterns and experimentation.",
-    fits: ["Track B · Beginners", "AX Designer", "All designers"],
+    fits: ["Track B · Starting out", "AX Designer", "All designers"],
     related: ["product-design", "design-system", "ai-product-builder", "frontend"],
     milestones: [
       {
@@ -278,7 +278,7 @@ export const externalRoadmaps: ExternalRoadmap[] = [
     group: "design",
     tagline:
       "End-to-end digital product design: discovery, framing, strategy, UI craft, engineering collaboration, systems and measurement.",
-    fits: ["Track B · Beginners", "Design Engineer", "Meta-Designer"],
+    fits: ["Track B · Starting out", "Design Engineer", "Meta-Designer"],
     related: ["ux-design", "design-system", "frontend", "ai-product-builder"],
     milestones: [
       {

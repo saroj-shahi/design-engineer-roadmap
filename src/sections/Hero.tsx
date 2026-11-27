@@ -1,10 +1,14 @@
 import { useEffect, type CSSProperties, type ReactNode } from "react";
 import {
   archetypes,
+  forLeads,
   handoffCases,
+  handoffFindings,
   heroMetrics,
   marketMetrics,
   orgFlattening,
+  skipAheadMonth,
+  startAudience,
   titleReality,
 } from "../data/research";
 import { AdoptionDumbbell } from "../components/AdoptionDumbbell";
@@ -14,7 +18,11 @@ import { HeroStage } from "../components/HeroStage";
 import { ArchetypeGlyph, ArrowGlyph, Glyph, type GlyphName } from "../components/icons";
 
 const heroMetricGlyphs: GlyphName[] = ["trendDown", "shareBar", "survey", "forecast"];
-import { BasisBadge, CountUp, Eyebrow, PageHeader, Roll, SubHead, Tag, jumpTo, navigate, pageHref, useMediaQuery, useTabList } from "../components/ui";
+import { BasisBadge, CountUp, Eyebrow, PageHeader, Roll, SubHead, Tag, jumpTo, navigate, pageHref, planHref, useMediaQuery, useTabList } from "../components/ui";
+
+/** Quiet inline text link with a growing underline. */
+const textLink =
+  "relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] font-medium text-ink";
 
 /** Opening of the Start page: a split hero. Words, search and the reader's questions on the left;
  *  the before/now stage (how work moved) on the right, so the idea is shown as well as told. */
@@ -30,10 +38,11 @@ export function HeroIntro({ children }: { children?: ReactNode }) {
           Design Engineer Field Guide · 2026
         </p>
         <h1 id="shift-title" className="mt-5 font-display text-hero text-balance text-ink lg:text-[clamp(2.75rem,4.6vw,4.25rem)]">
-          The handoff is shrinking. <em className="text-accent">Design and code</em> now meet earlier.
+          <em className="text-accent">Design and code</em> now meet earlier.
         </h1>
         <p className="mt-5 max-w-[54ch] text-lede text-pretty text-ink-2">
-          AI tools make it faster to turn a design into working code, so more designers now build alongside developers. Whether you're
+          Designers and developers now pass less work back and forth. AI tools make it faster to turn a design into working code, so more
+          designers build alongside developers. Whether you're
           upskilling in your current role or aiming for a new one, this guide maps three roles and a step-by-step plan.
         </p>
         {children}
@@ -63,22 +72,36 @@ export function StartHere() {
         <EntryCard
           href="#/roles"
           who="I'm a working designer"
-          meta="Track A · 6 months"
+          meta="Track A · Working designer"
           what="Upskill in your role, or grow into a hybrid one"
           detail="Compare Design Engineer, Meta-Designer and AX Designer, then follow a six-month plan from browser basics to real pull requests — at your current company or your next one."
+          welcome={startAudience.a}
           tools={["Figma", "React", "TypeScript", "Tailwind CSS", "Cursor", "Claude Code"]}
           cta="Explore the three roles"
         />
         <EntryCard
           href="#/plan/b"
           who="I'm starting out"
-          meta="Track B · 4 stages"
+          meta="Track B · Starting out"
           what="Start the beginner track"
-          detail="Build your UX and Product Design base first, prototype in real code, ship for real users and aim at teams hiring juniors."
+          detail="Follow a four-stage plan: build your UX and product design base first, prototype in real code, ship for real users and aim at teams hiring juniors."
+          welcome={startAudience.b}
           tools={["Figma", "Claude Design", "HTML5", "React", "Tailwind CSS", "Cursor"]}
           cta="Open the beginner plan"
         />
       </nav>
+      <div className="mt-6 flex flex-wrap gap-x-10 gap-y-3 border-t border-line pt-5 text-sm text-ink-3">
+        <p>
+          {startAudience.fromCode.lead}{" "}
+          <a href={pageHref("roles", "de")} className={textLink}>{startAudience.fromCode.role}</a>, or{" "}
+          <a href={planHref({ track: "a", option: "pde", month: skipAheadMonth })} className={textLink}>{startAudience.fromCode.plan}</a>.
+        </p>
+        <p>
+          {startAudience.leads.lead}{" "}
+          <a href={pageHref("jobs")} className={textLink}>{startAudience.leads.jobs}</a> and{" "}
+          <a href={pageHref("roles")} className={textLink}>{startAudience.leads.roles}</a>.
+        </p>
+      </div>
     </>
   );
 }
@@ -90,19 +113,21 @@ export function JobsShortAnswer({ more = false }: { more?: boolean }) {
         <p className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal lg:col-span-12">
           <span>The short answer</span>
         </p>
-        <div className="px-5 sm:px-7 lg:col-span-4 lg:pb-7">
-          <p className="font-display font-semibold leading-[0.9] tracking-[-0.04em] tabular-nums text-[clamp(4rem,8vw,7rem)] text-accent">+6%</p>
-          <p className="mt-3 max-w-[30ch] text-sm leading-snug text-ink-2">US web & interface design jobs, 2025 → 2035</p>
-          <p className="font-mono text-label font-normal mt-2 text-ink-3">US BLS projection</p>
-        </div>
-        <div className="px-5 pb-7 sm:px-7 lg:col-span-8 lg:pl-0 lg:pt-1">
+        {/* The answer leads in reading order (and on phones); on desktop the +6% figure sits to its left. */}
+        <div className="px-5 sm:px-7 lg:order-2 lg:col-span-8 lg:pl-0 lg:pb-7 lg:pt-1">
           <p className="font-display font-semibold tracking-[-0.02em] text-pretty text-[clamp(1.75rem,3vw,2.75rem)] leading-[1.05] text-ink">No, but it's changing.</p>
           <p className="mt-4 max-w-[58ch] leading-relaxed text-ink-2">
-            Big-tech hiring for some design roles is down. But design jobs overall are still projected to grow, and half of designers
+            Big-tech hiring for some design roles is down. But design jobs overall are still projected to grow, and half of surveyed designers
             already ship some AI-generated code. Your design skills still matter most; what's growing is demand for designers who can
             also work in code with developers. The rest of this guide shows how.
           </p>
           <p className="mt-4 max-w-[58ch] text-sm leading-relaxed text-ink-3">{titleReality}</p>
+          <p className="mt-3 text-sm text-ink-2">
+            Just starting out?{" "}
+            <a href={pageHref("plan", "b")} className="font-medium text-accent-ink underline decoration-line-strong underline-offset-4 transition-colors hover:decoration-current">
+              See the Track B plan
+            </a>
+          </p>
           {more && (
             <span className="mt-5 flex flex-wrap gap-x-8 gap-y-3">
               <a href={pageHref("jobs")} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] inline-flex items-center gap-2 text-[0.9375rem] font-medium text-ink group group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">
@@ -113,6 +138,11 @@ export function JobsShortAnswer({ more = false }: { more?: boolean }) {
               </a>
             </span>
           )}
+        </div>
+        <div className="px-5 pb-7 sm:px-7 lg:order-1 lg:col-span-4">
+          <p className="font-display font-semibold leading-[0.9] tracking-[-0.04em] tabular-nums text-[clamp(4rem,8vw,7rem)] text-accent">+6%</p>
+          <p className="mt-3 max-w-[30ch] text-sm leading-snug text-ink-2">US web & interface design jobs, 2025 → 2035</p>
+          <p className="font-mono text-label font-normal mt-2 text-ink-3">US BLS projection</p>
         </div>
       </div>
   );
@@ -153,6 +183,7 @@ function EntryCard({
   meta,
   what,
   detail,
+  welcome,
   tools,
   cta,
 }: {
@@ -161,6 +192,7 @@ function EntryCard({
   meta: string;
   what: string;
   detail: string;
+  welcome: string;
   tools: string[];
   cta: string;
 }) {
@@ -176,6 +208,7 @@ function EntryCard({
       <span className="flex flex-1 flex-col p-6 sm:p-8">
         <span className="font-display text-display-m text-balance text-ink">{what}</span>
         <span className="mt-3 max-w-[48ch] text-sm leading-relaxed text-ink-2">{detail}</span>
+        <span className="mt-3 max-w-[48ch] text-sm leading-relaxed text-ink">{welcome}</span>
         <span className="mt-5 flex flex-wrap gap-1.5">
           {tools.map((tool) => (
             <Tag key={tool}>{tool}</Tag>
@@ -199,7 +232,7 @@ export function HandoffProblem() {
       <SubHead
         id="handoff-title"
         title="Why: handoffs are the bottleneck."
-        note="All three roles grow from the same problem. Moving a design from Figma into code takes time, and details can get lost between tools. In Figma's 2025 research, nearly all designers and developers said the handoff could be improved. Only 1 designer in 5 sees a first build that matches the design. The fix belongs in the process."
+        note={`All three roles grow from the same problem. Moving a design from Figma into code takes time, and details can get lost between tools. In Figma's 2025 research, ${handoffFindings.handoffImprovable.value.toLowerCase()} designers and developers said the handoff could be improved, and ${handoffFindings.firstBuildMatchText}. The fix belongs in the process.`}
       />
       <div className="grid grid-cols-4 gap-x-4 lg:grid-cols-12 lg:gap-x-6 gap-y-16">
         <div className="col-span-4 space-y-24 sm:space-y-32 lg:col-span-12">
@@ -288,6 +321,48 @@ export function CaseStudies() {
   );
 }
 
+/** Hire or upskill: a short block for design leads, built from content used elsewhere in the guide. */
+export function ForLeads() {
+  const cards = [
+    { ...forLeads.upskill, href: pageHref("plan", "a"), cta: "See the Track A plan" },
+    { ...forLeads.hire, href: pageHref("jobs"), cta: "See the jobs outlook" },
+  ];
+  return (
+    <div className="mx-auto w-full max-w-[1440px] px-(--gutter) pb-24 sm:pb-36">
+      <section aria-labelledby="leads-title">
+        <SubHead id="leads-title" title={<>For <em>design leads</em></>} note={forLeads.intro} />
+        <div className="grid gap-4 sm:gap-5 lg:grid-cols-12 [&>*]:min-w-0">
+          {cards.map((c) => (
+            <article key={c.title} className="relative rounded-card border border-edge bg-card shadow-1 flex flex-col p-5 sm:p-6 lg:col-span-4">
+              <h3 className="font-display text-display-m text-balance text-ink inline-flex items-start gap-2.5">
+                <Glyph name="users" className="mt-1 !size-6 shrink-0" />
+                <span>{c.title}</span>
+              </h3>
+              <p className="mt-3 flex-1 text-sm leading-relaxed text-ink-2">{c.detail}</p>
+              <a href={c.href} className={`${textLink} mt-6 inline-flex items-center gap-2 self-start text-[0.9375rem] group`}>
+                {c.cta} <ArrowGlyph />
+              </a>
+            </article>
+          ))}
+          <article className="relative rounded-card border border-edge bg-card shadow-1 flex flex-col p-5 sm:p-6 lg:col-span-4">
+            <h3 className="text-[1.0625rem] font-medium tracking-tight text-ink">{forLeads.jobPostTitle}</h3>
+            <ul className="mt-3 space-y-2 text-sm leading-relaxed text-ink-2">
+              {forLeads.jobPost.map((b) => (
+                <li key={b} className="flex gap-2.5">
+                  <span aria-hidden className="mt-[0.6em] size-1.5 shrink-0 rounded-full bg-accent" />
+                  <span>{b}</span>
+                </li>
+              ))}
+            </ul>
+            <h3 className="mt-6 text-[1.0625rem] font-medium tracking-tight text-ink">{forLeads.interviewTitle}</h3>
+            <p className="mt-3 text-sm leading-relaxed text-ink-2">{forLeads.interview}</p>
+          </article>
+        </div>
+      </section>
+    </div>
+  );
+}
+
 /** Every market figure in one table, with scope and source. */
 export function MarketTable() {
   return (
@@ -351,7 +426,7 @@ export function Archetypes({ role, intro }: { role?: string; intro?: ReactNode }
       <PageHeader
         id="roles-title"
         title={["Which role", <>fits <em>you?</em></>]}
-        lede="Three directions are growing where design and code meet. First, the problem they solve. Then pick the one that fits your team or where you want to grow — you don't need a new title to work this way."
+        lede="Three roles where design and code meet. First, the problem they solve. Then pick the one that fits your team or where you want to grow — you don't need a new title to work this way."
       />
 
       {intro && <div className="mb-24 sm:mb-36">{intro}</div>}
@@ -409,6 +484,15 @@ export function Archetypes({ role, intro }: { role?: string; intro?: ReactNode }
             <p className="max-w-[60ch] font-display font-semibold tracking-[-0.02em] text-pretty text-[clamp(1.25rem,1.8vw,1.625rem)] leading-[1.2] text-ink">
               <span className="text-accent-ink">This fits you if</span> {a.fitsIf}
             </p>
+            {a.fromCode && (
+              <p className="max-w-[60ch] text-sm leading-relaxed text-ink-2">
+                <span className="font-medium text-ink">Coming from code? </span>
+                {a.fromCode}{" "}
+                <a href={planHref({ track: "a", option: a.plan, month: skipAheadMonth })} className={textLink}>
+                  Start the plan at Month&nbsp;{skipAheadMonth}
+                </a>
+              </p>
+            )}
             <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
               <a href={`#/plan/a/${a.plan}`} className="relative isolate inline-flex h-12 items-center gap-3 overflow-hidden rounded-full bg-accent pl-[1.375rem] pr-5 text-[0.9375rem] font-semibold tracking-[-0.005em] text-on-accent transition-[translate,box-shadow,color] duration-[260ms] ease-spring before:absolute before:inset-0 before:-z-10 before:translate-y-[101%] before:bg-ink before:transition-transform before:duration-[550ms] before:ease-silk before:content-[''] hover:shadow-accent hover:before:translate-y-0 focus-visible:shadow-accent focus-visible:before:translate-y-0 active:translate-y-px motion-reduce:active:translate-y-0 group">
                 <Roll>See the plan for this role</Roll>
@@ -468,6 +552,12 @@ export function Archetypes({ role, intro }: { role?: string; intro?: ReactNode }
                     ))}
                   </ul>
                   <p className="font-mono text-label font-normal mt-5 text-ink-3">Share of Design Engineer listings requiring each. Git workflows also cited.</p>
+                  {a.skillStatsBasis && (
+                    <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
+                      <BasisBadge basis={a.skillStatsBasis} />
+                      {a.skillStatsSource && <span className="font-mono text-label font-normal text-ink-3">{a.skillStatsSource}</span>}
+                    </p>
+                  )}
                 </>
               ) : (
                 <ul className="flex flex-wrap gap-1.5">

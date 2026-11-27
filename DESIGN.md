@@ -40,6 +40,7 @@ Never hard-code hex/rgb values in JSX or CSS outside the `:root` block in `src/i
   - `font-display font-semibold leading-[0.9] tracking-[-0.04em] tabular-nums` — big numerals
   - `text-lede max-w-[44ch] text-pretty text-ink-2` — intro copy
   - `font-mono text-label` — `12px` mixed-case mono metadata, `0.01em` tracking
+- **12px floor:** no text renders below `12px`. Badges, tags, tab sub-labels and `<kbd>` hints use `text-xs` / `text-label` (never `text-[10px]` or `text-[11px]`); chart captions and compact chart rows use `text-sm`; SVG chart labels use `fontSize` ≥ `12` (viewBox units); `HeroStage` container-query sizes clamp with `max(12px, …)`. Muted text (`--ink-3` on `--card`, `--inverse-muted` on `--inverse-bg`) stays above 4.5:1, so small labels never need a lighter tint.
 - **Orphan & measure discipline:**
   - `h1–h6` use `text-wrap: balance` (base styles); card footers add `text-balance`.
   - `p` and `dd` use `text-wrap: pretty` (base styles); display callouts and ledes add `text-pretty`.

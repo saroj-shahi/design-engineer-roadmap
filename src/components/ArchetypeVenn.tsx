@@ -230,7 +230,7 @@ export function ArchetypeVenn({ selected }: { selected: string }) {
             </g>
           </svg>
         </div>
-        <div className="rounded-b-[calc(var(--radius-card)-1px)] border-t border-line px-[1.125rem] py-3 text-balance flex flex-wrap items-center justify-between gap-3 bg-card text-xs text-ink-2">
+        <div className="rounded-b-[calc(var(--radius-card)-1px)] border-t border-line px-[1.125rem] py-3 text-balance flex flex-wrap items-center justify-between gap-3 bg-card text-sm text-ink-2">
           {(() => {
             const focused = skillMap.find((r) => r.id === activeRegion) ?? skillMap.find((r) => r.id === "core")!;
             const isOverlap = focused.sets.length > 1;

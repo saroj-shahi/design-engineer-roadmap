@@ -118,32 +118,40 @@ export function Lines({
 }
 
 /** Counts the numeric part of a figure like "−48%" or "3,423" up from zero when it scrolls in.
- *  Renders the real figure first; only zeroes it (before paint) once motion is known to be allowed,
- *  and snaps back to the real figure for print. */
+ *  The real figure is always in the markup (and in an sr-only copy for assistive tech), so no-JS,
+ *  reduced-motion and text snapshots never see a placeholder like "−0%". Only when motion is
+ *  allowed is the visual copy hidden until it scrolls in, then counted up; it snaps to the real
+ *  figure for print. */
 export function CountUp({ value, className = "" }: { value: string; className?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
   const [shown, setShown] = useState(value);
+  const [waiting, setWaiting] = useState(false);
 
   useLayoutEffect(() => {
     const el = ref.current;
     const match = value.match(/^([^\d]*)([\d,.]+)(.*)$/);
-    if (!el || !match || prefersReducedMotion()) {
-      setShown(value);
-      return;
-    }
+    setShown(value);
+    setWaiting(false);
+    if (!el || !match || prefersReducedMotion()) return;
     const [, pre, num, post] = match;
     const target = parseFloat(num.replace(/,/g, ""));
-    if (!Number.isFinite(target)) {
-      setShown(value);
-      return;
-    }
+    if (!Number.isFinite(target)) return;
     const decimals = num.includes(".") ? num.split(".")[1].length : 0;
     const grouped = num.includes(",");
-    setShown(`${pre}0${post}`);
+    const format = (n: number) => {
+      const s = grouped
+        ? n.toLocaleString("en-US", { minimumFractionDigits: decimals, maximumFractionDigits: decimals })
+        : n.toFixed(decimals);
+      // Never show a signed zero such as "−0%".
+      return `${parseFloat(s.replace(/,/g, "")) === 0 ? pre.replace(/[−+-]/g, "") : pre}${s}${post}`;
+    };
+    // Hide the visual copy (visibility, so it keeps its size) until it scrolls in; the text stays the real figure.
+    setWaiting(true);
     let raf = 0;
     const finish = () => {
       io.disconnect();
       cancelAnimationFrame(raf);
+      setWaiting(false);
       setShown(value);
     };
     const io = new IntersectionObserver(
@@ -158,13 +166,11 @@ export function CountUp({ value, className = "" }: { value: string; className?: 
             setShown(value);
             return;
           }
-          const n = target * (1 - Math.pow(1 - p, 4));
-          const formatted = grouped
-            ? n.toLocaleString("en-US", { minimumFractionDigits: decimals, maximumFractionDigits: decimals })
-            : n.toFixed(decimals);
-          setShown(`${pre}${formatted}${post}`);
+          setShown(format(target * (1 - Math.pow(1 - p, 4))));
           raf = requestAnimationFrame(tick);
         };
+        setShown(format(0));
+        setWaiting(false);
         raf = requestAnimationFrame(tick);
       },
       { threshold: 0.4 },
@@ -180,7 +186,9 @@ export function CountUp({ value, className = "" }: { value: string; className?: 
 
   return (
     <span ref={ref} className={className}>
-      <span aria-hidden>{shown}</span>
+      <span aria-hidden="true" className={waiting ? "invisible" : undefined}>
+        {shown}
+      </span>
       <span className="sr-only">{value}</span>
     </span>
   );
@@ -191,7 +199,7 @@ export function Roll({ children }: { children: string }) {
   return (
     <span className="relative inline-flex h-[1.2em] overflow-hidden leading-[1.2em]">
       <span className="block transition-transform duration-[650ms] ease-silk group-hover:-translate-y-full group-focus-visible:-translate-y-full">{children}</span>
-      <span aria-hidden className="absolute left-0 top-full block transition-transform duration-[650ms] ease-silk group-hover:-translate-y-full group-focus-visible:-translate-y-full">{children}</span>
+      <span aria-hidden="true" className="absolute left-0 top-full block transition-transform duration-[650ms] ease-silk group-hover:-translate-y-full group-focus-visible:-translate-y-full">{children}</span>
     </span>
   );
 }
@@ -298,6 +306,42 @@ export function SubHead({
    Mouse and trackpad readers see `children`; touch readers see `touch` (defaults to `children`).
    `keys` adds keyboard shortcuts as <kbd> chips, shown only where there is a fine pointer. */
 
+/** Copies the full URL for a deep link (a plan month, a stage) so it can be shared. The result is announced
+ *  in a polite live region; if the clipboard is blocked, it says so instead of failing silently. */
+export function CopyLink({ hash, label = "Copy link", className = "" }: { hash: string; label?: string; className?: string }) {
+  const [status, setStatus] = useState<"idle" | "copied" | "failed">("idle");
+  const timer = useRef<number | undefined>(undefined);
+  useEffect(() => () => window.clearTimeout(timer.current), []);
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(`${location.origin}${location.pathname}${location.search}${hash}`);
+      setStatus("copied");
+    } catch {
+      setStatus("failed");
+    }
+    window.clearTimeout(timer.current);
+    timer.current = window.setTimeout(() => setStatus("idle"), 3000);
+  };
+  return (
+    <span className={`inline-flex items-center gap-x-2 ${className}`}>
+      <button
+        type="button"
+        onClick={copy}
+        className="relative inline-flex items-center gap-1.5 font-mono text-label font-normal transition-colors after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] hover:text-accent-ink"
+      >
+        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="square" className="size-3.5 shrink-0">
+          <path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1" />
+          <path d="M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1" />
+        </svg>
+        {label}
+      </button>
+      <span role="status" aria-live="polite" className="font-mono text-label font-normal">
+        {status === "copied" ? "Link copied" : status === "failed" ? "Couldn't copy. Use the address bar." : ""}
+      </span>
+    </span>
+  );
+}
+
 export function Hint({
   children,
   touch,
@@ -320,7 +364,7 @@ export function Hint({
       {keys && (
         <span className="ml-1 inline-flex gap-1 pointer-coarse:hidden">
           {keys.map((k) => (
-            <kbd key={k} className="rounded-[4px] border border-current/30 px-1 py-px font-mono text-[10px] leading-none">
+            <kbd key={k} className="rounded-[4px] border border-current/30 px-1 py-px font-mono text-xs leading-none">
               {k}
             </kbd>
           ))}
@@ -339,7 +383,7 @@ export function Tag({ children, tone = "neutral" }: { children: ReactNode; tone?
     solid: "border-ink bg-ink text-paper",
   };
   return (
-    <span className={`inline-flex max-w-full items-center gap-1.5 rounded-full border px-2.5 py-[3px] font-mono text-[11px] leading-4 tracking-tight ${tones[tone]}`}>
+    <span className={`inline-flex max-w-full items-center gap-1.5 rounded-full border px-2.5 py-[3px] font-mono text-xs leading-4 tracking-tight ${tones[tone]}`}>
       {typeof children === "string" && <BrandLogosFor text={children} max={2} className="size-3.5" />}
       <span>{children}</span>
     </span>
@@ -484,7 +528,7 @@ export function Tabs({
             ) : (
               <>
                 <span className="block">{t.label}</span>
-                {t.sub && <span className="mt-0.5 block font-mono text-[11px] normal-case tracking-normal text-ink-3">{t.sub}</span>}
+                {t.sub && <span className="mt-0.5 block font-mono text-xs normal-case tracking-normal text-ink-3">{t.sub}</span>}
                 {variant === "underline" && (
                   <span aria-hidden className={`absolute bottom-0 left-0 right-0 h-px origin-left bg-ink transition-transform duration-700 ease-silk ${selected ? "scale-x-100" : "scale-x-0"}`} />
                 )}
@@ -744,7 +788,7 @@ export const pages: { id: Page; label: string; title: string; nav?: boolean }[] 
   { id: "home", label: "Start", title: "Start here" },
   { id: "jobs", label: "Jobs", title: "Is my job going away" },
   { id: "roles", label: "Roles", title: "Which role fits you" },
-  { id: "plan", label: "Plan", title: "Your six-month plan" },
+  { id: "plan", label: "Plan", title: "Your plan" },
   { id: "ready", label: "Checklist", title: "Readiness checklist" },
   { id: "library", label: "Library", title: "Reference library" },
   { id: "sources", label: "Sources", title: "Sources and method", nav: false },

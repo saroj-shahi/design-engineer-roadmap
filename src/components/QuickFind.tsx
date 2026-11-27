@@ -33,10 +33,10 @@ function useDestinations(): Destination[] {
     for (const m of planFor("pde"))
       list.push({ label: `Month ${m.month}: ${m.title}`, group: "Plan · Design Engineer", hint: m.build, href: `#/plan/a/pde/m${m.month}` });
     for (const m of planFor("meta").filter((m) => m.month >= 4))
-      list.push({ label: `Month ${m.month}: ${m.title}`, group: "Plan · Meta-Designer or AX", hint: m.build, href: `#/plan/a/meta/m${m.month}` });
-    list.push({ label: "Beginner track (Track B)", group: "Plan", hint: "4 stages", href: "#/plan/b" });
+      list.push({ label: `Month ${m.month}: ${m.title}`, group: "Plan · Meta-Designer or AX Designer", hint: m.build, href: `#/plan/a/meta/m${m.month}` });
+    list.push({ label: "Track B · Starting out", group: "Plan", hint: "Four stages", href: "#/plan/b" });
     for (const [id, label] of [
-      ["compare", "Compare roles"],
+      ["compare", "Design vs. design + code"],
       ["skills", "Skills"],
       ["tools", "Tools"],
       ["roadmaps", "Roadmaps"],
@@ -72,14 +72,30 @@ export function FindBox({ autoFocus = false, onDone, large = false }: { autoFocu
   }, [autoFocus]);
 
   const results = useMemo(() => {
-    const words = q.toLowerCase().trim().split(/\s+/).filter(Boolean);
+    const query = q.toLowerCase().trim().replace(/\s+/g, " ");
+    const words = query.split(" ").filter(Boolean);
     if (!words.length) return [];
+    // Rank title matches above loose matches in the group or snippet: exact title, then title prefix,
+    // then a word in the title starting with the query, then the query anywhere in the title.
+    // Glossary terms win ties, so a term's own entry beats pages that merely mention it.
+    const rank = (d: Destination) => {
+      const label = d.label.toLowerCase();
+      const score =
+        label === query ? 0
+        : label.startsWith(query) ? 1
+        : label.split(/[^a-z0-9]+/).some((w) => w.startsWith(query)) ? 2
+        : label.includes(query) ? 3
+        : words.every((w) => label.includes(w)) ? 4
+        : 5;
+      return score * 2 + (d.group === "Glossary" ? 0 : 1);
+    };
     return all
-      .filter((d) => {
-        const hay = `${d.label} ${d.group} ${d.hint ?? ""}`.toLowerCase();
-        return words.every((w) => hay.includes(w));
-      })
-      .slice(0, 8);
+      .map((d, i) => ({ d, i, hay: `${d.label} ${d.group} ${d.hint ?? ""}`.toLowerCase() }))
+      .filter(({ hay }) => words.every((w) => hay.includes(w)))
+      .map((r) => ({ ...r, score: rank(r.d) }))
+      .sort((a, b) => a.score - b.score || a.i - b.i)
+      .slice(0, 8)
+      .map(({ d }) => d);
   }, [q, all]);
 
   const open = results.length > 0;
@@ -141,35 +157,55 @@ export function FindBox({ autoFocus = false, onDone, large = false }: { autoFocu
         />
         <kbd className="hidden rounded-md border border-edge px-2 py-0.5 font-mono text-xs text-ink-3 sm:inline">⌘K</kbd>
       </div>
-      <ul
-        id={listId}
-        role="listbox"
-        aria-label="Results"
-        className={`${open ? "" : "hidden"} absolute inset-x-0 top-[calc(100%+6px)] z-50 max-h-[22rem] overflow-y-auto rounded-ctl border border-edge bg-card p-1.5 shadow-2`}
+      <div
+        className={`${open ? "" : "hidden"} absolute inset-x-0 top-[calc(100%+6px)] z-50 rounded-ctl border border-edge bg-card p-1.5 shadow-2`}
       >
-        {results.map((d, i) => (
-          <li
-            key={`${d.group}-${d.label}`}
-            id={`${listId}-${i}`}
-            role="option"
-            aria-selected={i === active}
-            onMouseDown={(e) => e.preventDefault()}
-            onClick={() => pick(d)}
-            onMouseEnter={() => setActive(i)}
-            className={`flex cursor-pointer items-baseline justify-between gap-4 rounded-chip px-3 py-2.5 ${i === active ? "bg-sunken" : ""}`}
-          >
-            <span className="min-w-0">
-              <span className="block truncate text-[0.9375rem] text-ink">{d.label}</span>
-              {d.hint && <span className="mt-0.5 block truncate text-xs text-ink-3">{d.hint}</span>}
-            </span>
-            <span className="font-mono text-label font-normal shrink-0 text-ink-3">{d.group}</span>
-          </li>
-        ))}
-      </ul>
+        <ul id={listId} role="listbox" aria-label="Results" className="max-h-[min(26rem,55vh)] overflow-y-auto">
+          {results.map((d, i) => (
+            <li
+              key={`${d.group}-${d.label}`}
+              id={`${listId}-${i}`}
+              role="option"
+              aria-selected={i === active}
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => pick(d)}
+              onMouseEnter={() => setActive(i)}
+              className={`flex cursor-pointer flex-col gap-1 rounded-chip px-3 py-2.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4 ${i === active ? "bg-sunken" : ""}`}
+            >
+              <span className="min-w-0">
+                <span className="block text-[0.9375rem] leading-snug text-pretty text-ink">{d.label}</span>
+                {d.hint && <span className="mt-0.5 line-clamp-2 text-sm leading-snug text-ink-3">{d.hint}</span>}
+              </span>
+              <span className="font-mono text-label font-normal text-ink-3 sm:max-w-[40%] sm:shrink-0 sm:text-right">{d.group}</span>
+            </li>
+          ))}
+        </ul>
+        <p aria-hidden="true" className="mt-1 hidden border-t border-line px-3 pb-1 pt-2 font-mono text-label text-ink-3 pointer-fine:block">
+          <KeyHint />
+        </p>
+      </div>
       <p aria-live="polite" className="sr-only">
         {q.trim() ? `${results.length} result${results.length === 1 ? "" : "s"}` : ""}
       </p>
     </div>
+  );
+}
+
+/** Keyboard help for the results. Shown only with a fine pointer (mouse or trackpad), where a keyboard is likely. */
+function KeyHint() {
+  const k = "rounded-[4px] border border-edge px-1.5 py-px font-mono text-xs text-ink-2";
+  return (
+    <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
+      <span>
+        <kbd className={k}>↑</kbd> <kbd className={k}>↓</kbd> to move
+      </span>
+      <span>
+        <kbd className={k}>↵</kbd> to open
+      </span>
+      <span>
+        <kbd className={k}>Esc</kbd> to close
+      </span>
+    </span>
   );
 }
 
@@ -223,7 +259,9 @@ export function FindDialog() {
         {open && (
           <div className="rounded-card border border-edge bg-paper p-4 shadow-2">
             <FindBox autoFocus large onDone={() => setOpen(false)} />
-            <p className="font-mono text-label font-normal mt-3 px-1 text-ink-3">↑↓ to move · Enter to open · Esc to close</p>
+            <p className="mt-3 hidden px-1 font-mono text-label font-normal text-ink-3 pointer-fine:block">
+              <KeyHint />
+            </p>
           </div>
         )}
       </dialog>

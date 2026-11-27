@@ -388,7 +388,7 @@ em, .italic { font-style: italic; }
 @container (max-width: 559px) {
   .hs-canvas {
     aspect-ratio: 25 / 24;
-    --W: 45; --Hc: 30; --Ha: 40;
+    --W: 45; --Hc: 33; --Ha: 40;
     --dx: 3; --dy: 4; --ex: 52; --ey: 52; --bx: 27.5; --by: 4;
     --ay: 50; --a1: 2; --a2: 34.5; --a3: 67;
     --tx: 25.5; --ty: 47;
@@ -410,7 +410,7 @@ em, .italic { font-style: italic; }
   flex-direction: column;
   overflow: hidden;
 }
-.hs-card .hs-head { font-size: max(9px, var(--fs-label)); padding: calc(var(--pad) * 0.5) var(--pad); white-space: nowrap; }
+.hs-card .hs-head { font-size: max(12px, var(--fs-label)); padding: calc(var(--pad) * 0.5) var(--pad); white-space: nowrap; }
 .hs-body { display: flex; flex: 1; flex-direction: column; gap: calc(var(--pad) * 0.5); padding: var(--pad); min-height: 0; }
 .hs-body-row { flex-direction: row; align-items: center; gap: var(--pad); }
 .hs-glyph { width: var(--g) !important; height: var(--g) !important; flex-shrink: 0; }
@@ -423,7 +423,7 @@ em, .italic { font-style: italic; }
   letter-spacing: -0.015em;
   color: var(--ink);
 }
-.hs-sub { margin-top: 0.35em; font-size: max(11px, var(--fs-sub)); line-height: 1.25; color: var(--ink-2); }
+.hs-sub { margin-top: 0.35em; font-size: max(12px, var(--fs-sub)); line-height: 1.25; color: var(--ink-2); }
 
 .hs-designer { --x: var(--dx); --y: var(--dy); }
 .hs-engineer { --x: var(--ex); --y: var(--ey); }
@@ -451,9 +451,9 @@ em, .italic { font-style: italic; }
   border: 1px solid var(--accent);
   border-radius: 999px;
   color: var(--accent-ink);
-  font-size: max(10px, var(--fs-label));
+  font-size: max(12px, var(--fs-label));
 }
-.hs-tag-sub { font-size: max(9px, calc(var(--fs-label) * 0.9)); color: var(--ink-3); background: var(--card); padding: 0 0.3rem; max-width: 44cqw; text-align: center; }
+.hs-tag-sub { font-size: max(12px, calc(var(--fs-label) * 0.9)); color: var(--ink-3); background: var(--card); padding: 0 0.3rem; max-width: 44cqw; text-align: center; }
 .hs-strike {
   position: absolute;
   left: -6%;

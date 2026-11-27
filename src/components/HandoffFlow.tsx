@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import { Glyph, type GlyphName } from "./icons";
+import { handoffFindings } from "../data/research";
 
 interface Step {
   who: string;
@@ -22,14 +23,14 @@ const after: Step[] = [
   { who: "Team", name: "Ship", out: "Production", glyph: "launch" },
 ];
 
-/** Before / after workflow delta framed as a Swiss specimen plate.
+/** Before / after workflow change framed as a Swiss specimen plate.
  *  Per diagram-design focal discipline, coral accents ONLY the bottleneck removed
- *  (the handoff wall and rework loop in Before); After reads in calm solid ink. */
+ *  (the handoff point and rework loop in Before); After reads in calm solid ink. */
 export function HandoffFlow() {
   return (
     <figure aria-labelledby="handoff-flow-cap" className="relative rounded-card border border-edge bg-card shadow-1">
       <div className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal">
-        <h3 className="m-0">Workflow delta · Before vs. After</h3>
+        <h3 className="m-0">How the work changes · Before vs. After</h3>
         <span className="hidden sm:inline">Handoff removed</span>
       </div>
 
@@ -39,7 +40,7 @@ export function HandoffFlow() {
           title="The handoff"
           steps={before}
           handoffAfter={1}
-          loop="Rework loop: only 1 in 5 first builds match the design"
+          loop={`Rework loop: ${handoffFindings.firstBuildMatchText}`}
           bottleneck
         />
         <div className="border-t-2 border-dashed border-line-strong pt-8">
@@ -121,7 +122,7 @@ function Row({
               <Glyph name={s.glyph} className="mt-3.5 !size-9 sm:!size-11" />
               <span className="mt-auto pt-3 font-display font-semibold tracking-[-0.02em] text-pretty text-[1.25rem] leading-[1.06]">{s.name}</span>
               <span
-                className={`mt-2 inline-block self-start border px-1.5 py-0.5 font-mono text-[10px] leading-tight ${
+                className={`mt-2 inline-block self-start border px-1.5 py-0.5 font-mono text-xs leading-tight ${
                   solid ? "border-inverse-line text-inverse-muted" : "border-line text-ink-3"
                 }`}
               >
@@ -147,13 +148,13 @@ function Row({
                     <span className="max-sm:hidden">→</span>
                   </span>
                 ))}
-              {handoff && <span className="sr-only">Handoff wall to the engineer.</span>}
+              {handoff && <span className="sr-only">Here the designer hands the work to the engineer.</span>}
             </li>
           );
         })}
       </ol>
 
-      {/* Return loop: Before loops back across the handoff wall (accent); After iterates tightly inside code (ink) */}
+      {/* Return loop: Before loops back across the handoff point (accent); After iterates tightly inside code (ink) */}
       <div className="mt-2 hidden grid-cols-4 gap-7 sm:grid" aria-hidden>
         {bottleneck ? (
           <div className="relative col-span-3 col-start-2 h-6 border-x border-b border-dashed border-accent">

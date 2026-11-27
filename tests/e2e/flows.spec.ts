@@ -96,7 +96,8 @@ test.describe("search", () => {
 });
 
 test.describe("start page", () => {
-  test("question chips jump to their chapter or open their page", async ({ page }) => {
+  test("question chips jump to their chapter or open their page", async ({ page }, info) => {
+    test.skip(info.project.name === "mobile", "chips are hidden on phones; the nav and cards carry the same questions");
     await fresh(page, "/#/");
     await page.getByRole("button", { name: "Where do I start?" }).click();
     await expect(page.locator("#start-here")).toBeInViewport();

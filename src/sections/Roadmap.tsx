@@ -5,6 +5,7 @@ import { PlanRoadmapBase, type BaseRoadmapItem } from "../components/PlanRoadmap
 import { RoadmapMap } from "../components/RoadmapMap";
 import {
   aiPolicyLabel,
+  applicationsPerPost,
   beginnerContext,
   beginnerStack,
   icGrowth,
@@ -12,15 +13,22 @@ import {
   launchStages,
   leverageHabits,
   planFor,
+  planPace,
+  seedStageHiring,
   sixMonthPlan,
+  skipAheadMonth,
+  toolPricingNote,
   trackAOptions,
+  trackBCostNote,
   type PlanTopicGroup,
   type Resource,
 } from "../data/research";
 import { PLAN_PDFS, type PlanPdfId } from "../data/planPdfs";
 import {
+  BasisBadge,
   CheckRow,
   ContextBar,
+  CopyLink,
   Eyebrow,
   jumpTo,
   Meter,
@@ -89,7 +97,8 @@ export function Roadmap({ plan }: { plan: PlanRoute | null }) {
       : plan.track === "a"
         ? [
             { label: "Plan" },
-            { label: `Track A · ${trackAOptions.find((o) => o.id === plan.option)?.name ?? ""}` },
+            { label: "Track A · Working designer" },
+            { label: trackAOptions.find((o) => o.id === plan.option)?.name ?? "" },
             { label: `Month ${plan.month} of ${MONTHS}` },
           ]
         : [{ label: "Plan" }, { label: "Track B · Starting out" }, { label: `Stage ${plan.stage} of ${STAGES}` }];
@@ -118,7 +127,7 @@ export function Roadmap({ plan }: { plan: PlanRoute | null }) {
         id="roadmap"
         level="h1"
         title={["Your plan,", <em>step by step.</em>]}
-        lede={`Pick where you are today. If you already work as a designer, pick a role next. The plan changes to match. ${saveNote}`}
+        lede={`Pick where you are today. If you already work as a designer, pick a role next. The plan changes to match. ${planPace} ${saveNote}`}
       />
 
       <div {...listProps} aria-label="Career track" className="grid gap-6 sm:grid-cols-2">
@@ -189,8 +198,6 @@ export function Roadmap({ plan }: { plan: PlanRoute | null }) {
         </p>
       </div>
 
-      <PlanDownloads current={plan ? (plan.track === "a" ? `a-${plan.option}` : "b") : null} />
-
       {plan && (
         <>
           {/* Spacer, not a wrapper: the bar must sit directly in the section so it sticks through the whole plan. */}
@@ -201,6 +208,8 @@ export function Roadmap({ plan }: { plan: PlanRoute | null }) {
           </div>
         </>
       )}
+
+      <PlanDownloads current={plan ? (plan.track === "a" ? `a-${plan.option}` : "b") : null} />
     </Section>
   );
 }
@@ -208,7 +217,7 @@ export function Roadmap({ plan }: { plan: PlanRoute | null }) {
 /** A printable PDF of each plan, for reading offline or sharing. Files come from `npm run pdfs`. */
 function PlanDownloads({ current }: { current: PlanPdfId | null }) {
   return (
-    <div className="mt-10 sm:mt-14">
+    <div className="mt-24 sm:mt-36">
       <SubHead n="PDF" title="Take a plan with you" note="A printable copy of each plan, with every month or stage, its topics and resources. Your ticks stay here in the browser." />
       <ul className="grid gap-4 sm:grid-cols-3">
         {PLAN_PDFS.map((p) => {
@@ -411,11 +420,35 @@ function TrackA({ plan: route }: { plan: PlanA }) {
                     <span key={k} className={`h-1 flex-1 rounded-full transition-colors duration-500 ${k < i ? (on ? "bg-accent" : "bg-ink-3") : "bg-line"}`} />
                   ))}
                 </span>
-                <span className="sr-only">Month {x.month}</span>
+                <span className="sr-only">
+                  Month {x.month}
+                  {x.month < skipAheadMonth ? ", optional if you already code" : ""}
+                </span>
               </button>
             );
           })}
         </div>
+
+        {month < skipAheadMonth && (
+          <p className="mt-6 flex flex-wrap items-baseline gap-x-3 gap-y-1 border-l border-accent pl-4 text-sm leading-relaxed text-ink-2">
+            <span>
+              <span className="font-medium text-ink">Already code?</span> Months 1–{skipAheadMonth - 1} cover browser basics and JavaScript & React, so you can skip them.
+            </span>
+            <a
+              href={planHref({ ...route, month: skipAheadMonth })}
+              onClick={(e) => {
+                e.preventDefault();
+                setMonth(skipAheadMonth);
+              }}
+              className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] group inline-flex items-center gap-1.5 font-medium text-ink"
+            >
+              <span className="bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">
+                Start at Month {skipAheadMonth}
+              </span>
+              <ArrowGlyph />
+            </a>
+          </p>
+        )}
 
         <div
           {...months.panelProps(String(month))}
@@ -423,9 +456,13 @@ function TrackA({ plan: route }: { plan: PlanA }) {
           className="relative rounded-card border border-edge bg-card shadow-1 mt-6"
         >
           <p className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal">
-            <span>Month {String(m.month).padStart(2, "0")}</span>
+            <span>
+              Month {String(m.month).padStart(2, "0")}
+              {m.month < skipAheadMonth && " · Optional if you already code"}
+            </span>
             <span>{aiPolicyLabel[m.aiPolicy]}</span>
           </p>
+          <CopyLink hash={planHref({ ...route, month: m.month })} label={`Copy link to Month ${m.month}`} className="flex-wrap px-5 pt-5 text-ink-3 sm:px-7" />
           <div className="[&>*]:animate-panel-in [&>*]:[animation-delay:calc(var(--i,0)*60ms)] motion-reduce:[&>*]:animate-fade-in grid gap-y-10 px-5 py-8 sm:px-7 md:grid-cols-12 md:gap-x-6">
           <div className="md:col-span-4" style={{ "--i": 0 } as CSSProperties}>
             <Eyebrow>Learning focus</Eyebrow>
@@ -464,7 +501,7 @@ function TrackA({ plan: route }: { plan: PlanA }) {
         </div>
         <div id="plan-portfolio" className="lg:col-span-6 lg:col-start-7">
           <SubHead n="A.4" title="Show your work — at work or on the market" />
-          <ChecklistLink href={pageHref("ready", "a")} title="Your readiness checklist" detail="Live demo, clean repo, short write-up, merged PR and proof you build with AI. Useful for team demos, promotion cases or job applications." />
+          <ChecklistLink href={pageHref("ready", "a")} title="Your checklist" detail="Live demo, clean repo, short write-up, merged PR and proof you build with AI. Useful for team demos, promotion cases or job applications." />
           <div className="mt-10 rounded-card border border-accent/40 bg-inverse p-6 text-on-inverse shadow-accent sm:p-8">
             <p className="font-mono text-label font-normal mb-4 text-inverse-accent">If you do interview</p>
             <p className="font-display font-semibold tracking-[-0.02em] text-pretty text-[1.625rem] leading-[1.15]">{interviewFocus.hybrid}</p>
@@ -663,6 +700,30 @@ function TrackB({ stage }: { stage: number }) {
 
   return (
     <div className="space-y-24 sm:space-y-36">
+      {/* The very first thing to do, before the map and the detail */}
+      <div className="rounded-card border border-accent/40 bg-inverse p-6 text-on-inverse shadow-accent sm:p-8">
+        <p className="font-mono text-label font-normal mb-4 text-inverse-accent">Your first step this week</p>
+        <p className="max-w-[44ch] font-display font-semibold tracking-[-0.02em] text-pretty text-[1.625rem] leading-[1.15]">{launchStages[0].start}</p>
+        <p className="mt-4 max-w-[62ch] text-sm leading-relaxed text-inverse-muted">
+          {trackBCostNote} {toolPricingNote}
+        </p>
+        {stage !== 1 && (
+          <button
+            type="button"
+            onClick={() => {
+              setStage(1);
+              jumpTo("stage-detail");
+            }}
+            className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] group mt-5 inline-flex items-center gap-1.5 font-mono text-label font-normal text-on-inverse"
+          >
+            <span className="bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">
+              Open Stage 1
+            </span>
+            <ArrowGlyph />
+          </button>
+        )}
+      </div>
+
       {/* Map of the whole plan, starting from the shared UX & Product Design base */}
       <div id="plan-map">
         <SubHead n="B.map" title="Your plan at a glance" note="Start from the UX & Product Design base that all three roles share, then move through four stages in order. Pick the base or any stage to open its details." />
@@ -733,9 +794,12 @@ function TrackB({ stage }: { stage: number }) {
           })}
         </div>
         <div {...stages.panelProps(String(stage))} key={stage} className="relative rounded-card border border-edge bg-card shadow-1 animate-panel-in motion-reduce:animate-fade-in grid grid-cols-4 gap-x-4 lg:grid-cols-12 lg:gap-x-6 mt-6 px-5 py-8 sm:px-7">
-          <p className="font-mono text-label font-normal col-span-4 text-ink-3 lg:col-span-3">
-            Stage 0{s.n} — {s.name}
-          </p>
+          <div className="col-span-4 flex flex-col items-start gap-3 lg:col-span-3">
+            <p className="font-mono text-label font-normal text-ink-3">
+              Stage 0{s.n} — {s.name}
+            </p>
+            <CopyLink hash={planHref({ track: "b", stage: s.n })} label={`Copy link to Stage ${s.n}`} className="flex-wrap text-ink-3" />
+          </div>
           <p className="col-span-4 mt-3 max-w-[60ch] text-lg leading-relaxed text-ink lg:col-span-8 lg:col-start-5 lg:mt-0">{s.detail}</p>
           <div className="col-span-4 mt-10 grid gap-y-8 lg:col-span-8 lg:col-start-5 md:grid-cols-12 md:gap-x-6">
             <StartAndDone stepKey={`b-s${s.n}`} start={s.start} doneWhen={s.doneWhen} topics={s.roadmapTopics} resources={s.resources} />
@@ -747,8 +811,8 @@ function TrackB({ stage }: { stage: number }) {
       <div id="plan-market">
         <SubHead n="B.2" title="The market you're entering" note={
             <>
-              Seed-stage startups (young companies on their first funding round) have the highest design hiring rate (25%). With 300–800
-              applicants per role, a portfolio with something that runs is one way to stand out.{" "}
+              Seed-stage startups (young companies on their first funding round) have the highest design hiring rate ({seedStageHiring.value}). With{" "}
+              {applicationsPerPost.value} applicants per role, a portfolio with something that runs is one way to stand out.{" "}
               <a href={pageHref("jobs")} className="font-medium text-ink underline decoration-line-strong underline-offset-4 hover:decoration-current">
                 See the full jobs outlook
               </a>
@@ -771,7 +835,10 @@ function TrackB({ stage }: { stage: number }) {
                 </dd>
                 <dt className="order-3 mt-3 text-sm text-ink-2">{c.label}</dt>
                 <dd className="font-display font-semibold leading-[0.9] tracking-[-0.04em] tabular-nums order-2 whitespace-nowrap text-[clamp(2.25rem,4.5vw,4.5rem)]">{c.value}</dd>
-                <dd className="font-mono text-label font-normal order-4 mt-auto pt-4 text-ink-3">{c.source}</dd>
+                <dd className="font-mono text-label font-normal order-4 mt-auto flex flex-col items-start gap-1.5 pt-4 text-ink-3">
+                  <BasisBadge basis={c.basis} />
+                  <span>{c.source}</span>
+                </dd>
               </div>
             );
           })}
@@ -780,7 +847,7 @@ function TrackB({ stage }: { stage: number }) {
 
       {/* Stack */}
       <div id="plan-stack">
-        <SubHead n="B.3" title="One focused stack, in order" />
+        <SubHead n="B.3" title="One focused stack, in order" note={toolPricingNote} />
         <ol className="grid gap-4 md:grid-cols-3">
           {beginnerStack.map((p, i) => (
             <li key={p.phase} className="relative rounded-card border border-edge bg-card shadow-1 p-5 sm:p-6">
@@ -800,7 +867,7 @@ function TrackB({ stage }: { stage: number }) {
       <div className="grid gap-y-24 lg:grid-cols-12 lg:gap-x-6">
         <div id="plan-portfolio" className="lg:col-span-6">
           <SubHead n="B.4" title="Junior portfolio screening" />
-          <ChecklistLink href={pageHref("ready", "b")} title="Your screening checklist" detail="Clear scope, how your thinking changed, a live build, easy access. Tick it off on the Checklist page." />
+          <ChecklistLink href={pageHref("ready", "b")} title="Your checklist" detail="Clear scope, how your thinking changed, a live build, easy access. Tick it off on the Checklist page." />
         </div>
         <div id="plan-first-year" className="lg:col-span-5 lg:col-start-8">
           <SubHead n="B.5" title="Your first year on the job" />

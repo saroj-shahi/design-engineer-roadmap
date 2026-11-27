@@ -7,7 +7,8 @@
 
 /* ───────────── Types ───────────── */
 
-export type BasisKind = "survey" | "analytics" | "projection" | "case";
+/** How a figure was produced. `commentary` marks figures reported in articles or blogs rather than in a primary dataset. */
+export type BasisKind = "survey" | "analytics" | "projection" | "case" | "commentary";
 
 export interface Metric {
   value: string;
@@ -26,10 +27,15 @@ export interface Archetype {
   signals: string;
   skills: string[];
   skillStats?: { label: string; value: number }[];
+  /** Basis and source of `skillStats`. */
+  skillStatsBasis?: BasisKind;
+  skillStatsSource?: string;
   /** Titles job posts use for this kind of work. The role names above are this guide's own. */
   aka: string[];
   /** Plain "this fits you if…" line, and which Track A option its plan uses. */
   fitsIf: string;
+  /** Optional line for readers who already write code. Copy only, no figures. */
+  fromCode?: string;
   plan: "pde" | "meta";
 }
 
@@ -37,6 +43,8 @@ export interface CompareRow {
   dimension: string;
   traditional: string;
   hybrid: string;
+  /** Optional developer-side view of the same row, for readers coming from code. Copy only. */
+  fromCode?: string;
 }
 
 export interface Skill {
@@ -149,7 +157,7 @@ export const heroMetrics: Metric[] = [
   },
   {
     value: "50%",
-    label: "Designers who ship AI-written code to real\u00A0products",
+    label: "Surveyed designers who ship AI-written code to real\u00A0products",
     scope: "Q1 2026 survey",
     source: "Designer Fund / Foundation\u00A0Capital",
     basis: "survey",
@@ -247,12 +255,38 @@ export const adoptionShift = {
   after: {
     label: "Q1 2026 (Designer Fund / Foundation Capital)",
     rows: [
-      { who: "Designers who ship AI-written code to real products", value: 50 },
+      { who: "Surveyed designers who ship AI-written code to real products", value: 50 },
       { who: "…of whom use the “Design Engineer” title", value: 20 },
       { who: "Teams where PMs or engineers now create UI", value: 40 },
     ],
   },
 };
+
+/** Figma 2025 research on design-to-code handoff. One wording for the "1 in 5" claim, used everywhere. */
+export const handoffFindings = {
+  firstBuildMatch: {
+    value: "1 in 5",
+    label: "Designers who see a first build that matches the design",
+    scope: "2025",
+    source: "Figma 2025 trend & AI research",
+    basis: "survey",
+  } satisfies Metric,
+  /** Sentence form of `firstBuildMatch`, for prose. */
+  firstBuildMatchText: "only 1 designer in 5 sees a first build that matches the design",
+  handoffImprovable: {
+    value: "Nearly all",
+    label: "Designers and developers who say the handoff could be improved",
+    scope: "2025",
+    source: "Figma 2025 trend & AI research",
+    basis: "survey",
+  } satisfies Metric,
+};
+
+/** Q1 2026 Designer Fund / Foundation Capital survey rows, by meaning. */
+export const shipsAiCode = adoptionShift.after.rows[0];
+export const deTitleShare = adoptionShift.after.rows[1];
+export const teamsWhereOthersCreateUi = adoptionShift.after.rows[2];
+export const adoptionBasis: { before: BasisKind; after: BasisKind } = { before: "survey", after: "survey" };
 
 /* ───────────── §2 Archetypes ───────────── */
 
@@ -263,7 +297,9 @@ export const archetypes: Archetype[] = [
     short: "Ships the code",
     focus: "Product or brand and web work",
     aka: ["Design Engineer", "UX Engineer", "Design Technologist", "Front-end Designer"],
-    fitsIf: "you care about the last 10% of polish, already play with code, and want to own what ships.",
+    fitsIf: "you care about small visual details, already try things in code, and want to be responsible for the finished product.",
+    fromCode:
+      "If you already work as a front-end developer, your HTML, CSS, React and Git skills carry straight over. Spend your time on visual craft, typography and design judgment.",
     plan: "pde",
     deliverable:
       "Code changes merged into the real product. You own the UI components, design tokens, screen sizes and visual quality in the code\u00A0itself.",
@@ -275,6 +311,9 @@ export const archetypes: Archetype[] = [
       { label: "Live code portfolio", value: 46 },
       { label: "TypeScript", value: 42 },
     ],
+    // TODO(source): the brief gives these job-post shares without naming the dataset behind them.
+    skillStatsBasis: "analytics",
+    skillStatsSource: "Design Engineer job posts, 2026",
   },
   {
     id: "meta",
@@ -329,6 +368,8 @@ export const comparison: CompareRow[] = [
     dimension: "What carries over",
     traditional: "Research, problem framing, visual craft, typography and judgment about what to build.",
     hybrid: "The same foundation. Code is added on top of it, not instead of it.",
+    fromCode:
+      "Coming from code? Your HTML, CSS, React, Git and code review skills carry over. Add visual craft, typography, research and design judgment on top.",
   },
   {
     dimension: "Primary artifacts",
@@ -353,9 +394,19 @@ export const basisLabel: Record<BasisKind, string> = {
   analytics: "Hiring data",
   projection: "Gov. forecast",
   case: "Case study",
+  commentary: "Commentary",
 };
 
 /* ───────────── §5 Skills architecture ───────────── */
+
+/** AI in Design Report 2026 (stateofaidesign.com, in works cited). */
+export const judgmentOverAi: Metric = {
+  value: "Over 80%",
+  label: "Designers who still rely on their own judgment over AI",
+  scope: "2026",
+  source: "AI in Design Report 2026",
+  basis: "survey",
+};
 
 export const coreSkills: Skill[] = [
   {
@@ -366,7 +417,7 @@ export const coreSkills: Skill[] = [
   {
     name: "Human craft, visual taste & curation",
     detail:
-      "Visual hierarchy, small interaction details, typography and judgment. These still matter when AI makes the first draft. Over 80% of designers still rely on their own judgment over AI (AI in Design Report 2026).",
+      `Visual hierarchy, small interaction details, typography and judgment. These still matter when AI makes the first draft. ${judgmentOverAi.value} of designers still rely on their own judgment over AI (${judgmentOverAi.source}, ${judgmentOverAi.basis}).`,
     tags: ["Craft"],
   },
   {
@@ -425,6 +476,9 @@ export const axShift = {
   summary:
     "Screens still matter. The work grows to include rules for trust, how much the AI can do alone, and when it must ask a person.",
 };
+
+// TODO(source): the brief gives these agent maturity shares without naming the study behind them; basis assumed survey.
+export const agentMaturityBasis: BasisKind = "survey";
 
 export const agentMaturity = [
   { level: 1, label: "Not using agents", value: 21, detail: "Have not set up any AI agents." },
@@ -536,7 +590,7 @@ export const patternCategories: PatternCategory[] = [
 export const toolStages: ToolStage[] = [
   {
     id: 1,
-    name: "Visual Prototyping",
+    name: "Visual prototyping",
     tools: ["Claude Design", "Figma Make", "Google Stitch"],
     capabilities: "Make screens from a prompt, explore visual directions, create decks, and build clickable prototypes.",
     guardrail:
@@ -544,7 +598,7 @@ export const toolStages: ToolStage[] = [
   },
   {
     id: 2,
-    name: "Moving Between Design and Code",
+    name: "Moving between design and code",
     tools: ["Figma MCP", "Codex (Figma integration)", "Claude Code (Figma plugin/MCP)"],
     capabilities:
       "Works both ways. Agents read Figma tokens, variables and Code Connect components, or turn code back into editable Figma layers.",
@@ -553,7 +607,7 @@ export const toolStages: ToolStage[] = [
   },
   {
     id: 3,
-    name: "Production UI & Code",
+    name: "Production UI and code",
     tools: ["Codex", "Claude Code", "v0 (Vercel)", "Cursor"],
     capabilities: "Real code changes across many files, React components (v0), inline edits (Cursor) and GitHub pull requests.",
     guardrail:
@@ -561,7 +615,7 @@ export const toolStages: ToolStage[] = [
   },
   {
     id: 4,
-    name: "App Builders (MVPs & Demos)",
+    name: "App builders (MVPs and demos)",
     tools: ["Replit (Agent 4 & Design Canvas)", "Lovable", "Bolt"],
     capabilities: "Quick full apps with databases, admin dashboards and proof-of-concept software.",
     guardrail:
@@ -637,6 +691,21 @@ export const trackAOptions = [
   },
 ];
 
+/** Who each starting track welcomes, shown on the Start page. Copy only, no figures. */
+export const startAudience = {
+  a: "Print, brand and editorial designers fit here too. Your eye for type, layout and detail carries straight over.",
+  b: "No design job or degree needed. Writers, marketers and other career switchers are welcome.",
+  fromCode: { lead: "Coming from code?", role: "See the Design Engineer role", plan: "start its plan at Month\u00A03" },
+  leads: { lead: "Leading a team?", jobs: "Start with Jobs", roles: "Roles" },
+};
+
+/** How fast to go. The brief gives no hours per week, so this stays a guide, not a schedule. */
+export const planPace =
+  "Go at your own pace. Months and stages are a guide, not a deadline, and the plan works alongside a full-time\u00A0job.";
+
+/** For readers who already code: where to join Track A. Months 1–2 cover browser basics and JavaScript & React. */
+export const skipAheadMonth = 3;
+
 export const sixMonthPlan: Month[] = [
   {
     month: 1,
@@ -644,8 +713,8 @@ export const sixMonthPlan: Month[] = [
     learn: ["Semantic HTML & forms", "Flexbox, CSS Grid & breakpoints", "Typography, color & hierarchy", "Browser DevTools"],
     build: "3 responsive landing pages",
     focus: "HTML, CSS layout (Flexbox, Grid) and checking layouts in DevTools.",
-    deliverable: "3 responsive landing pages, built from scratch with no frameworks.",
-    guardrail: "No AI code and no CSS frameworks. Learn to fix layouts by hand.",
+    deliverable: "Three responsive landing pages, built from scratch with no frameworks.",
+    guardrail: "No AI code and no CSS frameworks this month, so you learn to read and fix layouts by hand. You'll need that skill to check AI's work later.",
     aiPolicy: "none",
     start: "Pick a landing page you like and rebuild its layout from a blank HTML file.",
     doneWhen: "You can rebuild a layout from a screenshot and fix it at phone width without help.",
@@ -726,10 +795,10 @@ export const sixMonthPlan: Month[] = [
     learn: ["Tailwind CSS & Vite", "Design tokens & dark mode", "TypeScript basics", "Type, color & spacing scales"],
     build: "Launch 1 small tool or web app",
     focus: "Tailwind CSS, design tokens and TypeScript basics.",
-    deliverable: "Build and launch 1 small tool or live web app.",
+    deliverable: "Build and launch one small tool or live web app.",
     guardrail: "You can now spot when AI output is wrong, so use AI coding tools (Cursor, Claude Code) freely to write code faster.",
     aiPolicy: "assist",
-    start: "Turn the colors, spacing and type of one month-1 page into design tokens.",
+    start: "Turn the colors, spacing and type of one page from month one into design tokens.",
     doneWhen: "Your tool is live at a public link, and you can explain every file in it.",
     roadmapTopics: [
       {
@@ -854,9 +923,9 @@ export const sixMonthPlan: Month[] = [
     build: "Live work, write-ups & merged PRs",
     focus: "Package what you've built so teammates, managers or hiring teams can see the impact — whether you're expanding your current role or looking for a new one.",
     deliverable: "Document two live builds and your merged PRs for an internal demo, promotion case, or updated portfolio.",
-    guardrail: "Staying in your role? Share a demo with your design and engineering leads to widen your scope. Looking to move? Send ~20 careful applications to teams that hire hybrids instead of mass applying.",
+    guardrail: "Staying in your role? Share a demo with your design and engineering leads and ask to take on more code work. Looking to move? Send about 20 careful applications to teams that hire hybrids, rather than many quick ones.",
     aiPolicy: "position",
-    start: "Pick your two strongest builds and write a 2–3 paragraph write-up of the problem, trade-offs and result.",
+    start: "Pick your two strongest builds and write two or three paragraphs on the problem, trade-offs and result.",
     doneWhen: "Every item on the readiness checklist is ticked.",
     roadmapTopics: [
       {
@@ -1032,6 +1101,15 @@ export const aiPolicyLabel: Record<Month["aiPolicy"], string> = {
   position: "Prove impact",
 };
 
+// TODO(source): the brief gives this figure without naming its source; basis assumed survey.
+export const designerIsolation: Metric = {
+  value: "20%",
+  label: "Designers who feel isolated (up from 5% in 2025)",
+  scope: "2026",
+  source: "Research brief",
+  basis: "survey",
+};
+
 export const leverageHabits: ChecklistItem[] = [
   {
     id: "preprogram",
@@ -1055,18 +1133,56 @@ export const leverageHabits: ChecklistItem[] = [
     id: "isolation",
     title: "Don't work alone",
     detail:
-      "20% of designers feel isolated (up from 5% in 2025). Measure your value by clear team decisions and user results, not by the number of screens.",
+      `${designerIsolation.value} of designers feel isolated (up from 5% in 2025). Measure your value by clear team decisions and user results, not by the number of screens.`,
   },
 ];
 
+/* ───────────── For design leads ───────────── */
+
+/** Hire vs. upskill, built only from content elsewhere in this file (titleReality, comparison, interviewFocus). */
+export const forLeads = {
+  intro:
+    "Hiring and upskilling are both valid ways to bring design and code closer on your team. You can often start with the people you already have.",
+  upskill: {
+    title: "Upskill your team",
+    detail:
+      "Use the Track A plan as a shared learning plan. Start with habits that pay off right away: load your design system into the team's AI tools, and agree with front-end leads to review designers' small code changes.",
+  },
+  hire: {
+    title: "Hire for the role",
+    detail: titleReality,
+  },
+  jobPostTitle: "What to ask for in a job post",
+  jobPost: [
+    "Research, problem framing, visual craft, typography and judgment about what to build.",
+    "Code quality in HTML, CSS, JavaScript and React, and clear component structure.",
+    "Accessibility (ARIA) and design tokens.",
+    "Working with AI tools, with the judgment to review what they make.",
+  ],
+  interviewTitle: "How to interview",
+  interview: interviewFocus.hybrid,
+};
+
 /* ───────────── §4 Track B: beginners ───────────── */
 
-export const beginnerContext = [
-  { value: "−65%", label: "Entry-level hiring at big tech", source: "SignalFire" },
-  { value: "−76%", label: "Junior hiring at startups", source: "SignalFire" },
-  { value: "300–800", label: "Applications per job post", source: "Personal.ink; Bootcamp (Medium)" },
-  { value: "~90%", label: "Hiring managers who expect a strong junior portfolio", source: "UX Pilot, citing State of UX Hiring" },
+export const beginnerContext: { value: string; label: string; source: string; basis: BasisKind }[] = [
+  { value: "−65%", label: "Entry-level hiring at big tech", source: "SignalFire", basis: "analytics" },
+  { value: "−76%", label: "Junior hiring at startups", source: "SignalFire", basis: "analytics" },
+  { value: "300–800", label: "Applications per job post", source: "Personal.ink; Bootcamp (Medium)", basis: "commentary" },
+  { value: "~90%", label: "Hiring managers who expect a strong junior portfolio", source: "UX Pilot, citing State of UX Hiring", basis: "survey" },
 ];
+
+/** Applications per job post, from `beginnerContext`. */
+export const applicationsPerPost = beginnerContext[2];
+
+// TODO(source): the brief gives this seed-stage hiring rate without naming its source; basis assumed hiring data.
+export const seedStageHiring: Metric = {
+  value: "25%",
+  label: "Design hiring rate at seed-stage startups, the highest of any stage",
+  scope: "2026",
+  source: "Research brief",
+  basis: "analytics",
+};
 
 export interface LaunchStage {
   n: number;
@@ -1167,7 +1283,7 @@ export const launchStages: LaunchStage[] = [
     learn: ["Interviews & contextual inquiry", "Local orgs, OSS & small SaaS", "Usability testing & critiques", "Analytics, HEART & A/B testing"],
     name: "Ship real work for real users",
     detail:
-      "Skip made-up Spotify or Uber redesigns. Solve real problems for local businesses, community groups, open-source projects or small SaaS. Start small: one group, one problem, a handful of real users. Test it live and write down how feedback changed your mind.",
+      "Skip made-up redesigns of famous apps. Solve real problems for local businesses, community groups, open-source projects or small SaaS. Start small: one group, one problem, a handful of real users. Test it live and write down how feedback changed your mind.",
     output: "Live work with proof from real users",
     start: "Ask one local business, club or open-source project what slows them down each week.",
     doneWhen: "Real people used what you built, and you can show what changed because of their feedback.",
@@ -1206,10 +1322,10 @@ export const launchStages: LaunchStage[] = [
     learn: ["Product sense, OKRs & RICE/Kano", "3–4 outcome-led case studies", "Feasibility specs & edge cases", "Seed startups, agencies & B2B"],
     name: "Aim at the right employers",
     detail:
-      "Write 3–4 short, easy-to-scan case studies. Aim them at early (seed-stage) startups, which hire the most designers relative to size (25%). Also try small agencies and industry-focused B2B companies, not only big tech junior programs.",
+      `Write three or four short, easy-to-scan case studies. Aim them at early (seed-stage) startups, which hire the most designers relative to size (${seedStageHiring.value}). Also try small agencies and industry-focused B2B companies, not only big tech junior programs.`,
     output: "A portfolio aimed at where hiring happens",
     start: "Rewrite the opening of your best case study: who you are, the problem, and what you did.",
-    doneWhen: "Every item on the portfolio checklist is ticked.",
+    doneWhen: "Every item on the readiness checklist is ticked.",
     roadmapTopics: [
       {
         slug: "product-design",
@@ -1241,13 +1357,39 @@ export const launchStages: LaunchStage[] = [
   },
 ];
 
+/** Free vs. paid, from each resource's own `cost`. Tools carry no price data, so the guide points to their own pricing. */
+const allResources = launchStages.flatMap((st) => st.resources);
+const freeResources = allResources.filter((r) => r.cost === "free").length;
+export const trackBCostNote =
+  freeResources === allResources.length
+    ? "Every learning resource linked in this plan is free."
+    : `${freeResources} of ${allResources.length} learning resources linked in this plan are free.`;
+export const toolPricingNote = "Tool prices and free tiers change, so check each tool's current pricing before you sign\u00A0up.";
+
 export const beginnerStack = [
   { phase: "Explore", tools: ["Figma", "Claude Design", "Figma Make", "Google Stitch"] },
   { phase: "Build", tools: ["HTML5 & CSS3", "React", "Tailwind CSS"] },
   { phase: "Execute", tools: ["Cursor"] },
 ];
 
+/** Track B readiness list. The first three are small "this week" steps taken from Stage 1, so a reader
+ *  starting from zero can tick something early; the rest are what screeners look for in a junior portfolio. */
 export const juniorChecklist: ChecklistItem[] = [
+  {
+    id: "week-teardown",
+    title: "This week: take one app apart",
+    detail: launchStages[0].start,
+  },
+  {
+    id: "week-wcag",
+    title: "This week: check one screen against WCAG",
+    detail: "Run one of your own screens through the WebAIM WCAG 2 checklist from Stage 1 and note what fails.",
+  },
+  {
+    id: "week-explain",
+    title: "This week: explain one problem and its fix",
+    detail: "Say a usability or accessibility problem, and its fix, in plain words, as if to a friend.",
+  },
   {
     id: "context",
     title: "Clear context and scope up front",
@@ -1294,10 +1436,14 @@ export const readinessItems: ChecklistItem[] = [
   { id: "ai", title: "Proof of an AI-assisted workflow", detail: "Show you guided Cursor or Claude Code to ship real features." },
   { id: "access", title: "Easy to open", detail: "No broken links, setup hoops or clutter — anyone you share it with can try it right away." },
   { id: "scope", title: "Honest about your role", detail: "Say clearly what you designed, built and reviewed — and label practice projects as such." },
-  { id: "deployed", title: "A live project you built and launched", detail: "Components with every state and layouts that fit any screen, live on Vercel or similar. Months 3–4 of the plan." },
-  { id: "merged", title: "A merged pull request in a real codebase", detail: "Even a small UI fix in your team's code or an open-source project counts. Month 5 of the plan." },
+  { id: "deployed", title: "A live project you built and launched", detail: "Components with every state and layouts that fit any screen, live on Vercel or similar. Month 3 in both Track A plans." },
+  { id: "merged", title: "A merged pull request in a real codebase", detail: "Even a small UI fix in your team's code or an open-source project counts. Month 5 in both Track A plans." },
 ];
 
+/** When the guide's content was last updated. Keep in sync with `dateModified` in index.html's JSON-LD. */
+export const lastUpdated = "2026-11-25";
+
+/** Primary data sources cited in the brief. `url` only where the public page is known; otherwise none. */
 export interface Source {
   label: string;
   url?: string;
@@ -1308,7 +1454,7 @@ export const sources: Source[] = [
   { label: "Figma 2025 trend & AI research" },
   { label: "CollabSoft" },
   { label: "Designer Fund / Foundation Capital, Q1 2026 survey", url: "https://designerfund.com/blog/how-figma-midjourney-and-databricks-harness-ai-in-design" },
-  { label: "US BLS Employment Projections · SOC 15-1255" },
+  { label: "US BLS Employment Projections · SOC 15-1255", url: "https://www.bls.gov/ooh/computer-and-information-technology/web-developers.htm" },
   { label: "Academy UX (job aggregator), Oct 2026" },
   { label: "Hymera recruiting analysis, July 2026" },
 ];
@@ -1403,8 +1549,9 @@ export const glossaryTopicLabel: Record<GlossaryTopic, string> = {
 
 /** `see` names other glossary terms to cross-link; each must match a `term` exactly. */
 export const glossary: { term: string; topic: GlossaryTopic; meaning: string; see?: string[] }[] = [
-  { term: "Design Engineer", topic: "design", meaning: "A designer who also builds the real interface in code and owns how it looks and works once it ships. See the Roles page.", see: ["Meta-Designer", "AX (Agentic Experience)"] },
+  { term: "Design Engineer", topic: "design", meaning: "A designer who also builds the real interface in code and owns how it looks and works once it ships. See the Roles page.", see: ["Meta-Designer", "AX (Agentic Experience)", "UX Engineer / Design Technologist"] },
   { term: "Meta-Designer", topic: "design", meaning: "A designer who builds the system others design with: tokens, components and the rules people and AI follow. See the Roles page.", see: ["Design Engineer", "Design system"] },
+  { term: "UX Engineer / Design Technologist", topic: "design", meaning: "Other job titles for work close to a Design Engineer's. What each covers varies by company: some lean toward prototypes, others toward production code.", see: ["Design Engineer", "Prototype"] },
   { term: "UX (user experience)", topic: "design", meaning: "How it feels to use a product from start to finish, including whether it solves the problem.", see: ["UI (user interface)"] },
   { term: "UI (user interface)", topic: "design", meaning: "The screens, buttons, text and controls people see and touch.", see: ["UX (user experience)"] },
   { term: "UX research", topic: "design", meaning: "Learning about users and their needs through interviews, surveys, testing and data.", see: ["User interview", "Usability testing"] },
@@ -1492,6 +1639,7 @@ export const glossary: { term: string; topic: GlossaryTopic; meaning: string; se
   { term: "API", topic: "code", meaning: "A defined way for one piece of software to ask another for data or actions.", see: ["Front end vs back end"] },
   { term: "Terminal", topic: "code", meaning: "A text window where you type commands to run tools, like starting a project on your computer. Also called the command line.", see: ["npm", "Localhost"] },
   { term: "npm", topic: "code", meaning: "A tool and online store for packages: ready-made code other people wrote that you add to a project.", see: ["Terminal"] },
+  { term: "Vite", topic: "code", meaning: "A build tool that runs a fast local preview while you work and bundles the project for release. It is often used with React.", see: ["npm", "Localhost"] },
   { term: "Localhost", topic: "code", meaning: "A private preview of a website that only your computer can see while you build it.", see: ["Terminal", "Deploy"] },
   { term: "Git", topic: "code", meaning: "A tool that tracks every change to a project's files, so you can review or undo them.", see: ["Repo (repository)", "Commit"] },
   { term: "Repo (repository)", topic: "code", meaning: "A project's folder of files plus every past version of them. GitHub is a common place to keep one online.", see: ["Git"] },
@@ -1523,6 +1671,9 @@ export const glossary: { term: string; topic: GlossaryTopic; meaning: string; se
   { term: "KPI (key performance indicator)", topic: "team", meaning: "A number a team tracks to see whether it is meeting its goals.", see: ["OKR (objectives and key results)"] },
   { term: "OKR (objectives and key results)", topic: "team", meaning: "A goal-setting method: a clear objective plus measurable results that show progress.", see: ["KPI (key performance indicator)"] },
   { term: "North Star metric", topic: "team", meaning: "The one number a product team treats as the best sign of value delivered to users." },
+  { term: "HEART framework", topic: "team", meaning: "A framework from Google for measuring user experience: Happiness, Engagement, Adoption, Retention and Task success. Teams usually pick the few that fit their product.", see: ["Retention", "KPI (key performance indicator)"] },
+  { term: "RICE", topic: "team", meaning: "A way to rank ideas by Reach, Impact, Confidence and Effort. The scores are estimates, so use them to compare ideas, not as exact answers.", see: ["Kano model", "Backlog"] },
+  { term: "Kano model", topic: "team", meaning: "A way to sort features by how they affect satisfaction: basics people expect, features where more is better, and extras that delight.", see: ["RICE"] },
   { term: "NPS (Net Promoter Score)", topic: "team", meaning: "A survey score based on how likely people are to recommend a product." },
   { term: "Agile", topic: "team", meaning: "A way of working in short cycles, shipping small pieces and adjusting as you learn.", see: ["Sprint"] },
   { term: "Sprint", topic: "team", meaning: "A fixed, short period, often one or two weeks, where a team finishes a set of work.", see: ["Agile", "Backlog"] },
@@ -1559,4 +1710,8 @@ export const glossary: { term: string; topic: GlossaryTopic; meaning: string; se
   { term: "A2A (Agent-to-Agent)", topic: "ai", meaning: "A standard that lets AI agents pass tasks and updates to each other.", see: ["MCP (Model Context Protocol)"] },
   { term: "AG-UI", topic: "ai", meaning: "A standard for sending live updates from an AI agent to the app screen.", see: ["A2UI (Agent-to-User Interface)"] },
   { term: "A2UI (Agent-to-User Interface)", topic: "ai", meaning: "A standard that lets an agent show users only components from an approved design system.", see: ["AG-UI", "Design system"] },
+  { term: "Autonomy Dial", topic: "ai", meaning: "A control that lets users choose how much an AI agent does on its own, from doing the task themselves to full automation. Riskier tasks get tighter limits.", see: ["Human-in-the-loop (HITL)", "Human-on-the-loop (HOTL)", "Guardrail"] },
+  { term: "CLAUDE.md / AGENTS.md", topic: "ai", meaning: "A plain text file in a project that tells an AI coding tool the project's rules, like which commands to run and how to name things. Claude Code reads CLAUDE.md; AGENTS.md is a shared format many tools read.", see: ["AI agent", "Plan mode"] },
+  { term: "Plan mode", topic: "ai", meaning: "A setting in some AI coding tools, such as Claude Code, where the agent reads the project and proposes a plan before it changes any files. You review the plan first.", see: ["CLAUDE.md / AGENTS.md", "Human-in-the-loop (HITL)"] },
+  { term: "llms.txt", topic: "ai", meaning: "A proposed standard: a plain text file on a website that gives AI tools a short, easy-to-read guide to its pages or docs. Support for it varies.", see: ["MCP (Model Context Protocol)"] },
 ];

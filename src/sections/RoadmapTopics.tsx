@@ -181,7 +181,7 @@ export function RoadmapTopics({ slug }: { slug?: string }) {
                       />
                       <span className="flex items-baseline justify-between gap-2">
                         <span className={`font-mono text-label font-normal ${on ? "text-accent-ink" : "text-ink-3"}`}>
-                          {r.milestones.length} stages
+                          {r.milestones.length} sections
                         </span>
                         <span className="font-mono text-label font-normal tabular-nums text-ink-3">
                           {done > 0 ? `${done}/${total}` : `${total} topics`}
@@ -217,7 +217,7 @@ export function RoadmapTopics({ slug }: { slug?: string }) {
           <div className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal">
             <span>roadmap.sh/{active.slug}</span>
             <span className="tabular-nums">
-              {active.milestones.length} stages · {activeTotal} topics
+              {active.milestones.length} sections · {activeTotal} topics
             </span>
           </div>
 
@@ -427,7 +427,7 @@ export function RoadmapTopics({ slug }: { slug?: string }) {
           </div>
         ) : (
           <ol
-            aria-label={`${active.title} stages`}
+            aria-label={`${active.title} sections`}
             className="relative mt-10 space-y-6 before:absolute before:bottom-6 before:left-5 before:top-6 before:w-[2px] before:bg-edge sm:before:left-6"
           >
             {filteredMilestones.map((m, i) => {

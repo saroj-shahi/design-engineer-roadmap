@@ -2,18 +2,20 @@ import { useState, type CSSProperties } from "react";
 import {
   agentLayers,
   agentMaturity,
+  agentMaturityBasis,
   axDomains,
   axShift,
   coreSkills,
   engineeringSkills,
   patternCategories,
   protocols,
+  teamsWhereOthersCreateUi,
   type Skill,
 } from "../data/research";
 import { BrandLogosFor } from "../components/BrandLogo";
 import { Glyph, type GlyphName } from "../components/icons";
 import { ProtocolArchitecture } from "../components/ProtocolArchitecture";
-import { Disclosure, Lines, Section, SectionHeader, TabPanel, Tabs, Tag, pageHref, useTabList } from "../components/ui";
+import { BasisBadge, Disclosure, Lines, Section, SectionHeader, TabPanel, Tabs, Tag, pageHref, useTabList } from "../components/ui";
 
 const patternTotal = patternCategories.reduce((n, c) => n + c.patterns.length, 0);
 
@@ -41,7 +43,7 @@ export function SkillsExplorer() {
           <TabPanel idPrefix="skills" id="core">
             <SkillLedger skills={coreSkills} large />
             <Footnote>
-              These still set you apart when AI makes the first draft. In a Q1 2026 Designer Fund / Foundation Capital survey, 40% of
+              These still set you apart when AI makes the first draft. In a Q1 2026 Designer Fund / Foundation Capital survey, {teamsWhereOthersCreateUi.value}% of
               teams said PMs or engineers now create UI with AI. Browse full topic syllabi in{" "}
               <a href={pageHref("library", "roadmaps", "ux-design")} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] font-medium text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">
                 UX Design
@@ -187,8 +189,15 @@ function AxPanel() {
           <p className="mt-8 max-w-[52ch] leading-relaxed text-ink-2">{axShift.summary}</p>
         </div>
         <figure className="col-span-4 self-end lg:col-span-4 lg:col-start-9">
-          <figcaption className="font-mono text-label font-normal mb-4 text-ink-3">Enterprise agent maturity</figcaption>
-          <div className="flex h-24 overflow-hidden rounded-ctl border border-edge" role="img" aria-label="21% no adoption, 68% piloting, 11% in production">
+          <figcaption className="mb-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
+            <span className="font-mono text-label font-normal text-ink-3">Enterprise agent maturity</span>
+            <BasisBadge basis={agentMaturityBasis} />
+          </figcaption>
+          <div
+            className="flex h-24 overflow-hidden rounded-ctl border border-edge"
+            role="img"
+            aria-label={agentMaturity.map((m) => `${m.value}% ${m.label.toLowerCase()}`).join(", ")}
+          >
             {agentMaturity.map((m) => (
               <div
                 key={m.level}

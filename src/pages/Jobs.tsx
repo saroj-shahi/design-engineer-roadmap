@@ -46,7 +46,7 @@ export function Jobs() {
           <MarketTable />
         </section>
       </div>
-      <NextPage to="roles" title="Which role fits you?" note="Three roles are growing where design and code meet. See what each one involves and who it suits." />
+      <NextPage to="roles" title="Which role fits you?" note="Three roles where design and code meet. See what each one involves and who it suits." />
     </>
   );
 }

@@ -45,6 +45,16 @@ Always run `npm run typecheck` (or `npm run build`) after edits.
 3. **Respectful bridge tone:** Plain, direct prose. Never frame designers as "catching up" or engineers as gatekeepers; frame hybrid work as shrinking the handoff.
 4. **Dual Track A framing:** Track A copy (`Home`, `Roles`, `Plan`, `Ready`, `Comparison`) must serve working designers upskilling in their current job **and** those preparing for a new role.
 
+## Naming rules (copy)
+
+- **Months and stages:** Track A has six **months**; Track B has four **stages**. Use "stage" only for Track B. Groups inside a roadmap.sh track are **sections**; the four columns on the Tools shelf are **steps**.
+- **Track labels:** always "Track A · Working designer" and "Track B · Starting out" (tags, breadcrumbs, PDF labels, search).
+- **Role names:** spell a role out in full once, on the Roles page (e.g. "Agentic Experience (AX) Designer"). Everywhere else use the short names with these capitals: "Design Engineer", "Meta-Designer", "AX Designer".
+- **Checklist:** "Checklist" in nav, buttons and other UI labels; "readiness checklist" only inside sentences.
+- **Case:** sentence case for tool step names and UI labels ("Moving between design and code").
+- **Numbers:** spell out one to nine in prose ("six-month plan", "four-stage plan", "three roles"). Figures, stats and short meta labels keep digits.
+- **Plain words:** no idioms or metaphors a non-native reader would need to decode; define jargon on first use or add it to the glossary.
+
 ## Routing, storage & SEO rules
 
 - **Hash routing:** All in-app routes use `#/...` (`#/roles/de`, `#/plan/a/pde/m1`, `#/plan/b/s1`, `#/ready/a`, `#/library/roadmaps/frontend`). Keep the `legacy` anchor map in `ui.tsx` working.

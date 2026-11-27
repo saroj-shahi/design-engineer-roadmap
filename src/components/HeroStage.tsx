@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 
 import { BrandLogo } from "./BrandLogo";
 import { Glyph, ArchetypeGlyph, type GlyphName } from "./icons";
 import { Hint, prefersReducedMotion, usePointerParallax } from "./ui";
-import { archetypes } from "../data/research";
+import { archetypes, handoffFindings } from "../data/research";
 
 const tagline = (id: string) => archetypes.find((a) => a.id === id)?.short ?? "";
 
@@ -23,7 +23,7 @@ const captions: Record<Phase, ReactNode> = {
   before: (
     <>
       <strong className="font-medium text-ink">Before:</strong> a designer makes the screen in Figma, then an engineer rebuilds it from a
-      spec. Even with great people on both sides, only 1 in 5 first builds match the design.
+      spec. Even with great people on both sides, {handoffFindings.firstBuildMatchText}.
     </>
   ),
   after: (

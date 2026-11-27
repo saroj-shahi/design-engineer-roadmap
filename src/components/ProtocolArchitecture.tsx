@@ -47,7 +47,7 @@ export function ProtocolArchitecture({
           {/* Left node: User & UI */}
           <rect x="20" y="68" width="156" height="148" fill="var(--card)" stroke="var(--edge)" strokeWidth="2" />
           <rect x="20" y="68" width="156" height="26" fill="var(--inverse-bg)" />
-          <text x="32" y="85" fill="var(--inverse-fg)" style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.08em" }}>
+          <text x="32" y="85" fill="var(--inverse-fg)" style={{ fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: "0.08em" }}>
             SURFACE
           </text>
           <text x="32" y="132" fill="var(--ink)" style={{ fontFamily: "var(--font-display)", fontStretch: "72%", fontWeight: 600, fontSize: 22 }}>
@@ -64,7 +64,7 @@ export function ProtocolArchitecture({
           <rect x="360" y="60" width="168" height="164" fill="var(--hard)" />
           <rect x="356" y="56" width="168" height="164" fill="var(--card)" stroke="var(--edge)" strokeWidth="2" />
           <rect x="356" y="56" width="168" height="28" fill="var(--accent)" />
-          <text x="368" y="74" fill="var(--on-accent)" style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.08em", fontWeight: 600 }}>
+          <text x="368" y="74" fill="var(--on-accent)" style={{ fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: "0.08em", fontWeight: 600 }}>
             ORCHESTRATOR
           </text>
           <text x="368" y="122" fill="var(--ink)" style={{ fontFamily: "var(--font-display)", fontStretch: "72%", fontWeight: 600, fontSize: 26 }}>
@@ -76,31 +76,31 @@ export function ProtocolArchitecture({
           <text x="368" y="166" fill="var(--ink-2)" style={{ fontFamily: "var(--font-sans)", fontSize: 12 }}>
             streams UI updates
           </text>
-          <text x="368" y="198" fill="var(--ink-3)" style={{ fontFamily: "var(--font-mono)", fontSize: 10 }}>
+          <text x="368" y="198" fill="var(--ink-3)" style={{ fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: "-0.03em" }}>
             HITL / HOTL GUARDRAILS
           </text>
 
           {/* Top-right node: Tools & Data */}
           <rect x="704" y="48" width="156" height="84" fill="var(--card)" stroke="var(--edge)" strokeWidth="2" />
-          <text x="716" y="72" fill="var(--ink-3)" style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.08em" }}>
+          <text x="716" y="72" fill="var(--ink-3)" style={{ fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: "0.08em" }}>
             CONTEXT
           </text>
           <text x="716" y="98" fill="var(--ink)" style={{ fontFamily: "var(--font-display)", fontStretch: "72%", fontWeight: 600, fontSize: 20 }}>
             Tools &amp; Data
           </text>
-          <text x="716" y="117" fill="var(--ink-2)" style={{ fontFamily: "var(--font-sans)", fontSize: 11.5 }}>
+          <text x="716" y="117" fill="var(--ink-2)" style={{ fontFamily: "var(--font-sans)", fontSize: 12 }}>
             Figma, repos, APIs
           </text>
 
           {/* Bottom-right node: Other Agents */}
           <rect x="704" y="152" width="156" height="84" fill="var(--card)" stroke="var(--edge)" strokeWidth="2" />
-          <text x="716" y="176" fill="var(--ink-3)" style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.08em" }}>
+          <text x="716" y="176" fill="var(--ink-3)" style={{ fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: "0.08em" }}>
             PEERS
           </text>
           <text x="716" y="202" fill="var(--ink)" style={{ fontFamily: "var(--font-display)", fontStretch: "72%", fontWeight: 600, fontSize: 20 }}>
             Other Agents
           </text>
-          <text x="716" y="221" fill="var(--ink-2)" style={{ fontFamily: "var(--font-sans)", fontSize: 11.5 }}>
+          <text x="716" y="221" fill="var(--ink-2)" style={{ fontFamily: "var(--font-sans)", fontSize: 12 }}>
             Specialist workflows
           </text>
 
@@ -164,7 +164,7 @@ export function ProtocolArchitecture({
                   y={lineY + 13}
                   textAnchor="middle"
                   fill={on ? "var(--on-accent)" : "var(--ink-3)"}
-                  style={{ fontFamily: "var(--font-sans)", fontSize: 10.5 }}
+                  style={{ fontFamily: "var(--font-sans)", fontSize: 12 }}
                 >
                   {b.sub}
                 </text>

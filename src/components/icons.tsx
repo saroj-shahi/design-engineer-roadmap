@@ -386,6 +386,7 @@ const basisGlyph: Record<BasisKind, GlyphName> = {
   survey: "survey",
   projection: "forecast",
   case: "caseStudy",
+  commentary: "library",
 };
 
 export function BasisGlyph({ basis, className = "size-3.5" }: { basis: BasisKind; className?: string }) {

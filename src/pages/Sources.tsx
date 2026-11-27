@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { sources, worksCited } from "../data/research";
+import { lastUpdated, sources, worksCited } from "../data/research";
 import { ExternalGlyph } from "../components/icons";
 import { NextPage, PageHeader, SubHead } from "../components/ui";
 
@@ -24,6 +24,13 @@ function ExtLink({ href, children }: { href: string; children: ReactNode }) {
   );
 }
 
+const lastUpdatedLabel = new Date(`${lastUpdated}T00:00:00Z`).toLocaleDateString("en-GB", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+  timeZone: "UTC",
+});
+
 /** Every source behind the guide's figures, plus how they are used. Linked from the footer and from search. */
 export function Sources() {
   return (
@@ -31,8 +38,12 @@ export function Sources() {
       <PageHeader
         id="sources-title"
         title={["Sources", <em>and method.</em>]}
-        lede={`Every figure in this guide traces to one research brief. Here are the ${sources.length} sources it cites and ${worksCited.length} articles behind it.`}
-      />
+        lede={`Every figure in this guide traces to one research brief. Here are the ${sources.length} data sources it cites and ${worksCited.length} articles behind it.`}
+      >
+        <p className="mt-8 font-mono text-label font-normal text-ink-3">
+          Last updated <time dateTime={lastUpdated}>{lastUpdatedLabel}</time>
+        </p>
+      </PageHeader>
 
       <section aria-labelledby="method-title" className="mt-4">
         <SubHead id="method-title" eyebrow="01 · Method" title="How the figures are used" />
@@ -55,15 +66,24 @@ export function Sources() {
       <section aria-labelledby="cited-title" className="mt-20 sm:mt-28">
         <SubHead
           id="cited-title"
-          eyebrow="02 · Sources"
-          title="Sources cited in the research brief"
+          eyebrow="02 · Primary data"
+          title="Data sources cited in the research brief"
           action={<span className="font-mono text-label text-ink-3">{sources.length} sources</span>}
         />
         <ol className="grid gap-x-6 sm:grid-cols-2 lg:grid-cols-3">
           {sources.map((s, i) => (
             <li key={s.label} className="flex items-start gap-4 border-t border-line py-4">
               <span className="w-7 shrink-0 pt-0.5 font-mono text-label tabular-nums text-ink-3">{String(i + 1).padStart(2, "0")}</span>
-              <span className="min-w-0 leading-snug">{s.url ? <ExtLink href={s.url}>{s.label}</ExtLink> : <span className="text-ink-2">{s.label}</span>}</span>
+              <span className="min-w-0 leading-snug">
+                {s.url ? (
+                  <ExtLink href={s.url}>{s.label}</ExtLink>
+                ) : (
+                  <>
+                    <span className="text-ink-2">{s.label}</span>
+                    <span className="mt-1 block font-mono text-label font-normal text-ink-3">Cited in the research brief · no public link</span>
+                  </>
+                )}
+              </span>
             </li>
           ))}
         </ol>
@@ -72,8 +92,8 @@ export function Sources() {
       <section aria-labelledby="works-title" className="mt-20 sm:mt-28">
         <SubHead
           id="works-title"
-          eyebrow="03 · Reading"
-          title="Works cited"
+          eyebrow="03 · Commentary"
+          title="Works cited: articles and commentary"
           action={<span className="font-mono text-label text-ink-3">{worksCited.length} articles</span>}
         />
         <ol className="grid gap-x-6 sm:grid-cols-2">
@@ -82,7 +102,7 @@ export function Sources() {
               <span className="w-7 shrink-0 pt-0.5 font-mono text-label tabular-nums text-ink-3">{String(i + 1).padStart(2, "0")}</span>
               <span className="min-w-0 leading-snug">
                 <ExtLink href={w.url}>{w.title}</ExtLink>
-                <span className="mt-1 block break-all font-mono text-[11px] text-ink-3">{hostnameOf(w.url)}</span>
+                <span className="mt-1 block break-all font-mono text-xs text-ink-3">{hostnameOf(w.url)}</span>
               </span>
             </li>
           ))}

@@ -78,7 +78,8 @@ export function Home() {
             <div className="mt-7 max-w-[38rem]">
               <FindBox large />
             </div>
-            <ul aria-label="Common questions" className="mt-3 flex max-w-[40rem] flex-wrap gap-2">
+            {/* Phones skip the chips: the nav and the "What's inside" cards already offer the same questions. */}
+            <ul aria-label="Common questions" className="mt-3 hidden max-w-[40rem] flex-wrap gap-2 sm:flex">
               {startQuestions.map((q) => (
                 <li key={q.label}>
                   {q.jump ? (
@@ -142,7 +143,7 @@ export function Home() {
             title={<>Where are you <em>starting from?</em></>}
             action={
               <a href="#/ready" className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] group bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] inline-flex items-center gap-2 text-[0.9375rem] font-medium text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">
-                <span>Or open the readiness checklist</span>
+                <span>Or open the Checklist</span>
                 <ArrowGlyph />
               </a>
             }

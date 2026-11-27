@@ -59,7 +59,7 @@ export function Comparison() {
               <div className="grid gap-6 sm:grid-cols-2">
                 {[
                   { who: "Design-first UX designer", text: row.traditional },
-                  { who: "Design engineer (design + code)", text: row.hybrid },
+                  { who: "Design Engineer (design + code)", text: row.hybrid },
                 ].map((c, i) => (
                   <div key={c.who} className="relative rounded-card border border-edge bg-card shadow-1 flex flex-col" style={{ "--i": i } as CSSProperties}>
                     <p className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal">
@@ -72,6 +72,11 @@ export function Comparison() {
                   </div>
                 ))}
               </div>
+              {row.fromCode && (
+                <p className="mt-6 max-w-[62ch] border-l border-accent pl-4 text-sm leading-relaxed text-ink-2" style={{ "--i": 2 } as CSSProperties}>
+                  {row.fromCode}
+                </p>
+              )}
               <p className="font-mono text-label font-normal mt-5 text-ink-3" style={{ "--i": 2 } as CSSProperties}>
                 {String(dim + 1).padStart(2, "0")} / {String(comparison.length).padStart(2, "0")} · {row.dimension}
               </p>
@@ -80,14 +85,14 @@ export function Comparison() {
         </TabPanel>
       ) : (
         <TabPanel idPrefix="cmpview" id="table">
-          <div tabIndex={0} role="region" aria-label="Role comparison table (scrolls sideways)" className="relative rounded-card border border-edge bg-card shadow-1 overflow-x-auto px-5 sm:px-7 focus-visible:outline-offset-[-2px]">
+          <div tabIndex={0} role="region" aria-label="Comparison table (scrolls sideways)" className="relative rounded-card border border-edge bg-card shadow-1 overflow-x-auto px-5 sm:px-7 focus-visible:outline-offset-[-2px]">
             <table className="w-full min-w-[720px] text-left">
-              <caption className="sr-only">Design-first UX designer and design engineer, compared</caption>
+              <caption className="sr-only">Design-first UX designer and Design Engineer, compared</caption>
               <thead>
                 <tr className="font-mono text-label font-normal border-b-2 border-edge text-ink-3">
                   <th scope="col" className="w-[22%] py-3 pr-6 font-normal">Dimension</th>
                   <th scope="col" className="py-3 pr-6 font-normal">Design-first UX designer</th>
-                  <th scope="col" className="py-3 font-normal">Design engineer (design + code)</th>
+                  <th scope="col" className="py-3 font-normal">Design Engineer (design + code)</th>
                 </tr>
               </thead>
               <tbody>
@@ -97,7 +102,10 @@ export function Comparison() {
                       <span className="font-display font-semibold tracking-[-0.02em] text-pretty text-2xl leading-tight text-ink">{r.dimension}</span>
                     </th>
                     <td className="py-6 pr-6 leading-relaxed text-ink-2">{r.traditional}</td>
-                    <td className="py-6 leading-relaxed text-ink-2">{r.hybrid}</td>
+                    <td className="py-6 leading-relaxed text-ink-2">
+                      {r.hybrid}
+                      {r.fromCode && <span className="mt-3 block text-sm text-ink-3">{r.fromCode}</span>}
+                    </td>
                   </tr>
                 ))}
               </tbody>

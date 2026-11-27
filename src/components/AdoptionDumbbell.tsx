@@ -1,5 +1,6 @@
 import { useId } from "react";
-import { adoptionShift } from "../data/research";
+import { adoptionBasis, adoptionShift, deTitleShare, shipsAiCode, teamsWhereOthersCreateUi } from "../data/research";
+import { BasisBadge } from "./ui";
 
 /* Shared 0-100% dumbbell + bar chart per diagram-design type-bar:
    Top band compares Developers vs Designers on the exact same 0-100% scale (hollow vs solid
@@ -16,9 +17,11 @@ const devCore = adoptionShift.before.rows[1].value; // 59
 const desCore = adoptionShift.before.rows[2].value; // 31
 const desDraft = adoptionShift.before.rows[3].value; // 22
 
+/* Row 2 pairs two different tasks (writing code vs. drafting UI), so it is labelled per group
+   and shows no gap: the points are not a like-for-like difference. */
 const dumbbells = [
-  { label: "Use AI for core work", designer: desCore, developer: devCore, y: 84 },
-  { label: "AI code vs. first UI drafts", designer: desDraft, developer: devCode, y: 136 },
+  { lines: ["Use AI for core work"], designer: desCore, developer: devCore, y: 84, sameTask: true },
+  { lines: ["Developers: AI writes code", "Designers: AI drafts UI"], designer: desDraft, developer: devCode, y: 136, sameTask: false },
 ];
 
 const convergence = adoptionShift.after.rows.map((r, i) => ({
@@ -34,7 +37,10 @@ export function AdoptionDumbbell({ className = "" }: { className?: string }) {
     <figure className={`relative rounded-card border border-edge bg-card shadow-1 ${className}`}>
       <div className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal">
         <h3 className="m-0">AI adoption: divergence, then convergence</h3>
-        <span className="hidden sm:block">Shared 0–100% scale</span>
+        <span className="flex items-center gap-4">
+          <span className="hidden sm:block">Shared 0–100% scale</span>
+          {adoptionBasis.before === adoptionBasis.after && <BasisBadge basis={adoptionBasis.before} onBand />}
+        </span>
       </div>
 
       <div tabIndex={0} role="region" aria-label="AI adoption chart (scrolls sideways)" className="plate-field overflow-x-auto px-4 py-5 sm:px-6 focus-visible:outline-offset-[-2px]">
@@ -45,9 +51,7 @@ export function AdoptionDumbbell({ className = "" }: { className?: string }) {
           className="mx-auto block h-auto w-full min-w-[580px] max-w-[840px]"
         >
           <title id={`${uid}-title`}>
-            Shared 0 to 100 percent chart comparing 2025 developer and designer AI adoption gaps (core work 31% vs 59%, drafts vs code
-            22% vs 68%) with Q1 2026 convergence (50% of designers ship AI-written code, 40% of teams have PMs or engineers creating UI,
-            20% of those designers use the Design Engineer title).
+            {`Shared 0 to 100 percent chart of 2025 AI use: for core work, designers ${desCore}% vs developers ${devCore}%; for different tasks, developers who ask AI to write code ${devCode}% and designers who use AI for first UI drafts ${desDraft}%. Then Q1 2026 survey: ${shipsAiCode.value}% of surveyed designers ship AI-written code, ${teamsWhereOthersCreateUi.value}% of teams have PMs or engineers creating UI, ${deTitleShare.value}% of those designers use the Design Engineer title.`}
           </title>
 
           {/* Vertical 0-100% gridlines */}
@@ -69,7 +73,7 @@ export function AdoptionDumbbell({ className = "" }: { className?: string }) {
                   y={354}
                   textAnchor="middle"
                   fill="var(--ink-3)"
-                  style={{ fontFamily: "var(--font-mono)", fontSize: 10.5 }}
+                  style={{ fontFamily: "var(--font-mono)", fontSize: 12 }}
                 >
                   {t}%
                 </text>
@@ -82,7 +86,7 @@ export function AdoptionDumbbell({ className = "" }: { className?: string }) {
             x={8}
             y={46}
             fill="var(--ink-3)"
-            style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.08em" }}
+            style={{ fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: "0.08em" }}
           >
             2025 DIVERGENCE · {adoptionShift.before.label.toUpperCase()}
           </text>
@@ -95,28 +99,34 @@ export function AdoptionDumbbell({ className = "" }: { className?: string }) {
             const xRight = Math.max(xDes, xDev);
             const gap = d.developer - d.designer;
             return (
-              <g key={d.label}>
+              <g key={d.lines.join(" ")}>
                 <text
                   x={PLOT_L - 14}
-                  y={d.y + 4}
+                  y={d.y + 4 - (d.lines.length - 1) * 8}
                   textAnchor="end"
                   fill="var(--ink)"
                   style={{ fontFamily: "var(--font-sans)", fontSize: 13, fontWeight: 500 }}
                 >
-                  {d.label}
+                  {d.lines.map((l, i) => (
+                    <tspan key={l} x={PLOT_L - 14} dy={i === 0 ? 0 : 16}>
+                      {l}
+                    </tspan>
+                  ))}
                 </text>
                 {/* Connector drawn before dots; uses --line-strong (>=3.3:1 in both themes) */}
                 <line x1={xLeft} y1={d.y} x2={xRight} y2={d.y} stroke="var(--line-strong)" strokeWidth="2" />
                 {/* Gap label centered above connector */}
-                <text
-                  x={(xLeft + xRight) / 2}
-                  y={d.y - 11}
-                  textAnchor="middle"
-                  fill="var(--ink-3)"
-                  style={{ fontFamily: "var(--font-mono)", fontSize: 10 }}
-                >
-                  +{gap} pts
-                </text>
+                {d.sameTask && (
+                  <text
+                    x={(xLeft + xRight) / 2}
+                    y={d.y - 11}
+                    textAnchor="middle"
+                    fill="var(--ink-3)"
+                    style={{ fontFamily: "var(--font-mono)", fontSize: 12 }}
+                  >
+                    +{gap} pts
+                  </text>
+                )}
                 {/* Designers (hollow reference dot) */}
                 <circle cx={xDes} cy={d.y} r={6.5} fill="var(--card)" stroke="var(--ink-2)" strokeWidth="2" />
                 {/* Developers (solid accent focal dot with 1.25px ink outline for >=3:1 non-text contrast) */}
@@ -127,7 +137,7 @@ export function AdoptionDumbbell({ className = "" }: { className?: string }) {
                   y={d.y + 4}
                   textAnchor="end"
                   fill="var(--ink-2)"
-                  style={{ fontFamily: "var(--font-mono)", fontSize: 11.5 }}
+                  style={{ fontFamily: "var(--font-mono)", fontSize: 12 }}
                 >
                   {d.designer}%
                 </text>
@@ -136,7 +146,7 @@ export function AdoptionDumbbell({ className = "" }: { className?: string }) {
                   y={d.y + 4}
                   textAnchor="start"
                   fill="var(--accent-ink)"
-                  style={{ fontFamily: "var(--font-mono)", fontSize: 11.5, fontWeight: 600 }}
+                  style={{ fontFamily: "var(--font-mono)", fontSize: 12, fontWeight: 600 }}
                 >
                   {d.developer}%
                 </text>
@@ -152,7 +162,7 @@ export function AdoptionDumbbell({ className = "" }: { className?: string }) {
             x={8}
             y={198}
             fill="var(--accent-ink)"
-            style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.08em" }}
+            style={{ fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: "0.08em" }}
           >
             2026 CONVERGENCE · {adoptionShift.after.label.toUpperCase()}
           </text>
@@ -169,7 +179,18 @@ export function AdoptionDumbbell({ className = "" }: { className?: string }) {
                   fill={c.focal ? "var(--ink)" : "var(--ink-2)"}
                   style={{ fontFamily: "var(--font-sans)", fontSize: 12.5, fontWeight: c.focal ? 600 : 400 }}
                 >
-                  {c.label}
+                  {/* Long labels break onto two lines so they never run past the left edge of the chart. */}
+                  {(() => {
+                    const label = c.label.replace(/ /g, " ");
+                    if (label.length <= 44) return c.label;
+                    const mid = label.lastIndexOf(" ", Math.ceil(label.length / 2));
+                    return (
+                      <>
+                        <tspan x={PLOT_L - 14} dy={-7.5}>{label.slice(0, mid)}</tspan>
+                        <tspan x={PLOT_L - 14} dy={15}>{label.slice(mid + 1)}</tspan>
+                      </>
+                    );
+                  })()}
                 </text>
                 <rect x={PLOT_L} y={c.y} width={w} height={22} fill="var(--card)" />
                 <rect
@@ -187,7 +208,7 @@ export function AdoptionDumbbell({ className = "" }: { className?: string }) {
                   y={c.y + 15}
                   textAnchor="start"
                   fill={c.focal ? "var(--accent-ink)" : "var(--ink-2)"}
-                  style={{ fontFamily: "var(--font-mono)", fontSize: 11.5, fontWeight: c.focal ? 600 : 400 }}
+                  style={{ fontFamily: "var(--font-mono)", fontSize: 12, fontWeight: c.focal ? 600 : 400 }}
                 >
                   {c.value}%
                 </text>
@@ -197,7 +218,7 @@ export function AdoptionDumbbell({ className = "" }: { className?: string }) {
         </svg>
       </div>
 
-      <figcaption className="rounded-b-[calc(var(--radius-card)-1px)] border-t border-line px-[1.125rem] py-3 text-balance flex flex-wrap items-center justify-between gap-3 bg-card text-xs text-ink-2">
+      <figcaption className="rounded-b-[calc(var(--radius-card)-1px)] border-t border-line px-[1.125rem] py-3 text-balance flex flex-wrap items-center justify-between gap-3 bg-card text-sm text-ink-2">
         <span className="flex flex-wrap items-center gap-x-5 gap-y-1.5">
           <span className="inline-flex items-center gap-2">
             <svg aria-hidden viewBox="0 0 14 14" className="size-3.5 shrink-0">

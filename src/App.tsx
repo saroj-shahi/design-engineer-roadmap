@@ -162,10 +162,10 @@ const roleTitles: Record<string, string> = {
 };
 
 const shelfTitles: Record<string, string> = {
-  compare: "Compare Roles",
-  skills: "Skills Architecture",
-  tools: "Tooling Pipeline",
-  roadmaps: "Topic Roadmaps",
+  compare: "Design vs. Design + Code",
+  skills: "Skills",
+  tools: "Tools",
+  roadmaps: "Roadmaps",
   glossary: "Glossary",
 };
 
@@ -196,7 +196,7 @@ function titleFor(route: Route) {
             .map((w) => (w === "ux" || w === "ai" ? w.toUpperCase() : w.charAt(0).toUpperCase() + w.slice(1)))
             .join(" ")
         : null;
-      return label ? `${label} Roadmap | ${SITE}` : `Topic Roadmaps | ${SITE}`;
+      return label ? `${label} Roadmap | ${SITE}` : `Roadmaps | ${SITE}`;
     }
     return `${shelfTitles[shelf] ?? p.title} | ${SITE}`;
   }
@@ -211,7 +211,7 @@ function descriptionFor(route: Route) {
     case "roles":
       return "Compare Design Engineer, Meta-Designer, and Agentic Experience (AX) Designer roles, deliverables, skill signals, and handoff economics.";
     case "plan":
-      return "Follow a 6-month upskilling roadmap for working designers (Track A) or a 4-stage beginner roadmap (Track B) with paired roadmap.sh topics.";
+      return "Follow a six-month plan for working designers (Track A) or a four-stage plan for people starting out (Track B), with paired roadmap.sh topics.";
     case "ready":
       return "Interactive proof-of-work readiness checklist for designers shipping code in their current role or preparing for hybrid roles.";
     case "library":
@@ -219,7 +219,7 @@ function descriptionFor(route: Route) {
     case "sources":
       return "Every source and article behind the Design Engineer Field Guide's figures, and how the research brief's data is used.";
     default:
-      return "Practical 2026 guide for designers upskilling into code or Design Engineer, Meta-Designer, and AX roles: market data, skills, tooling, and a 6-month plan.";
+      return "Practical 2026 guide for designers upskilling into code or Design Engineer, Meta-Designer and AX Designer roles: market data, skills, tooling, and a six-month plan.";
   }
 }
 
