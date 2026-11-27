@@ -25,6 +25,11 @@ export function Footer() {
           <a href={pageHref("sources")} className={link}>
             Sources and method
           </a>
+          <a href="https://github.com/saroj-shahi/design-engineer-roadmap" target="_blank" rel="noopener noreferrer" className={link}>
+            Source on GitHub
+            <ExternalGlyph className="text-ink-3 transition-colors duration-300 group-hover:text-accent-ink" />
+            <span className="sr-only"> (opens in new tab)</span>
+          </a>
           <a href="https://buymeacoffee.com/sarojshahi" target="_blank" rel="noopener noreferrer" className={link}>
             Buy me a coffee
             <ExternalGlyph className="text-ink-3 transition-colors duration-300 group-hover:text-accent-ink" />
