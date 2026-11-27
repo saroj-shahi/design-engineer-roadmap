@@ -25,6 +25,7 @@ import {
   type Resource,
 } from "../data/research";
 import { PLAN_PDFS, type PlanPdfId } from "../data/planPdfs";
+import { PLAN_TOPICS_KEY, planProgress, stepKeyFor, upNext, type StepProgress } from "../components/progress";
 import {
   cardLink,
   BasisBadge,
@@ -294,6 +295,9 @@ function TrackA({ plan: route }: { plan: PlanA }) {
   const plan = planFor(choice);
   const m = plan[month - 1];
   const habitsDone = leverageHabits.filter((h) => habits.set.has(h.id)).length;
+  const planTicks = usePersistentSet(PLAN_TOPICS_KEY);
+  const steps = planProgress("a", choice, planTicks.set);
+  const next = upNext(steps);
   const setMonth = (n: number) => go({ ...route, month: n });
   const months = useTabList({
     ids: plan.map((x) => String(x.month)),
@@ -459,10 +463,12 @@ function TrackA({ plan: route }: { plan: PlanA }) {
                     <span key={k} className={`h-1 flex-1 rounded-full transition-colors duration-500 ${k < i ? (on ? "bg-accent" : "bg-ink-3") : "bg-line"}`} />
                   ))}
                 </span>
+                <StepTally step={steps[i]} next={next?.label === steps[i].label} compact />
                 <span className="sr-only">
                   Month {x.month}
                   {x.month === 1 ? `, ${codeSkipLabels.startHere.toLowerCase()}` : ""}
                   {x.month < skipAheadMonth ? `, ${codeSkipLabels.optional.toLowerCase()}` : ""}
+                  {tallyText(steps[i], next?.label === steps[i].label)}
                 </span>
               </button>
             );
@@ -514,7 +520,14 @@ function TrackA({ plan: route }: { plan: PlanA }) {
               <Eyebrow className="!text-accent-ink">Guardrail · {aiPolicyLabel[m.aiPolicy]}</Eyebrow>
               <p className="leading-relaxed text-ink">{m.guardrail}</p>
             </div>
-            <StartAndDone stepKey={`a-${choice}-m${m.month}`} start={m.start} doneWhen={m.doneWhen} topics={m.roadmapTopics} resources={m.resources} />
+            <StartAndDone
+              ticks={planTicks}
+              stepKey={stepKeyFor(route)}
+              start={m.start}
+              doneWhen={m.doneWhen}
+              topics={m.roadmapTopics}
+              resources={m.resources}
+            />
           </div>
         </div>
         <StepNav n={month} total={MONTHS} unit="month" onStep={setMonth} />
@@ -566,6 +579,44 @@ function TrackA({ plan: route }: { plan: PlanA }) {
   );
 }
 
+/** Plain words for a step's topic tally, for screen readers. Starts with a comma so it follows the step's name. */
+const tallyText = (step: StepProgress, next: boolean) =>
+  step.total === 0 ? "" : `, ${step.done} of ${step.total} topics ticked${step.done === step.total ? ", done" : ""}${next ? ", up next" : ""}`;
+
+/**
+ * Topics ticked in one month or stage, and an "Up next" mark on the step to work on next.
+ * `compact` is for the narrow month tabs: the text shows from `sm` up (with a dot for "Up next" on phones) and is hidden
+ * from screen readers, which get `tallyText` in the tab's own sr-only label instead.
+ */
+function StepTally({ step, next, compact = false }: { step: StepProgress; next: boolean; compact?: boolean }) {
+  if (step.total === 0) return null;
+  const complete = step.done === step.total;
+  const count = (
+    <span className={`tabular-nums ${complete ? "text-accent-ink" : "text-ink-3"}`}>
+      {complete ? "✓ " : ""}
+      {step.done}/{step.total}
+      {!compact && " topics"}
+    </span>
+  );
+  if (compact) {
+    return (
+      <>
+        {next && <span aria-hidden className="absolute right-2 top-2 size-1.5 rounded-full bg-accent sm:hidden" />}
+        <span aria-hidden className="font-mono text-label font-normal mt-2 hidden flex-col items-start gap-0.5 sm:flex">
+          {count}
+          {next && <span className="text-accent-ink">Up next</span>}
+        </span>
+      </>
+    );
+  }
+  return (
+    <span className="font-mono text-label font-normal mt-auto flex flex-wrap items-center justify-between gap-2 pt-4">
+      {count}
+      {next && <Tag tone="accent">Up next</Tag>}
+    </span>
+  );
+}
+
 /** Previous / Next under a step's detail. At the last step, Next moves on to "Show your work", where the checklist card is
  *  (a jump, not a second link to the checklist). */
 function StepNav({ n, total, unit, onStep }: { n: number; total: number; unit: "month" | "stage"; onStep: (n: number) => void }) {
@@ -607,19 +658,21 @@ function ChecklistLink({ href, title, detail }: { href: string; title: string; d
 
 /** The first task for a step, the sign you can move on, paired roadmap.sh topics, and where to learn it. Spans a 12-column row. */
 function StartAndDone({
+  ticks: planTicks,
   stepKey,
   start,
   doneWhen,
   topics,
   resources,
 }: {
+  /** Shared with the month or stage tabs, so their counts move as topics are ticked here. */
+  ticks: ReturnType<typeof usePersistentSet>;
   stepKey: string;
   start: string;
   doneWhen: string;
   topics: PlanTopicGroup[];
   resources: Resource[];
 }) {
-  const planTicks = usePersistentSet("de-guide:plan-topics");
   const totalTopics = topics.reduce((sum, g) => sum + g.topics.length, 0);
   const doneTopics = topics.reduce((sum, g) => sum + g.topics.filter((t) => planTicks.set.has(`${stepKey}:${g.slug}:${t}`)).length, 0);
 
@@ -725,6 +778,9 @@ function StepButton({
 
 function TrackB({ stage }: { stage: number }) {
   const s = launchStages[stage - 1];
+  const planTicks = usePersistentSet(PLAN_TOPICS_KEY);
+  const steps = planProgress("b", "pde", planTicks.set);
+  const next = upNext(steps);
   const setStage = (n: number) => go({ track: "b", stage: n });
   const stages = useTabList({
     ids: launchStages.map((x) => String(x.n)),
@@ -813,6 +869,7 @@ function TrackB({ stage }: { stage: number }) {
                   {x.name}
                 </span>
                 <span className="mt-4 text-xs text-ink-2">{x.output}</span>
+                <StepTally step={steps[i]} next={next?.label === steps[i].label} />
               </button>
             );
           })}
@@ -830,7 +887,14 @@ function TrackB({ stage }: { stage: number }) {
           </div>
           <p className="col-span-4 mt-3 max-w-[60ch] text-lg leading-relaxed text-ink lg:col-span-8 lg:col-start-5 lg:mt-0">{s.detail}</p>
           <div className="col-span-4 mt-10 grid gap-y-8 lg:col-span-8 lg:col-start-5 md:grid-cols-12 md:gap-x-6">
-            <StartAndDone stepKey={`b-s${s.n}`} start={s.start} doneWhen={s.doneWhen} topics={s.roadmapTopics} resources={s.resources} />
+            <StartAndDone
+              ticks={planTicks}
+              stepKey={stepKeyFor({ track: "b", stage: s.n })}
+              start={s.start}
+              doneWhen={s.doneWhen}
+              topics={s.roadmapTopics}
+              resources={s.resources}
+            />
           </div>
         </div>
         <StepNav n={stage} total={STAGES} unit="stage" onStep={setStage} />

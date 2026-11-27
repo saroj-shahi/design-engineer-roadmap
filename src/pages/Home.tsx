@@ -2,6 +2,7 @@ import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import { ChoosePathButton, HeroIntro, JobsShortAnswer, StartHere } from "../sections/Hero";
 import { articles, sources } from "../data/research";
 import { FindBox } from "../components/QuickFind";
+import { ResumeCard } from "../components/ResumeCard";
 import { Glyph, type GlyphName } from "../components/icons";
 import { cardLink, ActionLink, SubHead, jumpTo, pageHref, type Page } from "../components/ui";
 
@@ -87,6 +88,7 @@ export function Home() {
               <ChoosePathButton />
               <ActionLink href={pageHref("sources")} variant="secondary">{`Built from ${sources.length} sources and ${articles.length} articles`}</ActionLink>
             </div>
+            <ResumeCard />
           </HeroIntro>
         </div>
       </section>

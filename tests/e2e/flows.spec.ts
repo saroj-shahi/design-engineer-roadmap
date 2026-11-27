@@ -302,3 +302,34 @@ test.describe("charts", () => {
     });
   }
 });
+
+test.describe("progress", () => {
+  test("ticking a topic updates the month's count and marks it up next", async ({ page }) => {
+    await fresh(page, "/#/plan/a/pde/m1");
+    const tab = page.getByRole("tab", { name: /Month 1,/ });
+    await expect(tab).toHaveAccessibleName(/, 0 of \d+ topics ticked/);
+    await page.locator("#month-detail").getByRole("checkbox").first().check({ force: true });
+    await expect(tab).toHaveAccessibleName(/, 1 of \d+ topics ticked, up next/);
+  });
+
+  test("Start offers to pick up where you left off", async ({ page }) => {
+    await fresh(page, "/#/plan/b/s2");
+    await page.goto("/#/");
+    const card = page.getByRole("region", { name: /Back to Stage 2/ });
+    await expect(card).toBeVisible();
+    await expect(card.getByRole("link", { name: /Open Stage 2/ })).toHaveAttribute("href", "#/plan/b/s2");
+  });
+
+  test("a first visit shows no resume card", async ({ page }) => {
+    await fresh(page, "/#/");
+    await expect(page.getByRole("region", { name: /Pick up at|Back to|Every plan topic/ })).toHaveCount(0);
+  });
+
+  test("the checklist groups items by area and links to the plan step", async ({ page }) => {
+    await fresh(page, "/#/ready/a");
+    await expect(page.getByRole("list", { name: "What you built" })).toBeVisible();
+    await expect(page.getByRole("list", { name: "How you share it" })).toBeVisible();
+    await expect(page.getByRole("progressbar", { name: "What you built" })).toHaveAttribute("aria-valuemax", "4");
+    await expect(page.getByRole("link", { name: "Learn this in Month 3" })).toHaveAttribute("href", "#/plan/a/pde/m3");
+  });
+});

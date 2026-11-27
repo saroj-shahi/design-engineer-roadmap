@@ -1,6 +1,22 @@
 import { useEffect, useRef, useState } from "react";
-import { juniorChecklist, readinessItems, type ChecklistItem } from "../data/research";
-import { CheckRow, Section, SectionHeader, Tabs, navigate, pageHref, parseStringArray, usePersistentSet, useSaveNote, type Track } from "../components/ui";
+import { type ChecklistItem } from "../data/research";
+import { checklists } from "../components/progress";
+import {
+  CheckRow,
+  Meter,
+  Section,
+  SectionHeader,
+  Tabs,
+  TextLink,
+  navigate,
+  pageHref,
+  parseStringArray,
+  planFromParts,
+  planHref,
+  usePersistentSet,
+  useSaveNote,
+  type Track,
+} from "../components/ui";
 import { Glyph } from "../components/icons";
 
 /** One checklist per track, each with its own saved ticks. Chapter 05 links here instead of repeating them. */
@@ -18,8 +34,7 @@ const lists: Record<
   }
 > = {
   a: {
-    key: "de-guide:readiness",
-    items: readinessItems,
+    ...checklists.a,
     who: "Working designer",
     lede: "Concrete proof you can work across design and code — to demo to your team, support a promotion case, or share when you're ready for a new\u00A0role.",
     start: "Start with one live demo. It's the quickest proof to share with teammates or reviewers.",
@@ -29,8 +44,7 @@ const lists: Record<
     almostNote: (title) => `One item left: “${title}”. Close that gap next.`,
   },
   b: {
-    key: "de-guide:junior-checklist",
-    items: juniorChecklist,
+    ...checklists.b,
     who: "Starting out",
     lede: "Three small steps you can take this week, then what screeners look for in a junior portfolio alongside your case studies.",
     start: "Tick items as you go. The first one needs no code and fits in an evening: pick an app you use daily and note where it fails a new user.",
@@ -47,6 +61,25 @@ function levelFor(done: number, total: number, list: (typeof lists)[Track], next
   if (done === total - 1) return { label: "Almost ready", note: list.almostNote(next.title) };
   if (done >= total / 2) return { label: "Getting close", note: `${done * 2 === total ? "Halfway there" : "Over halfway"}. Next up: “${next.title}”.` };
   return { label: "Foundations", note: `Keep going. Next up: “${next.title}”.` };
+}
+
+/** Items in their area groups, in the order each area first appears. Items without an area form one unnamed group. */
+function groupByArea(items: ChecklistItem[]) {
+  const groups: { area: string; items: ChecklistItem[] }[] = [];
+  for (const it of items) {
+    const area = it.area ?? "";
+    const g = groups.find((x) => x.area === area);
+    if (g) g.items.push(it);
+    else groups.push({ area, items: [it] });
+  }
+  return groups;
+}
+
+/** Link to the plan step that teaches an item. Track A keeps the reader's saved role. */
+function stepHref(track: Track, step: number) {
+  if (track === "b") return planHref({ track: "b", stage: step });
+  const a = planFromParts(["a"]);
+  return planHref({ track: "a", option: a?.track === "a" ? a.option : "pde", month: step });
 }
 
 /** One-time move of ticks from the old Track A copy of this list (same ids; "aiproof" became "ai"). */
@@ -147,15 +180,24 @@ function Checklist({ track }: { track: Track }) {
     window.clearTimeout(timer.current);
     timer.current = window.setTimeout(() => setUndo("idle"), 10000);
   };
-  const total = list.items.length;
-  const done = list.items.filter((it) => set.has(it.id)).length;
+  const groups = groupByArea(list.items);
+  const ordered = groups.flatMap((g) => g.items);
+  const total = ordered.length;
+  const done = ordered.filter((it) => set.has(it.id)).length;
   const pct = Math.round((done / total) * 100);
   const level = levelFor(
     done,
     total,
     list,
-    list.items.find((it) => !set.has(it.id)),
+    ordered.find((it) => !set.has(it.id)),
   );
+  const unit = track === "a" ? "Month" : "Stage";
+  // One "Learn this in …" link per plan step (the page links each place once): on its first unticked item.
+  const linked = new Set<string>();
+  for (const step of new Set(ordered.map((it) => it.step))) {
+    const first = ordered.find((it) => it.step === step && step !== undefined && !set.has(it.id));
+    if (first) linked.add(first.id);
+  }
 
   return (
     <div
@@ -185,7 +227,7 @@ function Checklist({ track }: { track: Track }) {
             </p>
           )}
           <div className="mt-6 flex gap-1" aria-hidden>
-            {list.items.map((it, i) => (
+            {ordered.map((it, i) => (
               <span key={it.id} className="relative h-2 flex-1 bg-line">
                 <span
                   className={`absolute inset-0 origin-left bg-accent transition-transform duration-700 ease-silk ${set.has(it.id) ? "scale-x-100" : "scale-x-0"}`}
@@ -197,6 +239,13 @@ function Checklist({ track }: { track: Track }) {
           <p className="font-mono text-label font-normal mt-3 tabular-nums text-ink-3">
             {String(done).padStart(2, "0")} / {String(total).padStart(2, "0")} complete
           </p>
+          {groups.length > 1 && (
+            <div className="mt-8 space-y-5">
+              {groups.map((g) => (
+                <Meter key={g.area} value={g.items.filter((it) => set.has(it.id)).length} max={g.items.length} label={g.area} />
+              ))}
+            </div>
+          )}
           <div className="mt-10 border-t border-ink pt-5">
             <p className="font-mono text-label font-normal text-accent-ink">{level.label}</p>
             <p className="mt-2 max-w-[34ch] font-display font-semibold tracking-[-0.02em] text-pretty text-[1.625rem] leading-[1.15] text-ink">{level.note}</p>
@@ -229,11 +278,46 @@ function Checklist({ track }: { track: Track }) {
 
       <div className="col-span-4 self-start lg:col-span-7 lg:col-start-6">
         <p className="mb-5 max-w-[52ch] leading-relaxed text-pretty text-ink-2">{list.lede}</p>
-        <ul className="relative rounded-card border border-edge bg-card shadow-1 px-5 sm:px-6 [&>li:last-child]:border-b-0">
-          {list.items.map((it, i) => (
-            <CheckRow key={it.id} index={i + 1} checked={set.has(it.id)} onToggle={() => toggle(it.id)} title={it.title} detail={it.detail} />
-          ))}
-        </ul>
+        <div className="space-y-10">
+          {groups.map((g) => {
+            const offset = ordered.indexOf(g.items[0]);
+            const headId = `ready-${track}-${g.area.toLowerCase().replace(/[^a-z]+/g, "-")}`;
+            return (
+              <div key={g.area}>
+                {g.area && (
+                  <h2 id={headId} className="font-mono text-label font-normal mb-3 flex items-baseline justify-between gap-3 text-ink-3">
+                    <span>{g.area}</span>
+                    <span className="tabular-nums">
+                      {g.items.filter((it) => set.has(it.id)).length} / {g.items.length}
+                    </span>
+                  </h2>
+                )}
+                <ul
+                  aria-labelledby={g.area ? headId : undefined}
+                  className="relative rounded-card border border-edge bg-card shadow-1 px-5 sm:px-6 [&>li:last-child]:border-b-0"
+                >
+                  {g.items.map((it, i) => (
+                    <CheckRow
+                      key={it.id}
+                      index={offset + i + 1}
+                      checked={set.has(it.id)}
+                      onToggle={() => toggle(it.id)}
+                      title={it.title}
+                      detail={it.detail}
+                      extra={
+                        it.step && linked.has(it.id) ? (
+                          <TextLink href={stepHref(track, it.step)}>
+                            Learn this in {unit} {it.step}
+                          </TextLink>
+                        ) : undefined
+                      }
+                    />
+                  ))}
+                </ul>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

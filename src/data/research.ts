@@ -138,6 +138,10 @@ export interface ChecklistItem {
   id: string;
   title: string;
   detail: string;
+  /** Group on the Checklist page (readiness and junior lists only). */
+  area?: string;
+  /** The plan month (Track A) or stage (Track B) that teaches this item, where the item's own detail names one. */
+  step?: number;
 }
 
 /* ───────────── §1 Macro market ───────────── */
@@ -1377,36 +1381,45 @@ export const beginnerStack = [
 export const juniorChecklist: ChecklistItem[] = [
   {
     id: "week-teardown",
+    area: "This week",
+    step: 1,
     title: "This week: take one app apart",
     detail: launchStages[0].start,
   },
   {
     id: "week-wcag",
+    area: "This week",
+    step: 1,
     title: "This week: check one screen against WCAG",
     detail: "Run one of your own screens through the WebAIM WCAG 2 checklist from Stage 1 and note what fails.",
   },
   {
     id: "week-explain",
+    area: "This week",
     title: "This week: explain one problem and its fix",
     detail: "Say a usability or accessibility problem, and its fix, in plain words, as if to a friend.",
   },
   {
     id: "context",
+    area: "In your portfolio",
     title: "Clear context and scope up front",
     detail: "Say who you are, the exact problem and what you did, before any visuals. Mark personal and school work as practice projects.",
   },
   {
     id: "changed",
+    area: "In your portfolio",
     title: "Show how your thinking changed",
     detail: "Share raw findings, ideas you dropped and test results that made you change course. Show the messy path honestly.",
   },
   {
     id: "functional",
+    area: "In your portfolio",
     title: "Working proof",
     detail: "Link to live apps (Vercel, Lovable, React builds) or videos that show real interactions.",
   },
   {
     id: "friction",
+    area: "In your portfolio",
     title: "Easy to open, tightly focused",
     detail:
       "No passwords, broken links or clutter. Keep a small toolset: Figma plus Claude Design, Figma Make or Stitch to explore; React, Tailwind and Cursor to build.",
@@ -1431,23 +1444,48 @@ export const icGrowth = [
 /* ───────────── Self-assessment ───────────── */
 
 export const readinessItems: ChecklistItem[] = [
-  { id: "demo", title: "A live demo anyone can use in seconds", detail: "A link a teammate, manager or reviewer can open and use right away." },
+  {
+    id: "demo",
+    area: "What you built",
+    title: "A live demo anyone can use in seconds",
+    detail: "A link a teammate, manager or reviewer can open and use right away.",
+  },
   {
     id: "repo",
+    area: "How you share it",
     title: "A clean GitHub repository (public or team)",
     detail: "Clear components, state, CSS structure and ARIA labels others can read and review.",
   },
-  { id: "writeup", title: "A 2–3 paragraph design and code write-up", detail: "What you wanted, your decisions, trade-offs and next steps." },
-  { id: "ai", title: "Proof of an AI-assisted workflow", detail: "Show you guided Cursor or Claude Code to ship real features." },
-  { id: "access", title: "Easy to open", detail: "No broken links, setup hoops or clutter — anyone you share it with can try it right away." },
-  { id: "scope", title: "Honest about your role", detail: "Say clearly what you designed, built and reviewed — and label practice projects as such." },
+  {
+    id: "writeup",
+    area: "How you share it",
+    title: "A 2–3 paragraph design and code write-up",
+    detail: "What you wanted, your decisions, trade-offs and next steps.",
+  },
+  { id: "ai", area: "What you built", title: "Proof of an AI-assisted workflow", detail: "Show you guided Cursor or Claude Code to ship real features." },
+  {
+    id: "access",
+    area: "How you share it",
+    title: "Easy to open",
+    detail: "No broken links, setup hoops or clutter — anyone you share it with can try it right away.",
+  },
+  {
+    id: "scope",
+    area: "How you share it",
+    title: "Honest about your role",
+    detail: "Say clearly what you designed, built and reviewed — and label practice projects as such.",
+  },
   {
     id: "deployed",
+    area: "What you built",
+    step: 3,
     title: "A live project you built and launched",
     detail: "Components with every state and layouts that fit any screen, live on Vercel or similar. Month 3 in Track A (either role).",
   },
   {
     id: "merged",
+    area: "What you built",
+    step: 5,
     title: "A merged pull request in a real codebase",
     detail: "Even a small UI fix in your team's code or an open-source project counts. Month 5 in Track A (either role).",
   },

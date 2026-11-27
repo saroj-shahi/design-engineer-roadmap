@@ -736,12 +736,15 @@ export function CheckRow({
   title,
   detail,
   index,
+  extra,
 }: {
   checked: boolean;
   onToggle: () => void;
   title: string;
   detail: string;
   index?: number;
+  /** Shown under the row, outside the label, so it may hold a link. */
+  extra?: ReactNode;
 }) {
   const id = useId();
   return (
@@ -781,6 +784,7 @@ export function CheckRow({
           </svg>
         </span>
       </label>
+      {extra && <div className="-mt-3 pb-5 pl-12 text-sm">{extra}</div>}
     </li>
   );
 }
@@ -1015,21 +1019,24 @@ export const planHref = (p: PlanRoute) => (p.track === "a" ? `#/plan/a/${p.optio
 
 export const PLAN_ROUTE_KEY = "de-guide:plan-route";
 
-/** Where "back to your plan" should go: the last plan the reader looked at, else the bare plan page. */
-export function lastPlanHref() {
+/** The last plan step the reader looked at, or null. */
+export function lastPlanRoute(): PlanRoute | null {
   try {
     const saved = localStorage.getItem(PLAN_ROUTE_KEY);
     if (saved) {
       const r = parseRoute(saved);
-      if (r && !r.notFound && r.page === "plan") {
-        const plan = planFromParts(r.parts);
-        if (plan) return planHref(plan);
-      }
+      if (r && !r.notFound && r.page === "plan") return planFromParts(r.parts);
     }
   } catch {
     /* ignore */
   }
-  return pageHref("plan");
+  return null;
+}
+
+/** Where "back to your plan" should go: the last plan the reader looked at, else the bare plan page. */
+export function lastPlanHref() {
+  const plan = lastPlanRoute();
+  return plan ? planHref(plan) : pageHref("plan");
 }
 
 /** Track from a #/ready/{a|b} or #/plan/{a|b} part, or null. */
