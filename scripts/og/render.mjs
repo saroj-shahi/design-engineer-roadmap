@@ -1,10 +1,11 @@
 // Renders the social preview and app icons from their sources:
 //   scripts/og/og-image.html -> public/og-image.png (1200×630)
+//   scripts/og/story.html    -> docs/promo/instagram-story.png (1080×1920)
 //   public/favicon.svg       -> public/apple-touch-icon.png (180), icon-192.png, icon-512.png,
 //                               icon-maskable-512.png, favicon.ico (16 + 32)
 // Run with `npm run icons` (needs `npx playwright install chromium` once).
 import { chromium } from "@playwright/test";
-import { readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 
@@ -21,6 +22,14 @@ await page.goto("file://" + path.join(root, "scripts/og/og-image.html"));
 await page.evaluate(() => document.fonts.ready);
 await page.waitForTimeout(300);
 await page.screenshot({ path: pub("og-image.png"), clip: { x: 0, y: 0, width: 1200, height: 630 } });
+
+// 1b. Instagram story (1080×1920) for promotion; content stays inside the 250px top / 340px bottom safe zone.
+await page.setViewportSize({ width: 1080, height: 1920 });
+await page.goto("file://" + path.join(root, "scripts/og/story.html"));
+await page.evaluate(() => document.fonts.ready);
+await page.waitForTimeout(300);
+await mkdir(path.join(root, "docs/promo"), { recursive: true });
+await page.screenshot({ path: path.join(root, "docs/promo/instagram-story.png"), clip: { x: 0, y: 0, width: 1080, height: 1920 } });
 
 // 2. Icons from the SVG mark. `pad` shrinks the mark inside a solid tile (iOS and maskable icons
 //    are cropped by the OS, so they get a full-bleed background and a safe-zone margin).
