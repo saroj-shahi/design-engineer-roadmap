@@ -87,7 +87,7 @@ function trackA(option) {
   const cover = `<section class="cover">
     <header class="brand">
       <span class="brand-mark">${mark(36)}</span>
-      <span class="brand-name"><b>Design Engineer</b><span>Field Guide · <em>2026</em></span></span>
+      <span class="brand-name"><b>Design Engineer</b><span>Field Guide</span></span>
       <a class="brand-url" href="${SITE}">${SITE_HOST}</a>
     </header>
     <p class="kicker">Track A · Working designer</p>
@@ -146,7 +146,7 @@ function trackB() {
   const cover = `<section class="cover">
     <header class="brand">
       <span class="brand-mark">${mark(36)}</span>
-      <span class="brand-name"><b>Design Engineer</b><span>Field Guide · <em>2026</em></span></span>
+      <span class="brand-name"><b>Design Engineer</b><span>Field Guide</span></span>
       <a class="brand-url" href="${SITE}">${SITE_HOST}</a>
     </header>
     <p class="kicker">Track B · Starting out</p>
@@ -194,7 +194,7 @@ const credits = (planUrl) => `<section class="credits">
   <span class="brand-mark">${mark(28)}</span>
   <div>
     <p class="eyebrow">About this guide</p>
-    <p><b>Design Engineer Field Guide · 2026</b>, created by <a href="${AUTHOR.url}">${AUTHOR.name}</a> (${AUTHOR.url.replace("https://", "")}).</p>
+    <p><b>Design Engineer Field Guide</b>, created by <a href="${AUTHOR.url}">${AUTHOR.name}</a> (${AUTHOR.url.replace("https://", "")}).</p>
     <p>Figures come from “The 2026 Product Design Evolution” research brief. Roadmap topics are drawn from roadmap.sh. Full sources and method: <a href="${SITE}#/sources">${SITE_HOST}/#/sources</a></p>
     <p>Interactive plan, with ticks saved in your browser: <a href="${planUrl}">${planUrl.replace("https://", "")}</a></p>
   </div>
@@ -299,7 +299,7 @@ for (const pdf of PLAN_PDFS) {
     headerTemplate: "<span></span>",
     // Header/footer templates can't load web fonts, so they use the system monospace.
     footerTemplate: `<div style="width:100%;padding:0 16mm;display:flex;align-items:center;gap:6px;white-space:nowrap;font:7pt Menlo,'SF Mono',Consolas,monospace;color:#6b5f76;-webkit-print-color-adjust:exact">
-      ${mark(11)}<span>Design Engineer Field Guide · 2026</span><span>·</span><span>${SITE_HOST}</span>
+      ${mark(11)}<span>Design Engineer Field Guide</span><span>·</span><span>${SITE_HOST}</span>
       <span style="margin-left:auto"><span class="pageNumber"></span> / <span class="totalPages"></span></span></div>`,
     tagged: true,
     outline: true,

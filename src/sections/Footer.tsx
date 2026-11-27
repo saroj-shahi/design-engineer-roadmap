@@ -10,7 +10,7 @@ export function Footer() {
     <footer className="relative z-[1] border-t border-line">
       <div className="mx-auto flex w-full max-w-[1440px] flex-wrap items-center justify-between gap-x-8 gap-y-3 px-(--gutter) py-6 font-mono text-label text-ink-3">
         <p className="flex flex-wrap items-center gap-x-2 gap-y-1">
-          <span>Design Engineer Field Guide · 2026</span>
+          <span>Design Engineer Field Guide</span>
           <span aria-hidden>·</span>
           <span className="inline-flex items-center gap-1">
             Created by

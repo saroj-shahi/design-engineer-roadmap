@@ -1,6 +1,6 @@
 # Design Engineer Field Guide
 
-A static, six-page field guide (plus a Sources page linked from the footer) for designers upskilling into code or moving into **Design Engineer**, **Meta-Designer**, and **AX Designer** roles (**Design Engineer Field Guide · 2026**). React 18 + TypeScript + Vite 5 + Tailwind v4. No backend, no router library. End-to-end tests run on Playwright.
+A static, six-page field guide (plus a Sources page linked from the footer) for designers upskilling into code or moving into **Design Engineer**, **Meta-Designer**, and **AX Designer** roles (**Design Engineer Field Guide**). React 18 + TypeScript + Vite 5 + Tailwind v4. No backend, no router library. End-to-end tests run on Playwright.
 
 See **[AGENTS.md](AGENTS.md)** for full cross-agent instructions and **[DESIGN.md](DESIGN.md)** for the complete Plum Dusk design system, color tokens, typography rules, and Visual QA checklist.
 

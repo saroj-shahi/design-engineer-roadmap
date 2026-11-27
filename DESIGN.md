@@ -5,7 +5,7 @@ Visual design system, token contract, and Visual QA standards for the **Design E
 ## 1. Visual identity: "Plum Dusk"
 
 - **Aesthetic:** One dark theme. An aubergine ground (`--desk`) with a faint rose glow at the top, soft cards (`--card`) with a `1px` border (`--edge`) and `20px` radius (`--radius`), quiet blurred shadows (`--sh-1`, `--sh-2`), and a single rose accent (`--accent`). There is no light theme and no theme toggle.
-- **Main brand mark:** `BrandMark` in `src/components/Nav.tsx` and `public/favicon.svg` — a 32×32 artboard frame with four corner handles compiling into an accent code slash and angle bracket (`/>`), paired with the stacked `Design Engineer` / `Field Guide · 2026` lockup.
+- **Main brand mark:** `BrandMark` in `src/components/Nav.tsx` and `public/favicon.svg` — a 32×32 artboard frame with four corner handles compiling into an accent code slash and angle bracket (`/>`), paired with the stacked `Design Engineer` / `Field Guide` lockup.
 - **Grid:** 12-column desktop / 4-column mobile grid (`.wrap` max `1440px` + `.grid-12`, responsive `--gutter`: `16px` / `24px` / `40px`). Press `Alt+G` to inspect the live column overlay.
 - **Navigation:** a slim sticky top bar with pill links and a `⌘K` / `Ctrl+K` search (`src/components/QuickFind.tsx`). The Start page opens with the headline and a search field, then reads as four chapters with a sticky chapter rail on desktop.
 
@@ -44,8 +44,9 @@ Never hard-code hex/rgb values in JSX or CSS outside the `:root` block in `src/i
 - **Reading sizes and the 12px floor:** text a reader needs (labels, captions, notes, tags) renders at `13px` or more: `text-xs` and `text-label` are both `13px`, and captions and compact chart rows use `text-sm` (`14px`). Never use `text-[10px]`, `text-[11px]` or `text-[12px]`. `12px` is the hard floor, used only by chart text: SVG chart labels use `fontSize` ≥ `12` (viewBox units) and `HeroStage` container-query sizes clamp with `max(12px, …)`. Below `1024px` (phones and tablets) charts switch to their HTML variants (`lg:` breakpoint) so SVG labels never shrink under `12px`; the e2e chart check runs at phone and `768px`.
 - **Ink for reading vs. metadata:** captions, notes, card descriptions and glossary text use `text-ink-2`. Keep `text-ink-3` for truly secondary metadata (mono eyebrows, counts, sources, dates) and dimmed inactive states. Muted text (`--ink-3` on `--card`, `--inverse-muted` on `--inverse-bg`) stays above 4.5:1, so small labels never need a lighter tint.
 - **Orphan & measure discipline:**
-  - `h1–h6` use `text-wrap: balance` (base styles); card footers add `text-balance`.
-  - `p` and `dd` use `text-wrap: pretty` (base styles); display callouts and ledes add `text-pretty`.
+  - `h1–h6`, `dt`, `th`, `td`, `caption` and `figcaption` use `text-wrap: balance` (base styles); card footers add `text-balance`.
+  - `p`, `dd`, `li` and `blockquote` use `text-wrap: pretty` (base styles); display callouts and ledes add `text-pretty`.
+  - `pretty` doesn't always prevent a one-word last line. Where one remains, tie the last two words with `\u00A0`, and check the result at 375, 768, 1024, 1280 and 1440px so the tied pair never overflows a narrow column.
   - Keep prose blocks between `44ch` and `62ch` (`.prose-measure`).
   - Use non-breaking spaces (`\u00A0`) for tight lockups prone to 1-word hangs (e.g., `starting\u00A0out`, `new\u00A0role`, `Talent\u00A02026`, `→\u00A0140,800`).
 

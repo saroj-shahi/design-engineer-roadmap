@@ -501,7 +501,7 @@ export const externalRoadmaps: ExternalRoadmap[] = [
     shortTitle: "Frontend",
     url: "https://roadmap.sh/frontend",
     group: "engineering-ai",
-    tagline: "Core web standards, Git, Tailwind, React, TypeScript, testing, accessibility, performance and AI-assisted development.",
+    tagline: "Core web standards, Git, Tailwind, React, TypeScript, testing, accessibility, performance and AI-assisted\u00A0development.",
     fits: ["Design Engineer", "Track A · Month 1–5", "Track B · Stage 2"],
     related: ["design-system", "product-design", "claude-code", "ai-product-builder"],
     milestones: [

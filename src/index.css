@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ─────────────────────────────────────────────────────────────
-   Field Guide / 2026 — design tokens
+   Field Guide — design tokens
    Plum Dusk: one dark theme. Aubergine ground, one rose accent,
    soft radii, quiet hairlines, no hard shadows.
    ───────────────────────────────────────────────────────────── */
@@ -227,11 +227,18 @@ h2,
 h3,
 h4,
 h5,
-h6 {
+h6,
+dt,
+th,
+td,
+caption,
+figcaption {
   text-wrap: balance;
 }
 p,
-dd {
+dd,
+li,
+blockquote {
   text-wrap: pretty;
 }
 em,

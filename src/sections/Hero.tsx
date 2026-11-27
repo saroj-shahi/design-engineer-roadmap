@@ -51,7 +51,7 @@ export function HeroIntro({ children }: { children?: ReactNode }) {
             <span className="absolute inset-0 rounded-full bg-accent opacity-60 motion-safe:animate-[ping_1s_cubic-bezier(0,0,0.2,1)_4]" />
             <span className="relative size-2 rounded-full bg-accent" />
           </span>
-          Design Engineer Field Guide · 2026
+          Design Engineer Field Guide
         </p>
         <h1 id="shift-title" className="mt-5 font-display text-hero text-balance text-ink lg:text-[clamp(2.75rem,4.6vw,4.25rem)]">
           <em className="text-accent">Design and code</em> now meet earlier.
@@ -282,16 +282,16 @@ export function HandoffProblem() {
 /** How teams are changing: AI adoption by designers and developers, and flatter org charts. */
 export function TeamShift() {
   return (
-    <div className="grid grid-flow-dense gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-12 [&>*]:min-w-0">
-      <AdoptionDumbbell className="md:col-span-2 lg:col-span-8" />
+    <div className="grid grid-flow-dense gap-4 sm:gap-5 md:grid-cols-2 xl:grid-cols-12 [&>*]:min-w-0">
+      <AdoptionDumbbell className="md:col-span-2 xl:col-span-8" />
 
       {/* Org flattening */}
-      <div data-reveal className="relative rounded-card border border-edge bg-card shadow-1 flex flex-col md:col-span-2 lg:col-span-4">
+      <div data-reveal className="relative rounded-card border border-edge bg-card shadow-1 flex flex-col md:col-span-2 xl:col-span-4">
         <h3 className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal">
           Org-chart flattening
         </h3>
         <div className="flex flex-1 flex-col px-5 pb-6 pt-5 sm:px-6">
-          <p className="max-w-[52ch] text-sm text-ink-2">
+          <p className="mb-5 max-w-[52ch] text-sm text-ink-2">
             Teams are getting flatter: more people per manager, and more senior hands-on roles that span design and code.
           </p>
           <dl className="mt-auto grid grid-cols-3 border-t border-line pt-1">

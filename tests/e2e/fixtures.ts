@@ -2,7 +2,7 @@ import { test as base, expect, type Page } from "@playwright/test";
 
 /** Every route a reader can land on, with the page title it should get. */
 export const routes = [
-  { path: "/#/", name: "Start", title: /Design Engineer Field Guide \| 2026/ },
+  { path: "/#/", name: "Start", title: /Design Engineer Field Guide \| Roles/ },
   { path: "/#/jobs", name: "Jobs", title: /^Is my job going away\? \|/ },
   { path: "/#/roles/de", name: "Roles · Design Engineer", title: /^Design Engineer \|/ },
   { path: "/#/roles/meta", name: "Roles · Meta-Designer", title: /^Meta-Designer \|/ },
