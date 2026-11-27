@@ -15,11 +15,11 @@ const C: Record<ArchetypeId, { x: number; y: number }> = {
 };
 const ALL: ArchetypeId[] = ["de", "meta", "ax"];
 
-/** Outside-stroke set labels (title + track subtitle) cleanly outside circle bounds (bottom edge = 508). */
+/** Outside-stroke set labels (title + focus subtitle) cleanly outside circle bounds (bottom edge = 508). */
 const setLabel: Record<ArchetypeId, { x: number; y: number; align: "middle" | "start" | "end"; name: string; sub: string }> = {
-  de: { x: 340, y: 28, align: "middle", name: "Design Engineer", sub: "CODE TRACK" },
-  meta: { x: 96, y: 542, align: "start", name: "Meta-Designer", sub: "SYSTEMS TRACK" },
-  ax: { x: 584, y: 542, align: "end", name: "AX Designer", sub: "AI AGENT TRACK" },
+  de: { x: 340, y: 28, align: "middle", name: "Design Engineer", sub: "Code focus" },
+  meta: { x: 96, y: 542, align: "start", name: "Meta-Designer", sub: "Systems focus" },
+  ax: { x: 584, y: 542, align: "end", name: "AX Designer", sub: "AI agent focus" },
 };
 
 const anchor: Record<string, { x: number; y: number }> = {
@@ -172,7 +172,7 @@ export function ArchetypeVenn({ selected }: { selected: string }) {
 
             {/* Outside-stroke set labels (never cross circle strokes). On phones the diagram is too small for
                 SVG text to stay at 12px, so these hide and the HTML overlay below draws them at full size. */}
-            <g pointerEvents="none" aria-hidden className="max-sm:hidden">
+            <g pointerEvents="none" aria-hidden className="max-lg:hidden">
               {ALL.map((s) => {
                 const l = setLabel[s];
                 const isSel = s === selected;
@@ -232,7 +232,7 @@ export function ArchetypeVenn({ selected }: { selected: string }) {
             </g>
           </svg>
           {/* Phone overlay: the same labels and markers in HTML, placed by viewBox percentages, so text stays at 12px or more. */}
-          <div aria-hidden className="pointer-events-none absolute inset-0 sm:hidden">
+          <div aria-hidden className="pointer-events-none absolute inset-0 lg:hidden">
             {ALL.map((s) => {
               const l = setLabel[s];
               const isSel = s === selected;

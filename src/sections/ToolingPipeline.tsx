@@ -14,7 +14,7 @@ export function ToolingPipeline() {
     <Section id="tooling">
       <SectionHeader
         id="tooling"
-        title={["The right tool", <em>for each step.</em>]}
+        title={["The right tool", <em>for each step</em>]}
         lede={`Pick your level or role to see the tools for each step of the work. Choose one set and stick with it. Too many tools slow you down. ${toolPricingNote}`}
       />
 
@@ -22,7 +22,7 @@ export function ToolingPipeline() {
         <div className="relative rounded-card border border-edge bg-card shadow-1 col-span-4 p-4 sm:p-5 lg:col-span-8">
           <RoleMatrix value={roleId} onChange={setRoleId} />
         </div>
-        <p className="col-span-4 self-end text-sm leading-relaxed text-ink-3 lg:col-span-3 lg:col-start-10">
+        <p className="col-span-4 self-end text-sm leading-relaxed text-ink-2 lg:col-span-3 lg:col-start-10">
           Each row is a level or role; each column is a step of the work. A filled cell means that row's recommended tools cover that step,
           and the number is how many of that step's tools it uses. Step 04, app builders, sits outside every recommended stack.
           Pick a row to see its chain.
@@ -49,9 +49,6 @@ export function ToolingPipeline() {
                         isLast ? "border-edge bg-accent text-on-accent" : "border-edge bg-card text-ink"
                       }`}
                     >
-                      <span className={`font-mono text-label font-normal tabular-nums ${isLast ? "text-on-accent" : "text-ink-3"}`}>
-                        {String(i + 1).padStart(2, "0")}
-                      </span>
                       <BrandLogosFor text={c} max={3} className="size-4 sm:size-[1.125rem]" />
                       <span className="font-display font-semibold tracking-[-0.02em] text-pretty text-[clamp(1.375rem,2.2vw,2rem)] leading-none">{c}</span>
                     </span>

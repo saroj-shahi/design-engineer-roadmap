@@ -96,14 +96,10 @@ test.describe("search", () => {
 });
 
 test.describe("start page", () => {
-  test("question chips jump to their chapter or open their page", async ({ page }, info) => {
-    test.skip(info.project.name === "mobile", "chips are hidden on phones; the nav and cards carry the same questions");
+  test("the main button jumps to the starting doors", async ({ page }) => {
     await fresh(page, "/#/");
-    await page.getByRole("button", { name: "Where do I start?" }).click();
+    await page.getByRole("button", { name: "Find your starting point" }).click();
     await expect(page.locator("#start-here")).toBeInViewport();
-    await page.getByRole("list", { name: "Common questions" }).getByRole("link", { name: "Is my job going away?" }).click();
-    await expect(page).toHaveURL(/#\/jobs$/);
-    await expect(page.locator("main h1")).toContainText("Is my job");
   });
 
   test("chapter rail follows the reader on desktop", async ({ page }, info) => {
@@ -144,7 +140,7 @@ test.describe("roles", () => {
   test("overlap map and case studies are open, not hidden", async ({ page }) => {
     await fresh(page, "/#/roles/de");
     await expect(page.getByRole("heading", { name: /How the three roles overlap/ })).toBeVisible();
-    await expect(page.getByRole("heading", { name: /Teams that closed the gap/ })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Teams that moved designers into code/ })).toBeVisible();
   });
 
   test("the jobs page keeps every market figure in the open", async ({ page }) => {
@@ -212,6 +208,11 @@ test.describe("glossary", () => {
     await expect.poll(async () => Number((await count.textContent())?.split(" ")[0])).toBeLessThan(total);
 
     await topics.getByRole("button", { name: "All" }).click();
+    // On phones every topic group starts closed: open the first one to reach a cross-reference.
+    if (test.info().project.name === "mobile") {
+      await expect(page.locator("section[aria-labelledby='glossary-title'] button[aria-expanded='true']")).toHaveCount(0);
+      await page.locator("section[aria-labelledby='glossary-title'] button[aria-expanded]").first().click();
+    }
     const see = page.locator("dd", { hasText: /^See / }).first().getByRole("link").first();
     const target = (await see.textContent())!.trim();
     await see.click();
@@ -241,7 +242,7 @@ test.describe("charts", () => {
     test(`chart text on ${path} never renders below 12px`, async ({ page }) => {
       await fresh(page, path);
       if (tab) await page.locator(tab).click();
-      const sizes = await page.evaluate(() => {
+      const measure = () => page.evaluate(() => {
         const shown = (el: Element) => {
           const r = el.getBoundingClientRect();
           if (!r.width || !r.height) return false;
@@ -268,9 +269,17 @@ test.describe("charts", () => {
         });
         return out;
       });
+      const sizes = await measure();
       expect(sizes.length).toBeGreaterThan(0);
-      // Desktop keeps the full SVG charts as designed; the 12px floor is enforced on phones, where they used to shrink.
+      // Desktop keeps the full SVG charts as designed; the 12px floor is enforced on phones, where they used to shrink,
+      // and on tablets (768px), where the HTML chart variants now apply up to 1024px.
       if (test.info().project.name === "mobile") expect(sizes.filter((s) => s.px < 12)).toEqual([]);
+      else {
+        await page.setViewportSize({ width: 768, height: 1024 });
+        const tablet = await measure();
+        expect(tablet.length).toBeGreaterThan(0);
+        expect(tablet.filter((s) => s.px < 12)).toEqual([]);
+      }
     });
   }
 });

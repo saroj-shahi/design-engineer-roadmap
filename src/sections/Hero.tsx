@@ -9,7 +9,9 @@ import {
   orgFlattening,
   skipAheadMonth,
   startAudience,
+  entryRoute,
   titleReality,
+  titleRealityShort,
 } from "../data/research";
 import { AdoptionDumbbell } from "../components/AdoptionDumbbell";
 import { ArchetypeVenn } from "../components/ArchetypeVenn";
@@ -18,11 +20,7 @@ import { HeroStage } from "../components/HeroStage";
 import { ArchetypeGlyph, ArrowGlyph, Glyph, type GlyphName } from "../components/icons";
 
 const heroMetricGlyphs: GlyphName[] = ["trendDown", "shareBar", "survey", "forecast"];
-import { BasisBadge, CopyLink, CountUp, Eyebrow, PageHeader, Roll, SubHead, Tag, jumpTo, navigate, pageHref, planHref, useMediaQuery, useTabList } from "../components/ui";
-
-/** Quiet inline text link with a growing underline. */
-const textLink =
-  "relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] font-medium text-ink";
+import { cardLink, ActionLink, BasisBadge, CopyLink, CountUp, Eyebrow, PageHeader, SubHead, Tag, TextLink, actionClass, jumpTo, navigate, pageHref, planHref, useMediaQuery, useTabList } from "../components/ui";
 
 /** Opening of the Start page: a split hero. Words, search and the reader's questions on the left;
  *  the before/now stage (how work moved) on the right, so the idea is shown as well as told. */
@@ -32,7 +30,7 @@ export function HeroIntro({ children }: { children?: ReactNode }) {
       <div className="min-w-0">
         <p className="inline-flex items-center gap-2 rounded-full border border-edge bg-card/60 py-1.5 pl-2.5 pr-3.5 font-mono text-label text-ink-2">
           <span aria-hidden className="relative flex size-2">
-            <span className="absolute inset-0 rounded-full bg-accent opacity-60 motion-safe:animate-ping" />
+            <span className="absolute inset-0 rounded-full bg-accent opacity-60 motion-safe:animate-[ping_1s_cubic-bezier(0,0,0.2,1)_4]" />
             <span className="relative size-2 rounded-full bg-accent" />
           </span>
           Design Engineer Field Guide · 2026
@@ -57,7 +55,7 @@ export function HeroIntro({ children }: { children?: ReactNode }) {
 /** Primary call to action under the hero: scroll to the two starting doors. */
 export function ChoosePathButton() {
   return (
-    <button type="button" onClick={() => jumpTo("start-here")} className="relative isolate inline-flex h-12 items-center gap-3 overflow-hidden rounded-full bg-accent pl-[1.375rem] pr-5 text-[0.9375rem] font-semibold tracking-[-0.005em] text-on-accent transition-[translate,box-shadow,color] duration-[260ms] ease-spring before:absolute before:inset-0 before:-z-10 before:translate-y-[101%] before:bg-ink before:transition-transform before:duration-[550ms] before:ease-silk before:content-[''] hover:shadow-accent hover:before:translate-y-0 focus-visible:shadow-accent focus-visible:before:translate-y-0 active:translate-y-px motion-reduce:active:translate-y-0 group">
+    <button type="button" onClick={() => jumpTo("start-here")} className={actionClass("primary")}>
           <span>Find your starting point</span>
           <span aria-hidden className="font-mono text-sm transition-transform duration-300 motion-safe:group-hover:translate-y-0.5">↓</span>
         </button>
@@ -74,7 +72,7 @@ export function StartHere() {
           who="I'm a working designer"
           meta="Track A · Working designer"
           what="Upskill in your role, or grow into a hybrid one"
-          detail="Compare Design Engineer, Meta-Designer and AX Designer, then follow a six-month plan from browser basics to real pull requests — at your current company or your next one."
+          detail="Compare Design Engineer, Meta-Designer and AX Designer. Then build on your UX and product design base with a six-month plan, from browser basics to real pull requests — at your current company or your next one."
           welcome={startAudience.a}
           tools={["Figma", "React", "TypeScript", "Tailwind CSS", "Cursor", "Claude Code"]}
           cta="Explore the three roles"
@@ -90,16 +88,19 @@ export function StartHere() {
           cta="Open the beginner plan"
         />
       </nav>
-      <div className="mt-6 flex flex-wrap gap-x-10 gap-y-3 border-t border-line pt-5 text-sm text-ink-3">
+      <div className="mt-6 grid gap-x-10 gap-y-6 border-t border-line pt-6 text-sm leading-relaxed text-ink-2 md:grid-cols-2">
+        {/* The developer route is a real door, so it gets a button; the leads note stays a sentence (one secondary action per section). */}
+        <div className="flex flex-col items-start gap-3">
+          <p>
+            <span className="font-medium text-ink">{startAudience.fromCode.lead}</span> {startAudience.fromCode.note}
+          </p>
+          <ActionLink variant="secondary" href={planHref({ track: "a", option: "pde", month: skipAheadMonth })}>
+            {startAudience.fromCode.cta}
+          </ActionLink>
+        </div>
         <p>
-          {startAudience.fromCode.lead}{" "}
-          <a href={pageHref("roles", "de")} className={textLink}>{startAudience.fromCode.role}</a>, or{" "}
-          <a href={planHref({ track: "a", option: "pde", month: skipAheadMonth })} className={textLink}>{startAudience.fromCode.plan}</a>.
-        </p>
-        <p>
-          {startAudience.leads.lead}{" "}
-          <a href={pageHref("jobs")} className={textLink}>{startAudience.leads.jobs}</a> and{" "}
-          <a href={pageHref("roles")} className={textLink}>{startAudience.leads.roles}</a>.
+          <span className="font-medium text-ink">{startAudience.leads.lead}</span>{" "}
+          <TextLink href={pageHref("roles", "leads")}>{startAudience.leads.link}</TextLink> {startAudience.leads.rest}
         </p>
       </div>
     </>
@@ -121,22 +122,15 @@ export function JobsShortAnswer({ more = false }: { more?: boolean }) {
             already ship some AI-generated code. Your design skills still matter most; what's growing is demand for designers who can
             also work in code with developers. The rest of this guide shows how.
           </p>
-          <p className="mt-4 max-w-[58ch] text-sm leading-relaxed text-ink-3">{titleReality}</p>
-          <p className="mt-3 text-sm text-ink-2">
-            Just starting out?{" "}
-            <a href={pageHref("plan", "b")} className="font-medium text-accent-ink underline decoration-line-strong underline-offset-4 transition-colors hover:decoration-current">
-              See the Track B plan
-            </a>
-          </p>
-          {more && (
-            <span className="mt-5 flex flex-wrap gap-x-8 gap-y-3">
-              <a href={pageHref("jobs")} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] inline-flex items-center gap-2 text-[0.9375rem] font-medium text-ink group group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">
-                See the full jobs outlook <ArrowGlyph />
-              </a>
-              <a href={pageHref("roles")} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] inline-flex items-center gap-2 text-[0.9375rem] font-medium text-ink group group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">
-                See the three roles <ArrowGlyph />
-              </a>
-            </span>
+          <p className="mt-4 max-w-[58ch] text-sm leading-relaxed text-ink-2">{more ? titleRealityShort : titleReality}</p>
+          {more ? (
+            <p className="mt-6">
+              <ActionLink href={pageHref("jobs")}>See the full jobs outlook</ActionLink>
+            </p>
+          ) : (
+            <p className="mt-3 max-w-[58ch] text-sm leading-relaxed text-ink-2">
+              {entryRoute} <TextLink href={pageHref("plan", "b")}>See the Track B plan</TextLink>
+            </p>
           )}
         </div>
         <div className="px-5 pb-7 sm:px-7 lg:order-1 lg:col-span-4">
@@ -164,7 +158,7 @@ export function JobsFigures({ figure }: { figure?: string }) {
             style={{ "--i": i } as CSSProperties}
             className="relative rounded-card border border-edge bg-card shadow-1 group flex min-h-[17rem] flex-col sm:min-h-[21rem]"
           >
-            <dt className="order-4 mt-4 flex-1 max-w-[26ch] px-4 text-sm leading-snug text-pretty text-ink-2 sm:px-5">{m.label}</dt>
+            <dt className="order-5 mt-2 flex-1 max-w-[26ch] px-4 text-sm leading-snug text-pretty text-ink-2 sm:px-5">{m.label}</dt>
             <dd className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal order-1 rounded-t-[calc(var(--radius-card)-1px)]">
               <BasisBadge basis={m.basis} onBand />
               {m.id && (
@@ -182,7 +176,8 @@ export function JobsFigures({ figure }: { figure?: string }) {
             <dd className={`font-display font-semibold leading-[0.9] tracking-[-0.04em] tabular-nums order-3 mt-auto px-4 pt-6 text-[clamp(3rem,5vw,5rem)] sm:px-5 ${i === 0 ? "text-accent" : "text-ink"}`}>
               <CountUp value={m.value} />
             </dd>
-            <dd className="rounded-b-[calc(var(--radius-card)-1px)] border-t border-line px-[1.125rem] py-3 text-balance font-mono text-label font-normal order-5 mt-5 flex min-h-[3.5rem] items-center text-ink-3 sm:px-5">{m.source}</dd>
+            {m.caption && <dd className="order-4 mt-4 max-w-[30ch] px-4 font-medium leading-snug text-pretty text-ink sm:px-5">{m.caption}</dd>}
+            <dd className="rounded-b-[calc(var(--radius-card)-1px)] border-t border-line px-[1.125rem] py-3 text-balance font-mono text-label font-normal order-6 mt-5 flex min-h-[3.5rem] items-center text-ink-3 sm:px-5">{m.source}</dd>
           </div>
         ))}
       </dl>
@@ -210,7 +205,7 @@ function EntryCard({
   cta: string;
 }) {
   return (
-    <a href={href} className="relative rounded-card border border-edge bg-card shadow-1 group/card transition-[translate,box-shadow,border-color,opacity] duration-[260ms] ease-spring hover:-translate-y-[3px] hover:border-line-strong hover:shadow-2 active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink has-[>input:focus-visible]:outline-2 has-[>input:focus-visible]:outline-offset-4 has-[>input:focus-visible]:outline-accent-ink motion-reduce:hover:translate-y-0 group flex h-full flex-col">
+    <a href={href} className={`relative ${cardLink} group flex h-full flex-col`}>
       <span className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal">
         <span className="inline-flex items-center gap-1.5">
           <Glyph name="user" className="!size-3.5 [--accent:currentColor]" />
@@ -244,7 +239,7 @@ export function HandoffProblem() {
     <section aria-labelledby="handoff-title">
       <SubHead
         id="handoff-title"
-        title="Why: handoffs are the bottleneck."
+        title="Why: passing work from designer to developer is slow"
         note={`All three roles grow from the same problem. Moving a design from Figma into code takes time, and details can get lost between tools. In Figma's 2025 research, ${handoffImprovableText}, and builds often need another pass to match the design. The fix belongs in the process.`}
       />
       <div className="grid grid-cols-4 gap-x-4 lg:grid-cols-12 lg:gap-x-6 gap-y-16">
@@ -289,7 +284,7 @@ export function CaseStudies() {
   return (
     <div className="mx-auto w-full max-w-[1440px] px-(--gutter) pb-24 sm:pb-36">
       <section aria-labelledby="cases-title">
-        <SubHead id="cases-title" title={<>Teams that <em>closed the gap</em></>} note="Two single-company case studies: what changed when designers started working in code. They are examples, not market benchmarks." />
+        <SubHead id="cases-title" title={<>Teams that <em>moved designers into code</em></>} note="Two single-company case studies: what changed when designers started working in code. They are examples, not market benchmarks." />
         <div className="grid gap-4 sm:gap-5 lg:grid-cols-12 [&>*]:min-w-0">
           {handoffCases.map((c, i) => (
             <article
@@ -307,7 +302,7 @@ export function CaseStudies() {
                   <h3 className="font-display text-display-m text-balance">{c.org}</h3>
                   <BasisBadge basis="case" />
                 </div>
-                <p className="mt-2 text-sm text-ink-3">{c.what}</p>
+                <p className="mt-2 text-sm text-ink-2">{c.what}</p>
                 <dl className="mt-auto grid gap-6 pt-6 sm:grid-cols-2">
                   {c.stats.map((s) => (
                     <div key={s.label}>
@@ -342,7 +337,7 @@ export function ForLeads() {
   ];
   return (
     <div className="mx-auto w-full max-w-[1440px] px-(--gutter) pb-24 sm:pb-36">
-      <section aria-labelledby="leads-title">
+      <section id="leads" aria-labelledby="leads-title" className="scroll-mt-28">
         <SubHead id="leads-title" title={<>For <em>design leads</em></>} note={forLeads.intro} />
         <div className="grid gap-4 sm:gap-5 lg:grid-cols-12 [&>*]:min-w-0">
           {cards.map((c) => (
@@ -352,9 +347,9 @@ export function ForLeads() {
                 <span>{c.title}</span>
               </h3>
               <p className="mt-3 flex-1 text-sm leading-relaxed text-ink-2">{c.detail}</p>
-              <a href={c.href} className={`${textLink} mt-6 inline-flex items-center gap-2 self-start text-[0.9375rem] group`}>
-                {c.cta} <ArrowGlyph />
-              </a>
+              <p className="mt-6 text-[0.9375rem]">
+                <TextLink href={c.href}>{c.cta}</TextLink>
+              </p>
             </article>
           ))}
           <article className="relative rounded-card border border-edge bg-card shadow-1 flex flex-col p-5 sm:p-6 lg:col-span-4">
@@ -369,6 +364,22 @@ export function ForLeads() {
             </ul>
             <h3 className="mt-6 text-[1.0625rem] font-medium tracking-tight text-ink">{forLeads.interviewTitle}</h3>
             <p className="mt-3 text-sm leading-relaxed text-ink-2">{forLeads.interview}</p>
+          </article>
+          <article className="relative rounded-card border border-edge bg-card shadow-1 flex flex-col p-5 sm:p-6 lg:col-span-5">
+            <h3 className="text-[1.0625rem] font-medium tracking-tight text-ink">{forLeads.decisionTitle}</h3>
+            <p className="mt-3 text-sm leading-relaxed text-ink-2">{forLeads.decision}</p>
+          </article>
+          <article className="relative rounded-card border border-edge bg-card shadow-1 flex flex-col p-5 sm:p-6 lg:col-span-7">
+            <h3 className="text-[1.0625rem] font-medium tracking-tight text-ink">{forLeads.levelsTitle}</h3>
+            <p className="mt-1.5 text-sm leading-relaxed text-ink-2">{forLeads.levelsNote}</p>
+            <dl className="mt-4 space-y-3 text-sm leading-relaxed">
+              {forLeads.levels.map((l) => (
+                <div key={l.label} className="grid gap-x-4 gap-y-0.5 sm:grid-cols-[9rem_1fr]">
+                  <dt className="font-medium text-ink">{l.label}</dt>
+                  <dd className="text-ink-2">{l.detail}</dd>
+                </div>
+              ))}
+            </dl>
           </article>
         </div>
       </section>
@@ -401,10 +412,7 @@ export function MarketTable() {
                         <td className="py-3 pr-4 text-ink-3">{m.scope}</td>
                         <td className="py-3 text-ink-3">
                           {m.url ? (
-                            <a href={m.url} target="_blank" rel="noopener noreferrer" className="underline decoration-line-strong underline-offset-4 hover:text-ink hover:decoration-current">
-                              {m.source}
-                              <span className="sr-only"> (opens in new tab)</span>
-                            </a>
+                            <TextLink href={m.url}>{m.source}</TextLink>
                           ) : (
                             m.source
                           )}
@@ -453,7 +461,7 @@ export function Archetypes({ role, intro }: { role?: string; intro?: ReactNode }
 
       {intro && <div className="mb-24 sm:mb-36">{intro}</div>}
 
-      <SubHead id="roles-pick" title={<>Three roles that <em>close the gap</em></>} note="Pick one to see what it involves, the titles it goes by and where it's in demand." />
+      <SubHead id="roles-pick" title={<>Three roles that <em>join design and code</em></>} note="Pick one to see what it involves, the titles it goes by and where it's in demand." />
 
       {/* One surface: the role list on the left stays in view while the chosen role's detail reads on the right. */}
       <div className="grid gap-6 lg:grid-cols-[minmax(0,19rem)_minmax(0,1fr)] lg:items-start lg:gap-8">
@@ -469,7 +477,7 @@ export function Archetypes({ role, intro }: { role?: string; intro?: ReactNode }
                 <button
                   key={x.id}
                   {...tabProps(x.id, i)}
-                  className={`group relative flex min-h-10 min-w-0 items-center justify-center gap-3 rounded-full px-1 text-center text-xs transition-colors sm:px-2 sm:text-sm duration-300 lg:justify-start lg:rounded-ctl lg:border lg:p-4 lg:text-left ${
+                  className={`group relative flex min-h-11 min-w-0 items-center justify-center gap-3 rounded-full px-1 text-center text-xs transition-colors sm:px-2 sm:text-sm duration-300 lg:justify-start lg:rounded-ctl lg:border lg:p-4 lg:text-left ${
                     on
                       ? "bg-accent text-on-accent lg:border-accent lg:bg-accent-soft lg:text-ink"
                       : "text-ink-2 hover:bg-sunken hover:text-ink lg:border-edge lg:bg-card"
@@ -503,6 +511,10 @@ export function Archetypes({ role, intro }: { role?: string; intro?: ReactNode }
               <span className="font-mono text-label font-normal text-ink-3">{a.focus}</span>
             </div>
             <h3 className="font-display text-display-m text-balance text-ink">{a.name}</h3>
+            <div className="max-w-[60ch]">
+              <Eyebrow>A day in this role</Eyebrow>
+              <p className="leading-relaxed text-ink-2">{a.day}</p>
+            </div>
             <p className="max-w-[60ch] font-display font-semibold tracking-[-0.02em] text-pretty text-[clamp(1.25rem,1.8vw,1.625rem)] leading-[1.2] text-ink">
               <span className="text-accent-ink">This fits you if</span> {a.fitsIf}
             </p>
@@ -510,22 +522,17 @@ export function Archetypes({ role, intro }: { role?: string; intro?: ReactNode }
               <p className="max-w-[60ch] text-sm leading-relaxed text-ink-2">
                 <span className="font-medium text-ink">Coming from code? </span>
                 {a.fromCode}{" "}
-                <a href={planHref({ track: "a", option: a.plan, month: skipAheadMonth })} className={textLink}>
+                <TextLink href={planHref({ track: "a", option: a.plan, month: skipAheadMonth })}>
                   Start the plan at Month&nbsp;{skipAheadMonth}
-                </a>
+                </TextLink>
               </p>
             )}
             <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-              <a href={`#/plan/a/${a.plan}`} className="relative isolate inline-flex h-12 items-center gap-3 overflow-hidden rounded-full bg-accent pl-[1.375rem] pr-5 text-[0.9375rem] font-semibold tracking-[-0.005em] text-on-accent transition-[translate,box-shadow,color] duration-[260ms] ease-spring before:absolute before:inset-0 before:-z-10 before:translate-y-[101%] before:bg-ink before:transition-transform before:duration-[550ms] before:ease-silk before:content-[''] hover:shadow-accent hover:before:translate-y-0 focus-visible:shadow-accent focus-visible:before:translate-y-0 active:translate-y-px motion-reduce:active:translate-y-0 group">
-                <Roll>See the plan for this role</Roll>
-                <ArrowGlyph />
-              </a>
-              <a href="#/plan/b/s1" className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] inline-flex items-center gap-2 text-sm text-ink-2 hover:text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">
-                Starting out? See the beginner plan <ArrowGlyph />
-              </a>
+              <ActionLink href={`#/plan/a/${a.plan}`}>See the plan for this role</ActionLink>
+              <ActionLink href="#/plan/b/s1" variant="secondary">Starting out? See the beginner plan</ActionLink>
             </div>
             {sharesPlanWith.length > 0 && (
-              <p className="text-sm text-ink-3">Shares a six-month plan with the {sharesPlanWith.join(" and ")} role.</p>
+              <p className="text-sm text-ink-2">Shares a six-month plan with the {sharesPlanWith.join(" and ")} role.</p>
             )}
           </div>
 

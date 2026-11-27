@@ -79,7 +79,7 @@ export function Nav({ page }: { page: Page | null }) {
                 key={p.id}
                 href={`${rootPrefix}${pageHref(p.id)}`}
                 aria-current={on ? "page" : undefined}
-                className={`nav-link group relative flex h-10 shrink-0 items-center gap-2 rounded-full focus-visible:outline-offset-[-2px] px-2 text-[13px] transition-colors duration-300 sm:px-4 sm:text-sm ${
+                className={`nav-link group relative flex h-11 min-w-11 shrink-0 items-center justify-center gap-2 rounded-full focus-visible:outline-offset-[-2px] px-2 text-[13px] transition-colors duration-300 sm:px-4 sm:text-sm ${
                   on ? "bg-accent-soft text-accent-ink" : "text-ink-2 hover:bg-sunken hover:text-ink"
                 }`}
               >

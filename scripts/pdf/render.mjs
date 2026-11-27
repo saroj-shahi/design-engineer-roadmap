@@ -81,7 +81,7 @@ function trackA(option) {
     option === "pde"
       ? "Six months, from browser basics to merged pull requests in a real product. Learn the browser before AI tools. Apply each month in your current job or in side projects — the plan uses React, TypeScript and Tailwind."
       : "Months 1–3 are the same for both Track A options: enough front-end to review AI code. Months 4–6 switch to design systems AI tools can read, and to trust flows for AI agents.";
-  const overview = `<table class="overview"><thead><tr><th>Month</th><th>Step</th><th>AI use</th><th>You build</th></tr></thead><tbody>${months
+  const overview = `<table class="overview"><thead><tr><th>Month</th><th>Step</th><th>AI use</th><th>Result</th></tr></thead><tbody>${months
     .map((m) => `<tr><td class="num">${pad(m.month)}</td><td>${esc(m.title)}</td><td>${esc(aiPolicyLabel[m.aiPolicy])}</td><td>${esc(m.build)}</td></tr>`)
     .join("")}</tbody></table>`;
 
@@ -106,6 +106,7 @@ function trackA(option) {
         kicker: `Month ${pad(m.month)} of ${pad(months.length)}`,
         note: aiPolicyLabel[m.aiPolicy],
         title: m.title,
+        lead: m.fromCode,
         fields: [
           field("Learning focus", `<p class="focus">${esc(m.focus)}</p>`),
           field("Practical deliverable", `<p>${esc(m.deliverable)}</p>`),
@@ -151,7 +152,7 @@ function trackB() {
     </header>
     <p class="kicker">Track B · Starting out</p>
     <h1>Your first role,<br /><em>four-stage plan</em></h1>
-    <p class="lead">Get your first role, with code in your portfolio. Start from the UX &amp; Product Design base, then move through four stages in order.</p>
+    <p class="lead">Get your first role, with code in your portfolio. Stage 1 is your UX &amp; Product Design base; then move through the other three stages in order.</p>
     ${field("Your plan at a glance", overview)}
     ${field("One focused stack, in order", `<div class="stack">${beginnerStack
       .map((p, i) => `<div><p class="topic-head">${pad(i + 1)} — ${esc(p.phase)}</p>${tags(p.tools)}</div>`)
@@ -174,9 +175,9 @@ function trackB() {
   const extras = `<section class="step">
     <header class="step-head"><span>After the plan</span></header>
     <h2>The market you're entering</h2>
-    <p class="lead">Seed-stage startups (young companies on their first funding round) have the highest design hiring rate (25%). With 300–800 applicants per role, a portfolio with something that runs is one way to stand out.</p>
+    <p class="lead">Seed-stage startups (young companies on their first funding round) have the highest design hiring rate (25%). With 300–800 applications per job post, a portfolio with something that runs helps you get noticed.</p>
     ${market}
-    <h2 class="h2-gap">Junior portfolio screening</h2>
+    <h2 class="h2-gap">What reviewers check in a junior portfolio</h2>
     ${checks(juniorChecklist)}
     <h2 class="h2-gap">Your first year on the job</h2>
     ${checks(icGrowth.map((g) => ({ title: g.name, detail: g.detail })))}

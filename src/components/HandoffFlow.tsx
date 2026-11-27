@@ -10,7 +10,7 @@ interface Step {
 
 const before: Step[] = [
   { who: "Designer", name: "Design in Figma", out: "Static mock", glyph: "frame" },
-  { who: "Designer", name: "Spec & redlines", out: "Ticket", glyph: "ruler" },
+  { who: "Designer", name: "Spec & redlines (notes on the design)", out: "Ticket", glyph: "ruler" },
   { who: "Engineer", name: "Build in code", out: "First build", glyph: "terminal" },
   { who: "Both", name: "QA & review", out: "Bug list", glyph: "check" },
 ];
@@ -29,7 +29,7 @@ export function HandoffFlow() {
   return (
     <figure aria-labelledby="handoff-flow-cap" className="relative rounded-card border border-edge bg-card shadow-1">
       <div className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal">
-        <h3 className="m-0">How the work changes · Before vs. After</h3>
+        <h3 className="m-0">How the work changes · Before → after</h3>
         <span className="hidden sm:inline">Handoff removed</span>
       </div>
 
@@ -157,11 +157,11 @@ function Row({
       <div className="mt-2 hidden grid-cols-4 gap-7 sm:grid" aria-hidden>
         {bottleneck ? (
           <div className="relative col-span-3 col-start-2 h-6 border-x border-b border-dashed border-accent">
-            <span className="absolute -left-[5px] -top-2 font-mono text-[11px] leading-none text-accent">▲</span>
+            <svg aria-hidden="true" viewBox="0 0 10 8" focusable="false" className="absolute -left-[5.5px] -top-2 h-2 w-2.5 text-accent"><path d="M5 0 10 8H0z" fill="currentColor" /></svg>
           </div>
         ) : (
           <div className="relative col-span-2 col-start-2 h-5 border-x border-b border-ink-3">
-            <span className="absolute -left-[5px] -top-2 font-mono text-[11px] leading-none text-ink-3">▲</span>
+            <svg aria-hidden="true" viewBox="0 0 10 8" focusable="false" className="absolute -left-[5.5px] -top-2 h-2 w-2.5 text-ink-3"><path d="M5 0 10 8H0z" fill="currentColor" /></svg>
           </div>
         )}
       </div>

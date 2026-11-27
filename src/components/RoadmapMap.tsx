@@ -1,4 +1,5 @@
 import type { CSSProperties, MouseEvent } from "react";
+import { cardLink } from "./ui";
 
 export interface MapStep {
   id: string;
@@ -41,9 +42,11 @@ export function RoadmapMap({
   return (
     <div>
       <div className="mb-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-ink-2" aria-hidden>
-        <span className="flex items-center gap-2">
-          <span className="rm-key rm-key-base" /> Base
-        </span>
+        {steps.some((s) => s.foundation) && (
+          <span className="flex items-center gap-2">
+            <span className="rm-key rm-key-base" /> Base
+          </span>
+        )}
         <span className="flex items-center gap-2">
           <span className="rm-key rm-key-node" /> Step
         </span>
@@ -55,7 +58,7 @@ export function RoadmapMap({
         </span>
       </div>
 
-      <ol className="rm" aria-label={label}>
+      <ol data-nav className="rm" aria-label={label}>
         {steps.map((s, i) => {
           const on = s.id === active;
           const isBase = Boolean(s.foundation);
@@ -69,7 +72,7 @@ export function RoadmapMap({
                   e.preventDefault();
                   onPick(s.id);
                 }}
-                className={`rm-node relative rounded-card border border-edge bg-card shadow-1 group/card transition-[translate,box-shadow,border-color,opacity] duration-[260ms] ease-spring hover:-translate-y-[3px] hover:border-line-strong hover:shadow-2 active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink has-[>input:focus-visible]:outline-2 has-[>input:focus-visible]:outline-offset-4 has-[>input:focus-visible]:outline-accent-ink motion-reduce:hover:translate-y-0 block ${
+                className={`rm-node relative ${cardLink} block ${
                   isBase ? "rm-node-base" : on ? "is-on translate-y-0! border-accent! shadow-accent! rm-node-on" : ""
                 }`}
               >
@@ -82,7 +85,7 @@ export function RoadmapMap({
                   {s.title}
                 </span>
                 {s.note && (
-                  <span className={`mt-2 block text-xs ${isBase ? "text-inverse-muted" : "text-ink-3"}`}>
+                  <span className={`mt-2 block text-xs ${isBase ? "text-inverse-muted" : "text-ink-2"}`}>
                     {s.note}
                   </span>
                 )}

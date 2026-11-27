@@ -1,5 +1,5 @@
 import { type CSSProperties } from "react";
-import { ArrowBackGlyph, ArrowGlyph, DownloadGlyph, ExternalGlyph, Glyph, type GlyphName } from "../components/icons";
+import { ArrowBackGlyph, ArrowGlyph, DownloadGlyph, Glyph, type GlyphName } from "../components/icons";
 import { BrandLogosFor } from "../components/BrandLogo";
 import { PlanRoadmapBase, type BaseRoadmapItem } from "../components/PlanRoadmapBase";
 import { RoadmapMap } from "../components/RoadmapMap";
@@ -16,6 +16,8 @@ import {
   planPace,
   sixMonthPlan,
   skipAheadMonth,
+  codeSkipLabels,
+  forLeads,
   toolPricingNote,
   trackAOptions,
   trackBCostNote,
@@ -24,6 +26,7 @@ import {
 } from "../data/research";
 import { PLAN_PDFS, type PlanPdfId } from "../data/planPdfs";
 import {
+  cardLink,
   BasisBadge,
   CheckRow,
   ContextBar,
@@ -38,6 +41,7 @@ import {
   SectionHeader,
   SubHead,
   Tag,
+  TextLink,
   TopicCheckbox,
   usePersistentSet,
   useSaveNote,
@@ -126,7 +130,7 @@ export function Roadmap({ plan }: { plan: PlanRoute | null }) {
         id="roadmap"
         level="h1"
         title={["Your plan,", <em>step by step.</em>]}
-        lede={`Pick where you are today. If you already work as a designer, pick a role next. The plan changes to match. ${planPace} ${saveNote}`}
+        lede={`Already work as a designer? Choose Track A, then a role. Starting out? Choose Track B. The plan changes to match. ${planPace} ${saveNote}`}
       />
 
       <div {...listProps} aria-label="Career track" className="grid gap-6 sm:grid-cols-2">
@@ -138,7 +142,7 @@ export function Roadmap({ plan }: { plan: PlanRoute | null }) {
               {...tabProps(t.id, i)}
               // With nothing picked, keep the first card reachable by Tab.
               tabIndex={on || (track === null && i === 0) ? 0 : -1}
-              className={`rounded-card border border-edge bg-card shadow-1 group/card transition-[translate,box-shadow,border-color,opacity] duration-[260ms] ease-spring hover:-translate-y-[3px] hover:border-line-strong hover:shadow-2 active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink has-[>input:focus-visible]:outline-2 has-[>input:focus-visible]:outline-offset-4 has-[>input:focus-visible]:outline-accent-ink motion-reduce:hover:translate-y-0 group relative isolate flex min-h-[15rem] flex-col overflow-hidden p-5 text-left transition-colors duration-700 ease-silk sm:min-h-[19rem] sm:p-8 ${
+              className={`${cardLink} group relative isolate flex min-h-[15rem] flex-col overflow-hidden p-5 text-left transition-colors duration-700 ease-silk sm:min-h-[19rem] sm:p-8 ${
                 on ? "is-on translate-y-0! border-accent! shadow-accent! text-on-inverse" : "text-ink"
               }`}
             >
@@ -164,36 +168,27 @@ export function Roadmap({ plan }: { plan: PlanRoute | null }) {
         })}
       </div>
 
-      {track === null && <p className="mt-6 text-[1.0625rem] font-medium tracking-tight text-ink">Pick where you are today to see your plan.</p>}
+      {track === null && (
+        <>
+          <p className="mt-6 text-[1.0625rem] font-medium tracking-tight text-ink">Pick where you are today to see your plan.</p>
+          {/* A taste of each plan before a track is picked: its very first task. */}
+          <ul aria-label="The first step in each plan" className="mt-4 grid gap-6 sm:grid-cols-2">
+            {[
+              { kicker: "Track A · First step", text: sixMonthPlan[0].start },
+              { kicker: "Track B · First step this week", text: launchStages[0].start },
+            ].map((x) => (
+              <li key={x.kicker} className="border-l border-accent pl-4">
+                <span className="font-mono text-label font-normal block text-ink-3">{x.kicker}</span>
+                <span className="mt-1.5 block leading-relaxed text-ink-2">{x.text}</span>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
 
-      <div className="mt-6 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3 border-t border-line pt-5 text-sm text-ink-3">
+      <div className="mt-6 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3 border-t border-line pt-5 text-sm text-ink-2">
         <p>
-          New to a term like PR, tokens or MCP?{" "}
-          <a href={pageHref("library", "glossary")} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] font-medium text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">
-            See the glossary
-          </a>
-        </p>
-        <p className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-          <span>Full topic checklists from roadmap.sh:</span>
-          <a href={pageHref("library", "roadmaps", "ux-design")} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] font-medium text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">
-            UX Design
-          </a>
-          <span aria-hidden>·</span>
-          <a href={pageHref("library", "roadmaps", "product-design")} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] font-medium text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">
-            Product Design
-          </a>
-          <span aria-hidden>·</span>
-          <a href={pageHref("library", "roadmaps", "design-system")} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] font-medium text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">
-            Design System
-          </a>
-          <span aria-hidden>·</span>
-          <a href={pageHref("library", "roadmaps", "frontend")} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] font-medium text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">
-            Frontend
-          </a>
-          <span aria-hidden>·</span>
-          <a href={pageHref("library", "roadmaps")} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] font-medium text-accent-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">
-            All 8 roadmaps →
-          </a>
+          New to a term like PR, tokens or MCP? <TextLink href={pageHref("library", "glossary")}>See the glossary</TextLink>
         </p>
       </div>
 
@@ -217,7 +212,7 @@ export function Roadmap({ plan }: { plan: PlanRoute | null }) {
 function PlanDownloads({ current }: { current: PlanPdfId | null }) {
   return (
     <div className="mt-24 sm:mt-36">
-      <SubHead n="PDF" title="Take a plan with you" note="A printable copy of each plan, with every month or stage, its topics and resources. Your ticks stay here in the browser." />
+      <SubHead n="PDF" title="Take a plan with you" note={`A printable copy of each plan, with every month or stage, its topics and resources. Your ticks stay here in the browser. ${forLeads.sharePdf}`} />
       <ul className="grid gap-4 sm:grid-cols-3">
         {PLAN_PDFS.map((p) => {
           const on = current === p.id;
@@ -227,12 +222,12 @@ function PlanDownloads({ current }: { current: PlanPdfId | null }) {
                 href={`${import.meta.env.BASE_URL}${p.file}`}
                 download
                 type="application/pdf"
-                className={`rounded-card border border-edge bg-card shadow-1 group/card transition-[translate,box-shadow,border-color,opacity] duration-[260ms] ease-spring hover:-translate-y-[3px] hover:border-line-strong hover:shadow-2 active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink motion-reduce:hover:translate-y-0 group flex w-full items-start gap-4 p-5 ${on ? "is-on border-accent! shadow-accent!" : ""}`}
+                className={`${cardLink} group flex w-full items-start gap-4 p-5 ${on ? "is-on border-accent! shadow-accent!" : ""}`}
               >
                 <DownloadGlyph className={`!size-8 shrink-0 ${on ? "text-accent-ink" : "text-ink"}`} />
                 <span className="min-w-0 flex-1">
                   <span className={`font-mono text-label font-normal block ${on ? "text-accent-ink" : "text-ink-3"}`}>
-                    {on ? "Your plan · PDF" : "PDF · A4"}
+                    {on ? "Your plan · PDF for print or desktop" : "PDF · A4 · for print or desktop"}
                   </span>
                   <span className="mt-1.5 block text-[1.0625rem] font-medium tracking-tight text-pretty text-ink">
                     <span className="sr-only">Download </span>
@@ -302,7 +297,7 @@ function TrackA({ plan: route }: { plan: PlanA }) {
               return (
                 <label
                   key={o.id}
-                  className={`rounded-card border border-edge bg-card shadow-1 group/card transition-[translate,box-shadow,border-color,opacity] duration-[260ms] ease-spring hover:-translate-y-[3px] hover:border-line-strong hover:shadow-2 active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink has-[>input:focus-visible]:outline-2 has-[>input:focus-visible]:outline-offset-4 has-[>input:focus-visible]:outline-accent-ink motion-reduce:hover:translate-y-0 group relative cursor-pointer p-6 sm:p-8 ${on ? "is-on translate-y-0! border-accent! shadow-accent!" : ""}`}
+                  className={`${cardLink} group relative cursor-pointer p-6 sm:p-8 ${on ? "is-on translate-y-0! border-accent! shadow-accent!" : ""}`}
                 >
                   <input type="radio" name="trackA" value={o.id} checked={on} onChange={() => go({ ...route, option: o.id as TrackAOption })} className="sr-only" />
                   <span className="flex items-start gap-4">
@@ -328,7 +323,7 @@ function TrackA({ plan: route }: { plan: PlanA }) {
             })}
           </div>
         </fieldset>
-        <p className="mt-6 max-w-[62ch] text-sm leading-relaxed text-ink-3" aria-live="polite">
+        <p className="mt-6 max-w-[62ch] text-sm leading-relaxed text-ink-2" aria-live="polite">
           {choice === "pde"
             ? "Six months, from browser basics to merged pull requests in a real product."
             : "Months 1–3 match the Design Engineer plan: enough front-end to review AI code. Months 4–6 turn to design systems AI tools can read, and to trust flows for AI agents."}
@@ -341,7 +336,7 @@ function TrackA({ plan: route }: { plan: PlanA }) {
         <RoadmapMap
           label="Six-month plan"
           leftLabel="Learn"
-          rightLabel="Build"
+          rightLabel="Result"
           active={String(month)}
           hrefFor={(id) => (id === "base" ? pageHref("library", "roadmaps", "ux-design") : planHref({ ...route, month: Number(id) }))}
           onPick={(id) => {
@@ -407,7 +402,7 @@ function TrackA({ plan: route }: { plan: PlanA }) {
               <button
                 key={x.month}
                 {...months.tabProps(String(x.month), i)}
-                className={`rounded-card border border-edge bg-card shadow-1 group/card transition-[translate,box-shadow,border-color,opacity] duration-[260ms] ease-spring hover:-translate-y-[3px] hover:border-line-strong hover:shadow-2 active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink has-[>input:focus-visible]:outline-2 has-[>input:focus-visible]:outline-offset-4 has-[>input:focus-visible]:outline-accent-ink motion-reduce:hover:translate-y-0 group relative overflow-hidden px-2 pb-4 pt-4 text-left sm:px-4 ${on ? "is-on translate-y-0! border-accent! shadow-accent!" : ""}`}
+                className={`${cardLink} group relative overflow-hidden px-2 pb-4 pt-4 text-left sm:px-4 ${on ? "is-on translate-y-0! border-accent! shadow-accent!" : ""}`}
               >
                 <span aria-hidden className={`absolute left-0 right-0 top-0 h-[4px] origin-left bg-accent transition-transform duration-700 ease-silk ${on ? "scale-x-100" : "scale-x-0"}`} />
                 <span className={`font-display font-semibold leading-[0.9] tracking-[-0.04em] tabular-nums block text-[clamp(2rem,4.5vw,4rem)] transition-colors duration-500 ${on ? "text-ink" : "text-ink-3 group-hover:text-ink"}`}>
@@ -421,7 +416,8 @@ function TrackA({ plan: route }: { plan: PlanA }) {
                 </span>
                 <span className="sr-only">
                   Month {x.month}
-                  {x.month < skipAheadMonth ? ", optional if you already code" : ""}
+                  {x.month === 1 ? `, ${codeSkipLabels.startHere.toLowerCase()}` : ""}
+                  {x.month < skipAheadMonth ? `, ${codeSkipLabels.optional.toLowerCase()}` : ""}
                 </span>
               </button>
             );
@@ -433,19 +429,18 @@ function TrackA({ plan: route }: { plan: PlanA }) {
             <span>
               <span className="font-medium text-ink">Already code?</span> Months 1–{skipAheadMonth - 1} cover browser basics and JavaScript & React, so you can skip them.
             </span>
-            <a
+            <TextLink
               href={planHref({ ...route, month: skipAheadMonth })}
               onClick={(e) => {
                 e.preventDefault();
                 setMonth(skipAheadMonth);
+                // This link unmounts once the month changes, so hand focus to the new month's tab.
+                requestAnimationFrame(() => document.getElementById(`month-tab-${skipAheadMonth}`)?.focus());
               }}
-              className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] group inline-flex items-center gap-1.5 font-medium text-ink"
+              className="font-medium"
             >
-              <span className="bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">
-                Start at Month {skipAheadMonth}
-              </span>
-              <ArrowGlyph />
-            </a>
+              Start at Month {skipAheadMonth}
+            </TextLink>
           </p>
         )}
 
@@ -457,11 +452,13 @@ function TrackA({ plan: route }: { plan: PlanA }) {
           <p className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal">
             <span>
               Month {String(m.month).padStart(2, "0")}
-              {m.month < skipAheadMonth && " · Optional if you already code"}
+              {m.month === 1 && ` · ${codeSkipLabels.startHere}`}
+              {m.month < skipAheadMonth && ` · ${codeSkipLabels.optional}`}
             </span>
             <span>{aiPolicyLabel[m.aiPolicy]}</span>
           </p>
           <CopyLink hash={planHref({ ...route, month: m.month })} label={`Copy link to Month ${m.month}`} className="flex-wrap px-5 pt-5 text-ink-3 sm:px-7" />
+          {m.fromCode && <p className="mx-5 mt-5 max-w-[70ch] border-l border-accent pl-4 text-sm leading-relaxed text-ink-2 sm:mx-7">{m.fromCode}</p>}
           <div className="[&>*]:animate-panel-in [&>*]:[animation-delay:calc(var(--i,0)*60ms)] motion-reduce:[&>*]:animate-fade-in grid gap-y-10 px-5 py-8 sm:px-7 md:grid-cols-12 md:gap-x-6">
           <div className="md:col-span-4" style={{ "--i": 0 } as CSSProperties}>
             <Eyebrow>Learning focus</Eyebrow>
@@ -483,7 +480,6 @@ function TrackA({ plan: route }: { plan: PlanA }) {
           total={MONTHS}
           unit="month"
           onStep={setMonth}
-          doneHref={pageHref("ready", "a")}
         />
       </div>
 
@@ -516,8 +512,8 @@ function TrackA({ plan: route }: { plan: PlanA }) {
         title="Every topic behind this plan"
         note={
           choice === "pde"
-            ? "UX Design and Product Design are your foundation. Open any stage to audit what you know and track Design Systems, Frontend and Claude Code topics."
-            : "UX Design and Product Design are your foundation. Open any stage to audit what you know and track Design Systems, Prompt & Context and AI Agents topics."
+            ? "UX Design and Product Design are your foundation. Open any stage to audit what you know and tick off Design Systems, Frontend and Claude Code topics."
+            : "UX Design and Product Design are your foundation. Open any stage to audit what you know and tick off Design Systems, Prompt & Context and AI Agents topics."
         }
         items={trackABaseRoadmaps[choice]}
       />
@@ -525,8 +521,9 @@ function TrackA({ plan: route }: { plan: PlanA }) {
   );
 }
 
-/** Previous / Next under a step's detail. At the last step, Next becomes a link on to the checklist. */
-function StepNav({ n, total, unit, onStep, doneHref }: { n: number; total: number; unit: "month" | "stage"; onStep: (n: number) => void; doneHref: string }) {
+/** Previous / Next under a step's detail. At the last step, Next moves on to "Show your work", where the checklist card is
+ *  (a jump, not a second link to the checklist). */
+function StepNav({ n, total, unit, onStep }: { n: number; total: number; unit: "month" | "stage"; onStep: (n: number) => void }) {
   return (
     <div className="mt-5 flex items-center justify-between gap-4">
       <StepButton disabled={n === 1} reason={`You're on the first ${unit}`} onClick={() => onStep(Math.max(1, n - 1))} dir="back">
@@ -540,10 +537,9 @@ function StepNav({ n, total, unit, onStep, doneHref }: { n: number; total: numbe
           Next
         </StepButton>
       ) : (
-        <a href={doneHref} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] group font-mono text-label font-normal flex items-center gap-1.5 text-ink">
-          <span className="bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">Open the checklist</span>
-          <ArrowGlyph />
-        </a>
+        <StepButton disabled={false} onClick={() => jumpTo("plan-portfolio")} dir="next">
+          Show your work
+        </StepButton>
       )}
     </div>
   );
@@ -552,7 +548,7 @@ function StepNav({ n, total, unit, onStep, doneHref }: { n: number; total: numbe
 
 function ChecklistLink({ href, title, detail }: { href: string; title: string; detail: string }) {
   return (
-    <a href={href} className="relative rounded-card border border-edge bg-card shadow-1 group/card transition-[translate,box-shadow,border-color,opacity] duration-[260ms] ease-spring hover:-translate-y-[3px] hover:border-line-strong hover:shadow-2 active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink has-[>input:focus-visible]:outline-2 has-[>input:focus-visible]:outline-offset-4 has-[>input:focus-visible]:outline-accent-ink motion-reduce:hover:translate-y-0 group mt-6 flex items-start gap-5 p-5 sm:p-6">
+    <a href={href} className={`relative ${cardLink} group mt-6 flex items-start gap-5 p-5 sm:p-6`}>
       <Glyph name="check" className="!size-12 shrink-0 text-ink" />
       <span className="min-w-0 flex-1">
         <span className="flex items-center justify-between gap-3 text-[1.0625rem] font-medium tracking-tight text-ink">
@@ -612,18 +608,12 @@ function StartAndDone({
                     <span className="font-mono text-label font-normal block text-accent-ink">{g.source} roadmap</span>
                     <span className="mt-0.5 block text-sm font-medium text-ink">{g.area}</span>
                   </div>
-                  <a
-                    href={pageHref("library", "roadmaps", g.slug)}
-                    className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] shrink-0 text-ink-3 hover:text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]"
-                  >
-                    Full checklist →
-                  </a>
                 </div>
                 <ul className="mt-2 divide-y divide-line">
                   {g.topics.map((t) => {
                     const key = `${stepKey}:${g.slug}:${t}`;
                     return (
-                      <li key={key} className="py-1.5">
+                      <li key={key}>
                         <TopicCheckbox checked={planTicks.set.has(key)} onToggle={() => planTicks.toggle(key)} label={t} />
                       </li>
                     );
@@ -632,6 +622,9 @@ function StartAndDone({
               </div>
             ))}
           </div>
+          <p className="mt-4 text-sm text-ink-2">
+            Every topic, section by section: <TextLink href={pageHref("library", "roadmaps")}>see the full roadmap.sh checklists</TextLink>
+          </p>
         </div>
       )}
       {resources.length > 0 && (
@@ -640,12 +633,10 @@ function StartAndDone({
           <ul className="grid gap-x-6 sm:grid-cols-2">
             {resources.map((r) => (
               <li key={r.url} className="flex items-center justify-between gap-3 border-b border-line">
-                <a href={r.url} target="_blank" rel="noopener noreferrer" className="group inline-flex min-h-11 min-w-0 flex-1 items-center gap-2 py-2.5 text-ink">
-                  <BrandLogosFor text={`${r.label} ${r.url}`} max={1} className="size-4 text-ink-2 transition-colors duration-300 group-hover:text-accent-ink" />
-                  <span className="bg-[linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[0%_1px] bg-position-[100%_100%] pb-0.5 transition-[background-size,color] duration-[600ms] ease-silk hover:bg-size-[100%_1px] hover:bg-position-[0%_100%] focus-visible:bg-size-[100%_1px] focus-visible:bg-position-[0%_100%] data-[on=true]:bg-size-[100%_1px] data-[on=true]:bg-position-[0%_100%] group-hover:bg-size-[100%_1px] group-hover:bg-position-[0%_100%] group-focus-visible:bg-size-[100%_1px] group-focus-visible:bg-position-[0%_100%]">{r.label}</span>
-                  <ExternalGlyph className="shrink-0 text-ink-3 transition-colors duration-300 group-hover:text-accent-ink" />
-                  <span className="sr-only"> (opens in new tab)</span>
-                </a>
+                <span className="inline-flex min-h-11 min-w-0 flex-1 items-center gap-2 py-2.5">
+                  <BrandLogosFor text={`${r.label} ${r.url}`} max={1} className="size-4 shrink-0 text-ink-2" />
+                  <TextLink href={r.url}>{r.label}</TextLink>
+                </span>
                 <span className={`font-mono text-label font-normal shrink-0 ${r.cost === "free" ? "text-ink-3" : "text-accent-ink"}`}>{r.cost === "free" ? "Free" : "Paid"}</span>
               </li>
             ))}
@@ -676,7 +667,7 @@ function StepButton({
       onClick={onClick}
       disabled={disabled}
       title={disabled ? reason : undefined}
-      className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] group font-mono text-label font-normal flex items-center gap-1.5 text-ink transition-opacity disabled:cursor-not-allowed disabled:opacity-50"
+      className="hit group font-mono text-label font-normal flex items-center gap-1.5 text-ink transition-opacity disabled:cursor-not-allowed disabled:opacity-50"
     >
       {dir === "back" && <ArrowBackGlyph />}
       <span className="bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">{children}</span>
@@ -704,7 +695,7 @@ function TrackB({ stage }: { stage: number }) {
         <p className="font-mono text-label font-normal mb-4 text-inverse-accent">Your first step this week</p>
         <p className="max-w-[44ch] font-display font-semibold tracking-[-0.02em] text-pretty text-[1.625rem] leading-[1.15]">{launchStages[0].start}</p>
         <p className="mt-4 max-w-[62ch] text-sm leading-relaxed text-inverse-muted">
-          {trackBCostNote} {toolPricingNote}
+          {trackBCostNote}
         </p>
         {stage !== 1 && (
           <button
@@ -713,7 +704,7 @@ function TrackB({ stage }: { stage: number }) {
               setStage(1);
               jumpTo("stage-detail");
             }}
-            className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] group mt-5 inline-flex items-center gap-1.5 font-mono text-label font-normal text-on-inverse"
+            className="hit group mt-5 inline-flex items-center gap-1.5 font-mono text-label font-normal text-on-inverse"
           >
             <span className="bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">
               Open Stage 1
@@ -725,41 +716,21 @@ function TrackB({ stage }: { stage: number }) {
 
       {/* Map of the whole plan, starting from the shared UX & Product Design base */}
       <div id="plan-map">
-        <SubHead n="B.map" title="Your plan at a glance" note="Start from the UX & Product Design base that all three roles share, then move through four stages in order. Pick the base or any stage to open its details." />
+        <SubHead n="B.map" title="Your plan at a glance" note="Stage 1 is the UX & Product Design base that all three roles share. Then move through the other three stages in order. Pick any stage to open its details." />
         <RoadmapMap
           label="Four-stage launch plan"
-          leftLabel="Focus"
+          leftLabel="Learn"
           rightLabel="Result"
           active={String(stage)}
-          hrefFor={(id) => (id === "base" ? pageHref("library", "roadmaps", "ux-design") : planHref({ track: "b", stage: Number(id) }))}
+          hrefFor={(id) => planHref({ track: "b", stage: Number(id) })}
           onPick={(id) => {
-            if (id === "base") {
-              jumpTo("plan-base");
-              return;
-            }
             setStage(Number(id));
             jumpTo("stage-detail");
           }}
           steps={[
-            {
-              id: "base",
-              kicker: "Base · Foundation",
-              title: "UX & Product Design",
-              note: "Open base checklists ↓",
-              base: "UX Design · Product Design",
-              foundation: true,
-              left: [
-                "Behavior & decision making",
-                "Interviews, personas & JTBD",
-                "IA, flows & wireframing",
-                "Visual craft, layout & WCAG",
-                "Usability & impact testing",
-              ],
-              right: "UX & Product Design foundation",
-            },
             ...launchStages.map((x) => ({
               id: String(x.n),
-              kicker: `Stage ${x.n}`,
+              kicker: x.n === 1 ? "Stage 1 · Your base" : `Stage ${x.n}`,
               title: x.name,
               base: x.roadmapTopics.map((g) => g.source).join(" · "),
               left: x.learn,
@@ -779,7 +750,7 @@ function TrackB({ stage }: { stage: number }) {
               <button
                 key={x.n}
                 {...stages.tabProps(String(x.n), i)}
-                className={`rounded-card border border-edge bg-card shadow-1 group/card transition-[translate,box-shadow,border-color,opacity] duration-[260ms] ease-spring hover:-translate-y-[3px] hover:border-line-strong hover:shadow-2 active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink has-[>input:focus-visible]:outline-2 has-[>input:focus-visible]:outline-offset-4 has-[>input:focus-visible]:outline-accent-ink motion-reduce:hover:translate-y-0 group relative flex h-full w-full flex-col overflow-hidden p-5 text-left ${on ? "is-on translate-y-0! border-accent! shadow-accent!" : ""}`}
+                className={`${cardLink} group relative flex h-full w-full flex-col overflow-hidden p-5 text-left ${on ? "is-on translate-y-0! border-accent! shadow-accent!" : ""}`}
               >
                   <span aria-hidden className={`absolute left-0 right-0 top-0 h-[4px] origin-left bg-accent transition-transform duration-700 ease-silk ${on ? "scale-x-100" : "scale-x-0"}`} />
                   <span className="flex items-start justify-between gap-3">
@@ -787,7 +758,7 @@ function TrackB({ stage }: { stage: number }) {
                     {on && <SelectedMark className="text-accent-ink">Selected</SelectedMark>}
                   </span>
                   <span className={`mt-3 font-display font-semibold tracking-[-0.02em] text-pretty text-2xl leading-tight transition-colors duration-500 ${on ? "text-ink" : "text-ink-3 group-hover:text-ink"}`}>{x.name}</span>
-                  <span className="mt-4 text-xs text-ink-3">{x.output}</span>
+                  <span className="mt-4 text-xs text-ink-2">{x.output}</span>
               </button>
             );
           })}
@@ -804,17 +775,15 @@ function TrackB({ stage }: { stage: number }) {
             <StartAndDone stepKey={`b-s${s.n}`} start={s.start} doneWhen={s.doneWhen} topics={s.roadmapTopics} resources={s.resources} />
           </div>
         </div>
-        <StepNav n={stage} total={STAGES} unit="stage" onStep={setStage} doneHref={pageHref("ready", "b")} />
+        <StepNav n={stage} total={STAGES} unit="stage" onStep={setStage} />
       </div>
 
       <div id="plan-market">
         <SubHead n="B.2" title="The market you're entering" note={
             <>
               Small startups and agencies are often the most open to first-time designers. With{" "}
-              {applicationsPerPost.value} applicants per role, a portfolio with something that runs is one way to stand out.{" "}
-              <a href={pageHref("jobs")} className="font-medium text-ink underline decoration-line-strong underline-offset-4 hover:decoration-current">
-                See the full jobs outlook
-              </a>
+              {applicationsPerPost.value} applications per job post, a portfolio with something that runs helps you get noticed.{" "}
+              <TextLink href={pageHref("jobs")}>See the full jobs outlook</TextLink>
               .
             </>
           }
@@ -865,7 +834,7 @@ function TrackB({ stage }: { stage: number }) {
 
       <div className="grid gap-y-24 lg:grid-cols-12 lg:gap-x-6">
         <div id="plan-portfolio" className="lg:col-span-6">
-          <SubHead n="B.4" title="Junior portfolio screening" />
+          <SubHead n="B.4" title="What reviewers check in a junior portfolio" />
           <ChecklistLink href={pageHref("ready", "b")} title="Your checklist" detail="Clear scope, how your thinking changed, a live build, easy access. Tick it off on the Checklist page." />
         </div>
         <div id="plan-first-year" className="lg:col-span-5 lg:col-start-8">
@@ -889,7 +858,7 @@ function TrackB({ stage }: { stage: number }) {
         id="plan-base"
         n="B.base"
         title="Every topic behind this plan"
-        note="Build your base in UX Design and Product Design first, then layer Frontend, AI Product Builder and Design Systems. Expand any stage to tick off topics as you learn."
+        note="Stage 1 works through the UX Design and Product Design checklists here. Later stages layer Frontend, AI Product Builder and Design Systems. Expand any stage to tick off topics as you learn."
         items={trackBBaseRoadmaps}
       />
     </div>

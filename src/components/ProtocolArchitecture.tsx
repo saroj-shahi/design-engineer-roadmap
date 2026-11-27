@@ -78,7 +78,7 @@ export function ProtocolArchitecture({
 
       {/* Phones: the same topology as a top-to-bottom stack of HTML nodes and protocol buttons, so text stays at 12px or more.
           The SVG below carries the same content for wider screens; only one of the two is ever displayed. */}
-      <div className="plate-field grid gap-2 px-4 py-5 sm:hidden">
+      <div className="plate-field grid gap-2 px-4 py-5 lg:hidden">
         <PhoneNode n={nodes[0]} />
         <PhoneBridges ids={["agui", "a2ui"]} activeId={active.id} onSelect={onSelect} />
         <PhoneNode n={nodes[1]} />
@@ -89,7 +89,7 @@ export function ProtocolArchitecture({
         </div>
       </div>
 
-      <div tabIndex={0} role="region" aria-label="Agent protocol map (scrolls sideways)" className="plate-field hidden overflow-x-auto px-4 py-5 sm:block sm:px-6 focus-visible:outline-offset-[-2px]">
+      <div tabIndex={0} role="region" aria-label="Agent protocol map (scrolls sideways)" className="plate-field hidden overflow-x-auto px-4 py-5 lg:block sm:px-6 focus-visible:outline-offset-[-2px]">
         <svg
           viewBox="0 0 880 276"
           role="img"

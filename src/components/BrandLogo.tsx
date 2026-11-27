@@ -276,8 +276,22 @@ export function BrandLogo({ brand, className = "size-3.5" }: { brand: BrandId; c
   );
 }
 
-export function BrandLogosFor({ text, max = 2, className = "size-3.5" }: { text: string; max?: number; className?: string }) {
-  const ids = detectBrands(text, max);
+/** Marks that are only letters ("TS", "JS"). Beside text that already names the brand they read as a duplicate chip. */
+const lettermarks: ReadonlySet<BrandId> = new Set<BrandId>(["typescript", "javascript"]);
+
+export function BrandLogosFor({
+  text,
+  max = 2,
+  className = "size-3.5",
+  letters = true,
+}: {
+  text: string;
+  max?: number;
+  className?: string;
+  /** false: leave out letter-only marks, for chips whose text already spells the name. */
+  letters?: boolean;
+}) {
+  const ids = detectBrands(text, max).filter((id) => letters || !lettermarks.has(id));
   if (ids.length === 0) return null;
   return (
     <span aria-hidden="true" className="inline-flex shrink-0 items-center gap-1">

@@ -5,7 +5,7 @@ import { ToolingPipeline } from "../sections/ToolingPipeline";
 import { glossary, glossaryTopicLabel, type GlossaryTopic } from "../data/research";
 import { externalRoadmaps } from "../data/roadmaps";
 import { useEffect, useState } from "react";
-import { ContextBar, Disclosure, NextPage, PageHeader, SubHead, jumpTo, lastPlanHref, navigate, pageHref, useMediaQuery } from "../components/ui";
+import { ContextBar, CopyLink, Disclosure, TextLink, NextPage, PageHeader, SubHead, jumpTo, lastPlanHref, navigate, pageHref, useMediaQuery } from "../components/ui";
 
 const shelves = [
   { id: "compare", label: "Design vs. design + code" },
@@ -39,7 +39,7 @@ export function Library({ shelf: raw, term }: { shelf?: string; term?: string })
         title={["Go deeper,", <em>when you want to.</em>]}
         lede="You don't need any of this to start. Open a shelf when a question comes up."
       >
-        <nav aria-label="Library shelves" className="mt-10 grid max-w-full grid-cols-2 gap-1 rounded-ctl border border-edge bg-card p-1 sm:inline-flex">
+        <nav data-nav aria-label="Library shelves" className="mt-10 grid max-w-full grid-cols-2 gap-1 rounded-ctl border border-edge bg-card p-1 sm:inline-flex">
           {shelves.map((s) => {
             const selected = s.id === shelf;
             return (
@@ -98,6 +98,24 @@ function Glossary({ term }: { term?: string }) {
     navigate(pageHref("library", "glossary", slugify(name)), { replace: true });
   };
 
+  // Phone groups: all start closed so the page stays short; following a link to a term opens its group and leaves the others as they are.
+  const termTopic = term ? glossary.find((g) => slugify(g.term) === term)?.topic : undefined;
+  const [openTopics, setOpenTopics] = useState<Set<GlossaryTopic>>(() => new Set(termTopic ? [termTopic] : []));
+  const setTopicOpen = (t: GlossaryTopic, open: boolean) =>
+    setOpenTopics((prev) => {
+      const next = new Set(prev);
+      if (open) next.add(t);
+      else next.delete(t);
+      return next;
+    });
+
+  // Open the linked term's group in the same render, so the jump below finds the card.
+  const [seenTerm, setSeenTerm] = useState(term);
+  if (term !== seenTerm) {
+    setSeenTerm(term);
+    if (termTopic && !openTopics.has(termTopic)) setOpenTopics(new Set(openTopics).add(termTopic));
+  }
+
   useEffect(() => {
     if (term) jumpTo(`term-${term}`);
   }, [term]);
@@ -106,7 +124,7 @@ function Glossary({ term }: { term?: string }) {
     <section aria-labelledby="glossary-title" className="pb-24 sm:pb-36">
       <SubHead
         id="glossary-title"
-        title={<>Plain words for <em>the jargon.</em></>}
+        title={<>Plain words for <em>the jargon</em></>}
         note="Skip what you know. Look a term up when it comes up in a course, a job post or a team meeting."
         className="mt-10 !mb-0"
       />
@@ -115,7 +133,7 @@ function Glossary({ term }: { term?: string }) {
           <label htmlFor="glossary-filter" className="font-mono text-label font-normal block text-ink-3">
             Filter terms
           </label>
-          <input id="glossary-filter" type="search" value={q} onChange={(e) => setQ(e.target.value)} autoComplete="off" className="w-full rounded-none border-0 border-b border-line-strong bg-transparent py-3 text-xl tracking-[-0.01em] text-ink transition-colors duration-[400ms] ease-silk placeholder:text-ink-3 focus:border-accent-ink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink" />
+          <input id="glossary-filter" type="search" value={q} onChange={(e) => setQ(e.target.value)} autoComplete="off" className="min-h-11 w-full rounded-none border-0 border-b border-line-strong bg-transparent py-3 text-xl tracking-[-0.01em] text-ink transition-colors duration-[400ms] ease-silk placeholder:text-ink-3 focus:border-accent-ink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink" />
         </div>
         <div role="group" aria-label="Show terms by topic" className="flex flex-wrap gap-2 pb-2">
           {topics.map((l) => (
@@ -124,7 +142,7 @@ function Glossary({ term }: { term?: string }) {
               type="button"
               aria-pressed={topic === l.id}
               onClick={() => setTopic(l.id)}
-              className={`inline-flex min-h-10 items-center rounded-full border px-4 font-mono text-label font-normal transition-colors duration-300 ${
+              className={`inline-flex min-h-11 items-center rounded-full border px-4 font-mono text-label font-normal transition-colors duration-300 ${
                 topic === l.id ? "border-accent bg-accent-soft text-accent-ink" : "border-edge text-ink-2 hover:border-accent hover:text-ink"
               }`}
             >
@@ -139,23 +157,21 @@ function Glossary({ term }: { term?: string }) {
       {terms.length === 0 ? (
         <div className="mt-10">
           <p className="text-ink-2">{needle ? <>No term matches “{q.trim()}”.</> : "No terms here yet."}</p>
-          <button type="button" onClick={() => { setQ(""); setTopic("all"); }} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] mt-3 text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">
+          <button type="button" onClick={() => { setQ(""); setTopic("all"); }} className="hit font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] mt-3 text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">
             Clear filter
           </button>
         </div>
       ) : grouped ? (
-        /* Phones, "All", no filter: one collapsible group per topic keeps the page short. The first group and
-           the group holding a deep-linked term open; keying on that remounts a group open when a link targets it. */
+        /* Phones, "All", no filter: one collapsible group per topic keeps the page short. */
         <div className="mt-6 border-t border-line">
-          {topicIds.map((t, i) => {
+          {topicIds.map((t) => {
             const inTopic = terms.filter((g) => g.topic === t);
-            const termTopic = term ? glossary.find((g) => slugify(g.term) === term)?.topic : undefined;
-            const holdsTerm = termTopic === t;
             return (
               <Disclosure
-                key={`${t}-${holdsTerm}`}
+                key={t}
                 headingLevel="h3"
-                defaultOpen={holdsTerm || (!termTopic && i === 0)}
+                open={openTopics.has(t)}
+                onOpenChange={(o) => setTopicOpen(t, o)}
                 summary={
                   <>
                     {glossaryTopicLabel[t]} <span className="font-mono text-label font-normal text-ink-3">· {inTopic.length} terms</span>
@@ -176,38 +192,30 @@ function Glossary({ term }: { term?: string }) {
 
 function GlossaryCard({ g, term, openTerm }: { g: (typeof glossary)[number]; term?: string; openTerm: (name: string) => void }) {
   const slug = slugify(g.term);
-  const href = pageHref("library", "glossary", slug);
+  // Cross-references: each term once, never the entry itself, at most three (DESIGN.md §4a, rule 6).
+  const see = [...new Set(g.see ?? [])].filter((name) => slugify(name) !== slug).slice(0, 3);
   return (
     <div id={`term-${slug}`} className={`relative rounded-card border border-edge bg-card shadow-1 p-5 ${slug === term ? "!border-accent" : ""}`}>
-      <dt className="font-display font-semibold tracking-[-0.02em] text-pretty text-[1.5rem] leading-tight text-ink">
-        <a
-          href={href}
-          onClick={(e) => {
-            e.preventDefault();
-            navigate(href, { replace: true });
-          }}
-          className="hover:text-accent-ink"
-        >
-          {g.term}
-        </a>
+      <dt className="flex items-start justify-between gap-3">
+        <span className="font-display font-semibold tracking-[-0.02em] text-pretty text-[1.5rem] leading-tight text-ink">{g.term}</span>
+        <CopyLink hash={pageHref("library", "glossary", slug)} label={`Copy link to ${g.term}`} iconOnly className="mt-1.5 shrink-0 text-ink-3" />
       </dt>
       <dd className="mt-2 text-sm leading-relaxed text-ink-2">{g.meaning}</dd>
-      {g.see && g.see.length > 0 && (
-        <dd className="mt-3 text-sm text-ink-3">
+      {see.length > 0 && (
+        <dd data-xref className="mt-3 text-sm leading-7 text-ink-2">
           See{" "}
-          {g.see.map((name, i) => (
+          {see.map((name, i) => (
             <span key={name}>
               {i > 0 && ", "}
-              <a
+              <TextLink
                 href={pageHref("library", "glossary", slugify(name))}
                 onClick={(e) => {
                   e.preventDefault();
                   openTerm(name);
                 }}
-                className="bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-ink hover:text-accent-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]"
               >
                 {name}
-              </a>
+              </TextLink>
             </span>
           ))}
         </dd>

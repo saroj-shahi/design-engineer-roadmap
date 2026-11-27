@@ -1,7 +1,8 @@
 import { useState, type CSSProperties } from "react";
-import { BrandLogo, BrandLogosFor } from "../components/BrandLogo";
+import { BrandLogosFor } from "../components/BrandLogo";
 import { ExternalGlyph } from "../components/icons";
 import {
+  cardLink,
   Eyebrow,
   Section,
   SectionHeader,
@@ -9,6 +10,7 @@ import {
   Tag,
   TopicCheckbox,
   navigate,
+  ActionLink,
   pageHref,
   usePersistentSet,
   useSaveNote,
@@ -134,19 +136,19 @@ export function RoadmapTopics({ slug }: { slug?: string }) {
     <Section id="roadmaps">
       <SectionHeader
         id="roadmaps"
-        title={["Topic roadmaps,", <em>from roadmap.sh.</em>]}
-        lede={`${externalRoadmaps.length} full topic syllabi (${totalTopicsAll} topics) plus ${companionRoadmaps.length} companion skill tracks from roadmap.sh — mapped to the roles in this guide. ${saveNote}`}
+        title={["Topic roadmaps,", <em>from roadmap.sh</em>]}
+        lede={`${externalRoadmaps.length} full topic syllabi (${totalTopicsAll} topics) plus ${companionRoadmaps.length} companion skill roadmaps from roadmap.sh — mapped to the roles in this guide. ${saveNote}`}
       />
 
       {/* Roadmap selector grouped into Design vs Code & AI */}
-      <div {...listProps} aria-label="Official roadmap.sh tracks" className="space-y-8">
+      <div {...listProps} aria-label="Official roadmap.sh roadmaps" className="space-y-8">
         {(["design", "engineering-ai"] as const).map((group) => {
           const items = externalRoadmaps.filter((r) => r.group === group);
           return (
             <div key={group}>
               <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
                 <p className="font-mono text-label font-normal text-ink">{groupMeta[group].label}</p>
-                <p className="text-xs text-ink-3">{groupMeta[group].note}</p>
+                <p className="text-xs text-ink-2">{groupMeta[group].note}</p>
               </div>
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 {items.map((r) => {
@@ -169,7 +171,7 @@ export function RoadmapTopics({ slug }: { slug?: string }) {
                     <button
                       key={r.slug}
                       {...tabProps(r.slug, idx)}
-                      className={`rounded-card border border-edge bg-card shadow-1 group/card transition-[translate,box-shadow,border-color,opacity] duration-[260ms] ease-spring hover:-translate-y-[3px] hover:border-line-strong hover:shadow-2 active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink has-[>input:focus-visible]:outline-2 has-[>input:focus-visible]:outline-offset-4 has-[>input:focus-visible]:outline-accent-ink motion-reduce:hover:translate-y-0 group relative flex h-full flex-col overflow-hidden p-4 text-left transition-colors duration-300 ${
+                      className={`${cardLink} group relative flex h-full flex-col overflow-hidden p-4 text-left transition-colors duration-300 ${
                         on ? "is-on translate-y-0! border-accent! shadow-accent!" : ""
                       }`}
                     >
@@ -195,7 +197,7 @@ export function RoadmapTopics({ slug }: { slug?: string }) {
                         <BrandLogosFor text={r.shortTitle} max={1} className="size-4 text-accent-ink" />
                         <span>{r.shortTitle}</span>
                       </span>
-                      <span className="mt-2 block text-xs leading-snug text-ink-3">
+                      <span className="mt-2 block text-xs leading-snug text-ink-2">
                         {r.fits[0]}
                       </span>
                     </button>
@@ -236,7 +238,7 @@ export function RoadmapTopics({ slug }: { slug?: string }) {
               </div>
 
               {active.related.length > 0 && (
-                <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-ink-3">
+                <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-5 text-xs text-ink-3">
                   <span className="font-mono text-label font-normal">Connects to</span>
                   {active.related.map((relSlug) => {
                     const rel = externalRoadmaps.find((x) => x.slug === relSlug);
@@ -246,7 +248,7 @@ export function RoadmapTopics({ slug }: { slug?: string }) {
                         key={relSlug}
                         type="button"
                         onClick={() => selectRoadmap(relSlug)}
-                        className="inline-flex min-h-6 items-center relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] font-medium text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]"
+                        className="inline-flex min-h-6 items-center hit bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] font-medium text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]"
                       >
                         {rel.shortTitle}
                       </button>
@@ -282,7 +284,7 @@ export function RoadmapTopics({ slug }: { slug?: string }) {
                     <button
                       type="button"
                       onClick={resetActive}
-                      className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-ink-3 hover:text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]"
+                      className="hit font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-ink-3 hover:text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]"
                     >
                       Clear {active.shortTitle} ticks
                     </button>
@@ -291,7 +293,7 @@ export function RoadmapTopics({ slug }: { slug?: string }) {
                     <button
                       type="button"
                       onClick={undoReset}
-                      className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-accent-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]"
+                      className="hit font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-accent-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]"
                     >
                       Undo clear
                     </button>
@@ -300,18 +302,8 @@ export function RoadmapTopics({ slug }: { slug?: string }) {
               </div>
 
               <div className="flex flex-wrap items-center justify-between gap-4 border-t border-line pt-5">
-                <span className="text-xs text-ink-3">Interactive diagram & study guides</span>
-                <a
-                  href={active.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="relative isolate inline-flex items-center gap-3 overflow-hidden rounded-full bg-accent font-semibold tracking-[-0.005em] text-on-accent transition-[translate,box-shadow,color] duration-[260ms] ease-spring before:absolute before:inset-0 before:-z-10 before:translate-y-[101%] before:bg-ink before:transition-transform before:duration-[550ms] before:ease-silk before:content-[''] hover:shadow-accent hover:before:translate-y-0 focus-visible:shadow-accent focus-visible:before:translate-y-0 active:translate-y-px motion-reduce:active:translate-y-0 h-10 px-4 text-sm"
-                >
-                  <BrandLogo brand="roadmapsh" className="size-4" />
-                  <span>Open on roadmap.sh</span>
-                  <ExternalGlyph className="size-3.5" />
-                  <span className="sr-only"> (opens in new tab)</span>
-                </a>
+                <span className="text-xs text-ink-2">Interactive diagram & study guides</span>
+                <ActionLink href={active.url}>Open on roadmap.sh</ActionLink>
               </div>
             </div>
           </div>
@@ -329,12 +321,12 @@ export function RoadmapTopics({ slug }: { slug?: string }) {
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="e.g. BJ Fogg, Design Tokens, HEART, MCP, Grid…"
                 autoComplete="off"
-                className="w-full rounded-none border-0 border-b border-line-strong bg-transparent tracking-[-0.01em] text-ink transition-colors duration-[400ms] ease-silk placeholder:text-ink-3 focus:border-accent-ink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink py-2 text-base"
+                className="min-h-11 w-full rounded-none border-0 border-b border-line-strong bg-transparent tracking-[-0.01em] text-ink transition-colors duration-[400ms] ease-silk placeholder:text-ink-3 focus:border-accent-ink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink py-2 text-base"
               />
             </div>
 
             <div className="flex flex-wrap items-center gap-4 pb-1">
-              <label className="inline-flex cursor-pointer items-center gap-2 text-xs text-ink-2 transition-colors hover:text-ink">
+              <label className="inline-flex min-h-11 cursor-pointer items-center gap-2 text-xs text-ink-2 transition-colors hover:text-ink">
                 <input
                   type="checkbox"
                   checked={searchAll}
@@ -347,7 +339,7 @@ export function RoadmapTopics({ slug }: { slug?: string }) {
                 <button
                   type="button"
                   onClick={() => setQuery("")}
-                  className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]"
+                  className="hit font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]"
                 >
                   Clear filter
                 </button>
@@ -388,7 +380,7 @@ export function RoadmapTopics({ slug }: { slug?: string }) {
                       const k = topicKey(roadmap.slug, h.milestoneId, h.item);
                       const checked = ticks.set.has(k);
                       return (
-                        <li key={k} className="py-2.5">
+                        <li key={k} className="py-1">
                           <TopicCheckbox
                             checked={checked}
                             onToggle={() => ticks.toggle(k)}
@@ -412,14 +404,14 @@ export function RoadmapTopics({ slug }: { slug?: string }) {
               <button
                 type="button"
                 onClick={() => setSearchAll(true)}
-                className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-accent-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]"
+                className="hit font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-accent-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]"
               >
                 Search all {externalRoadmaps.length} roadmaps instead
               </button>
               <button
                 type="button"
                 onClick={() => setQuery("")}
-                className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]"
+                className="hit font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]"
               >
                 Clear filter
               </button>
@@ -486,7 +478,7 @@ export function RoadmapTopics({ slug }: { slug?: string }) {
                             {branch.items.map((item) => {
                               const k = topicKey(active.slug, m.id, item);
                               return (
-                                <li key={k} className="py-1.5">
+                                <li key={k}>
                                   <TopicCheckbox
                                     checked={ticks.set.has(k)}
                                     onToggle={() => ticks.toggle(k)}
@@ -521,7 +513,7 @@ export function RoadmapTopics({ slug }: { slug?: string }) {
                 href={c.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="relative rounded-card border border-edge bg-card shadow-1 group/card transition-[translate,box-shadow,border-color,opacity] duration-[260ms] ease-spring hover:-translate-y-[3px] hover:border-line-strong hover:shadow-2 active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink has-[>input:focus-visible]:outline-2 has-[>input:focus-visible]:outline-offset-4 has-[>input:focus-visible]:outline-accent-ink motion-reduce:hover:translate-y-0 group flex h-full flex-col p-5"
+                className={`relative ${cardLink} group flex h-full flex-col p-5`}
               >
                 <span className="font-mono text-label font-normal text-ink-3">{c.category}</span>
                 <span className="mt-2.5 flex items-center justify-between gap-2 font-display font-semibold tracking-[-0.02em] text-pretty text-[1.375rem] leading-tight text-ink">

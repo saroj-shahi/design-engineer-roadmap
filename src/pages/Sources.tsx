@@ -1,7 +1,5 @@
-import type { ReactNode } from "react";
-import { lastUpdated, sources, worksCited } from "../data/research";
-import { ExternalGlyph } from "../components/icons";
-import { NextPage, PageHeader, SubHead } from "../components/ui";
+import { articles, lastUpdated, sources, worksCited } from "../data/research";
+import { NextPage, PageHeader, SubHead, TextLink } from "../components/ui";
 
 function hostnameOf(url: string) {
   try {
@@ -9,19 +7,6 @@ function hostnameOf(url: string) {
   } catch {
     return url;
   }
-}
-
-/** Outbound link: grows its underline on hover/focus and says it opens a new tab. */
-function ExtLink({ href, children }: { href: string; children: ReactNode }) {
-  return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="group inline text-ink">
-      <span className="bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size,color] duration-[600ms] ease-silk group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-hover:text-accent-ink group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">
-        {children}
-      </span>
-      <ExternalGlyph className="ml-1 text-ink-3 transition-colors duration-300 group-hover:text-accent-ink" />
-      <span className="sr-only"> (opens in new tab)</span>
-    </a>
-  );
 }
 
 const lastUpdatedLabel = new Date(`${lastUpdated}T00:00:00Z`).toLocaleDateString("en-GB", {
@@ -38,7 +23,7 @@ export function Sources() {
       <PageHeader
         id="sources-title"
         title={["Sources", <em>and method.</em>]}
-        lede={`Every figure in this guide traces to one research brief. Here are the ${sources.length} data sources it cites and ${worksCited.length} articles behind it.`}
+        lede={`Every figure in this guide traces to one research brief. Here are the ${sources.length} data sources it cites and ${articles.length} articles behind it.`}
       >
         <p className="mt-8 font-mono text-label font-normal text-ink-3">
           Last updated <time dateTime={lastUpdated}>{lastUpdatedLabel}</time>
@@ -76,7 +61,17 @@ export function Sources() {
               <span className="w-7 shrink-0 pt-0.5 font-mono text-label tabular-nums text-ink-3">{String(i + 1).padStart(2, "0")}</span>
               <span className="min-w-0 leading-snug">
                 {s.url ? (
-                  <ExtLink href={s.url}>{s.label}</ExtLink>
+                  <>
+                    <TextLink href={s.url}>{s.label}</TextLink>
+                    {/* An article that is also this source is merged here, so each URL appears once on the page. */}
+                    {worksCited
+                      .filter((w) => w.url === s.url)
+                      .map((w) => (
+                        <span key={w.url} className="mt-1 block font-mono text-label font-normal text-ink-3">
+                          Also cited as “{w.title}”
+                        </span>
+                      ))}
+                  </>
                 ) : (
                   <>
                     <span className="text-ink-2">{s.label}</span>
@@ -94,14 +89,14 @@ export function Sources() {
           id="works-title"
           eyebrow="03 · Commentary"
           title="Works cited: articles and commentary"
-          action={<span className="font-mono text-label text-ink-3">{worksCited.length} articles</span>}
+          action={<span className="font-mono text-label text-ink-3">{articles.length} articles</span>}
         />
         <ol className="grid gap-x-6 sm:grid-cols-2">
-          {worksCited.map((w, i) => (
+          {articles.map((w, i) => (
             <li key={w.url} className="flex items-start gap-4 border-t border-line py-4">
               <span className="w-7 shrink-0 pt-0.5 font-mono text-label tabular-nums text-ink-3">{String(i + 1).padStart(2, "0")}</span>
               <span className="min-w-0 leading-snug">
-                <ExtLink href={w.url}>{w.title}</ExtLink>
+                <TextLink href={w.url}>{w.title}</TextLink>
                 <span className="mt-1 block break-all font-mono text-xs text-ink-3">{hostnameOf(w.url)}</span>
               </span>
             </li>

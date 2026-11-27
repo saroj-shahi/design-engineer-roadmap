@@ -6,12 +6,13 @@ import {
   useState,
   type CSSProperties,
   type KeyboardEvent,
+  type MouseEvent as ReactMouseEvent,
   type PointerEvent,
   type ReactNode,
 } from "react";
 import { basisLabel, type BasisKind } from "../data/research";
 import { BrandLogosFor } from "./BrandLogo";
-import { ArrowGlyph, BasisGlyph } from "./icons";
+import { ArrowGlyph, BasisGlyph, ExternalGlyph } from "./icons";
 
 /* ───────── Motion plumbing ───────── */
 
@@ -194,13 +195,93 @@ export function CountUp({ value, className = "" }: { value: string; className?: 
   );
 }
 
-/** Label that rolls up to a duplicate on hover. Parent must carry the `group` class. */
+/** Label that rolls up to a duplicate on hover. Parent must carry the `group` class. Both copies share one grid cell,
+ *  so a label that wraps onto two lines keeps its full height; the duplicate is hidden from screen readers. */
 export function Roll({ children }: { children: string }) {
+  const move = "[grid-area:1/1] transition-transform duration-[650ms] ease-silk";
   return (
-    <span className="relative inline-flex h-[1.2em] overflow-hidden leading-[1.2em]">
-      <span className="block transition-transform duration-[650ms] ease-silk group-hover:-translate-y-full group-focus-visible:-translate-y-full">{children}</span>
-      <span aria-hidden="true" className="absolute left-0 top-full block transition-transform duration-[650ms] ease-silk group-hover:-translate-y-full group-focus-visible:-translate-y-full">{children}</span>
+    <span className="relative inline-grid overflow-hidden">
+      <span className={`${move} group-hover:-translate-y-full group-focus-visible:-translate-y-full`}>{children}</span>
+      <span aria-hidden="true" className={`${move} translate-y-full group-hover:translate-y-0 group-focus-visible:translate-y-0`}>{children}</span>
     </span>
+  );
+}
+
+/* ───────── Links and actions (DESIGN.md §4a) ───────── */
+
+/** Card link recipe (DESIGN.md §4a): a whole card that goes somewhere. Lifts on hover, rings on focus
+ *  (including a focused input inside it), stays still with reduced motion. Add layout classes after it. */
+export const cardLink =
+  "rounded-card border border-edge bg-card shadow-1 group/card transition-[translate,box-shadow,border-color,opacity] duration-[260ms] ease-spring hover:-translate-y-[3px] hover:border-line-strong hover:shadow-2 active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink has-[>input:focus-visible]:outline-2 has-[>input:focus-visible]:outline-offset-4 has-[>input:focus-visible]:outline-accent-ink motion-reduce:hover:translate-y-0";
+
+const isExternal = (href: string) => /^https?:\/\//.test(href);
+
+/** Inline link inside running prose or a note. Internal hrefs stay in the tab; external ones open a new tab,
+ *  add ↗ and say so to screen readers. The `hit` utility grows the tap area to 44px so short links stay easy to tap. */
+export function TextLink({
+  href,
+  children,
+  className = "",
+  onClick,
+}: {
+  href: string;
+  children: ReactNode;
+  className?: string;
+  onClick?: (e: ReactMouseEvent<HTMLAnchorElement>) => void;
+}) {
+  const ext = isExternal(href);
+  return (
+    <a
+      href={href}
+      onClick={onClick}
+      {...(ext ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+      className={`hit text-ink underline decoration-accent/60 decoration-1 underline-offset-[3px] transition-[text-decoration-color] duration-300 hover:decoration-accent hover:decoration-2 group-hover:decoration-2 focus-visible:decoration-2 ${className}`}
+    >
+      {children}
+      {ext && (
+        <>
+          <ExternalGlyph className="ml-0.5 inline !size-[0.85em] align-[-0.05em] text-ink-3" />
+          <span className="sr-only"> (opens in new tab)</span>
+        </>
+      )}
+    </a>
+  );
+}
+
+/** Pill classes for actions. Exported so a `<button>` that acts as a section's main step can match. */
+export const actionClass = (variant: "primary" | "secondary") =>
+  `group relative isolate inline-flex min-h-12 max-w-full items-center gap-3 overflow-hidden rounded-full py-2.5 pl-[1.375rem] pr-5 text-left text-[0.9375rem] leading-tight font-semibold tracking-[-0.005em] transition-[translate,box-shadow,color] duration-[260ms] ease-spring before:absolute before:inset-0 before:-z-10 before:translate-y-[101%] before:transition-transform before:duration-[550ms] before:ease-silk before:content-[''] hover:before:translate-y-0 focus-visible:before:translate-y-0 active:translate-y-px motion-reduce:active:translate-y-0 ${
+    variant === "primary"
+      ? "bg-accent text-on-accent before:bg-ink hover:shadow-accent focus-visible:shadow-accent"
+      : "text-ink shadow-[inset_0_0_0_1px_var(--line-strong)] before:bg-sunken hover:shadow-[inset_0_0_0_1px_var(--accent)]"
+  }`;
+
+/** A section's next step: filled accent pill (primary) or outline pill (secondary), label + →. At least 48px tall.
+ *  An external href opens a new tab and swaps → for ↗. */
+export function ActionLink({
+  href,
+  children,
+  variant = "primary",
+  className = "",
+}: {
+  href: string;
+  children: string;
+  variant?: "primary" | "secondary";
+  className?: string;
+}) {
+  const ext = isExternal(href);
+  return (
+    <a href={href} {...(ext ? { target: "_blank", rel: "noopener noreferrer" } : {})} className={`${actionClass(variant)} ${className}`}>
+      <Roll>{children}</Roll>
+      {ext ? (
+        <>
+          <ExternalGlyph className="shrink-0" />
+          <span className="sr-only"> (opens in new tab)</span>
+        </>
+      ) : (
+        <ArrowGlyph className="shrink-0" />
+      )}
+    </a>
   );
 }
 
@@ -339,7 +420,7 @@ export function CopyLink({
         type="button"
         onClick={copy}
         title={iconOnly ? label : undefined}
-        className="relative inline-flex items-center gap-1.5 font-mono text-label font-normal transition-colors after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] hover:text-accent-ink"
+        className="hit inline-flex items-center gap-1.5 font-mono text-label font-normal transition-colors hover:text-accent-ink"
       >
         <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="square" className="size-3.5 shrink-0">
           <path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1" />
@@ -404,7 +485,7 @@ export function Tag({ children, tone = "neutral" }: { children: ReactNode; tone?
   };
   return (
     <span className={`inline-flex max-w-full items-center gap-1.5 rounded-full border px-2.5 py-[3px] font-mono text-xs leading-4 tracking-tight ${tones[tone]}`}>
-      {typeof children === "string" && <BrandLogosFor text={children} max={2} className="size-3.5" />}
+      {typeof children === "string" && <BrandLogosFor text={children} max={2} className="size-3.5" letters={false} />}
       <span>{children}</span>
     </span>
   );
@@ -517,7 +598,7 @@ export function Tabs({
           underline: `group relative -mb-px shrink-0 pb-3 pt-1 focus-visible:outline-offset-[-2px] font-mono text-label font-normal transition-colors duration-500 ${
             selected ? "text-ink" : "text-ink-3 hover:text-ink"
           }`,
-          segmented: `shrink-0 h-10 rounded-chip px-4 focus-visible:outline-offset-[-2px] font-mono text-label font-normal transition-colors duration-300 ease-silk ${
+          segmented: `shrink-0 h-11 rounded-chip px-4 focus-visible:outline-offset-[-2px] font-mono text-label font-normal transition-colors duration-300 ease-silk ${
             selected ? "bg-inverse text-on-inverse" : "text-ink-3 hover:text-ink hover:bg-sunken"
           }`,
           list:
@@ -582,16 +663,27 @@ export function Disclosure({
   summary,
   children,
   defaultOpen = false,
+  open: openProp,
+  onOpenChange,
   meta,
   headingLevel: Heading = "h3",
 }: {
   summary: ReactNode;
   children: ReactNode;
   defaultOpen?: boolean;
+  /** Pass `open` + `onOpenChange` to control the disclosure from the parent. */
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
   meta?: ReactNode;
   headingLevel?: "h2" | "h3" | "h4";
 }) {
-  const [open, setOpen] = useState(defaultOpen);
+  const [openState, setOpenState] = useState(defaultOpen);
+  const open = openProp ?? openState;
+  const setOpen = (next: (o: boolean) => boolean) => {
+    const v = next(open);
+    setOpenState(v);
+    onOpenChange?.(v);
+  };
   const id = useId();
   return (
     <div className="border-b border-line">
@@ -675,7 +767,7 @@ export function TopicCheckbox({
   meta?: string;
 }) {
   return (
-    <label className="group flex min-h-8 cursor-pointer items-start gap-2.5 py-0.5">
+    <label className="group flex min-h-11 cursor-pointer items-start gap-2.5 py-3">
       <input type="checkbox" checked={checked} onChange={onToggle} className="peer sr-only" />
       <span
         aria-hidden
@@ -806,10 +898,10 @@ export type Page = "home" | "jobs" | "roles" | "plan" | "ready" | "library" | "s
 /** `nav: false` keeps a page out of the top nav (it is linked from the footer and search instead). */
 export const pages: { id: Page; label: string; title: string; nav?: boolean }[] = [
   { id: "home", label: "Start", title: "Start here" },
-  { id: "jobs", label: "Jobs", title: "Is my job going away" },
-  { id: "roles", label: "Roles", title: "Which role fits you" },
+  { id: "jobs", label: "Jobs", title: "Is my job going away?" },
+  { id: "roles", label: "Roles", title: "Which role fits you?" },
   { id: "plan", label: "Plan", title: "Your plan" },
-  { id: "ready", label: "Checklist", title: "Readiness checklist" },
+  { id: "ready", label: "Checklist", title: "How do I know I'm ready?" },
   { id: "library", label: "Library", title: "Reference library" },
   { id: "sources", label: "Sources", title: "Sources and method", nav: false },
 ];
@@ -1137,7 +1229,7 @@ export function ContextBar({
   return (
     <div className="sticky top-24 z-30 -mx-[var(--gutter)] border-b border-line bg-paper/95 px-[var(--gutter)] backdrop-blur-[2px] lg:top-16">
       <div className="flex min-h-11 items-center gap-6">
-        <nav aria-label={label} className="min-w-0 flex-1">
+        <nav data-nav aria-label={label} className="min-w-0 flex-1">
           <ol className="font-mono text-label font-normal flex min-w-0 items-center gap-2 text-ink-3">
             {trail.map((t, i) => {
               const last = i === trail.length - 1;
@@ -1145,7 +1237,7 @@ export function ContextBar({
                 <li key={i} className={`flex min-w-0 items-center gap-2 ${last ? "" : "shrink-0 max-sm:[&:not(:first-child)]:hidden"}`}>
                   {i > 0 && <span aria-hidden className={last ? "" : "max-sm:hidden"}>›</span>}
                   {t.href && !last ? (
-                    <a href={t.href} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-ink-2 hover:text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">
+                    <a href={t.href} className="hit bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-ink-2 hover:text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">
                       {t.label}
                     </a>
                   ) : (
@@ -1163,7 +1255,7 @@ export function ContextBar({
             <ul className="font-mono text-label font-normal flex items-center gap-4 text-ink-3">
               {jumps.map((j) => (
                 <li key={j.id}>
-                  <button type="button" onClick={() => jumpTo(j.id)} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[0%_1px] bg-position-[100%_100%] pb-0.5 transition-[background-size,color] duration-[600ms] ease-silk hover:bg-size-[100%_1px] hover:bg-position-[0%_100%] focus-visible:bg-size-[100%_1px] focus-visible:bg-position-[0%_100%] data-[on=true]:bg-size-[100%_1px] data-[on=true]:bg-position-[0%_100%] text-ink-3 hover:text-ink group-hover:bg-size-[100%_1px] group-hover:bg-position-[0%_100%] group-focus-visible:bg-size-[100%_1px] group-focus-visible:bg-position-[0%_100%]">
+                  <button type="button" onClick={() => jumpTo(j.id)} className="hit bg-[linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[0%_1px] bg-position-[100%_100%] pb-0.5 transition-[background-size,color] duration-[600ms] ease-silk hover:bg-size-[100%_1px] hover:bg-position-[0%_100%] focus-visible:bg-size-[100%_1px] focus-visible:bg-position-[0%_100%] data-[on=true]:bg-size-[100%_1px] data-[on=true]:bg-position-[0%_100%] text-ink-3 hover:text-ink group-hover:bg-size-[100%_1px] group-hover:bg-position-[0%_100%] group-focus-visible:bg-size-[100%_1px] group-focus-visible:bg-position-[0%_100%]">
                     {j.label}
                   </button>
                 </li>
@@ -1215,8 +1307,8 @@ export function useMediaQuery(query: string) {
 /** End-of-page signpost: the one obvious next step. */
 export function NextPage({ to, href, title, note }: { to: Page; href?: string; title: string; note: string }) {
   return (
-    <div className="mx-auto w-full max-w-[1440px] px-(--gutter) pb-24 sm:pb-32">
-      <a href={href ?? pageHref(to)} className="relative rounded-card border border-edge bg-card shadow-1 group/card transition-[translate,box-shadow,border-color,opacity] duration-[260ms] ease-spring hover:-translate-y-[3px] hover:border-line-strong hover:shadow-2 active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink has-[>input:focus-visible]:outline-2 has-[>input:focus-visible]:outline-offset-4 has-[>input:focus-visible]:outline-accent-ink motion-reduce:hover:translate-y-0 group flex flex-col gap-4 p-6 sm:flex-row sm:items-end sm:justify-between sm:p-8">
+    <div data-nav className="mx-auto w-full max-w-[1440px] px-(--gutter) pb-24 sm:pb-32">
+      <a href={href ?? pageHref(to)} className={`relative ${cardLink} group flex flex-col gap-4 p-6 sm:flex-row sm:items-end sm:justify-between sm:p-8`}>
         <span>
           <span className="font-mono text-label font-normal text-accent-ink">Next</span>
           <span className="font-display text-display-m text-balance mt-3 block text-ink">{title}</span>

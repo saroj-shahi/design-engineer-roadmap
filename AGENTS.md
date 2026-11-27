@@ -34,25 +34,31 @@ Always run `npm run typecheck` (or `npm run build`) after edits.
 - `src/components/Nav.tsx`: Sticky header, `BrandMark` (Design × Code emblem + wordmark lockup), responsive 5-page nav, ⌘K search (`QuickFind.tsx`), scroll progress bar.
 - `src/components/*`: Data visualizations and interactive modules (`HeroStage`, `MarketShiftChart`, `ArchetypeVenn`, `HandoffFlow`, `AdoptionDumbbell`, `ProtocolArchitecture`, `PlanRoadmapBase`, `RoadmapMap`).
 - `src/data/research.ts`: Single source of truth for all statistics, roles, plans, checklists, skills, tooling, protocols, sources, and glossary.
-- `src/data/roadmaps.ts`: Structured `roadmap.sh` curricula (8 core syllabi + companion skill tracks) shared between `PlanRoadmapBase` and `Library → Roadmaps`.
+- `src/data/roadmaps.ts`: Structured `roadmap.sh` curricula (8 core syllabi + companion skill roadmaps) shared between `PlanRoadmapBase` and `Library → Roadmaps`.
 - `src/index.css`: Design tokens (one dark Plum Dusk set), `@theme` scales (text, radii, shadows, animations) for Tailwind utilities, typography wrapping rules, and reduced-motion-safe animations.
 
 ## Non-negotiable content rules
 
 1. **Zero invented data:** Every figure, stat, percentage, company example, and citation must trace to `src/data/research.ts` ("The 2026 Product Design Evolution" brief). Edit data in `research.ts`, never hard-code numbers in JSX.
    - *Glossary exception:* `glossary` entries may also draw on well-established outside standards and common design knowledge (e.g., WCAG contrast ratios and levels, Hick's and Fitts's laws, IC levels). Keep them accurate to the original source, and hedge where practice varies. This covers definitions only; market stats and claims elsewhere still need the brief.
-2. **Honest metric basis:** Every `Metric` carries `basis: "survey" | "analytics" | "projection" | "case"` and renders through `BasisBadge`.
+2. **Honest metric basis:** Every `Metric` carries `basis: "survey" | "analytics" | "projection" | "case" | "commentary"` and renders through `BasisBadge`. `commentary` is for figures reported second-hand in blogs or articles rather than a primary dataset.
 3. **Respectful bridge tone:** Plain, direct prose. Never frame designers as "catching up" or engineers as gatekeepers; frame hybrid work as shrinking the handoff.
 4. **Dual Track A framing:** Track A copy (`Home`, `Roles`, `Plan`, `Ready`, `Comparison`) must serve working designers upskilling in their current job **and** those preparing for a new role.
 
 ## Naming rules (copy)
 
-- **Months and stages:** Track A has six **months**; Track B has four **stages**. Use "stage" only for Track B. Groups inside a roadmap.sh track are **sections**; the four columns on the Tools shelf are **steps**.
+- **Months and stages:** Track A has six **months**; Track B has four **stages**. Use "stage" only for Track B. Groups inside a roadmap.sh roadmap are **sections**; the four columns on the Tools shelf are **steps**.
 - **Track labels:** always "Track A · Working designer" and "Track B · Starting out" (tags, breadcrumbs, PDF labels, search).
 - **Role names:** spell a role out in full once, on the Roles page (e.g. "Agentic Experience (AX) Designer"). Everywhere else use the short names with these capitals: "Design Engineer", "Meta-Designer", "AX Designer".
 - **Checklist:** "Checklist" in nav, buttons and other UI labels; "readiness checklist" only inside sentences.
 - **Case:** sentence case for tool step names and UI labels ("Moving between design and code").
 - **Numbers:** spell out one to nine in prose ("six-month plan", "four-stage plan", "three roles"). Figures, stats and short meta labels keep digits.
+- **"Track":** only for Track A and Track B. Role emphasis is a **focus** ("Code focus", "Systems focus", "AI agent focus"); roadmap.sh syllabi are **roadmaps**.
+- **Meta-Designer:** always "Meta-Designer". "Systems Architect" appears only in that role's Common titles.
+- **One wording per page:** the page title in `pages` (ui.tsx), the Start page card, the h1, `NextPage` and `<title>` use the same words, with the question mark: "Is my job going away?", "Which role fits you?" (address the reader as "you", not "me"), "How do I know I'm ready?". Nav keeps its one-word labels.
+- **Library shelf names:** "Design vs. design + code" in sentence case everywhere (tab, `<title>`, search, NextPage).
+- **Headings:** no trailing period on h2s (h1 display lines may keep one); before/after labels read "Before → after".
+- **Small, senior title:** the full `titleReality` paragraph (with its figures) appears on Jobs only; elsewhere use the one-line `titleRealityShort` next to a single link to Jobs.
 - **Plain words:** no idioms or metaphors a non-native reader would need to decode; define jargon on first use or add it to the glossary.
 
 ## Routing, storage & SEO rules

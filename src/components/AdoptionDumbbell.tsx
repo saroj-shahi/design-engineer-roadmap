@@ -1,10 +1,20 @@
 import { useId } from "react";
-import { adoptionBasis, adoptionShift, deTitleShare, shipsAiCode, teamsWhereOthersCreateUi } from "../data/research";
+import {
+  adoptionBasis,
+  adoptionShift,
+  deTitleShare,
+  designersAiCoreWork,
+  designersAiFirstDrafts,
+  devsAiCoreWork,
+  devsAiWritesCode,
+  shipsAiCode,
+  teamsWhereOthersCreateUi,
+} from "../data/research";
 import { BasisBadge } from "./ui";
 
 /* Shared 0-100% dumbbell + bar chart per diagram-design type-bar:
    Top band compares Developers vs Designers on the exact same 0-100% scale (hollow vs solid
-   dots with >=3:1 ink stroke and connector); bottom band shows Q1 2026 convergence on the same axis. */
+   dots with >=3:1 ink stroke and connector); bottom band shows Q1 2026 survey shares on the same axis (a different survey, so not a trend). */
 const W = 840;
 const H = 372;
 const PLOT_L = 344;
@@ -12,10 +22,10 @@ const PLOT_R = 796;
 const TICKS = [0, 25, 50, 75, 100];
 const xOf = (pct: number) => Math.round(PLOT_L + (pct / 100) * (PLOT_R - PLOT_L));
 
-const devCode = adoptionShift.before.rows[0].value; // 68
-const devCore = adoptionShift.before.rows[1].value; // 59
-const desCore = adoptionShift.before.rows[2].value; // 31
-const desDraft = adoptionShift.before.rows[3].value; // 22
+const devCode = devsAiWritesCode.value;
+const devCore = devsAiCoreWork.value;
+const desCore = designersAiCoreWork.value;
+const desDraft = designersAiFirstDrafts.value;
 
 /* Row 2 pairs two different tasks (writing code vs. drafting UI), so it is labelled per group
    and shows no gap: the points are not a like-for-like difference. */
@@ -36,7 +46,7 @@ export function AdoptionDumbbell({ className = "" }: { className?: string }) {
   return (
     <figure className={`relative rounded-card border border-edge bg-card shadow-1 ${className}`}>
       <div className="flex items-center justify-between gap-3 border-b border-line bg-inverse px-[1.125rem] py-2.5 text-on-inverse rounded-t-[calc(var(--radius-card)-1px)] transition-colors duration-[250ms] ease-silk group-hover/card:bg-accent-soft group-hover/card:text-accent-ink group-[.is-on]/card:bg-accent-soft group-[.is-on]/card:text-accent-ink font-mono text-label font-normal">
-        <h3 className="m-0">AI adoption: divergence, then convergence</h3>
+        <h3 className="m-0">How designers and developers use AI, 2025 and 2026</h3>
         <span className="flex items-center gap-4">
           <span className="hidden sm:block">Shared 0–100% scale</span>
           {adoptionBasis.before === adoptionBasis.after && <BasisBadge basis={adoptionBasis.before} onBand />}
@@ -44,8 +54,8 @@ export function AdoptionDumbbell({ className = "" }: { className?: string }) {
       </div>
 
       {/* Phones: the same figures as HTML rows on the shared 0–100% scale, so labels stay at 12px or more without sideways scroll. */}
-      <div className="plate-field px-4 py-5 sm:hidden">
-        <p className="font-mono text-label text-ink-3">2025 divergence · {adoptionShift.before.label}</p>
+      <div className="plate-field px-4 py-5 lg:hidden">
+        <p className="font-mono text-label text-ink-3">2025 · {adoptionShift.before.label}</p>
         <ul className="mt-3 space-y-4">
           {dumbbells.map((d) => (
             <li key={d.lines.join(" ")} className="border-b border-line pb-4">
@@ -69,7 +79,7 @@ export function AdoptionDumbbell({ className = "" }: { className?: string }) {
             </li>
           ))}
         </ul>
-        <p className="mt-5 font-mono text-label text-accent-ink">2026 convergence · {adoptionShift.after.label}</p>
+        <p className="mt-5 font-mono text-label text-accent-ink">2026 · {adoptionShift.after.label}</p>
         <ul className="mt-3 space-y-3">
           {convergence.map((c) => (
             <li key={c.label}>
@@ -88,7 +98,7 @@ export function AdoptionDumbbell({ className = "" }: { className?: string }) {
         </ul>
       </div>
 
-      <div tabIndex={0} role="region" aria-label="AI adoption chart (scrolls sideways)" className="plate-field hidden overflow-x-auto px-4 py-5 sm:block sm:px-6 focus-visible:outline-offset-[-2px]">
+      <div tabIndex={0} role="region" aria-label="AI adoption chart (scrolls sideways)" className="plate-field hidden overflow-x-auto px-4 py-5 lg:block sm:px-6 focus-visible:outline-offset-[-2px]">
         <svg
           viewBox={`0 0 ${W} ${H}`}
           role="img"
@@ -126,14 +136,14 @@ export function AdoptionDumbbell({ className = "" }: { className?: string }) {
             );
           })}
 
-          {/* Band 1 header: 2025 divergence */}
+          {/* Band 1 header: 2025 */}
           <text
             x={8}
             y={46}
             fill="var(--ink-3)"
             style={{ fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: "0.08em" }}
           >
-            2025 DIVERGENCE · {adoptionShift.before.label.toUpperCase()}
+            2025 · {adoptionShift.before.label.toUpperCase()}
           </text>
 
           {/* Dumbbell rows */}
@@ -202,14 +212,14 @@ export function AdoptionDumbbell({ className = "" }: { className?: string }) {
           {/* Divider between 2025 and 2026 */}
           <line x1={8} y1={174} x2={PLOT_R} y2={174} stroke="var(--line-strong)" strokeWidth="1" strokeDasharray="4 4" />
 
-          {/* Band 2 header: Q1 2026 convergence */}
+          {/* Band 2 header: Q1 2026 */}
           <text
             x={8}
             y={198}
             fill="var(--accent-ink)"
             style={{ fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: "0.08em" }}
           >
-            2026 CONVERGENCE · {adoptionShift.after.label.toUpperCase()}
+            2026 · {adoptionShift.after.label.toUpperCase()}
           </text>
 
           {/* Shared-scale bars */}
@@ -279,7 +289,7 @@ export function AdoptionDumbbell({ className = "" }: { className?: string }) {
           </span>
           <span className="inline-flex items-center gap-2">
             <span aria-hidden className="inline-block h-3 w-4 border-2 border-accent bg-accent/20" />
-            <span>Q1 2026 focal share</span>
+            <span>Q1 2026 survey share</span>
           </span>
         </span>
         <span className="font-mono text-label font-normal text-ink-3">% of respondents</span>

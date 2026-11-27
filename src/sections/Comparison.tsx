@@ -15,7 +15,7 @@ export function Comparison() {
     <Section id="compare">
       <SectionHeader
         id="compare"
-        title={["What changes", <>when you <em>build it too.</em></>]}
+        title={["What changes", <>when you <em>build it too</em></>]}
         lede="Two valid ways to do design work, side by side — how they differ day to day and when teams evaluate them."
       />
 
@@ -104,7 +104,7 @@ export function Comparison() {
                     <td className="py-6 pr-6 leading-relaxed text-ink-2">{r.traditional}</td>
                     <td className="py-6 leading-relaxed text-ink-2">
                       {r.hybrid}
-                      {r.fromCode && <span className="mt-3 block text-sm text-ink-3">{r.fromCode}</span>}
+                      {r.fromCode && <span className="mt-3 block text-sm text-ink-2">{r.fromCode}</span>}
                     </td>
                   </tr>
                 ))}

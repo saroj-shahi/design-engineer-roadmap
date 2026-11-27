@@ -1,7 +1,6 @@
 import { useEffect, useId, useState } from "react";
-import { BrandLogo, BrandLogosFor } from "./BrandLogo";
-import { ExternalGlyph } from "./icons";
-import { Eyebrow, SubHead, Tag, TopicCheckbox, pageHref, usePersistentSet, useTabList } from "./ui";
+import { BrandLogosFor } from "./BrandLogo";
+import { cardLink, Eyebrow, SubHead, Tag, TextLink, TopicCheckbox, pageHref, usePersistentSet, useTabList } from "./ui";
 import {
   countRoadmapTopics,
   externalRoadmaps,
@@ -145,7 +144,7 @@ export function PlanRoadmapBase({
             <button
               key={entry.slug}
               {...tabProps(entry.slug, idx)}
-              className={`rounded-card border border-edge bg-card shadow-1 group/card transition-[translate,box-shadow,border-color,opacity] duration-[260ms] ease-spring hover:-translate-y-[3px] hover:border-line-strong hover:shadow-2 active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink has-[>input:focus-visible]:outline-2 has-[>input:focus-visible]:outline-offset-4 has-[>input:focus-visible]:outline-accent-ink motion-reduce:hover:translate-y-0 group relative flex h-full min-h-[6.75rem] flex-col overflow-hidden p-4 text-left transition-colors duration-300 max-sm:last:col-span-2 ${
+              className={`${cardLink} group relative flex h-full min-h-[6.75rem] flex-col overflow-hidden p-4 text-left transition-colors duration-300 max-sm:last:col-span-2 ${
                 on ? "is-on translate-y-0! border-accent! shadow-accent!" : ""
               }`}
             >
@@ -179,7 +178,7 @@ export function PlanRoadmapBase({
                 <BrandLogosFor text={entry.roadmap.shortTitle} max={1} className="size-3.5 text-accent-ink" />
                 <span>{entry.roadmap.shortTitle}</span>
               </span>
-              <span className="mt-1.5 block text-xs text-ink-3">
+              <span className="mt-1.5 block text-xs text-ink-2">
                 {entry.roadmap.milestones.length} sections
               </span>
             </button>
@@ -212,25 +211,10 @@ export function PlanRoadmapBase({
               <p className="mt-2 text-sm leading-relaxed text-ink-2">{roadmap.tagline}</p>
             </div>
 
-            <div className="flex flex-wrap items-center gap-4">
-              <a
-                href={pageHref("library", "roadmaps", roadmap.slug)}
-                className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]"
-              >
-                Full page view →
-              </a>
-              <a
-                href={roadmap.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] group font-mono text-label font-normal inline-flex items-center gap-1.5 text-ink-3 hover:text-ink"
-              >
-                <BrandLogo brand="roadmapsh" className="size-3.5" />
-                <span className="bg-[linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[0%_1px] bg-position-[100%_100%] pb-0.5 transition-[background-size,color] duration-[600ms] ease-silk hover:bg-size-[100%_1px] hover:bg-position-[0%_100%] focus-visible:bg-size-[100%_1px] focus-visible:bg-position-[0%_100%] data-[on=true]:bg-size-[100%_1px] data-[on=true]:bg-position-[0%_100%] group-hover:bg-size-[100%_1px] group-hover:bg-position-[0%_100%] group-focus-visible:bg-size-[100%_1px] group-focus-visible:bg-position-[0%_100%]">roadmap.sh</span>
-                <ExternalGlyph className="!size-3" />
-                <span className="sr-only"> (opens in new tab)</span>
-              </a>
-            </div>
+            {/* One link per roadmap: the Library page carries the roadmap.sh link, so it isn't repeated here. */}
+            <p className="font-mono text-label font-normal">
+              <TextLink href={pageHref("library", "roadmaps", roadmap.slug)}>See the full {roadmap.shortTitle} roadmap</TextLink>
+            </p>
           </div>
 
           {/* Progress + filter + expand controls */}
@@ -246,7 +230,7 @@ export function PlanRoadmapBase({
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search sections or topics…"
                 autoComplete="off"
-                className="w-full rounded-none border-0 border-b border-line-strong bg-transparent py-3 text-xl tracking-[-0.01em] text-ink transition-colors duration-[400ms] ease-silk placeholder:text-ink-3 focus:border-accent-ink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink !py-1.5 !text-sm"
+                className="min-h-11 w-full rounded-none border-0 border-b border-line-strong bg-transparent py-3 text-xl tracking-[-0.01em] text-ink transition-colors duration-[400ms] ease-silk placeholder:text-ink-3 focus:border-accent-ink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink !py-1.5 !text-sm"
               />
             </div>
 
@@ -277,7 +261,7 @@ export function PlanRoadmapBase({
                 <button
                   type="button"
                   onClick={() => setQuery("")}
-                  className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]"
+                  className="hit font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]"
                 >
                   Clear filter
                 </button>
@@ -285,7 +269,7 @@ export function PlanRoadmapBase({
                 <button
                   type="button"
                   onClick={toggleAll}
-                  className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-ink-3 hover:text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]"
+                  className="hit font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-ink-3 hover:text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]"
                 >
                   {allExpanded ? "Collapse all" : "Expand all"}
                 </button>
@@ -336,7 +320,7 @@ export function PlanRoadmapBase({
                         <span className="block font-display font-semibold tracking-[-0.02em] text-pretty text-[1.125rem] leading-snug text-ink">
                           {m.title}
                         </span>
-                        <span className="mt-0.5 block text-xs leading-relaxed text-ink-3">
+                        <span className="mt-0.5 block text-xs leading-relaxed text-ink-2">
                           {m.summary}
                         </span>
                       </span>
@@ -378,7 +362,7 @@ export function PlanRoadmapBase({
                                 {branch.items.map((item) => {
                                   const key = topicKey(roadmap.slug, m.id, item);
                                   return (
-                                    <li key={key} className="py-1.5">
+                                    <li key={key}>
                                       <TopicCheckbox checked={ticks.set.has(key)} onToggle={() => ticks.toggle(key)} label={item} />
                                     </li>
                                   );

@@ -13,7 +13,7 @@ import {
 import { BrandLogosFor } from "../components/BrandLogo";
 import { Glyph, type GlyphName } from "../components/icons";
 import { ProtocolArchitecture } from "../components/ProtocolArchitecture";
-import { Disclosure, Lines, Section, SectionHeader, TabPanel, Tabs, Tag, pageHref, useTabList } from "../components/ui";
+import { cardLink, Disclosure, Lines, Section, SectionHeader, TabPanel, Tabs, Tag, TextLink, pageHref, useTabList } from "../components/ui";
 
 const patternTotal = patternCategories.reduce((n, c) => n + c.patterns.length, 0);
 
@@ -30,7 +30,7 @@ export function SkillsExplorer() {
     <Section id="skills">
       <SectionHeader
         id="skills"
-        title={["What to learn,", <em>layer by layer.</em>]}
+        title={["What to learn,", <em>layer by layer</em>]}
         lede="Start with the judgment AI can't replace, add front-end skills, then learn to design products that use AI agents."
       />
 
@@ -42,14 +42,8 @@ export function SkillsExplorer() {
             <SkillLedger skills={coreSkills} large />
             <Footnote>
               These still set you apart when AI makes the first draft. In a Q1 2026 Designer Fund / Foundation Capital survey, {teamsWhereOthersCreateUi.value}% of
-              teams said PMs or engineers now create UI with AI. Browse full topic syllabi in{" "}
-              <a href={pageHref("library", "roadmaps", "ux-design")} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] font-medium text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">
-                UX Design
-              </a>{" "}
-              and{" "}
-              <a href={pageHref("library", "roadmaps", "product-design")} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] font-medium text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">
-                Product Design
-              </a>
+              teams said PMs or engineers now create UI. Browse full topic syllabi in{" "}
+              the <TextLink href={pageHref("library", "roadmaps")}>UX Design and Product Design roadmaps</TextLink>
               .
             </Footnote>
           </TabPanel>
@@ -60,13 +54,7 @@ export function SkillsExplorer() {
             <Footnote>
               Standardize on React, TypeScript and Tailwind CSS. Learn the browser before the AI: the six-month plan keeps AI code
               generation switched off for all of month one. See full topic checklists in{" "}
-              <a href={pageHref("library", "roadmaps", "frontend")} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] font-medium text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">
-                Frontend
-              </a>{" "}
-              and{" "}
-              <a href={pageHref("library", "roadmaps", "design-system")} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] font-medium text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">
-                Design System
-              </a>
+              the <TextLink href={pageHref("library", "roadmaps")}>Frontend and Design System roadmaps</TextLink>
               .
             </Footnote>
           </TabPanel>
@@ -101,7 +89,7 @@ function LayerStack({ value, onChange }: { value: string; onChange: (id: string)
             {...tabProps(d.id, i)}
             style={{ "--step": i } as CSSProperties}
             className={`group relative grid grid-cols-[4.5rem_1fr] items-baseline gap-x-4 px-4 py-5 text-left sm:grid-cols-[6rem_1fr_auto] sm:px-6 lg:ml-[calc(var(--step)*(100%_+_24px)/12)] ${
-              appendix && !on ? "relative rounded-card border border-dashed border-line-strong bg-transparent shadow-none mt-4 text-ink-3 hover:text-ink" : `relative rounded-card border border-edge bg-card shadow-1 group/card transition-[translate,box-shadow,border-color,opacity] duration-[260ms] ease-spring hover:-translate-y-[3px] hover:border-line-strong hover:shadow-2 active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink has-[>input:focus-visible]:outline-2 has-[>input:focus-visible]:outline-offset-4 has-[>input:focus-visible]:outline-accent-ink motion-reduce:hover:translate-y-0 ${appendix ? "mt-4" : ""}`
+              appendix && !on ? "relative rounded-card border border-dashed border-line-strong bg-transparent shadow-none mt-4 text-ink-3 hover:text-ink" : `relative ${cardLink} ${appendix ? "mt-4" : ""}`
             } ${on ? "is-on translate-y-0! border-accent! shadow-accent! text-ink" : "text-ink-3 hover:text-ink"}`}
           >
             <span aria-hidden className={`absolute -left-px inset-y-5 w-[3px] origin-top rounded-full bg-accent transition-transform duration-700 ease-silk ${on ? "scale-y-100" : "scale-y-0"}`} />
@@ -126,7 +114,7 @@ function LayerStack({ value, onChange }: { value: string; onChange: (id: string)
 function Footnote({ children }: { children: React.ReactNode }) {
   return (
     <div className="grid grid-cols-4 gap-x-4 lg:grid-cols-12 lg:gap-x-6 mt-8">
-      <p className="col-span-4 flex gap-3 text-sm leading-relaxed text-ink-3 lg:col-span-6 lg:col-start-7">
+      <p className="col-span-4 flex gap-3 text-sm leading-relaxed text-ink-2 lg:col-span-6 lg:col-start-7">
         <span aria-hidden className="font-mono text-accent-ink">*</span>
         <span>{children}</span>
       </p>
@@ -151,7 +139,14 @@ function SkillLedger({ skills, large = false }: { skills: Skill[]; large?: boole
           >
             {s.name}
           </h3>
-          <p className="col-span-4 max-w-[56ch] leading-relaxed text-ink-2 lg:col-span-5">{s.detail}</p>
+          <p className="col-span-4 max-w-[56ch] leading-relaxed text-ink-2 lg:col-span-5">
+            {s.detail}
+            {s.source && (
+              <>
+                {" "}Source: <TextLink href={s.source.url}>{s.source.label}</TextLink>.
+              </>
+            )}
+          </p>
           {s.tags && (
             <div className="col-span-4 flex flex-wrap content-start gap-1.5 lg:col-span-2 lg:justify-end">
               {s.tags.map((t) => (
@@ -201,7 +196,7 @@ function AxPanel() {
             onChange={setLayer}
             items={agentLayers.map((l, i) => ({ id: l.id, label: l.name, sub: `L${i + 1}` }))}
           />
-          <p className="mt-5 max-w-[36ch] text-sm leading-relaxed text-ink-3">
+          <p className="mt-5 max-w-[36ch] text-sm leading-relaxed text-ink-2">
             Every layer of an agent needs a surface the user can see. Pick a layer to list what the interface should expose.
           </p>
         </div>
@@ -239,7 +234,7 @@ function AxPanel() {
           <div className="col-span-4 lg:col-span-5">
             <Lines as="h3" className="font-display text-display-m text-balance" lines={["Ground the interface in how agents", <em>actually talk.</em>]} />
           </div>
-          <p className="col-span-4 self-end text-sm leading-relaxed text-ink-3 lg:col-span-6 lg:col-start-7">
+          <p className="col-span-4 self-end text-sm leading-relaxed text-ink-2 lg:col-span-6 lg:col-start-7">
             Four open protocols split the job: two connect the agent to the screen (AG-UI, A2UI) and two connect it to tools and peer
             agents (MCP, A2A). Pick any bridge in the diagram or open the rows below.
           </p>

@@ -1,6 +1,7 @@
 import { JobsFigures, JobsShortAnswer, MarketTable, TeamShift } from "../sections/Hero";
 import { MarketShiftChart } from "../components/MarketShiftChart";
 import { NextPage, PageHeader, SubHead } from "../components/ui";
+import { experiencedNote } from "../data/research";
 
 /** "Is my job going away?": the short answer first, then the hiring data, how teams are changing, and every figure. */
 export function Jobs({ figure }: { figure?: string }) {
@@ -19,13 +20,14 @@ export function Jobs({ figure }: { figure?: string }) {
           <div className="mt-8 sm:mt-10">
             <JobsFigures figure={figure} />
           </div>
+          <p className="mt-8 max-w-[68ch] border-l border-accent pl-4 leading-relaxed text-ink-2 sm:mt-10">{experiencedNote}</p>
         </section>
 
         <section aria-labelledby="jobs-shift-title" className="mt-24 sm:mt-32">
           <SubHead
             id="jobs-shift-title"
             eyebrow="01 · Hiring"
-            title={<>Where hiring grew, <em>and where it shrank.</em></>}
+            title={<>Where hiring grew, <em>and where it shrank</em></>}
             note="Change in hiring by role and company size (mostly compared with 2019), next to the US government's forecast for web and interface design jobs."
           />
           <MarketShiftChart />
@@ -35,8 +37,8 @@ export function Jobs({ figure }: { figure?: string }) {
           <SubHead
             id="jobs-teams-title"
             eyebrow="02 · Teams"
-            title={<>How teams are <em>changing.</em></>}
-            note="AI use by designers and developers is converging, and teams are getting flatter. Both point toward people who can work across design and code."
+            title={<>How teams are <em>changing</em></>}
+            note="AI is now part of the work for many designers and developers, and teams are getting flatter. Both point toward people who can work across design and code."
           />
           <TeamShift />
         </section>

@@ -85,11 +85,11 @@ export function Readiness({ track }: { track: Track | null }) {
               value={track}
               onChange={(v) => pick(v as Track)}
               items={[
-                { id: "a", label: "Working designer" },
-                { id: "b", label: "Starting out" },
+                { id: "a", label: "Track A · Working designer" },
+                { id: "b", label: "Track B · Starting out" },
               ]}
             />
-            <p className="text-sm text-ink-3">Same track as your plan.</p>
+            <p className="text-sm text-ink-2">Same track as your plan.</p>
           </div>
           {/* Keyed by track so each list loads its own saved ticks */}
           <Checklist key={track} track={track} />
@@ -98,15 +98,25 @@ export function Readiness({ track }: { track: Track | null }) {
         <div className="mb-10">
           <p className="mb-4 text-ink-2">Pick your track to see your checklist.</p>
           <div className="flex flex-wrap gap-3">
-            <button type="button" onClick={() => pick("a")} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] font-mono text-label font-normal inline-flex h-11 items-center gap-2 rounded-full border border-edge bg-card px-4 text-ink hover:bg-sunken">
+            <button type="button" onClick={() => pick("a")} className="hit font-mono text-label font-normal inline-flex h-11 items-center gap-2 rounded-full border border-edge bg-card px-4 text-ink hover:bg-sunken">
               <Glyph name="user" className="!size-4" />
               <span>I'm a working designer</span>
             </button>
-            <button type="button" onClick={() => pick("b")} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] font-mono text-label font-normal inline-flex h-11 items-center gap-2 rounded-full border border-edge bg-card px-4 text-ink hover:bg-sunken">
+            <button type="button" onClick={() => pick("b")} className="hit font-mono text-label font-normal inline-flex h-11 items-center gap-2 rounded-full border border-edge bg-card px-4 text-ink hover:bg-sunken">
               <Glyph name="user" className="!size-4" />
               <span>I'm starting out</span>
             </button>
           </div>
+          {/* A preview of the first item on each list, so the page shows what it holds before a pick. */}
+          <ul aria-label="The first item on each checklist" className="mt-8 grid max-w-[60rem] gap-6 sm:grid-cols-2">
+            {(["a", "b"] as const).map((t) => (
+              <li key={t} className="border-l border-accent pl-4">
+                <span className="font-mono text-label font-normal block text-ink-3">{lists[t].who} · First item</span>
+                <span className="mt-1.5 block font-medium text-ink">{lists[t].items[0].title}</span>
+                <span className="mt-1 block text-sm leading-relaxed text-ink-2">{lists[t].items[0].detail}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </Section>
@@ -178,7 +188,7 @@ function Checklist({ track }: { track: Track }) {
             {undo === "offer" && (
               <>
                 <p className="font-mono text-label font-normal text-ink-2">Checklist cleared.</p>
-                <button type="button" onClick={undoClear} className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">
+                <button type="button" onClick={undoClear} className="hit font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] text-ink group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]">
                   Undo
                 </button>
               </>
@@ -189,7 +199,7 @@ function Checklist({ track }: { track: Track }) {
             type="button"
             onClick={clear}
             disabled={done === 0}
-            className="relative after:absolute after:-inset-x-2 after:-inset-y-[15px] after:content-[''] font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] mt-2 text-ink-3 transition-colors hover:text-ink disabled:pointer-events-none disabled:opacity-50 group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]"
+            className="hit font-mono text-label font-normal bg-[linear-gradient(var(--line-strong),var(--line-strong)),linear-gradient(currentColor,currentColor)] bg-no-repeat bg-size-[100%_1px,0%_1px] bg-position-[0_100%,100%_100%] pb-0.5 transition-[background-size] duration-[600ms] ease-silk hover:bg-size-[100%_1px,100%_1px] hover:bg-position-[0_100%,0_100%] focus-visible:bg-size-[100%_1px,100%_1px] focus-visible:bg-position-[0_100%,0_100%] mt-2 text-ink-3 transition-colors hover:text-ink disabled:pointer-events-none disabled:opacity-50 group-hover:bg-size-[100%_1px,100%_1px] group-hover:bg-position-[0_100%,0_100%] group-focus-visible:bg-size-[100%_1px,100%_1px] group-focus-visible:bg-position-[0_100%,0_100%]"
           >
             Reset checklist
           </button>

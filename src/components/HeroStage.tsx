@@ -128,7 +128,7 @@ export function HeroStage() {
             Handoff
             <span className="hs-strike" />
           </span>
-          <span className="hs-tag-sub font-mono text-label font-normal">spec · redlines · back-and-forth</span>
+          <span className="hs-tag-sub font-mono text-label font-normal">spec · design notes · back-and-forth</span>
         </div>
 
         <StageCard

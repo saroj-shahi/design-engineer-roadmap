@@ -68,6 +68,61 @@ for (const r of routes) {
       });
       expect(problems).toEqual([]);
     });
+
+    test("links to each destination once in the page body", async ({ page }) => {
+      await fresh(page, r.path);
+      // Navigation (breadcrumbs, shelves, the plan map, the page directory, NextPage) and glossary cross-references don't count (DESIGN.md §4a).
+      const repeated = await page.evaluate(() => {
+        const seen = new Map<string, number>();
+        for (const a of document.querySelectorAll<HTMLAnchorElement>("main a[href]")) {
+          if (!a.getClientRects().length || a.closest("[data-nav], [data-xref]")) continue;
+          const href = a.getAttribute("href")!;
+          seen.set(href, (seen.get(href) ?? 0) + 1);
+        }
+        return [...seen].filter(([, n]) => n > 1).map(([h, n]) => `${h} ×${n}`);
+      });
+      expect(repeated).toEqual([]);
+    });
+
+    test("gives every control a 44px tap area on phones", async ({ page }, testInfo) => {
+      test.skip(testInfo.project.name !== "mobile", "touch targets are checked on the phone project");
+      await fresh(page, r.path);
+      await revealAll(page);
+      // Probe the real hit area with elementFromPoint, so the `hit` utility's ::after counts and covered edges don't.
+      // Links inside running text are exempt (WCAG 2.5.8 inline exception).
+      const small = await page.evaluate(() => {
+        document.documentElement.style.scrollBehavior = "auto";
+        const sel = "a[href], button, [role=tab], summary, label, input:not([type=checkbox]):not([type=radio]):not([type=hidden])";
+        const out: string[] = [];
+        for (const el of document.querySelectorAll<HTMLElement>(sel)) {
+          const box = el.getBoundingClientRect();
+          if (!box.width || !box.height || el.matches(":disabled") || el.closest("[aria-hidden=true], [inert], .sr-only")) continue;
+          if (el instanceof HTMLLabelElement && (el.querySelector("a, button") || (el.control && !["checkbox", "radio"].includes((el.control as HTMLInputElement).type)))) continue;
+          if (el.matches("a") && getComputedStyle(el).display === "inline") {
+            let block = el.parentElement;
+            while (block && getComputedStyle(block).display.startsWith("inline")) block = block.parentElement;
+            if (block && (block.textContent || "").trim().length > (el.textContent || "").trim().length + 2) continue;
+          }
+          el.scrollIntoView({ block: "center", inline: "center" });
+          const r = el.getBoundingClientRect();
+          const owns = (x: number, y: number) => {
+            const hit = document.elementFromPoint(x, y);
+            return !!hit && (el.contains(hit) || (el instanceof HTMLLabelElement && hit.closest("label") === el));
+          };
+          const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+          if (!owns(cx, cy)) continue; // centre covered (e.g. by the sticky bar); measured on another route
+          let top = cy, bottom = cy, left = cx, right = cx;
+          while (top > r.top - 30 && owns(cx, top - 1)) top--;
+          while (bottom < r.bottom + 30 && owns(cx, bottom + 1)) bottom++;
+          while (left > r.left - 30 && owns(left - 1, cy)) left--;
+          while (right < r.right + 30 && owns(right + 1, cy)) right++;
+          const w = Math.round(right - left + 1), h = Math.round(bottom - top + 1);
+          if (w < 44 || h < 44) out.push(`${el.tagName.toLowerCase()} "${(el.getAttribute("aria-label") || el.textContent || "").trim().replace(/\s+/g, " ").slice(0, 40)}" ${w}×${h}`);
+        }
+        return [...new Set(out)];
+      });
+      expect(small).toEqual([]);
+    });
   });
 }
 

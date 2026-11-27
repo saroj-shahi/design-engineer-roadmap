@@ -19,7 +19,7 @@ See **[AGENTS.md](AGENTS.md)** for full cross-agent instructions and **[DESIGN.m
 - `src/App.tsx`: shell. Picks the page from the hash route, syncs `document.title` (`Page | Design Engineer Field Guide`) and `<meta name="description">`, skip link, error boundary, `Alt+G` grid overlay.
 - `src/pages/*`: thin page composers (`Home`, `Jobs`, `Roles`, `Plan`, `Ready`, `Library`, `Sources`). `Sources` sets `nav: false` in `pages`, so it is reached from the footer and search, not the top nav.
 - `src/sections/*`: content blocks (`Hero`, `Roadmap`, `RoadmapTopics`, `Readiness`, `Comparison`, `SkillsExplorer`, `ToolingPipeline`, `Footer`).
-- `src/components/ui.tsx`: shared primitives and hooks (`Section`, `SectionHeader`, `SubHead`, `Tabs`/`TabPanel`/`useTabList`, `Disclosure`, `CheckRow`, `TopicCheckbox`, `Tag`, `BasisBadge`, `ContextBar`, `Meter`, `NextPage`, hash router, persisted state). Check here before writing a new primitive.
+- `src/components/ui.tsx`: shared primitives and hooks (`Section`, `SectionHeader`, `SubHead`, `Tabs`/`TabPanel`/`useTabList`, `Disclosure`, `CheckRow`, `TopicCheckbox`, `Tag`, `BasisBadge`, `ContextBar`, `Meter`, `NextPage`, `TextLink`, `ActionLink`, `CopyLink`, `Hint`, the `cardLink` card recipe, hash router, persisted state). Check here before writing a new primitive. Links follow DESIGN.md §4a; small controls get a 44px tap area from `min-h-11` or the `hit` utility in `index.css`.
 - `src/components/icons.tsx` & `src/components/BrandLogo.tsx`: 24×24 Swiss geometric glyphs (including metric/basis icons and `user`/`users` role icons) and 25 monochrome `currentColor` app/brand marks.
 - `src/components/*`: interactive diagrams & widgets (`Nav` with `BrandMark`, `QuickFind` (⌘K search), `HeroStage`, `MarketShiftChart`, `ArchetypeVenn`, `HandoffFlow`, `AdoptionDumbbell`, `ProtocolArchitecture`, `PlanRoadmapBase`, `RoadmapMap`).
 - `src/data/research.ts`: single source of truth for all research brief figures, roles, plans, checklists, tooling, and glossary.
@@ -30,7 +30,7 @@ See **[AGENTS.md](AGENTS.md)** for full cross-agent instructions and **[DESIGN.m
 
 - `src/data/research.ts` is the single source of truth, drawn from "The 2026 Product Design Evolution" research brief. **Never invent figures, stats, or sources.** Every number must trace to that brief; change data there, not in JSX.
 - **Glossary exception:** `glossary` entries may also draw on well-established outside standards and common design knowledge (e.g., WCAG contrast ratios and levels, Hick's and Fitts's laws, IC levels). Keep them accurate to the original source, and hedge where practice varies (e.g., "varies by company"). This exception covers definitions only. Market stats, metrics and claims elsewhere on the site still need the brief.
-- Each `Metric` carries a `basis` (`survey | analytics | projection | case`); keep it honest and render it with `BasisBadge`.
+- Each `Metric` carries a `basis` (`survey | analytics | projection | case | commentary`); keep it honest and render it with `BasisBadge`. Use `commentary` for figures reported second-hand in blogs or articles rather than a primary dataset.
 - Copy is plain and direct, and must not slight designers or developers: frame the role as a bridge, not one side catching up to the other.
 - Track A serves **both** working designers upskilling in their current role and those preparing for a new hybrid role — never assume every reader is job-hunting.
 

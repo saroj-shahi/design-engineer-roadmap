@@ -31,7 +31,7 @@ export function MarketShiftChart() {
 
       <div className="plate-field px-4 py-5 sm:px-6 sm:py-6">
         {/* Compact zero-anchored list for narrow phones so every bar and label fits cleanly without horizontal scroll */}
-        <ul aria-label="Hiring shift across tech roles" className="space-y-3 sm:hidden">
+        <ul aria-label="Hiring shift across tech roles" className="space-y-3 lg:hidden">
           {hiringShiftSeries.map((row) => {
             const positive = row.value > 0;
             const focal = Boolean(row.focal);
@@ -77,7 +77,7 @@ export function MarketShiftChart() {
           viewBox={`0 0 ${W} ${H}`}
           role="img"
           aria-labelledby={`${uid}-title`}
-          className="mx-auto hidden h-auto w-full max-w-[920px] sm:block"
+          className="mx-auto hidden h-auto w-full max-w-[920px] lg:block"
         >
           <title id={`${uid}-title`}>
             Diverging bar chart comparing tech hiring changes on a shared -60% to +20% scale, sorted high to low: startup software

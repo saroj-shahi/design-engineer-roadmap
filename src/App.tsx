@@ -1,6 +1,6 @@
 import { Component, Suspense, lazy, useEffect, useRef, useState, type ReactNode } from "react";
 import { Nav } from "./components/Nav";
-import { navPages, pageHref, pages, planFromParts, useRevealObserver, useRoute, type Route } from "./components/ui";
+import { cardLink, ActionLink, actionClass, navPages, pageHref, pages, planFromParts, useRevealObserver, useRoute, type Route } from "./components/ui";
 import { Home } from "./pages/Home";
 import { Footer } from "./sections/Footer";
 
@@ -28,12 +28,10 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boole
         </h1>
         <p className="max-w-[44ch] text-lede text-pretty text-ink-2 mt-8">Reload the page or return to the start of the guide.</p>
         <div className="mt-10 flex flex-wrap gap-4">
-          <button type="button" onClick={() => window.location.reload()} className="relative isolate inline-flex h-12 items-center gap-3 overflow-hidden rounded-full bg-accent pl-[1.375rem] pr-5 text-[0.9375rem] font-semibold tracking-[-0.005em] text-on-accent transition-[translate,box-shadow,color] duration-[260ms] ease-spring before:absolute before:inset-0 before:-z-10 before:translate-y-[101%] before:bg-ink before:transition-transform before:duration-[550ms] before:ease-silk before:content-[''] hover:shadow-accent hover:before:translate-y-0 focus-visible:shadow-accent focus-visible:before:translate-y-0 active:translate-y-px motion-reduce:active:translate-y-0">
+          <button type="button" onClick={() => window.location.reload()} className={actionClass("primary")}>
             Reload page
           </button>
-          <a href={`${BASE}#/`} className="relative isolate inline-flex h-12 items-center gap-3 overflow-hidden rounded-full pl-[1.375rem] pr-5 text-[0.9375rem] font-semibold tracking-[-0.005em] text-ink shadow-[inset_0_0_0_1px_var(--line-strong)] transition-[box-shadow,color] duration-[260ms] ease-spring before:absolute before:inset-0 before:-z-10 before:translate-y-[101%] before:bg-sunken before:transition-transform before:duration-[550ms] before:ease-silk before:content-[''] hover:shadow-[inset_0_0_0_1px_var(--accent)] hover:before:translate-y-0 focus-visible:before:translate-y-0">
-            Back to start
-          </a>
+          <ActionLink href={`${BASE}#/`} variant="secondary">Back to start</ActionLink>
         </div>
       </section>
     );
@@ -157,12 +155,13 @@ const SITE = "Design Engineer Field Guide";
 
 const roleTitles: Record<string, string> = {
   de: "Design Engineer",
-  meta: "Meta-Designer & Systems Architect",
+  meta: "Meta-Designer",
   ax: "Agentic Experience (AX) Designer",
+  leads: "For design leads",
 };
 
 const shelfTitles: Record<string, string> = {
-  compare: "Design vs. Design + Code",
+  compare: "Design vs. design + code",
   skills: "Skills",
   tools: "Tools",
   roadmaps: "Roadmaps",
@@ -175,7 +174,7 @@ function titleFor(route: Route) {
   const p = pages.find((x) => x.id === route.page)!;
   if (route.page === "roles") {
     const roleName = route.parts[0] ? roleTitles[route.parts[0]] : null;
-    return roleName ? `${roleName} | ${SITE}` : `Design Engineer, Meta-Designer & AX Roles | ${SITE}`;
+    return `${roleName ?? p.title} | ${SITE}`;
   }
   if (route.page === "plan") {
     const plan = planFromParts(route.parts);
@@ -209,17 +208,19 @@ function descriptionFor(route: Route) {
     case "jobs":
       return "Is design work going away? The 2026 hiring data for designers, engineers and PMs, how teams are changing, and every market figure with its source.";
     case "roles":
-      return "Compare Design Engineer, Meta-Designer, and Agentic Experience (AX) Designer roles, deliverables, skill signals, and handoff economics.";
+      if (route.parts[0] === "leads")
+        return "For design leads: when to upskill your team and when to hire, what to ask for in a job post, and how to interview for design and code.";
+      return "Compare the Design Engineer, Meta-Designer and Agentic Experience (AX) Designer roles: what each one makes, where it's in demand, and how it cuts the slow back-and-forth between designers and developers.";
     case "plan":
       return "Follow a six-month plan for working designers (Track A) or a four-stage plan for people starting out (Track B), with paired roadmap.sh topics.";
     case "ready":
-      return "Interactive proof-of-work readiness checklist for designers shipping code in their current role or preparing for hybrid roles.";
+      return "A short checklist to see if your work is ready to show: a live demo, a clean repo, a short write-up and a merged pull request. For your current team or a job search, on Track A or Track B.";
     case "library":
-      return "Reference library comparing traditional and hybrid design work, layered skills, AI tooling pipelines, 8 roadmap.sh tracks, and a plain-English glossary.";
+      return "Reference library comparing traditional and hybrid design work, layered skills, AI tooling pipelines, eight roadmaps from roadmap.sh, and a plain-English glossary.";
     case "sources":
       return "Every source and article behind the Design Engineer Field Guide's figures, and how the research brief's data is used.";
     default:
-      return "Practical 2026 guide for designers upskilling into code or Design Engineer, Meta-Designer and AX Designer roles: market data, skills, tooling, and a six-month plan.";
+      return "A 2026 guide for designers moving into code: a six-month plan for working designers and a four-stage plan for people starting out, plus Design Engineer, Meta-Designer and AX Designer roles, hiring data and tools.";
   }
 }
 
@@ -237,7 +238,7 @@ function NotFound() {
       <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         {navPages.map((p) => (
           <li key={p.id}>
-            <a href={`${BASE}${pageHref(p.id)}`} className="relative rounded-card border border-edge bg-card shadow-1 group/card transition-[translate,box-shadow,border-color,opacity] duration-[260ms] ease-spring hover:-translate-y-[3px] hover:border-line-strong hover:shadow-2 active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-ink has-[>input:focus-visible]:outline-2 has-[>input:focus-visible]:outline-offset-4 has-[>input:focus-visible]:outline-accent-ink motion-reduce:hover:translate-y-0 group flex h-full flex-col p-5">
+            <a href={`${BASE}${pageHref(p.id)}`} className={`relative ${cardLink} group flex h-full flex-col p-5`}>
               <span className="font-mono text-label font-normal text-ink-3">{p.label}</span>
               <span className="mt-3 block text-[1.0625rem] font-medium leading-snug tracking-tight text-ink">{p.title}</span>
               <span className="font-mono text-label font-normal mt-auto pt-6 text-accent-ink">Open →</span>

@@ -1,5 +1,5 @@
 import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from "react";
-import { archetypes, glossary, planFor } from "../data/research";
+import { archetypes, glossary, glossaryTopicLabel, planFor } from "../data/research";
 import { jumpTo, navigate, pageHref, pages } from "./ui";
 
 /** One place the reader can go: a page, a section of Start, a role, a plan month, a shelf or a glossary term. */
@@ -12,13 +12,25 @@ interface Destination {
   jump?: string;
 }
 
+/** Trim a snippet at a sentence end so results never stop mid-thought; cut at a word only when one sentence is too long. */
+const snippet = (text: string, max = 140) => {
+  const sentences = text.match(/[^.!?]+[.!?]+(?=\s|$)|[^.!?]+$/g) ?? [text];
+  let out = "";
+  for (const s of sentences) {
+    if (out && (out + s).length > max) break;
+    out += s;
+  }
+  out = out.trim();
+  return out.length <= max ? out : `${out.slice(0, out.lastIndexOf(" ", max)).replace(/[,;:]$/, "")}…`;
+};
+
 const slugify = (t: string) => t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 
 /** The questions the Start page answers, in the reader's words. Shared with the Start page's chips. */
-export const startQuestions: { label: string; href: string; jump?: string }[] = [
+const startQuestions: { label: string; href: string; jump?: string }[] = [
   { label: "Is my job going away?", href: pageHref("jobs") },
   { label: "Where do I start?", href: pageHref("home"), jump: "start-here" },
-  { label: "Which role fits me?", href: pageHref("roles") },
+  { label: "Which role fits you?", href: pageHref("roles") },
   { label: "What do I do next?", href: pageHref("plan") },
   { label: "How do I know I'm ready?", href: pageHref("ready") },
   { label: "I want the detail", href: pageHref("library") },
@@ -27,14 +39,15 @@ export const startQuestions: { label: string; href: string; jump?: string }[] = 
 function useDestinations(): Destination[] {
   return useMemo(() => {
     const list: Destination[] = [];
-    for (const q of startQuestions) list.push({ label: q.label, group: "Questions", href: q.href, jump: q.jump });
-    for (const p of pages) list.push({ label: p.title, group: "Pages", hint: p.label, href: pageHref(p.id) });
-    for (const a of archetypes) list.push({ label: a.name, group: "Roles", hint: a.short, href: pageHref("roles", a.id) });
+    for (const q of startQuestions) list.push({ label: q.label, group: "Questions", hint: q.jump ? undefined : pages.find((p) => pageHref(p.id) === q.href)?.label, href: q.href, jump: q.jump });
+    // A page whose title is already one of the questions above isn't listed twice.
+    for (const p of pages) if (!startQuestions.some((q) => q.label === p.title)) list.push({ label: p.title, group: "Pages", hint: p.label, href: pageHref(p.id) });
+    for (const a of archetypes) list.push({ label: a.name, group: "Roles page", hint: a.short, href: pageHref("roles", a.id) });
     for (const m of planFor("pde"))
-      list.push({ label: `Month ${m.month}: ${m.title}`, group: "Plan · Design Engineer", hint: m.build, href: `#/plan/a/pde/m${m.month}` });
+      list.push({ label: `Month ${m.month}: ${m.title}`, group: "Plan page · Design Engineer", hint: m.build, href: `#/plan/a/pde/m${m.month}` });
     for (const m of planFor("meta").filter((m) => m.month >= 4))
-      list.push({ label: `Month ${m.month}: ${m.title}`, group: "Plan · Meta-Designer or AX Designer", hint: m.build, href: `#/plan/a/meta/m${m.month}` });
-    list.push({ label: "Track B · Starting out", group: "Plan", hint: "Four stages", href: "#/plan/b" });
+      list.push({ label: `Month ${m.month}: ${m.title}`, group: "Plan page · Meta-Designer or AX Designer", hint: m.build, href: `#/plan/a/meta/m${m.month}` });
+    list.push({ label: "Track B · Starting out", group: "Plan page", hint: "Four stages", href: "#/plan/b" });
     for (const [id, label] of [
       ["compare", "Design vs. design + code"],
       ["skills", "Skills"],
@@ -42,9 +55,9 @@ function useDestinations(): Destination[] {
       ["roadmaps", "Roadmaps"],
       ["glossary", "Glossary"],
     ] as const)
-      list.push({ label, group: "Library", href: pageHref("library", id) });
+      list.push({ label, group: "Library shelf", href: pageHref("library", id) });
     for (const g of glossary)
-      list.push({ label: g.term, group: "Glossary", hint: g.meaning, href: pageHref("library", "glossary", slugify(g.term)) });
+      list.push({ label: g.term, group: `Library · Glossary · ${glossaryTopicLabel[g.topic]}`, hint: g.meaning, href: pageHref("library", "glossary", slugify(g.term)) });
     return list;
   }, []);
 }
@@ -87,7 +100,7 @@ export function FindBox({ autoFocus = false, onDone, large = false }: { autoFocu
         : label.includes(query) ? 3
         : words.every((w) => label.includes(w)) ? 4
         : 5;
-      return score * 2 + (d.group === "Glossary" ? 0 : 1);
+      return score * 2 + (d.group.startsWith("Library · Glossary") ? 0 : 1);
     };
     return all
       .map((d, i) => ({ d, i, hay: `${d.label} ${d.group} ${d.hint ?? ""}`.toLowerCase() }))
@@ -153,7 +166,7 @@ export function FindBox({ autoFocus = false, onDone, large = false }: { autoFocu
           }}
           onKeyDown={onKey}
           placeholder="Try “React”, “month 4” or “MCP”"
-          className={`min-w-0 flex-1 bg-transparent text-ink outline-none placeholder:text-ink-3 ${large ? "text-base" : "text-[0.9375rem]"}`}
+          className={`min-w-0 flex-1 self-stretch bg-transparent text-ink outline-none placeholder:text-ink-3 ${large ? "text-base" : "text-[0.9375rem]"}`}
         />
         <kbd className="hidden rounded-md border border-edge px-2 py-0.5 font-mono text-xs text-ink-3 sm:inline">⌘K</kbd>
       </div>
@@ -174,7 +187,7 @@ export function FindBox({ autoFocus = false, onDone, large = false }: { autoFocu
             >
               <span className="min-w-0">
                 <span className="block text-[0.9375rem] leading-snug text-pretty text-ink">{d.label}</span>
-                {d.hint && <span className="mt-0.5 line-clamp-2 text-sm leading-snug text-ink-3">{d.hint}</span>}
+                {d.hint && <span className="mt-0.5 line-clamp-3 text-sm leading-snug text-ink-2">{snippet(d.hint)}</span>}
               </span>
               <span className="font-mono text-label font-normal text-ink-3 sm:max-w-[40%] sm:shrink-0 sm:text-right">{d.group}</span>
             </li>
@@ -238,7 +251,7 @@ export function FindDialog() {
         type="button"
         onClick={() => setOpen(true)}
         aria-haspopup="dialog"
-        className="group flex h-10 items-center gap-2 rounded-full border border-edge px-3 text-sm text-ink-2 transition-colors hover:border-line-strong hover:text-ink"
+        className="group flex h-11 min-w-11 items-center justify-center gap-2 rounded-full border border-edge px-3 text-sm text-ink-2 transition-colors hover:border-line-strong hover:text-ink"
       >
         <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="size-4">
           <circle cx="11" cy="11" r="7" />
@@ -259,9 +272,6 @@ export function FindDialog() {
         {open && (
           <div className="rounded-card border border-edge bg-paper p-4 shadow-2">
             <FindBox autoFocus large onDone={() => setOpen(false)} />
-            <p className="mt-3 hidden px-1 font-mono text-label font-normal text-ink-3 pointer-fine:block">
-              <KeyHint />
-            </p>
           </div>
         )}
       </dialog>
