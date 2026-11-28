@@ -240,7 +240,7 @@ export const marketMetrics: Metric[] = [
 ];
 
 /** What the job-post numbers mean for a working designer. Figures from `marketMetrics`. */
-const [dePosts, pdPosts] = usJobPostsMetric.value.split(" vs. ");
+const [dePosts, pdPosts] = usJobPostsMetric.value.split(/\s+vs\.\s+/);
 
 /** The full "small, senior title" paragraph. Shown in full on Jobs only; elsewhere use `titleRealityShort` and link to Jobs. */
 export const titleReality = `Design Engineer is still a small, senior title. There are about ${dePosts} US job posts for it, against ${pdPosts} for Product Designer. In Europe, ${seniorDeShareMetric.value} of its listings ask for senior level. For most designers, the first step is hybrid work in the job they already have, not a new title.`;
